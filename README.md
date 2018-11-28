@@ -10,6 +10,10 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 - [skript-mirror](https://github.com/btk5h/skript-mirror)
 - [TuSKe](https://github.com/Tuke-Nuke/TuSKe)
 
+### Why SKYBLOCK.SK
+SKYBLOCK.SK allows server operators to open the files plain in any editor of their choice, like Notepad++ and saving it directly into the server folder. Then reload the server and it can be used.
+Thanks to the simplicity of Skript, server operators can use pseudocode like code, which is very easy to read and to change without getting in contact with Java. Skript is [well documented](http://skriptlang.github.io/Skript/), free and accessible to everyone who can read and write.
+
 ### Demo Servers
 If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server address into this section.
 - join.skyroad.me 
