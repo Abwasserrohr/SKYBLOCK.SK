@@ -16,7 +16,7 @@ Thanks to the simplicity of Skript, server operators can use pseudocode like cod
 
 ### Demo Servers
 If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server address into this section.
-- join.skyroad.me 
+- join.skyroad.me (Currently not accessible for everyone)
   - [Website](https://skyroad.me)
   - [Discord](https://discord.gg/FRuK5BC)
 
