@@ -5,7 +5,7 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 	
 
 ### Dependencies
-- [Spigot](https://hub.spigotmc.org/stash/projects/SPIGOT)
+- [Spigot](https://hub.spigotmc.org/stash/projects/SPIGOT) Minecraft Java version 1.13.2
 - [Skript](https://github.com/SkriptLang/Skript)
 - [skript-mirror](https://github.com/btk5h/skript-mirror)
 - [TuSKe](https://github.com/Tuke-Nuke/TuSKe)
