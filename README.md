@@ -15,3 +15,15 @@ If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server a
   - [Website](https://skyroad.me)
   - [Discord](https://discord.gg/FRuK5BC)
 
+### Roadmap
+- Remove dependency from TuSKe
+- Use more functions to simplify code for server operators
+- Add customizable options into the config to make it easier to change
+- Allow the creation of addons
+  - Test the skript and use feedback for addons
+- Add multible languages to the projectt
+- Create a documentation for server operators
+  - Also include all variables which can be used by the server operator
+- Add a logo for the project
+- Final Testing and bugfixing
+- Publish the Skript to https://www.spigotmc.org/ and maintain it
