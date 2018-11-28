@@ -31,4 +31,4 @@ If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server a
   - Also include all variables which can be used by the server operator
 - Add a logo for the project
 - Final Testing and bugfixing
-- Publish the Skript to https://www.spigotmc.org/ and maintain it
+- Publish the Skript to https://www.spigotmc.org/ and maintain/update it for future versions of minecraft
