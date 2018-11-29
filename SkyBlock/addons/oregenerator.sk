@@ -1,0 +1,17 @@
+#If something flows:
+on flow:
+	#If the block that flows is lava:
+	if event-block is lava:
+		$ thread
+		#Do this loop in a thread and look for cobblestone to replace
+		loop blocks in radius 1 of event-block:
+			if y-coordinate of event-block is y-coordinate of loop-block:
+				if loop-block is cobblestone:
+					#Loop through all chances:
+					loop {SB::oregenc::*}:
+						chance of loop-value-2%:
+							#If chance is successful, get the loop index number of the {SB::oregenc::*} list and 
+							#then get the block with the same index out of {SB::oregen::%loop-index-1%}
+							cancel event
+							set location of loop-block-1 to {SB::oregen::%loop-index-1%}
+							stop
