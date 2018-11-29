@@ -26,7 +26,6 @@ on EntityDamageByEntityEvent:
 		if {_p} is "false":
 			cancel event
 
-#If a vehicle is being destroyed, check if its allowed: todo maybe check for damage on a vehicle and cancel there
 on VehicleDestroyEvent:
 	set {_player} to event.getAttacker()
 	if {_player} is a player:
