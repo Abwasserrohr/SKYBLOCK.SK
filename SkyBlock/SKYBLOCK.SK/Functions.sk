@@ -1,0 +1,263 @@
+
+
+#Is used to leave a island
+#use text argument "owner", if the island is deleted by the island owner.
+function leaveisland(p:player, text:text):
+	clear {_p}'s inventory
+	set {_uuid} to uuid of {_p}
+	set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+	set {_locx} to x-coord of {_loc}
+	set {_locy} to y-coord of {_loc}
+	set {_locz} to z-coord of {_loc}
+	#todo needs to delete one by one
+	delete {SB::player::%{_uuid}%::island::*}
+	delete {SB::player::%{_uuid}%::island::leader}
+	delete {SB::player::%{_uuid}%::island::border1}
+	delete {SB::player::%{_uuid}%::island::border2}
+	delete {SB::player::%{_uuid}%::island::bedrock}
+	delete {SB::player::%{_uuid}%::island::home::*}		
+	teleport {_p} to {SB::config::spawn}
+
+	if {_text} is "owner":
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+			if loop-value is uuid of {_p}:
+				set {_i} to loop-index
+				delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
+				stop loop
+				
+#Calculate the island level - executed in a thread
+function calcisland(p:player):
+	set {_exp} to 0 
+	set {_level} to 1
+	#set xp needed for next level:
+	set {_xpn} to {_level}*{SB::config::explevel}
+	set {_uuid} to uuid of {_p}
+	loop blocks within {SB::player::%{_uuid}%::island::border1} to {SB::player::%{_uuid}%::island::border2}:
+		if loop-block is not void air or air:
+			set {_tb} to "%loop-block%" parsed as item
+			set {_tb} to "%{_tb}%"
+			replace all " " with "_" in {_tb}
+			#todo: maybe find another way to do this? looks not good...
+			if {_tb} is a chest:
+				set {_tb} to "%{_tb}%"
+			if {_tb} contains "chest":
+				set {_tb} to "chest"
+			if {_tb} contains "door":
+				set {_tb} to "door"
+			if {_tb} contains "plant":
+				set {_tb} to "plant"
+			if {_tb} contains "fence":
+				set {_tb} to "fence"
+			if {_tb} contains "cobblestone_wall":
+				set {_tb} to "fence"
+			if {_tb} contains "slab":
+				set {_tb} to "slab"
+			if {_tb} contains "leaf":
+				set {_tb} to "leaf"
+			if {_tb} contains "log":
+				set {_tb} to "log"
+			if {_tb} contains "grass":
+				set {_tb} to "grass"
+			if {_tb} contains "furnace":
+				set {_tb} to "furnace"
+			if {_tb} contains "sapling":
+				set {_tb} to "sapling"
+			if {_tb} contains "stem":
+				set {_tb} to "stem"
+			if {_tb} contains "quartz_pillar":
+				set {_tb} to "quartz_pillar"
+			if {_tb} contains "wool":
+				set {_tb} to "wool"
+			if {_tb} contains "beacon":
+				set {_tb} to "beacon"
+			if {_tb} contains "note_block":
+				set {_tb} to "note_block"
+			if {_tb} contains "jukeboxes":
+				set {_tb} to "jukeboxes"
+			if {_tb} contains "anvil":
+				set {_tb} to "anvil"
+			if {_tb} contains "piston":
+				set {_tb} to "piston"
+			if {_tb} contains "flower_pot":
+				set {_tb} to "flower_pot"
+			if {_tb} contains "cyan_glass":
+				set {_tb} to "glass_block"
+			if {_tb} contains "glass_pane":
+				set {_tb} to "glass_pane"
+			if {_tb} contains "glazed_terracotta":
+				set {_tb} to "glazed_terracotta"
+			if {_tb} contains "standing_banner":
+				set {_tb} to "standing_banner"
+			if {_tb} contains "carpet":
+				set {_tb} to "carpet"
+			if {_tb} contains "bed_head":
+				set {_tb} to "bed"
+			if {_tb} contains "sandstone_block":
+				set {_tb} to "sandstone_block"
+			if {_tb} contains "coral_block":
+				if {_tb} contains "living":
+					set {_tb} to "living_coral_block"
+			if {_tb} contains "carpet":
+				set {_tb} to "carpet"
+			if {_tb} contains "carpet":
+				set {_tb} to "carpet"
+			if {SB::expblocks::%{_tb}%} is set:
+				#add the xp of the block to the exp variable
+				add {SB::expblocks::%{_tb}%} to {_exp}
+				#if the exp variable is bigger than the xp needed variable, add one level
+				if {_exp} is more than {_xpn}:
+					add 1 to {_level}
+					set {_xpn} to {_level}*{SB::config::explevel}
+
+	set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
+	set {_x} to x-coordinate of {_bedrockloc}
+	set {_y} to y-coordinate of {_bedrockloc}
+	set {_z} to z-coordinate of {_bedrockloc}
+	set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to {_level}
+	delete {SB::calcstatus::%{_p}%}
+
+#Check, if the player is the island owner or member - usedd by checkprotect
+function checkislandowner(l:location, p:player) :: text:
+	set {_uuid} to uuid of {_p}
+	set {_loc1} to {SB::player::%{_uuid}%::island::border1}
+	add 1 to x-coord of {_loc1}
+	add 1 to z-coord of {_loc1}
+	set {_loc2} to {SB::player::%{_uuid}%::island::border2}
+	if {_l} is not within {_loc1} to {_loc2}:
+		return "false"
+	else:
+		return "true"
+
+#Check, if a detailed check is needed - used by checkprotect
+function generaleventcheck(p:player) :: text:
+	if "%{_p}'s world%" is "%{SB::config::world}%":
+		if {_p} has permission "%{SB::config::buildpermission}%":
+			stop
+		set {_uuid} to uuid of {_p}
+		if {SB::player::%{_uuid}%::island::border1} is not set:
+			return "false"
+		else:
+			return "true"
+#Checks, if the player is allowed to build at the location, false = allowed, true = not allowed	
+function checkprotect(l:location,p:player) :: text:
+	set {_r} to generaleventcheck({_p})
+	if {_r} is "false":
+		protectionmgs({_p})
+		return {_r}
+	else if {_r} is "true":
+		set {_r} to checkislandowner({_l}, {_p})
+		if {_r} is "false":
+			protectionmgs({_p})
+		return {_r}
+	else:
+		return "true"
+
+#Prints message to player
+function protectionmgs(p:player):
+	set {_uuid} to uuid of {_p}
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
+	message "%{_prefix}% %{_a}%" to {_p}
+	#todo change this into a action bar to prevent spam: execute console command "/title %{_p}% actionbar {""text"":""%{_prefix}% %{_a}%""}"
+
+#Prints tellraw message to player, on which the player can click and execute a command
+function tellrawmsg1(p:player,t1:text,t2:text,c:text):
+	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
+
+#Deletes the island of the defined player
+function deleteisland(p1: player):
+	set {_prefix} to {SB::lang::prefix::%{Language::%{_p1}%}%}
+	set {_uuid} to uuid of {_p1}
+	if {SB::player::%{_uuid}%::island::leader} is uuid of {_p1}:
+		clear {_p1}'s inventory
+
+		teleport {_p1} to {SB::config::spawn}
+
+		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_locx} to x-coord of {_loc}
+		set {_locy} to y-coord of {_loc}
+		set {_locz} to z-coord of {_loc}
+		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
+		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
+		set {_loc1} to {SB::player::%{_uuid}%::island::border1}
+		set {_loc2} to {SB::player::%{_uuid}%::island::border2}
+
+		delete {SB::player::%{_uuid}%::island::leader}
+		delete {SB::player::%{_uuid}%::island::border1}
+		delete {SB::player::%{_uuid}%::island::border2}
+		delete {SB::player::%{_uuid}%::island::bedrock}
+		delete {SB::player::%{_uuid}%::island::home::*}		
+
+		loop {_member::*}:
+			set {_p} to "%loop-value%" parsed as offline player
+			if {_p} is online:
+				make {_p} execute command "/is leave"
+			else:
+				#this is the uuid, not the player name!:
+				set {_uuid} to uuid of {_p}
+				set {Leave.%{_uuid}%} to true
+		set {_a} to {SB::lang::deledtedis::%{Language::%{_p1}%}%}
+		message "%{_prefix}% %{_a}%" to {_p1}
+		set {_loop} to 0
+		set {Islanddelete.%{_p1}%} to true
+		set {_size} to size of {deleteisland.1::*}
+		add 1 to {_size}
+		set {deleteisland.1::%{_size}%} to {_loc1}
+		set {deleteisland.2::%{_size}%} to {_loc2}
+		delete {Islanddelete.%{_p1}%}
+	else:
+		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
+		message "%{_prefix}% %{_a}%" to {_p1}
+
+#Loading bar in actionbar and result
+function actionload(p: player, t:text):
+	if {_t} is "start":
+		set {SB::actionload::%{_p}%} to 1
+		set {_vs} to "&6█&7█████████"
+		while {SB::actionload::%{_p}%} is set:
+			if {_vs} is "&6█&7█████████": 
+				set {_s} to "&7[&r%{_vs}%&7]&r" 
+				execute console command "/title %{_p}% actionbar {""text"":""%{_vs}%""}"
+				wait 0.2 seconds
+			replace all "&6█&7█" with "&7█&6█&7" in {_vs}
+			set {_s} to "&7[&r%{_vs}%&7]&r" 
+			execute console command "/title %{_p}% actionbar {""text"":""%{_vs}%""}"
+			if {_vs} is "&7█&7█&7█&7█&7█&7█&7█&7█&7█&6█&7":
+				set {_vs} to "&6█&7█████████"
+			wait 0.2 seconds
+	else:
+		delete {SB::actionload::%{_p}%}
+		set {_s} to "&6█████████&r %{_t}% &6█████████"
+		loop 8 times:
+			replace all "&6██" with "&6█" in {_s}
+			execute console command "/title %{_p}% actionbar {""text"":""%{_s}%""}"
+			wait 10 ticks
+		execute console command "/title %{_p}% actionbar {""text"":""""}"
+
+
+#Opens the menu für the skyblock command: /is
+function skyblockgui(p: player):
+	open chest with 3 rows named "&b&lSkyBlock" to {_p}
+	#Fill the Inventory with empty glass panes:
+	loop 3 * 9 times:
+		set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+	#Render the items into the menu
+	set {_uuid} to uuid of {_p}
+	set slot 10 of {_p}'s current inventory to grass named "%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%"
+	set slot 11 of {_p}'s current inventory to experience bottle named "%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%"
+	set slot 12 of {_p}'s current inventory to book and quill named "%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%"
+	set slot 13 of {_p}'s current inventory to wall sign named "%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%"
+	set slot 14 of {_p}'s current inventory to ender chest named "%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%"
+	set slot 15 of {_p}'s current inventory to end portal frame named "%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%"
+	set slot 16 of {_p}'s current inventory to barrier named "%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%"
+	
+#This deletes variables and creates new ones on the startup:
+#Prevents old variables from being in the system
+function loadconfig():
+	delete {SB::schematics::*}
+	delete {SB::calcdown::*}
+	delete {SB::oregenc::*}
+	delete {SB::oregen::*}
+	
