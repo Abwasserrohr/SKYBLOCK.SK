@@ -1,0 +1,512 @@
+
+command /island [<text>] [<text>]:
+	aliases: /is
+	trigger:
+		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+		if arg-1 is not set:
+			skyblockgui(player)
+		if arg-1 is "reload":
+			if player has permission "%{SB::config::buildpermission}%":
+				make player execute "/sk reload SkyBlock/"
+		if arg-1 is "create":
+			if {SB::player::%uuid of player%::island::border1} is set:
+				message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
+				stop
+			if player is online:
+				if arg-2 is "1":
+					#todo translation
+					open chest with 1 rows named "&6Inseln" to player
+					set {_s} to 0
+					#go trough all available schematics or structures, which where set in the config.sk and post it here:
+					loop {SB::schematics::schematic::*}:
+						set {_item} to grass named "%{SB::schematics::name::%{SK::lang::%uuid of player%}%::%loop-index%}%"
+						make gui slot {_s} of player with {_item} to run player command "/is create %loop-value%"
+						add 1 to {_s}
+					delete {_s}
+					delete {_Bla::*}
+					stop
+				else:
+					#check, if defined schematic exists:
+					if {SB::config::isstorage} is "Schematic":
+						if file "plugins/WorldEdit/schematics/%arg-2%" exists:
+							#security check, is this schematic within the config:
+							set {_ok} to false
+							loop {SB::schematics::schematic::*}:
+								if loop-value is arg-2:
+									set {_ok} to true
+							#not found, print error and stop:
+							if {_ok} is "false":
+								send "&c&lError"
+								stop
+						#file doesnt exist, print error and stop:
+						else:
+							send "&c&lError"
+							stop
+					#if there is no schematic, don't do anything for now
+					else:
+						set {_ok} to true
+			actionload(player,"start")
+			while {SB::searchprocess} is true:
+				wait 10 ticks
+			if {SB::searchis::%player%} is set:
+				message "%{_prefix}% %{SB::lang::waitis::%{SK::lang::%uuid of player%}%}%"
+				stop
+			else:
+				set {SB::searchis::%player%} to true
+			set {_loc} to location at 0.5, {SB::config::height}, 0.5 in "%{SB::config::world}%" parsed as world
+			set {SB::searchprocess} to true
+			set {_search} to true
+			set {_s} to 1
+			set {_l} to 1
+			set {_option3} to {SB::config::distance} parsed as number
+			while {_search} is true:
+				loop {_l} times:
+					if {_s} is 1 or 5:
+						add ({SB::config::distance}*2) to Z-coord of {_loc}
+					if {_s} is 2:
+						add  ({SB::config::distance}*2) to X-coord of {_loc}
+					if {_s} is 3:
+						subtract  ({SB::config::distance}*2) from Z-coord of {_loc}
+					if {_s} is 4:
+						subtract  ({SB::config::distance}*2) from X-coord of {_loc}
+					if block at {_loc} is not bedrock:
+						message "%{_prefix}% %{SB::lang::foundis::%{SK::lang::%uuid of player%}%}%"
+						delete {SB::searchis::%player%}
+						add 1 to y-coord of {_loc}
+						set {_schematic} to arg-2
+						set {_backloc} to player's location
+						subtract 1 from y-coord of {_loc}
+						set block at {_loc} to barrier
+						add 1 to y-coord of {_loc}
+						teleport player to {_loc}
+						wait 5 ticks
+						set {_loccx} to "%x-coord of {_loc}%"
+						set {_loccy} to "%y-coord of {_loc}%"
+						set {_loccz} to "%z-coord of {_loc}%"
+						replace all ".5" with "" in {_loccx}
+						set {_loccx} to {_loccx} parsed as integer
+						replace all ".5" with "" in {_loccy}
+						set {_loccy} to {_loccy} parsed as integer
+						replace all ".5" with "" in {_loccz}
+						set {_loccz} to {_loccz} parsed as integer
+						if {_loccx} < 0:
+							set {_loccx} to {_loccx}-1
+						if {_loccz} < 0:
+							set {_loccz} to {_loccz}-1
+						set {_chestloc} to {_loc}
+						set {_homeloc} to {_loc}
+						if {SB::config::isstorage} is "Structure":
+							execute console command "/setblock %{_loccx}% %{_loccy}% %{_loccz}% minecraft:structure_block[mode=load]{name:""%{_schematic}%"",posX:-2,posY:-1,posZ:-2,rotation:""NONE"",mirror:""NONE"",mode:""LOAD""} destroy"
+							wait 5 ticks
+							subtract 1 from y-coord of {_loc}
+							execute console command "/setblock %{_loccx}% %{_loccy}-1% %{_loccz}% minecraft:redstone_block"
+							wait 5 ticks
+						else if {SB::config::isstorage} is "Schematic":
+							#todo add functions for worldedit.
+							broadcast "Schematic is not working right now"
+							stop
+						#HOME start
+						set {_temphomeloc::*} to {SB::schematics::loc::%{_schematic}%::home} split at ","
+						loop {_temphomeloc::*}:
+							set {_temphomeloc::%loop-index%} to {_temphomeloc::%loop-index%} parsed as integer
+						set x-coordinate of {_homeloc} to x-coordinate of {_homeloc} + {_temphomeloc::1}
+						set y-coordinate of {_homeloc} to y-coordinate of {_homeloc} + {_temphomeloc::2}
+						set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
+						#HOME end
+						#CHEST start
+						#Gets the configurated schematic chest location and places a chest there:
+						set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
+						loop {_tc::*}:
+							set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
+						set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
+						set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
+						set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
+						set block at {_chestloc} to chest
+						set {_newchest} to block at {_chestloc}
+						loop {SB::schematics::chest::%{_schematic}%::*}:
+							set {_data::*} to loop-value-2 split at ","
+							set {_titem} to "%{_data::2}%" parsed as item
+							set {_tamount} to {_data::1} parsed as integer
+							add {_tamount} of {_titem} to {_newchest}'s inventory
+						#CHEST end
+						set {SB::searchprocess} to false
+						#If something went wrong, teleport player back to backloc variable
+						if block at {_loc} is not bedrock:
+							teleport player to {_backloc}
+							send "&c&o/is create"
+							stop
+						set {_b} to block at {_loc}
+						set {_pis} to {_loc}
+						add 1 to y-coord of {_pis}
+						delete {_search}
+						actionload(player,{SB::lang::foundis::%{SK::lang::%uuid of player%}%})
+						teleport player to {_homeloc}
+						remove blindness from player
+						remove slowness from player
+						set {_l::1} to {_loc}
+						set {_l::2} to {_loc}
+						set {_option4} to {SB::config::protect} parsed as number
+						add ({SB::config::distance} - {SB::config::protect}) to x-coord of {_l::1}
+						add ({SB::config::distance} - {SB::config::protect}) to z-coord of {_l::1}
+						subtract ({SB::config::distance} - {SB::config::protect}) from x-coord of {_l::2}
+						subtract ({SB::config::distance} - {SB::config::protect}) from z-coord of {_l::2}
+						set y-coord of {_l::1} to 256
+						set y-coord of {_l::2} to 0
+						set {_x} to x-coord of {_loc}
+						set {_y} to y-coord of {_loc}
+						set {_z} to z-coord of {_loc}
+						set {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} to uuid of player
+						set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to 1
+						set {SB::island::%{_x}%_%{_y}%_%{_z}%::exp} to 0
+						set {SB::player::%uuid of player%::island::bedrock} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
+						set {SB::islvl::%{_x}%_%{_y}%_%{_z}%} to 0
+						
+						add 1 to y-coord of {_loc}
+						set {_y} to y-coord of {_loc}						
+						set {SB::player::%uuid of player%::island::leader} to uuid of player
+						set {SB::player::%uuid of player%::island::home::home} to {_homeloc}
+						
+						set {_x} to x-coord of {_l::1}
+						set {_y} to y-coord of {_l::1}
+						set {_z} to z-coord of {_l::1}
+						set {SB::player::%uuid of player%::island::border1} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
+						set {_x} to x-coord of {_l::2}
+						set {_y} to y-coord of {_l::2}
+						set {_z} to z-coord of {_l::2}
+						set {SB::player::%uuid of player%::island::border2} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
+						stop loop
+					wait a ticks
+				if {_s} is 6:
+					set {_s} to 2
+				else:
+					add 1 to {_s}
+				if {_s} is 3 or 5:
+					add 1 to {_l}
+		else if arg-1 is "home":
+			set {_loc} to {SB::player::%uuid of player%::island::home::home}
+			if {_loc} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				if "%block at {_loc}%" contains "slab":
+					set {_skip} to true
+				if {_skip} is not set:
+					set {_loc2} to {_loc}
+					subtract 1 from y-coord of {_loc2}
+					if "%block at {_loc2}%" is "air":
+						message "%{_prefix}% %{SB::lang::homewarnair::%{SK::lang::%uuid of player%}%}%"
+						wait a tick
+						make player execute command "/is go"
+						stop
+				teleport player to {_loc}
+				message "%{_prefix}% %{SB::lang::tphome::%{SK::lang::%uuid of player%}%}%"
+		else if arg-1 is "sethome":
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				set {_loc1} to {SB::player::%uuid of player%::island::border1}
+				add 1 to x-coord of {_loc1}
+				add 1 to z-coord of {_loc1}
+				set {_loc2} to {SB::player::%uuid of player%::island::border2}
+				if location of player is within {_loc1} to {_loc2}:
+					#todo later, this could also save multible custom home names?
+					set {SB::player::%uuid of player%::island::home::home} to location of player
+					message "%{_prefix}% %{SB::lang::sethomeok::%{SK::lang::%uuid of player%}%}%"
+				else:
+					message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%"
+		else if arg-1 is "go":
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				set {_loc} to {SB::player::%uuid of player%::island::bedrock}
+				add 1 to y-coordinate of {_loc}
+				teleport player to {_loc}
+				message "%{_prefix}% %{SB::lang::tpis::%{SK::lang::%uuid of player%}%}%"
+
+		else if arg-1 are "delete" or "remove":
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
+				message "%{_prefix}% %{SB::lang::cantleave::%{SK::lang::%uuid of player%}%}%"
+			else:
+				#todo - ask, if the player really want to delete the island
+				deleteisland(player)
+		else if arg-1 is "calc":
+			#If there is more time between the las calculation and now than the set cooldown time in config.sk:
+			if difference between {SB::calcdown::%uuid of player%} and now < {SB::config::calccooldown}:
+				message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
+			else:
+				set {SB::calcdown::%uuid of player%} to now
+				set {SB::calcstatus::%player%} to 1
+				make player execute "/is calcwait"
+				$ thread
+				calcisland(player)
+		else if arg-1 is "calcwait":
+			if {SB::calcstatus::%player%} is set:
+				actionload(player,"start")
+				while {SB::calcstatus::%player%} is set:
+					wait 10 ticks
+				set {_uuid} to uuid of player
+				set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
+				set {_x} to x-coordinate of {_bedrockloc}
+				set {_y} to y-coordinate of {_bedrockloc}
+				set {_z} to z-coordinate of {_bedrockloc}
+				set {_level} to {SB::island::%{_x}%_%{_y}%_%{_z}%::level}
+				actionload(player,"&rLevel: &6&l%{_level}%")
+
+		else if arg-1 is "top":
+			if {SB::islvl::*} is set:
+				loop {SB::islvl::*}:
+					set {_loc::*} to loop-index split at "_"
+					set {_loc::1} to {_loc::1} parsed as number
+					set {_loc::2} to {_loc::2} parsed as number
+					set {_loc::3} to {_loc::3} parsed as number
+					set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
+					set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
+					set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
+					set {_Level::%{_uuid}%} to {_level}
+				loop {_Level::*}:
+					add 1 to {_size}
+					if {_low.to.high.list::%loop-value%} is not set:
+						set {_low.to.high.list::%loop-value%} to loop-index
+					else:
+						set {_n} to 0
+						loop {_size} times:
+							set {_n} to {_n}+1
+							{_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+							set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+							stop loop
+				wait 1 tick
+				set {_n} to size of {_low.to.high.list::*}
+				loop {_low.to.high.list::*}:
+					set {_high.to.low.list::%{_n}%} to loop-value
+					set {_n} to {_n}-1
+				wait 1 tick
+				set {_page} to 1
+				loop {_high.to.low.list::*}:
+					add 1 to {_result}
+					add 1 to {_r}
+					set {_Top::%{_page}%::%{_r}%} to loop-value
+					if loop-value is player:
+						set {_rank} to {_r}
+					else:
+						loop {_Member::%loop-value%::*}:
+							if loop-value-2 is player:
+								set {_rank} to {_r}
+					if {_result} is 10:
+						set {_result} to 0
+						add 1 to {_page}
+				set {_arg1} to arg-2 parsed as number
+				if {_arg1} is not set:
+					message "%{_prefix}% %{SB::lang::notanumber::%{SK::lang::%uuid of player%}%}%"
+					stop
+				else:
+					if {_top::%{_arg1}%::*} is not set:
+						message "%{_prefix}% %{SB::lang::pagenotfound::%{SK::lang::%uuid of player%}%}%"
+						stop
+				if {_Rank} is not set:
+					set {_rank} to "-/-"
+				message "%{SB::config::spacer}%"
+				send "%{SB::lang::prefix::%{SK::lang::%uuid of player%}%}%&6&l &eTop 10 &6&l(%arg-2%/%{_page}%)"
+				loop {_Top::%arg-2%::*}:
+					set {_member} to ""
+					set {_loc} to {SB::player::%loop-value%::island::bedrock}
+					set {_locx} to x-coord of {_loc}
+					set {_locy} to y-coord of {_loc}
+					set {_locz} to z-coord of {_loc}
+					loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+						set {_tp} to "%loop-value-2%" parsed as offline player
+						if {_member} is "":
+							set {_member} to "%{_tp}%"
+						else:
+							set {_member} to "%{_member}%, %{_tp}%"
+					set {_p} to "%loop-value%" parsed as offline player
+					if player is {_p}:
+						set {_rank} to loop-index
+					send  "&e&l%loop-index%&8 - &a%{_p}%&8&l: &e%{_Level::%loop-value%}% &7||&8 %{_Member}%"
+				set {_size} to size of {SB::islvl::*}
+				send "%{SB::lang::prefix::%{SK::lang::%uuid of player%}%}% &eDu bist auf Platz %{_rank}% von %{_size}% Inseln. todo: translate"
+				message "%{SB::config::spacer}%"
+			else:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+		else if arg-1 is "level" or "lvl":
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				message "%{_prefix}%  %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				set {_loc} to {SB::player::%uuid of player%::island::bedrock}
+				set {_locx} to x-coord of {_loc}
+				set {_locy} to y-coord of {_loc}
+				set {_locz} to z-coord of {_loc}
+				set {_level} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::level}
+				set {_p} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+				message "%{SB::config::spacer}%"
+				message "%{_p}%%{SB::lang::levelheader::%{SK::lang::%uuid of player%}%}%%{_level}%" to player
+				message "%{_p}% Calculate your level with /is calc -todo: translation" to player
+				message "%{SB::config::spacer}%"
+				set metadata value "IS-Level" of player to "%{_level}%"
+		else if arg-1 is "spawn" or "hub":
+			teleport player to {SB::config::spawn}
+		else if arg-1 is "invite":
+			if {SB::player::%uuid of player%::island::border1} is set:
+				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+					set {_arg2} to arg-2 parsed as offline player
+					if {_arg2} is online:
+						if {_arg2} is not player:
+							set {_p2} to {_arg2}
+							set {_tuuid} to uuid of {_p2}
+							if {SB::player::%{_tuuid}%::island::border1} is set:
+								set {_msg} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
+								replace all "<player>" with "%{_p2}%" in {_msg}
+								message "%{_prefix}% %{_msg}%"
+								stop
+							set {_uuid2} to uuid of {_arg2}
+							set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
+							message "%{_prefix}% %{SB::lang::sentrequest::%{SK::lang::%uuid of player%}%}%"
+							replace all "<player>" in {_b} with "%player%"
+							message "%{_prefix}% %{_b}%" to {_p2}
+							set {_uuidp2} to uuid of {_p2}
+							set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
+							replace all "<player>" with "%player%" in {_msg}
+							#todo  the function could execute the console command by itself, there is no need to do it this way
+							tellrawmsg1({_p2},{_prefix},{_msg},"/is join %player%")
+							set {_cooldown} to {SB::config::invitecooldown}
+							set {_cooldown} to {_cooldown} parsed as number
+							set {Request::%{_arg2}%::%player%} to {_cooldown}
+							while {Request::%{_arg2}%::%player%} > 0:
+								subtract 1 from {Request::%{_arg2}%::%player%}
+								wait a second
+							if {Request::%{_arg2}%::%player%} is 0:
+								delete {Request::%{_arg2}%::%player%}
+								set {_a} to {SB::lang::reqtoleader::%{SK::lang::%uuid of player%}%}
+								set {_uuid2} to uuid of {_arg2}
+								set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
+								message "%{_prefix}% %{_a}%"
+								message "%{_prefix}% %{_b}%" to {_p2}
+						else:
+							set {_a} to {SB::lang::cantinviteself::%{SK::lang::%uuid of player%}%}
+							message "%{_prefix}% %{_a}%"
+					else:
+						set {_a} to {SB::lang::playeroff::%{SK::lang::%uuid of player%}%}
+						message "%{_prefix}% %{_a}%"
+				else:
+					set {_a} to {SB::lang::notleader::%{SK::lang::%uuid of player%}%}
+					message "%{_prefix}% %{_a}%"
+			else:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+		else if arg-1 is "join":
+			set {_arg2} to arg-2 parsed as offline player
+			if {_arg2} is "1":
+				loop {Request::%player%::*}:
+					set {_tplayer} to loop-index parsed as offline player
+					set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%uuid of player%}%}
+					replace all "<player>" with "%{_tplayer}%" in {_msg}
+					tellrawmsg1(player,{_prefix},{_msg},"/is join %{_tplayer}%")
+				if size of {Request::%player%::*} is 0:
+					message "%{_prefix}% %{SB::lang::norequest::%{SK::lang::%uuid of player%}%}%" to player
+				stop
+			else if {_arg2} is set:
+				if {Request::%player%::%{_arg2}%} is set:
+					if {SB::player::%uuid of player%::island::border1} is set:
+						message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
+						set {_check} to {SB::player::%uuid of player%::island::leader}
+						if {_check} is uuid of player:
+							message "%{_prefix}% %{SB::lang::havetodelete::%{SK::lang::%uuid of player%}%}%"
+						else:
+							message "%{_prefix}% %{SB::lang::havetoleave::%{SK::lang::%uuid of player%}%}%"
+					else:
+						#todo - add a function which adds a member to the island with 2 agruments?
+						set {_uuid} to uuid of {_arg2}
+						set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+						set {_locx} to x-coord of {_loc}
+						set {_locy} to y-coord of {_loc}
+						set {_locz} to z-coord of {_loc}
+						add uuid of player to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+						set {_pluuid} to uuid of {_arg2}
+						set {_joinuuid} to uuid of player
+						set {SB::player::%{_joinuuid}%::island::bedrock} to {SB::player::%{_pluuid}%::island::bedrock}
+						set {SB::player::%{_joinuuid}%::island::leader} to {SB::player::%{_pluuid}%::island::leader}
+						set {SB::player::%{_joinuuid}%::island::home::home} to {SB::player::%{_pluuid}%::island::home::home}
+						set {SB::player::%{_joinuuid}%::island::border1} to {SB::player::%{_pluuid}%::island::border1}
+						set {SB::player::%{_joinuuid}%::island::border2} to {SB::player::%{_pluuid}%::island::border2}
+						delete {Request::%player%::%{_arg2}%}
+						broadcast "%{Request::%player%::%{_arg2}%}%"
+						make player execute command "/is home"
+						set {_a} to {SB::lang::joinedismember::%{SK::lang::%uuid of player%}%}
+						set {_uuid2} to uuid of {_arg2}
+						set {_b} to {SB::lang::joinedisleader::%{SK::lang::%{_uuid2}%}%}
+						replace all "<arg-2>" in {_a} with "%{_arg2}%"
+						replace all "<player>" in {_b} with "%player%"
+						message "%{_prefix}% %{_a}%"
+						set {_p2} to {_arg2}
+						message "%{_prefix}% %{_b}%" to {_p2}
+				else:
+					set {_a} to {SB::lang::norequest::%{SK::lang::%uuid of player%}%}
+					message "%{_prefix}% %{_a}%"
+			else:
+				set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
+				message "%{_prefix}% %{_a}%"
+		else if arg-1 is "leave":
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+					message "%{_prefix}% %{SB::lang::leaderleaveinfo::%{SK::lang::%uuid of player%}%}%"
+				else:
+					if arg-2 is player:
+						message "%{_prefix}% %{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
+						leaveisland(player, "member")
+					else:
+						message "%{_prefix}% %{SB::lang::leftis::%{SK::lang::%uuid of player%}%}%"
+						leaveisland(player, "owner")
+		else if arg-1 is "kick":
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+			else:
+				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+					if arg-2 is set:
+						set {_kickplayer} to arg-2 parsed as offline player
+						set {_uuid} to uuid of {_kickplayer}
+						set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+						set {_locx} to x-coord of {_loc}
+						set {_locy} to y-coord of {_loc}
+						set {_locz} to z-coord of {_loc}
+						loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+							if loop-value is uuid of {_kickplayer}:
+								delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
+								set {_a} to {SB::lang::kickmemberleader::%{SK::lang::%uuid of player%}%}
+								set {_b} to {SB::lang::kickmember::%{SK::lang::%{_uuid}%}%}
+								set {_p2} to arg-2 parsed as offline player
+								replace all "<arg-2>" in {_a} with arg-2
+								replace all "<player>" in {_b} with "%player%"
+								message "%{_prefix}% %{_a}%"
+								leaveisland({_p2}, "member")
+								stop
+						set {_a} to {SB::lang::plnotfound::%{SK::lang::%uuid of player%}%}
+						replace all "<arg-2>" with arg-2 in {_a}
+						message "%{_prefix}% %{_a}%"
+					else:
+						set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
+						message "%{_prefix}% %{_a}%"
+				else:
+					actionload(player,{SB::lang::noperm::%{SK::lang::%uuid of player%}%})
+		else if arg-1 is "help":
+			set {_site} to arg-2 parsed as integer
+			if {_site} is more than 3:
+				message "%{_prefix}% %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%"""
+				stop
+			send "%{SB::config::spacer}%"
+			if arg-2 is "1":
+				message "%{_prefix}% %{SB::lang::iscreate::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isdelete::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isteleport::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::issethome::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isteleportgo::%{SK::lang::%uuid of player%}%}%"
+			else if arg-2 is "2":
+				message "%{_prefix}% %{SB::lang::islevel::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::istop::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isinvite::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::iskick::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isjoin::%{SK::lang::%uuid of player%}%}%"
+			else if arg-2 is "3":
+				message "%{_prefix}% %{SB::lang::isleave::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isgui::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isspawn::%{SK::lang::%uuid of player%}%}%"
+			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/3 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
+			send "%{SB::config::spacer}%"
