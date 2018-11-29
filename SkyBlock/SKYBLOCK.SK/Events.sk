@@ -1,0 +1,233 @@
+
+import:
+	org.bukkit.event.player.PlayerArmorStandManipulateEvent
+	org.bukkit.event.entity.EntityDamageByEntityEvent
+	org.bukkit.event.vehicle.VehicleDestroyEvent
+	org.bukkit.Location
+	org.bukkit.event.player.PlayerInteractEvent
+
+#Events (Triggers) for protection purposes START
+
+#If a armorstand is manipulated, check if the user is allowed:
+on PlayerArmorStandManipulateEvent:
+	set {_player} to event.getPlayer()
+	if {_player} is a player:
+		set {_l} to event.getEntity().getLocation()
+		set {_p} to checkprotect({_l},{_player})
+		if {_p} is "false":
+			cancel event
+
+#If a entity is getting damage by a player, check if the player is allowed to do so:
+on EntityDamageByEntityEvent:
+	set {_player} to event.getDamager()
+	if {_player} is a player:
+		set {_l} to event.getEntity().getLocation()
+		set {_p} to checkprotect({_l},{_player})
+		if {_p} is "false":
+			cancel event
+
+#If a vehicle is being destroyed, check if its allowed: todo maybe check for damage on a vehicle and cancel there
+on VehicleDestroyEvent:
+	set {_player} to event.getAttacker()
+	if {_player} is a player:
+		set {_l} to event.getVehicle().getLocation()
+		set {_p} to checkprotect({_l},{_player})
+		if {_p} is "false":
+			cancel event
+
+#If the player interacts with soil, it is checked if the player is allowed to do this.
+on PlayerInteractEvent:
+	set {_b} to event.getClickedBlock()
+	if {_b} is soil:
+		set {_player} to event.getPlayer()
+		if {_player} is a player:
+			set {_l} to event.getClickedBlock().getLocation()
+			set {_p} to checkprotect({_l},{_player})
+			if {_p} is "false":
+				cancel event
+
+#If player places something, check for rights, false means no rights.
+on place:
+	set {_r} to checkprotect(location of event-entity,player)
+	if {_r} is "false":
+		cancel event
+
+#Player beaks something, this is going to check if the user has no right and cancels:
+on break:
+	set {_r} to checkprotect(location of event-entity,player)
+	if {_r} is "false":
+		cancel event
+
+#IF player clicks, this is checking if it should be cancelled
+on click:
+	#todo this can be done fancier than this: allow enderchest access from everywhere, also crafting table?
+	if "%clicked block%" contains "ender chest":
+		stop
+	set {_r} to checkprotect(location of event-entity,player)
+	if {_r} is "false":
+		cancel event
+
+#checks, if the player is rightclicking on a entitiy, like a villager and then cancels it.
+#todo this is already included in the on click event, could be removed here?
+on rightclick on entity:
+	set {_r} to checkprotect(location of event-entity,player)
+	if {_r} is "false":
+		cancel event
+
+#Events (Triggers) for protection purposes END
+
+
+#Disable 1.13 phantoms:
+#todo check from config if enabled or disabled:
+on spawn of a phantom: 
+	cancel event
+
+#This is handling the events the player is doing in the inventory menu
+#todo make this without tuSKe dependency, since skript-mirror is active
+on inventory click:
+	#todo allow a custom color scheme trough all messages
+	if inventory name of player's current inventory is "&b&lSkyBlock":
+		cancel event
+		#todo use skript-mirror instead of TuSKe
+		if clicked slot is 10:
+			close player's inventory
+			if {SB::player::%uuid of player%::island::border1} is not set:
+				make player execute command "/is create"
+			else:
+				make player execute command "/is home"
+		else if clicked slot is 11:
+			close player's inventory
+			make player execute command "/is level"
+		else if clicked slot is 12:
+			close player's inventory
+			#book and quill - todo -> daily missions
+		else if clicked slot is 13:
+			close player's inventory
+			make player execute command "/is top"
+		else if clicked slot is 14:
+			close player's inventory
+			#ender chest - not used
+		else if clicked slot is 15:
+			close player's inventory
+			make player execute command "/is spawn"
+
+
+on world change:
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+	if player has permission "%{SB::config::buildpermission}%":
+		if event-world is "%{SB::config::world}%":
+			make player execute command "/is spawn"
+		stop
+	if "%event-world%" contains "nether":
+		if {SB::config::portalenter} is "false":
+			make player execute command "/is home"
+			message "%{_prefix}% %{SB::lang::nonether::%{SK::lang::%uuid of player%}%}%"
+	#If player changes the world and is in the Island world, teleport the player back to the home to make sure player is not falling to death
+	if event-world is "%{SB::config::world}%":
+		make player execute command "/is home"
+
+#On player death, save the hunger bar to reset it after the respawn, this makes food worth more
+#todo toggle this feature in config.sk
+on death of player:
+	set {_p} to victim
+	if {_p} is a player:
+		if {_p} is online:
+			set {SB::hunger::%{_p}%} to hunger of {_p}
+on respawn:
+	wait a tick
+	if {SB::player::%uuid of player%::island::border1} is set:
+		make player execute command "/is home"
+	else:
+		make player execute command "/is spawn"
+	set hunger of player to {SB::hunger::%player%}
+
+on damage:
+	set {_prefix} to {SB::lang::prefix::%{Language::%attacker%}%}
+	set {_a} to {SB::lang::nopvp::%{Language::%attacker%}%}
+	if attacker has permission "%{SB::config::buildpermission}%":
+		stop
+	if {SB::config::pvp} is false:
+		if attacker is a player:
+			if victim is a player:
+				message "%{_prefix}% %{_a}%" to attacker
+				cancel event
+			stop
+	#todo double check this part, something doesnt work right here:
+	else:
+		if {SB::player::%uuid of attacker%::island::border1} is not set:
+			cancel event
+			message "%{_prefix}% %{_a}%" to attacker
+		else:
+			set {_r} to checkislandowner(location of attacker, attacker)
+			if {_r} is "false":
+				cancel event
+				message "%{_prefix}% %{_a}%" to attacker
+
+on ignition:
+	#todo add in config to ask:
+	#players allowed to set fire, true, false
+	#should fire spread, true, false
+	if player is set:
+		stop
+	cancel event
+
+on explode:
+	#todo add, tnt, true, false
+	#creeper explosion, true, false
+	cancel event
+
+#Island removal process at startup:
+on script load:
+	set {SB::searchprocess} to false
+	delete {SB::searchis::*}
+	delete {SB::hunger::*}
+	delete {SB::calcstatus::*}
+	delete {SB::actionload::*}
+
+	$ thread
+	loop {deleteisland.1::*}:
+		wait 0.5 seconds
+		set {_loc1} to loop-value
+		set {_loc2} to {Deleteisland.2::%loop-index%}
+
+		loop blocks within {_loc1} to {_loc2}:
+			if loop-block is chest or trapped chest:
+				clear loop-block's inventory
+			if loop-block is not air:
+				set loop-block to air
+				add 1 to {_i}
+			if {_i} is 500:
+				wait 1 tick
+				delete {_i}
+		delete {deleteisland.1::%loop-index%}
+		delete {deleteisland.2::%loop-index%}
+	delete {SB::ISDELPROCESS}
+	execute console command "/whitelist on"
+
+on script unload:
+	execute console command "/whitelist on"
+	set {SB::ISDELPROCESS} to true
+
+	
+on join:
+	wait a ticks
+	#todo check for default language in config.sk if there is "custom" choosen, let the user choose, if there is "api" choosen, use a api or database which has to be added.
+	if {SK::lang::%uuid of player%} is not set:
+		set {SK::lang::%uuid of player%} to "de"
+	set {_uuid} to uuid of player
+	if {Leave.%{_uuid}%} is set:
+		delete {Leave.%uuid of player%}
+		leaveisland(player, "member")
+		send "%{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
+	if {SB::player::%uuid of player%::island::home::home} is set:
+		teleport player to {SB::player::%uuid of player%::island::home::home}
+	else:
+		teleport player to {SB::config::spawn}
+	
+	
+on connect:
+	set {SK::lang::%uuid of player%} to "de"
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+	if {SB::ISDELPROCESS} is set:
+		if player doesn't have permission "%{SB::config::buildpermission}%":
+			kick player due to "%{_prefix}% %{SB::lang::delismsg::%{SK::lang::%uuid of player%}%}%"
