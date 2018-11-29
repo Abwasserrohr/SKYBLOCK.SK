@@ -1,5 +1,5 @@
 
-command /island [<text>] [<text>]:
+command /island [<text>] [<text=1>]:
 	aliases: /is
 	trigger:
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
