@@ -1,4 +1,3 @@
-
 command /island [<text>] [<text=1>]:
 	aliases: /is
 	trigger:
@@ -229,7 +228,6 @@ command /island [<text>] [<text=1>]:
 			else:
 				#If the 2. argument is 2, then delete, else, create a tellraw which executes this command with the 2. argument.
 				if arg-2 is "2":
-					#todo - ask, if the player really want to delete the island
 					set {_uuid} to uuid of player
 					set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
 					set {_x} to x-coordinate of {_bedrockloc}
@@ -240,7 +238,7 @@ command /island [<text>] [<text=1>]:
 					else:
 						deleteisland(player)
 				else:
-					tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%},"/is delete 2")
+					tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%}%},"/is delete 2")
 
 		else if arg-1 is "calc":
 			#If there is more time between the las calculation and now than the set cooldown time in config.sk:
