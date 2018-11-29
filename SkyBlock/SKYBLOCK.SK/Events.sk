@@ -126,19 +126,20 @@ on world change:
 		make player execute command "/is home"
 
 #On player death, save the hunger bar to reset it after the respawn, this makes food worth more
-#todo toggle this feature in config.sk
 on death of player:
 	set {_p} to victim
 	if {_p} is a player:
 		if {_p} is online:
-			set {SB::hunger::%{_p}%} to hunger of {_p}
+			if {SB::config::preventhungerreset} is true:
+				set {SB::hunger::%{_p}%} to hunger of {_p}
 on respawn:
 	wait a tick
 	if {SB::player::%uuid of player%::island::border1} is set:
 		make player execute command "/is home"
 	else:
 		make player execute command "/is spawn"
-	set hunger of player to {SB::hunger::%player%}
+	if {SB::config::preventhungerreset} is true:
+		set hunger of player to {SB::hunger::%player%}
 
 on damage:
 	set {_prefix} to {SB::lang::prefix::%{Language::%attacker%}%}
