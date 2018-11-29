@@ -1,0 +1,16 @@
+#This Skript reverts obidian back to lava, if clicked on it with a bucket
+
+#On rightclick with obsidian and an empty bucket:
+on rightclick on obsidian with a empty bucket:
+	#Check, if the player is not allowed:
+	set {_r} to checkprotect(location of event-block,player)
+	if {_r} is "false":
+		cancel event
+	else:
+		if player's tool is a empty bucket:
+			set event-block to air
+			remove 1 of empty bucket from player's inventory
+			if player's tool is air:
+				set player's tool to lava bucket
+			else:
+				give 1 of lava bucket to player
