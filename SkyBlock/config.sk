@@ -43,6 +43,9 @@ on load:
 	# Enable pvp: true = yes, false = no:
 	set {SB::config::pvp} to false
 	
+	# Prevent hunger reset on death: true = yes, false = no:
+	set {SB::config::preventhungerreset} to true
+	
 	#Set a cooldown for /is calc level calculation
 	set {SB::config::calccooldown} to 30 minutes
 
