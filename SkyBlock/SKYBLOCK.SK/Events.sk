@@ -211,7 +211,7 @@ on script unload:
 	
 on join:
 	wait a ticks
-	apply resistance to player for 3 seconds
+	execute console command "/effect give %player% minecraft:resistance 3 10 true"
 	#todo check for default language in config.sk if there is "custom" choosen, let the user choose, if there is "api" choosen, use a api or database which has to be added.
 	if {SK::lang::%uuid of player%} is not set:
 		set {SK::lang::%uuid of player%} to "de"
