@@ -35,7 +35,7 @@ on script load:
 	set {SB::lang::leftis::%{_lang}%} to "&8Du hast die Insel verlassen."
 	set {SB::lang::nonether::%{_lang}%} to "&7Die Hölle ist nicht zugänglich."
 	set {SB::lang::cooldown::%{_lang}%} to "&7Dieser Befehl lädt noch auf."
-	set {SB::lang::isdeleteqestion::%{_lang}%} to "&7Bist du sicher? &6Klicke Hier&7, um die Insel zu löschen."
+	set {SB::lang::isdeleteqestion::%{_lang}%} to "&7Bist du sicher? &6Klicke Hier&7"
 	#GUI
 	set {SB::lang::guigrassname::%{_lang}%} to "&6&lSkyblock"
 	set {SB::lang::guisoonname::%{_lang}%} to "&4&lDemnächst..."
