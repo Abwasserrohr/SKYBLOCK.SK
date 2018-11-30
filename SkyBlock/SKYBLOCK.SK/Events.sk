@@ -30,7 +30,8 @@ on EntityDamageByEntityEvent:
 # > Triggered if a vehicle is damaged, this could be a minecart or a boat.
 # > Actions:
 # > If the attacker is a player, check if the player is allowed to damage the vehicle, if not, cancel it.
-on VehicleDamageEvent:	set {_player} to event.getAttacker()
+on VehicleDamageEvent:
+	set {_player} to event.getAttacker()
 	if {_player} is a player:
 		set {_l} to event.getVehicle().getLocation()
 		set {_p} to checkprotect({_l},{_player})
