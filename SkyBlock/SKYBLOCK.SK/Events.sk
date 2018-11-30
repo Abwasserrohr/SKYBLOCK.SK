@@ -81,36 +81,6 @@ on rightclick on entity:
 on spawn of a phantom: 
 	cancel event
 
-#This is handling the events the player is doing in the inventory menu
-#todo make this without tuSKe dependency, since skript-mirror is active
-on inventory click:
-	#todo allow a custom color scheme trough all messages
-	if inventory name of player's current inventory is "&b&lSkyBlock":
-		cancel event
-		#todo use skript-mirror instead of TuSKe
-		if clicked slot is 10:
-			close player's inventory
-			if {SB::player::%uuid of player%::island::border1} is not set:
-				make player execute command "/is create"
-			else:
-				make player execute command "/is home"
-		else if clicked slot is 11:
-			close player's inventory
-			make player execute command "/is level"
-		else if clicked slot is 12:
-			close player's inventory
-			#book and quill - todo -> daily missions
-		else if clicked slot is 13:
-			close player's inventory
-			make player execute command "/is top"
-		else if clicked slot is 14:
-			close player's inventory
-			#ender chest - not used
-		else if clicked slot is 15:
-			close player's inventory
-			make player execute command "/is spawn"
-
-
 on world change:
 	set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
 	if player has permission "%{SB::config::buildpermission}%":
