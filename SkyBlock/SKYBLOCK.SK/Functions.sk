@@ -237,21 +237,30 @@ function actionload(p: player, t:text):
 		execute console command "/title %{_p}% actionbar {""text"":""""}"
 
 
-#Opens the menu für the skyblock command: /is
+#Opens the menu for the skyblock command: /is
+# > Function - skyblockgui:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Opens a new inventory menu with gui.sk
 function skyblockgui(p: player):
-	open chest with 3 rows named "&b&lSkyBlock" to {_p}
+	#open chest with 3 rows named "&b&lSkyBlock" to {_p}
+	opengui({_p},27,"&b&lSkyBlock")
 	#Fill the Inventory with empty glass panes:
 	loop 3 * 9 times:
 		set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
 	#Render the items into the menu
 	set {_uuid} to uuid of {_p}
-	set slot 10 of {_p}'s current inventory to grass named "%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%"
-	set slot 11 of {_p}'s current inventory to experience bottle named "%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%"
-	set slot 12 of {_p}'s current inventory to book and quill named "%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%"
-	set slot 13 of {_p}'s current inventory to wall sign named "%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%"
-	set slot 14 of {_p}'s current inventory to ender chest named "%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%"
-	set slot 15 of {_p}'s current inventory to end portal frame named "%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%"
-	set slot 16 of {_p}'s current inventory to barrier named "%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%"
+	if {SB::player::%{_uuid}%::island::border1} is set:
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is home""",true)
+	else:
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is create""",true)
+	setguiitem({_p},11,"experience bottle",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
+	setguiitem({_p},12,"book and quill",1,"%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%","","message ""Challenges are coming soon!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
+	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
+	setguiitem({_p},16,"barrier",1,"%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
 	
 #This deletes variables and creates new ones on the startup:
 #Prevents old variables from being in the system
