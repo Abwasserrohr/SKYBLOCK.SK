@@ -1,0 +1,178 @@
+#
+# ==============
+# GUI.SK v0.0.1
+# ==============
+# Create GUI menus fast and secure with all available inventory types.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# ==============
+# How to use it:
+# ==============
+# 1. Step: Open a GUI for a player:
+# > set {_player} to player
+# > set {_slots} to 9
+# > set {_name} to "&lExample menu"
+# > set {_type} to "HOPPER"
+# > opengui({_player},{_slots},{_name},{_type})
+# ==============
+# This example opens a GUI for the player with the name "Example name" as a hopper, you can also use other types:
+# ANVIL, BEACON, BREWING, CHEST, CRAFTING, CREATIVE, DISPENSER, DROPPER, ENCHANTING, ENDER_CHEST, FURNACE, HOPPER, MERCHANT, PLAYER, SHULKER_BOX, WORKBENCH
+# ==============
+# 2. Step: Add items to the GUI for the player:
+# > set {_player} to player
+# > set {_slot} to 1
+# > set {_item} to "diamond ore"
+# > set {_amount} to 1
+# > set {_name} to "&r&6&lFREE DIAMONDS!!!1"
+# > set {_lore} to "&r&fFREEEEEE! Click here!"
+# > set {_execute} to "execute console command ""give %{_player}% diamond_ore 1"""
+# > set {_close} to true
+# > setguiitem({_player},{_slot},{_item},{_amount},{_name},{_lore},{_execute},{_close})
+# ==============
+# This example sets 1 of diamond ore into slot 1 to the GUI, which is named "FREE DIAMOONDS!!!1" and has a lore like you can see above.
+# If a player clicks on this item, the text in {_execute} is going to be executed, also if {_close} is true, the inventory is closed on click.
+# You're done. Feel free to use it everywhere you like, be creative.
+# ==============
+# > Example, simply uncomment to test it out, ingame command: /test
+#command /test:
+#	trigger:
+#		opengui(player,9,"&6FREE STUFF","HOPPER")
+#		setguiitem(player,0,"diamond ore",1,"&r&6&lFREE DIAMONDS!!!1","&r&fFREEEEEE! Click here!","execute console command ""give %player% diamond_ore 1""",true)
+
+#Import all necessary java classes:
+import:
+	java.util.ArrayList
+	org.bukkit.Bukkit
+	org.bukkit.event.inventory.InventoryClickEvent
+	org.bukkit.event.inventory.InventoryCloseEvent
+	org.bukkit.inventory.Inventory
+	org.bukkit.inventory.ItemStack
+	org.bukkit.inventory.meta.ItemMeta
+	org.bukkit.event.inventory.InventoryType
+
+# Function: opengui - Opens a GUI
+# Arguments:
+# > <player>player, <integer>size, <text>name,[<text>inventory type]
+# > valid inventory types: ANVIL, BEACON, BREWING, CHEST, CRAFTING, CREATIVE, DISPENSER, DROPPER, ENCHANTING, ENDER_CHEST, FURNACE, HOPPER, MERCHANT, PLAYER, SHULKER_BOX, WORKBENCH
+# > view also here: #https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/inventory/InventoryType.html
+# Actions:
+# > Deletes set items from any old GUI by the defined player and opens the specified inventory,
+# > set the {SK::GUI::inv::%{_player}%} variable to inventory and then return
+function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolean:
+	delete {SK::GUI::items::%{_player}%::*}
+	# > If {_type} is CHEST (default)
+	if {_type} is "CHEST":
+		# > Execute Bukkit.createInventory with argument player, size (0, 9, 18, 27, 36, 45 or 54) and inventory name
+		set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
+	# > If it is not a chest, check the input and set the InventoryType:
+	# > This is done like this to avoid errors:
+	else:
+		if {_type} is "ANVIL":
+			set {_invtype} to InventoryType.ANVIL!
+		else if {_type} is "BEACON":
+			set {_invtype} to InventoryType.BEACON!
+		else if {_type} is "BREWING":
+			set {_invtype} to InventoryType.BREWING!
+		else if {_type} is "CHEST":
+			set {_invtype} to InventoryType.CHEST!
+		else if {_type} is "CRAFTING":
+			set {_invtype} to InventoryType.CRAFTING!
+		else if {_type} is "CREATIVE":
+			set {_invtype} to InventoryType.CREATIVE!
+		else if {_type} is "DISPENSER":
+			set {_invtype} to InventoryType.DISPENSER!
+		else if {_type} is "ENCHANTING":
+			set {_invtype} to InventoryType.ENCHANTING!
+		else if {_type} is "ENDER_CHEST":
+			set {_invtype} to InventoryType.ENDER_CHEST!
+		else if {_type} is "HOPPER":
+			set {_invtype} to InventoryType.HOPPER!
+		else if {_type} is "MERCHANT":
+			set {_invtype} to InventoryType.MERCHANT!
+		else if {_type} is "PLAYER":
+			set {_invtype} to InventoryType.PLAYER!
+		else if {_type} is "SHULKER_BOX":
+			set {_invtype} to InventoryType.SHULKER_BOX!
+		else if {_type} is "WORKBENCH":
+			set {_invtype} to InventoryType.WORKBENCH!
+		# > If {_invtype} has been found and set go forward:
+		if {_invtype} is set:
+			# > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
+			set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
+			# > Open the inventory to the player
+			{_player}.openInventory({_inventory})
+			# > Set the created inventory into the variable to check later, if the user clicks in the correct gui
+			set {SK::GUI::inv::%{_player}%} to {_inventory}
+			# > Everything went fine, return true.
+			return true
+		# > If not, print an error to the player who wanted to open the gui menu and stop the skript
+		else:
+			message "&5&lInvalid InventoryType: %{_type}%" to {_player}
+			stop
+
+# Function: setguiitem - Sets a item in a GUI
+# Arguments:
+# > <player>player, <integer>slot, <text>item,<integer>amount,<text>name,<text>lore,[<text>skript code to execute on click (like functions)],[<boolean>inventory close on click (true = yes)]
+# > Valid item: try it out, the function trys to parse everything it knows
+# Actions:
+# > Parses the item, creates a ItemStack, takes the ItemMeta out of it, creates a new Itemlore as a ArrayList,
+# > adds the lore to the Itemlore array, replace old ItemMeta with new ItemMeta to ItemStack.
+# > Now place the ItemStack to the defined slot in the inventory saved in {SK::GUI::inv::%{_player}%}.
+# > If {_exec} is not "", it adds the skript code to the variable {SK::GUI::items::%{_player}%::%{_slot}%}, 
+# > which is required on a click event, if something should happen.
+# > If {_close} is set to true, the variable {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is set to true,
+# > this allows the inventory to be closed on a click on the specified item.
+function setguiitem(player:player,slot:integer,item:text,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
+	set {_ItemStack} to {_item} parsed as item
+	set {_ItemStack} to {_ItemStack} named {_name}
+	set {_ItemMeta} to {_ItemStack}.getItemMeta()
+	set {_itemlore} to new ArrayList()
+	{_itemlore}.add({_lore})
+	{_ItemMeta}.setLore({_itemlore})
+	{_ItemStack}.setItemMeta({_ItemMeta})
+	set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_ItemStack}
+	if {_exec} != "":
+		set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+	if {_close} is true:
+		set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+
+# > Event - InventoryClickEvent
+# > This event gets triggered if a player clicks in his inventory.
+# > Actions:
+# > If the player's current inventory is the same as the inventory in {SK::GUI::inv::%{_player}%},
+# > the player is within a predefined menu.
+# > If there are items set for this GUI, cancel the event and execute actions:
+# > evaluate is a function to execute a string as skript code, which is used to allow the execution of functions trough a click on a item.
+# > If it was defined to close the players inventory, it is going to happen, if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true.
+on InventoryClickEvent:
+	set {_player} to event.getWhoClicked()
+	if {_player}'s current inventory is {SK::GUI::inv::%{_player}%}:
+		if size of {SK::GUI::items::%{_player}%::*} is not 0:
+			cancel event
+			set {_slot} to event.getRawSlot()
+			evaluate "%{SK::GUI::items::%{_player}%::%{_slot}%}%"
+			if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
+				close {_player}'s inventory
+
+# > Event - InventoryCloseEvent
+# > This event gets triggered if a player closes his.
+# > Actions:
+# > Deletes variables which may exist:
+on InventoryCloseEvent:
+	set {_player} to event.getPlayer()
+	delete {SK::GUI::inv::%{_player}%}
+	delete {SK::GUI::items::%{_player}%::*}
+	delete {SK::GUI::itemsclose::%{_player}%::*}
+
+# > Event - load
+# > This event is triggered on load of the skript.
+# > Actions:
+# > Deletes any variables that may exist due to corruption or server crash.
+on load:
+	delete {SK::GUI::inv::*}
+	delete {SK::GUI::items::*}
+	delete {SK::GUI::itemsclose::*}	
