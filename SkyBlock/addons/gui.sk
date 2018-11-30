@@ -160,6 +160,7 @@ on InventoryClickEvent:
 			set {_slot} to event.getRawSlot()
 			evaluate "%{SK::GUI::items::%{_player}%::%{_slot}%}%"
 			if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
+				wait 1 tick
 				close {_player}'s inventory
 
 # > Event - InventoryCloseEvent
