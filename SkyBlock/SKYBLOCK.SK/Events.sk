@@ -2,7 +2,7 @@
 import:
 	org.bukkit.event.player.PlayerArmorStandManipulateEvent
 	org.bukkit.event.entity.EntityDamageByEntityEvent
-	org.bukkit.event.vehicle.VehicleDestroyEvent
+	org.bukkit.event.vehicle.VehicleDamageEvent
 	org.bukkit.Location
 	org.bukkit.event.player.PlayerInteractEvent
 
@@ -26,8 +26,11 @@ on EntityDamageByEntityEvent:
 		if {_p} is "false":
 			cancel event
 
-on VehicleDestroyEvent:
-	set {_player} to event.getAttacker()
+# > Event: VehicleDamageEvent
+# > Triggered if a vehicle is damaged, this could be a minecart or a boat.
+# > Actions:
+# > If the attacker is a player, check if the player is allowed to damage the vehicle, if not, cancel it.
+on VehicleDamageEvent:	set {_player} to event.getAttacker()
 	if {_player} is a player:
 		set {_l} to event.getVehicle().getLocation()
 		set {_p} to checkprotect({_l},{_player})
