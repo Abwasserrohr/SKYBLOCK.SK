@@ -68,8 +68,7 @@ function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolea
 	delete {SK::GUI::items::%{_player}%::*}
 	# > If {_type} is CHEST (default)
 	if {_type} is "CHEST":
-		# > Execute Bukkit.createInventory with argument player, size (0, 9, 18, 27, 36, 45 or 54) and inventory name
-		set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
+		set {_invtype} to InventoryType.CHEST!
 	# > If it is not a chest, check the input and set the InventoryType:
 	# > This is done like this to avoid errors:
 	else:
@@ -102,19 +101,22 @@ function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolea
 		else if {_type} is "WORKBENCH":
 			set {_invtype} to InventoryType.WORKBENCH!
 		# > If {_invtype} has been found and set go forward:
-		if {_invtype} is set:
-			# > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
-			set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
-			# > Open the inventory to the player
-			{_player}.openInventory({_inventory})
-			# > Set the created inventory into the variable to check later, if the user clicks in the correct gui
-			set {SK::GUI::inv::%{_player}%} to {_inventory}
-			# > Everything went fine, return true.
-			return true
-		# > If not, print an error to the player who wanted to open the gui menu and stop the skript
+	if {_invtype} is set:
+		# > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
+		if {_type} is "CHEST":
+			set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
 		else:
-			message "&5&lInvalid InventoryType: %{_type}%" to {_player}
-			stop
+			set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
+		# > Open the inventory to the player
+		{_player}.openInventory({_inventory})
+		# > Set the created inventory into the variable to check later, if the user clicks in the correct gui
+		set {SK::GUI::inv::%{_player}%} to {_inventory}
+		# > Everything went fine, return true.
+		return true
+	# > If not, print an error to the player who wanted to open the gui menu and stop the skript
+	else:
+		message "&5&lInvalid InventoryType: %{_type}%" to {_player}
+		stop
 
 # Function: setguiitem - Sets a item in a GUI
 # Arguments:
@@ -152,7 +154,7 @@ function setguiitem(player:player,slot:integer,item:text,amount:integer,name:tex
 # > If it was defined to close the players inventory, it is going to happen, if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true.
 on InventoryClickEvent:
 	set {_player} to event.getWhoClicked()
-	if {_player}'s current inventory is {SK::GUI::inv::%{_player}%}:
+	if {SK::GUI::inv::%{_player}%} is set:
 		if size of {SK::GUI::items::%{_player}%::*} is not 0:
 			cancel event
 			set {_slot} to event.getRawSlot()
