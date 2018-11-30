@@ -12,6 +12,8 @@
 # ==============
 # How to use it:
 # ==============
+# > First use: Put this skript into your "plugins/Skript/scripts/" Folder, subfolders are possible too.
+# ==============
 # 1. Step: Open a GUI for a player:
 # > set {_player} to player
 # > set {_slots} to 9
