@@ -118,6 +118,9 @@ on respawn:
 on damage:
 	set {_prefix} to {SB::lang::prefix::%{Language::%attacker%}%}
 	set {_a} to {SB::lang::nopvp::%{Language::%attacker%}%}
+	if victim is a player:
+		if {SB::invincible::%victim%} is set:
+			cancel event
 	if attacker has permission "%{SB::config::buildpermission}%":
 		stop
 	if {SB::config::pvp} is false:
@@ -184,8 +187,8 @@ on script unload:
 
 	
 on join:
-	wait a ticks
-	execute console command "/effect give %player% minecraft:resistance 3 10 true"
+	wait a tick
+	set {SB::invincible::%player%} to 1
 	#todo check for default language in config.sk if there is "custom" choosen, let the user choose, if there is "api" choosen, use a api or database which has to be added.
 	if {SK::lang::%uuid of player%} is not set:
 		set {SK::lang::%uuid of player%} to "de"
@@ -198,6 +201,8 @@ on join:
 		teleport player to {SB::player::%uuid of player%::island::home::home}
 	else:
 		teleport player to {SB::config::spawn}
+	wait 5 seconds
+	delete {SB::invincible::%player%}
 	
 	
 on connect:
