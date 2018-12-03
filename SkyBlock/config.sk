@@ -120,7 +120,7 @@ on load:
 	set {SB::expblocks::nether_quartz_slab} to 15
 	
 	#Other Blocks
-	set {SB::expblocks::stone_brick} to 15
+	set {SB::expblocks::stone_brick} to 1.5
 	#Special Blocks:
 	set {SB::expblocks::enchantment_table} to 150
 	set {SB::expblocks::beacon} to 1000
