@@ -82,12 +82,12 @@ on load:
 
 	#EXP Blocks - Set how much experience a block should give for the level calculation:
 	#Only blocks, which are here, are going to give experience.
-	set {SB::expblocks::dirt_block} to 5
-	set {SB::expblocks::grass} to 5
-	set {SB::expblocks::sand} to 5
+	set {SB::expblocks::dirt_block} to 20
+	set {SB::expblocks::grass} to 20
+	set {SB::expblocks::sand} to 15
 	set {SB::expblocks::soil} to 5
-	set {SB::expblocks::cobble_block} to 2
-	set {SB::expblocks::stone_block} to 1
+	set {SB::expblocks::cobble_block} to 1
+	set {SB::expblocks::stone_block} to 1.5
 	set {SB::expblocks::slab} to 1
 	set {SB::expblocks::fence} to 2
 	set {SB::expblocks::dry_wall_sign} to 5
@@ -102,43 +102,43 @@ on load:
 	set {SB::expblocks::stem} to 2
 	set {SB::expblocks::stationary_water} to 0
 	set {SB::expblocks::stationary_lava} to 0
-	set {SB::expblocks::log} to 2
+	set {SB::expblocks::log} to 3
 	set {SB::expblocks::furnace} to 8
 	set {SB::expblocks::bedrock} to 0
-	set {SB::expblocks::wool} to 5
+	set {SB::expblocks::wool} to 2
 	set {SB::expblocks::pumpkin} to 1
 
 	#Blocks:
-	set {SB::expblocks::iron_block} to 40
-	set {SB::expblocks::block_of_diamond} to 200
+	set {SB::expblocks::iron_block} to 20
+	set {SB::expblocks::block_of_diamond} to 150
 	set {SB::expblocks::block_of_redstone} to 30
 	set {SB::expblocks::block_of_lapis_lazuli} to 50
-	set {SB::expblocks::emerald_block} to 150
-	set {SB::expblocks::gold_block} to 100
-	set {SB::expblocks::chiseled_quartz} to 50
-	set {SB::expblocks::quartz_pillar} to 50
-	set {SB::expblocks::nether_quartz_slab} to 15
+	set {SB::expblocks::emerald_block} to 75
+	set {SB::expblocks::gold_block} to 50
+	set {SB::expblocks::chiseled_quartz} to 25
+	set {SB::expblocks::quartz_pillar} to 25
+	set {SB::expblocks::nether_quartz_slab} to 10
 	
 	#Other Blocks
-	set {SB::expblocks::stone_brick} to 15
+	set {SB::expblocks::stone_brick} to 1.5
 	#Special Blocks:
-	set {SB::expblocks::enchantment_table} to 150
+	set {SB::expblocks::enchantment_table} to 250
 	set {SB::expblocks::beacon} to 1000
 	set {SB::expblocks::note_block} to 20
-	set {SB::expblocks::jukeboxes} to 50
+	set {SB::expblocks::jukeboxes} to 15
 	set {SB::expblocks::anvil} to 60
 	set {SB::expblocks::piston} to 4
 	set {SB::expblocks::hopper} to 4
 	set {SB::expblocks::glowstone_block} to 4
 	set {SB::expblocks::flower_pot} to 20
 	set {SB::expblocks::standing_banner} to 10
-	set {SB::expblocks::carpet} to 3
+	set {SB::expblocks::carpet} to 1.5
 	set {SB::expblocks::bed} to 3
 	set {SB::expblocks::redstone_wire} to 1
 
 	#Glass:
 	set {SB::expblocks::glass_block} to 20
-	set {SB::expblocks::glass_pane} to 20
+	set {SB::expblocks::glass_pane} to 10
 	#terracotta
 	set {SB::expblocks::glazed_terracotta} to 20
 	#Sandstone:
