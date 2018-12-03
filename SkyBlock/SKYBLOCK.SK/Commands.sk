@@ -467,6 +467,11 @@ command /island [<text>] [<text=1>]:
 					else:
 						message "%{_prefix}% %{SB::lang::leftis::%{SK::lang::%uuid of player%}%}%"
 						leaveisland(player, "owner")
+		
+		# > Argument: "kick"
+		# > If a player types in /island with the first argument "kick" and the second argument with the player name of the
+		# > player who should get kicked, then the following code is investigating if the user has an island, is the owner of his island,
+		# > has a member by that name on his member list and then fire the "leaveisland" function, if the player was found.
 		else if arg-1 is "kick":
 			if {SB::player::%uuid of player%::island::border1} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
@@ -475,7 +480,7 @@ command /island [<text>] [<text=1>]:
 					if arg-2 is set:
 						set {_kickplayer} to arg-2 parsed as offline player
 						set {_uuid} to uuid of {_kickplayer}
-						set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+						set {_loc} to {SB::player::%uuid of player%::island::bedrock}
 						set {_locx} to x-coord of {_loc}
 						set {_locy} to y-coord of {_loc}
 						set {_locz} to z-coord of {_loc}
@@ -491,7 +496,7 @@ command /island [<text>] [<text=1>]:
 								leaveisland({_p2}, "member")
 								stop
 						set {_a} to {SB::lang::plnotfound::%{SK::lang::%uuid of player%}%}
-						replace all "<arg-2>" with arg-2 in {_a}
+						replace all "<player>" with arg-2 in {_a}
 						message "%{_prefix}% %{_a}%"
 					else:
 						set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
