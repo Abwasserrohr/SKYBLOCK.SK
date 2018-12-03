@@ -16,13 +16,14 @@ on load:
 	set {SB::config::spawn} to location at 20.0, 87.0, 81.5 in "%{SB::config::world}%" parsed as world
 	set {SB::config::spawn}'s pitch to 0
 	set {SB::config::spawn}'s yaw to -95
+
 	# How much distance should be between islands:
 	set {SB::config::distance} to 100
 	
 	# On which height should islands be created
 	set {SB::config::height} to 100.5
 	
-	# Set the protection, dont know what this is doing, check it out!
+	# Set the protection, **not usable right now**. Border between two islands.
 	set {SB::config::protect} to "25"
 	
 	# Cooldown, how long to wait until the invite is no longer valid:
@@ -138,7 +139,7 @@ on load:
 
 	#Glass:
 	set {SB::expblocks::glass_block} to 20
-	set {SB::expblocks::glass_pane} to 10
+	set {SB::expblocks::glass_pane} to 7
 	#terracotta
 	set {SB::expblocks::glazed_terracotta} to 20
 	#Sandstone:
@@ -165,19 +166,19 @@ on load:
 	add nether quartz ore to {SB::oregen::*}
 	add 0.5 to {SB::oregenc::*}
 	add redstone ore to {SB::oregen::*}
-	add 2 to {SB::oregenc::*}
+	add 1.5 to {SB::oregenc::*}
 	add lapis ore to {SB::oregen::*}
-	add 3 to {SB::oregenc::*}
+	add 2.5 to {SB::oregenc::*}
 	add emerald ore to {SB::oregen::*}
-	add 4 to {SB::oregenc::*}
+	add 3.5 to {SB::oregenc::*}
 	add iron ore to {SB::oregen::*}
-	add 6 to {SB::oregenc::*}
+	add 4 to {SB::oregenc::*}
 	add coal ore to {SB::oregen::*}
-	add 10 to {SB::oregenc::*}
+	add 5 to {SB::oregenc::*}
 	add granite to {SB::oregen::*}
-	add 10 to {SB::oregenc::*}
+	add 5 to {SB::oregenc::*}
 	add andesite to {SB::oregen::*}
-	add 10 to {SB::oregenc::*}
+	add 5 to {SB::oregenc::*}
 	add diorite to {SB::oregen::*}
 	add 100 to {SB::oregenc::*}
 	add stone to {SB::oregen::*}
