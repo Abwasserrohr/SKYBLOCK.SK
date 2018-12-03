@@ -24,7 +24,7 @@ If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server a
 - Add customizable options into the config to make it easier to change
 - Allow the creation of addons
   - Test the skript and use feedback for addons
-- Add multible languages to the projectt
+- Add multible languages to the project
 - Create a documentation for server operators
   - Also include all variables which can be used by the server operator
 - Add a logo for the project
