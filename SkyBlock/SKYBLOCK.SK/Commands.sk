@@ -1,5 +1,5 @@
 command /island [<text>] [<text=1>]:
-	aliases: /is
+	aliases: /is, /sb, /skyblock
 	trigger:
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
 		if arg-1 is not set:
@@ -527,3 +527,63 @@ command /island [<text>] [<text=1>]:
 				message "%{_prefix}% %{SB::lang::isspawn::%{SK::lang::%uuid of player%}%}%"
 			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/3 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
+
+		# > Argument: "info"
+		# > If a player types in /island info, the the following code is being executed.
+		# > Actions:
+		# > Starts the "searchbedrock" function with the player as argument, if the return location is is not at y-coordinate -5, go forward.
+		# > Then it takes the location apart in x, y, z coordinates and gets all the variables from the main location of the island, where the
+		# > Bedrock is placed at and displays the data.
+		#
+		else if arg-1 is "info":
+			set {_bedrock} to searchbedrock(player)
+			if y-coordinate of {_bedrock} is -5:
+				#
+				# > Prints the defined spacers and a message that the island could not be found:
+				#
+				message "%{SB::config::spacer}%"
+				message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+				message "%{SB::config::spacer}%"
+			else:
+				set {_loc::1} to x-coord of {_bedrock}
+				set {_loc::2} to y-coord of {_bedrock}
+				set {_loc::3} to z-coord of {_bedrock}
+				
+				set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
+				set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
+				set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
+				set {_created} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
+				#
+				# > Go trough all members and add them as a player to a new array.
+				#
+				loop {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}:
+					add "%loop-value%" parsed as offline player to {_member::*} 
+				#
+				# > Prints the defined spacer:
+				#
+				message "%{SB::config::spacer}%"
+				#
+				# > Prints the header:
+				#
+				message "%{_prefix}% %{SB::lang::isinfo::%{SK::lang::%uuid of player%}%}%"
+				#
+				# > Prints the leader of the island:
+				#
+				message "%{_prefix}% %{SB::lang::isleader::%{SK::lang::%uuid of player%}%}% %{_uuid}%"
+				#
+				# > Prints the members, if there is at least one member:
+				#
+				if size of {_member::*} is not 0:
+					message "%{_prefix}% %{SB::lang::ismember::%{SK::lang::%uuid of player%}%}% %{_member::*}%"
+				#
+				# > Prints the island info:
+				#
+				message "%{_prefix}% %{SB::lang::isinfolevel::%{SK::lang::%uuid of player%}%}% %{_level}%"
+				#
+				# > Prints the creation date of the island:
+				#
+				message "%{_prefix}% %{SB::lang::iscreated::%{SK::lang::%uuid of player%}%}% %{_created}%"
+				#
+				# > Prints the defined spacer:
+				#
+				message "%{SB::config::spacer}%"
