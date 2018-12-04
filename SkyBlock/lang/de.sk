@@ -80,3 +80,17 @@ on script load:
 	set {SB::lang::protect::%{_lang}%} to "Dieses Gebiet ist gesichert."
 	set {SB::lang::clearkick::%{_lang}%} to "Der Server startet neu. Warte einen Moment."
 	set {SB::lang::nopvp::%{_lang}%} to "&cPvP ist hier nicht möglich."
+	
+	#
+	# > Command feedback messages
+	#
+	
+	#
+	# > /island info:
+	#
+	set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
+	set {SB::lang::isleader::%{_lang}%} to "Inselleiter:"
+	set {SB::lang::ismember::%{_lang}%} to "Mitglieder:"
+	set {SB::lang::isinfolevel::%{_lang}%} to "Level:"
+	set {SB::lang::iscreated::%{_lang}%} to "Erstellt:"
+	set {SB::lang::isinfonotfound::%{_lang}%} to "Insel konnte nicht gefunden werden."
