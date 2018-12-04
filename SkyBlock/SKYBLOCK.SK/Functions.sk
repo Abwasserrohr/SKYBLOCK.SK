@@ -408,7 +408,6 @@ function searchbedrock(p:player) :: location:
 			# > If the player is actually in this space, we return the location of the bedrock and
 			# > delete the {_search} variable to stop the while loop from doing more loops.
 			#
-			message "%{_loc}%" to {_p}
 			if location of {_p} is within {_lc::1} to {_lc::2}:
 				return {_loc}
 				delete {_search}
