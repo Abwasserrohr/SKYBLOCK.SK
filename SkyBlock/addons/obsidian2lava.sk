@@ -36,4 +36,4 @@ on block form of obsidian:
 	$ thread
 	loop all players:
 		if distance between loop-player and event-location < 30:
-			send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player-player%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%uuid of loop-player%}%}%" to loop-player
+			send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player
