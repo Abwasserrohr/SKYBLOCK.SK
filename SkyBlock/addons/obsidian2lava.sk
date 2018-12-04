@@ -1,6 +1,13 @@
-#This Skript reverts obidian back to lava, if clicked on it with a bucket
+#
+# > SKYBLOCK.SK Addon: obsidian2lava
+# > Revert obsidian to lava with a empty bucket.
+#
 
-#On rightclick with obsidian and an empty bucket:
+#
+# > Event: on rightclick on a obsidian block while holding a empty bucket
+# > Actions:
+# > The code below reverts obsidian back to lava, if the player has a empty bucket in his hand.
+#
 on rightclick on obsidian with a empty bucket:
 	#Check, if the player is not allowed:
 	set {_r} to checkprotect(location of event-block,player)
@@ -12,5 +19,21 @@ on rightclick on obsidian with a empty bucket:
 			remove 1 of empty bucket from player's inventory
 			if player's tool is air:
 				set player's tool to lava bucket
+				cancel event
 			else:
 				give 1 of lava bucket to player
+				cancel event
+
+#
+# > Event: on block form of obsidian
+# > This event happens, if water changes lava into obsidian, this is very bad, since lava is
+# > necessary to build a cobblestone generator to farm new cobblestone and other stone.
+# > Actions:
+# > Once this event is triggered, it loops all players on the server and if the distance between
+# > the loop-player and event-location is lower than 30, it informs the player about this addon.
+#
+on block form of obsidian:
+	$ thread
+	loop all players:
+		if distance between loop-player and event-location < 30:
+			send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player
