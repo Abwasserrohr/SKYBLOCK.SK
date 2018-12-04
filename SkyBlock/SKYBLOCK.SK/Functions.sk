@@ -274,8 +274,8 @@ function loadconfig():
 # > Arguments:
 # > <player>player
 # > Actions:
-# > Goes trough all possible island locations and check if player's location is within a calculated island,
-# > if no island matches, the function returns a location with y-coordinate -5.
+# > Goes trough all possible island locations and check if player's location is within a calculated island and returns the location,
+# > if no island matches, the function returns a location with y-coordinate -5 as a error.
 function searchbedrock(p:player) :: location:
 	#
 	# > Here, {_loc} is set to the center of the map, which is always at x0.5, yconfigured height, z0.5 and in a configured world.
