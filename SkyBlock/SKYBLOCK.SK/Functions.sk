@@ -326,15 +326,15 @@ function searchbedrock(p:player) :: location:
 			#
 			# > If the {_s} variable is 1 or 5, add the {_distance}*2 to the z- and x-coordinate.
 			# > Example, at the beginning, we are at the x like you can view below, then
-			# > if {_s} is 1 or 5, we're adding the {_distance}*2 to x and z coordinate.
+			# > if {_s} is 1 or 5, we're adding the {_distance}*2 to the z-coordinate.
 			# > Every "*" is a island, "x" is the center, where we start, example: server lobby.
 			# > Now, if {_s} is 1 or 5, the added {_distance}*2 points to "N", our new island location
 			# > which we calculated:
 			# > X
 			# > ^
 			# > | *  *  *  *  *
-			# > | *  *  *  N  *
-			# > | *  *  x  *  *
+			# > | *  *  *  *  *
+			# > | *  *  x  N  *
 			# > | *  *  *  *  *
 			# > | *  *  *  *  *
 			# > #-------------> Z
