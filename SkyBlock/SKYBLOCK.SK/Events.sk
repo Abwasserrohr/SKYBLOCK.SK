@@ -51,13 +51,13 @@ on PlayerInteractEvent:
 
 #If player places something, check for rights, false means no rights.
 on place:
-	set {_r} to checkprotect(location of event-entity,player)
+	set {_r} to checkprotect(location of event-block,player)
 	if {_r} is "false":
 		cancel event
 
 #Player beaks something, this is going to check if the user has no right and cancels:
 on break:
-	set {_r} to checkprotect(location of event-entity,player)
+	set {_r} to checkprotect(location of event-block,player)
 	if {_r} is "false":
 		cancel event
 
