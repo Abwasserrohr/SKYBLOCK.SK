@@ -168,6 +168,8 @@ on load:
 	add redstone ore to {SB::oregen::*}
 	add 1.5 to {SB::oregenc::*}
 	add lapis ore to {SB::oregen::*}
+	add 2 to {SB::oregenc::*}
+	add gold ore to {SB::oregen::*}
 	add 2.5 to {SB::oregenc::*}
 	add emerald ore to {SB::oregen::*}
 	add 3.5 to {SB::oregenc::*}
