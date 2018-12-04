@@ -23,8 +23,8 @@ on load:
 	# On which height should islands be created
 	set {SB::config::height} to 100.5
 	
-	# Set the protection, **not usable right now**. Border between two islands.
-	set {SB::config::protect} to "25"
+	# Set the protection border between islands (0 for no border):
+	set {SB::config::protect} to 1
 	
 	# Cooldown, how long to wait until the invite is no longer valid:
 	set {SB::config::invitecooldown} to 30
