@@ -64,7 +64,7 @@ on load:
 	#
 	# > If a spacer is needed in the chat, this is displayed:
 	#
-	set {SB::config::spacer} to "&7&l&m---------------------------------------------"
+	set {SB::config::spacer} to "%{SB::config::color::secondary::2}%&l&m---------------------------------------------"
 
 	#Schematics/Structure Files:
 	
