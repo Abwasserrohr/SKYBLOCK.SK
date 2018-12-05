@@ -199,6 +199,24 @@ on script load:
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
 	#
+	# > If we're done with deleting islands, also double check there is not a level entry left.
+	# > If there is one left, delete it and delete all variables to the island.
+	#
+	loop {SB::islvl::*}:
+		set {_loc::*} to loop-index split at "_"
+		set {_loc::1} to {_loc::1} parsed as number
+		set {_loc::2} to {_loc::2} parsed as number
+		set {_loc::3} to {_loc::3} parsed as number
+		set {_bedrock} to location at {_loc::1}, {_loc::2}, {_loc::3} in "%{SB::config::world}%" parsed as world
+		if block at {_bedrock} is air:
+			message "old island detected"
+			delete {SB::islvl::%loop-index%}
+			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
+			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
+			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
+			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
+
+	#
 	# > If we're done, allow players back on the server by disabling the whitelist.
 	#
 	execute console command "/whitelist off"
