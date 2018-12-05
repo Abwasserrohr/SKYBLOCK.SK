@@ -209,7 +209,6 @@ on script load:
 		set {_loc::3} to {_loc::3} parsed as number
 		set {_bedrock} to location at {_loc::1}, {_loc::2}, {_loc::3} in "%{SB::config::world}%" parsed as world
 		if block at {_bedrock} is air:
-			message "old island detected"
 			delete {SB::islvl::%loop-index%}
 			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
 			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
