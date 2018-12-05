@@ -154,19 +154,35 @@ on explode:
 	cancel event
 
 #Island removal process at startup:
+# > Event: on script load
+# > Actions:
+# > This is loaded once the skript is loaded, it deletes some variables which aren't needed anymore
+# > and also goes trough islands which should be deleted, all island locations are saved within
+# > the {deleteisland.1::*} and {deleteisland.2::*} array.
 on script load:
 	set {SB::searchprocess} to false
 	delete {SB::searchis::*}
 	delete {SB::hunger::*}
 	delete {SB::calcstatus::*}
 	delete {SB::actionload::*}
-
-	$ thread
+	
+	#
+	# > Loop trough all islands which should be deleted
+	#
 	loop {deleteisland.1::*}:
+		#
+		# > Wait a short time to give the server some break
+		#
 		wait 0.5 seconds
+		#
+		# > Set the local variables {_loc1} and {_loc2} to the two borders of the island
+		#
 		set {_loc1} to loop-value
-		set {_loc2} to {Deleteisland.2::%loop-index%}
+		set {_loc2} to {deleteisland.2::%loop-index%}
 
+		#
+		# > Go trough all the blocks within the two borders and remove them.
+		#
 		loop blocks within {_loc1} to {_loc2}:
 			if loop-block is chest or trapped chest:
 				clear loop-block's inventory
@@ -176,10 +192,16 @@ on script load:
 			if {_i} is 500:
 				wait 1 tick
 				delete {_i}
+		#
+		# > Delete the array entry, we're completed with the code above:
+		#
 		delete {deleteisland.1::%loop-index%}
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
-	execute console command "/whitelist on"
+	#
+	# > If we're done, allow players back on the server by disabling the whitelist.
+	#
+	execute console command "/whitelist off"
 
 on script unload:
 	execute console command "/whitelist on"
