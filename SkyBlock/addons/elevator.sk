@@ -11,7 +11,8 @@
 # ==============
 # How to use it:
 # ==============
-# > This skript doesn't need any setup on server side.
+# > This skript doesn't need any special setup on server side.
+# > First use: Place elevator.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
 # > Steps for users:
 # > 1: Place a sign on the bottom with the following contents:
 # > =Line 1: [Lift]
