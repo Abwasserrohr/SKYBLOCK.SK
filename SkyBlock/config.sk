@@ -68,8 +68,10 @@ on load:
 
 	#Schematics/Structure Files:
 	
-	#Add the name of the Schematic file here, it has to be in the WorldEdit folder:
-	set {_schematicname} to "testis"
+	#
+	# > Add the name of the file here, it should be in the islands folder of this skript, structures have to be 32x32x32 big:
+	#
+	set {_schematicname} to "default"
 	add {_schematicname} to {SB::schematics::schematic::*}
 	#Add the name that should be visible to the player, add a name for every language:
 	add "&rStandard" to {SB::schematics::name::de::*}
