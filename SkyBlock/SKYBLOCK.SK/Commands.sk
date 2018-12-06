@@ -95,7 +95,7 @@ command /island [<text>] [<text=1>]:
 						set {_chestloc} to {_loc}
 						set {_homeloc} to {_loc}
 						if {SB::config::isstorage} is "Structure":
-							execute console command "/setblock %{_loccx}% %{_loccy}% %{_loccz}% minecraft:structure_block[mode=load]{name:""%{_schematic}%"",posX:-2,posY:-1,posZ:-2,rotation:""NONE"",mirror:""NONE"",mode:""LOAD""} destroy"
+							execute console command "/setblock %{_loccx}% %{_loccy}% %{_loccz}% minecraft:structure_block[mode=load]{name:""%{_schematic}%"",posX:-16,posY:-1,posZ:-16,rotation:""NONE"",mirror:""NONE"",mode:""LOAD""} destroy"
 							wait 5 ticks
 							subtract 1 from y-coord of {_loc}
 							execute console command "/setblock %{_loccx}% %{_loccy}-1% %{_loccz}% minecraft:redstone_block"
