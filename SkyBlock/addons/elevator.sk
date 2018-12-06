@@ -57,14 +57,30 @@ on rightclick on sign:
 	if line 1 of event-block is {@sign_lift}:
 		set {_loc::1} to location of event-block
 		set {_loc::2} to {_loc::1}
+		#
+		# > If the event-block has the down content, set y-coordinate to 0
+		# > and remove 1 from the y-coordinate of the clicked block.
+		#
 		if line 2 of event-block is {@sign_down}:
 			set y-coordinate of {_loc::1} to 0
 			remove 1 from y-coordinate of {_loc::2}
+		#
+		# > If the event-block has the up content, set y-coordinate to 256
+		# > and add 1 to the y-coordinate of the clicked block.
+		#
 		else if line 2 of event-block is {@sign_up}:
 			set y-coordinate of {_loc::1} to 256
 			add 1 to y-coordinate of {_loc::2}
+		#
+		# > If the event-block has not either "Up" or "Down", stop here.
+		#
 		else:
 			stop
+		#
+		# > Loop trough all blocks between the elevator sign and the possible other elevator sign,
+		# > if found, it takes the difference between the clicked elevator and the found elevator and
+		# > changes the y-coordinate of the players location by this difference and then teleports the player.
+		#
 		loop blocks within {_loc::1} to {_loc::2}:
 			if loop-block is sign:
 				if line 1 of loop-block is {@sign_lift}:
@@ -75,6 +91,20 @@ on rightclick on sign:
 					else if line 2 of event-block is {@sign_up}:
 						set {_diff} to difference between y-coordinate of event-block and y-coordinate of loop-block
 						add {_diff} to y-coordinate of {_ploc}
+					#
+					# > If the block below the new player location is air, try to add 0.5 blocks to
+					# > make this save.
+					#
+					if the block below {_ploc} is air:
+						add 0.5 to y-coordinate of {_ploc}
+					#
+					# > If it is not save to stay on the now location now, stop here.
+					#
+					if the block below {_ploc} is air:
+						stop
+					#
+					# > It should be save to teleport the player to the new location now.
+					#
 					teleport player to {_ploc}
 
 #
