@@ -1,0 +1,125 @@
+#
+# ==============
+# elevator.sk v0.0.1
+# ==============
+# Let users build elevators using signs
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > This skript doesn't need any special setup on server side.
+# > First use: Place elevator.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Steps for users:
+# > 1: Place a sign on the bottom with the following contents:
+# > =Line 1: [Lift]
+# > =Line 2: Up
+# > =Line 3: Custom
+# > =Line 4: Custom
+# > 2: Place a sign on the top with the following contents:
+# > =Line 1: [Lift]
+# > =Line 2: Down
+# > =Line 3: Custom
+# > =Line 4: Custom
+# > Custom can replaced by players like they want to help orientation.
+# > The lift signs have to be on the same x and y axis to work.
+# ==============
+
+#
+# > The following options change the look of the skript
+#
+options:
+	#
+	# > Defines how the "Down" sign should look like:
+	#
+	sign_down: "↓ DOWN ↓"
+	#
+	# > Defines how the "Up" sign should look like:
+	#
+	sign_up: "↑ UP ↑"
+	#
+	# > Defines how the 1st line of the elevator sign should look like:
+	#
+	sign_lift: "&l[LIFT]"
+
+#
+# > Event - on rightclick on a sign
+# > Actions:
+# > This event gets triggered if someone rightclicks on a sign, then it is checked if
+# > the clicked block (event-block) is a elevator by checking the {@sign_lift} option.
+# > If it is a elevator, check if its going up or down and then go trough all blocks,
+# > below the sign or above, depending if it is going up or down.
+# > Then change the y-coordinate of the player to the difference between the two signs.
+#
+on rightclick on sign:
+	if line 1 of event-block is {@sign_lift}:
+		set {_loc::1} to location of event-block
+		set {_loc::2} to {_loc::1}
+		#
+		# > If the event-block has the down content, set y-coordinate to 0
+		# > and remove 1 from the y-coordinate of the clicked block.
+		#
+		if line 2 of event-block is {@sign_down}:
+			set y-coordinate of {_loc::1} to 0
+			remove 1 from y-coordinate of {_loc::2}
+		#
+		# > If the event-block has the up content, set y-coordinate to 256
+		# > and add 1 to the y-coordinate of the clicked block.
+		#
+		else if line 2 of event-block is {@sign_up}:
+			set y-coordinate of {_loc::1} to 256
+			add 1 to y-coordinate of {_loc::2}
+		#
+		# > If the event-block has not either "Up" or "Down", stop here.
+		#
+		else:
+			stop
+		#
+		# > Loop trough all blocks between the elevator sign and the possible other elevator sign,
+		# > if found, it takes the difference between the clicked elevator and the found elevator and
+		# > changes the y-coordinate of the players location by this difference and then teleports the player.
+		#
+		loop blocks within {_loc::1} to {_loc::2}:
+			if loop-block is sign:
+				if line 1 of loop-block is {@sign_lift}:
+					set {_ploc} to location of player
+					if line 2 of event-block is {@sign_down}:
+						set {_diff} to difference between y-coordinate of event-block and y-coordinate of loop-block
+						remove {_diff} from y-coordinate of {_ploc}
+					else if line 2 of event-block is {@sign_up}:
+						set {_diff} to difference between y-coordinate of event-block and y-coordinate of loop-block
+						add {_diff} to y-coordinate of {_ploc}
+					#
+					# > If the block below the new player location is air, try to add 0.5 blocks to
+					# > make this save.
+					#
+					if the block below {_ploc} is air:
+						add 0.5 to y-coordinate of {_ploc}
+					#
+					# > If it is not save to stay on the now location now, stop here.
+					#
+					if the block below {_ploc} is air:
+						stop
+					#
+					# > It should be save to teleport the player to the new location now.
+					#
+					teleport player to {_ploc}
+
+#
+# > Event - on sign change
+# > Actions:
+# > Once a sign is changed, this trigger is going to check if the first line of the
+# > changed sign has "[Lift]" as first line and "Up" or "Down" on the second line, if so,
+# > it is going to format the sign into the right format like defined in the options. 
+#
+on sign change:
+	if line 1 of event-block is "[Lift]":
+		if line 2 of event-block is "Up" or "Down":
+			set line 1 of event-block to {@sign_lift}
+			if line 2 of event-block is "Down":
+				set line 2 of event-block to {@sign_down}
+			if line 2 of event-block is "Up":
+				set line 2 of event-block to {@sign_up}

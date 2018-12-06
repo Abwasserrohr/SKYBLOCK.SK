@@ -24,8 +24,14 @@ function leaveisland(p:player, text:text):
 				set {_i} to loop-index
 				delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
 				stop loop
-				
-#Calculate the island level - executed in a thread
+#				
+# > Function: calcisland
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Calculates the island level by getting both borders on the island, then looping though all blocks and
+# > calculating all predefined experience bonuses from the configuration together to get a level.
+#
 function calcisland(p:player):
 	set {_exp} to 0 
 	set {_level} to 1
@@ -151,16 +157,24 @@ function checkprotect(l:location,p:player) :: text:
 		return {_r}
 	else:
 		return "true"
-
-#Prints message to player
+#
+# > Function: protectionmgs
+# > Actions:
+# > Prints a error message to the player that this area is protected.
+#
 function protectionmgs(p:player):
 	set {_uuid} to uuid of {_p}
 	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
 	set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
-	message "%{_prefix}% %{_a}%" to {_p}
-	#todo change this into a action bar to prevent spam: execute console command "/title %{_p}% actionbar {""text"":""%{_prefix}% %{_a}%""}"
+	actionload({_p}, {_a})
 
-#Prints tellraw message to player, on which the player can click and execute a command
+#
+# > Function: tellrawmsg1
+# > Arguments:
+# > <player>player, <text>text, <text>clickable text, <text>command
+# > Actions:
+# > Sends the player a clickable text message which executes a command on click.
+#
 function tellrawmsg1(p:player,t1:text,t2:text,c:text):
 	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
 
@@ -209,7 +223,7 @@ function deleteisland(p1: player):
 		delete {Islanddelete.%{_p1}%}
 	else:
 		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
-		message "%{_prefix}% %{_a}%" to {_p1}
+		actionload({_p1}, {_a})
 
 #Loading bar in actionbar and result
 function actionload(p: player, t:text):
@@ -475,3 +489,80 @@ function searchbedrock(p:player) :: location:
 			#
 			set {_loc} to location at 5, -5, 5 in "%{SB::config::world}%" parsed as world
 			return {_loc}
+
+#
+# > Import of all necessary classes for the loadislandstoworld function
+#
+import:
+	java.io.File
+	java.io.FileInputStream
+	java.io.FileOutputStream
+
+# > Function - loadislandstoworld:
+# > Arguments:
+# > none
+# > Actions:
+# > Once the configuration file is loaded, this function is executed.
+# > This function loads ".nbt" files from the "plugins/Skript/scripts/SkyBlock/islands" folder
+# > into the defined world folder.
+function loadislandstoworld():
+	#
+	# > Get a list all files in the folder of the "plugins/Skript/scripts/SkyBlock/islands" folder
+	#
+	set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/islands").listFiles()
+	#
+	# > Loop trough all the files
+	#
+	loop {_files::*}:
+		#
+		# > If the loop-value (file) ends with ".nbt", it should continue
+		#
+		set {_check} to loop-value.toString().endsWith(".nbt")
+		if {_check} is true:
+			#
+			# > Prints to console that it tries to copy import the files.
+			#
+			send "[SkyBlock] > Try to import %{_fname}% into your world..." to console
+			#
+			# > Get the name of the loop file.
+			#
+			set {_fname} to loop-value.getName()
+			#
+			# > Look if there is already a file with that name
+			#
+			set {_checkfile} to new File("%{SB::config::world}%/generated/minecraft/structures/%{_fname}%")
+			if {_checkfile}.isFile() is true:
+				#
+				# > Print that there is already a file with this name
+				#
+				send "[SkyBlock] > %{_fname}% is already set." to console
+			else:
+				#
+				# > There is no file with that name, copy it.
+				# > Set the {_source} to the loop file (our source)
+				#
+				set {_source} to loop-value
+				#
+				# > Set the {_dest} to our destination, which we already used with {_checckfile} above
+				#
+				set {_dest} to {_checkfile}
+				#
+				# > Set both stream channels to null
+				#
+				set {_sourceChannel} to null
+				set {_destChannel} to null
+				#
+				# > Open a new input and output stream to copy the files using transferFrom
+				#
+				set {_sourceChannel} to new FileInputStream({_source}).getChannel()
+				set {_destChannel} to new FileOutputStream({_dest}).getChannel()
+				#
+				# > Copy the file from the {_sourceChannel} to the {_destChannel}
+				#
+				{_destChannel}.transferFrom({_sourceChannel}, 0, {_sourceChannel}.size())
+				#
+				# > Close both streams and print a success message to console
+				#
+				{_sourceChannel}.close()
+				{_destChannel}.close()
+				send "[SkyBlock] > Successfully imported %{_fname}%!" to console
