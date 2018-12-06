@@ -24,8 +24,14 @@ function leaveisland(p:player, text:text):
 				set {_i} to loop-index
 				delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
 				stop loop
-				
-#Calculate the island level - executed in a thread
+#				
+# > Function: calcisland
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Calculates the island level by getting both borders on the island, then looping though all blocks and
+# > calculating all predefined experience bonuses from the configuration together to get a level.
+#
 function calcisland(p:player):
 	set {_exp} to 0 
 	set {_level} to 1
@@ -217,7 +223,7 @@ function deleteisland(p1: player):
 		delete {Islanddelete.%{_p1}%}
 	else:
 		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
-		message "%{_prefix}% %{_a}%" to {_p1}
+		actionload({_p1}, {_a})
 
 #Loading bar in actionbar and result
 function actionload(p: player, t:text):
