@@ -151,16 +151,24 @@ function checkprotect(l:location,p:player) :: text:
 		return {_r}
 	else:
 		return "true"
-
-#Prints message to player
+#
+# > Function: protectionmgs
+# > Actions:
+# > Prints a error message to the player that this area is protected.
+#
 function protectionmgs(p:player):
 	set {_uuid} to uuid of {_p}
 	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
 	set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
-	message "%{_prefix}% %{_a}%" to {_p}
-	#todo change this into a action bar to prevent spam: execute console command "/title %{_p}% actionbar {""text"":""%{_prefix}% %{_a}%""}"
+	actionload({_p}, {_a})
 
-#Prints tellraw message to player, on which the player can click and execute a command
+#
+# > Function: tellrawmsg1
+# > Arguments:
+# > <player>player, <text>text, <text>clickable text, <text>command
+# > Actions:
+# > Sends the player a clickable text message which executes a command on click.
+#
 function tellrawmsg1(p:player,t1:text,t2:text,c:text):
 	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
 
