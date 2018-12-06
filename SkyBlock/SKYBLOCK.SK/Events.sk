@@ -94,7 +94,7 @@ on world change:
 	if "%event-world%" contains "nether":
 		if {SB::config::portalenter} is "false":
 			make player execute command "/is home"
-			message "%{_prefix}% %{SB::lang::nonether::%{SK::lang::%uuid of player%}%}%"
+			actionload(player, {SB::lang::nonether::%{SK::lang::%uuid of player%}%})
 	#If player changes the world and is in the Island world, teleport the player back to the home to make sure player is not falling to death
 	if event-world is "%{SB::config::world}%":
 		make player execute command "/is home"
@@ -126,19 +126,19 @@ on damage:
 	if {SB::config::pvp} is false:
 		if attacker is a player:
 			if victim is a player:
-				message "%{_prefix}% %{_a}%" to attacker
+				actionload(attacker, {_a})
 				cancel event
 			stop
 	#todo double check this part, something doesnt work right here:
 	else:
 		if {SB::player::%uuid of attacker%::island::border1} is not set:
 			cancel event
-			message "%{_prefix}% %{_a}%" to attacker
+			actionload(attacker, {_a})
 		else:
 			set {_r} to checkislandowner(location of attacker, attacker)
 			if {_r} is "false":
 				cancel event
-				message "%{_prefix}% %{_a}%" to attacker
+				actionload(attacker, {_a})
 
 on ignition:
 	#todo add in config to ask:
