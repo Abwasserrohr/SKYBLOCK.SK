@@ -179,17 +179,17 @@ on load:
 	add diamond ore to {SB::oregen::*}
 	add 0.3 to {SB::oregenc::*}
 	add nether quartz ore to {SB::oregen::*}
-	add 0.5 to {SB::oregenc::*}
+	add 0.4 to {SB::oregenc::*}
 	add redstone ore to {SB::oregen::*}
-	add 1.5 to {SB::oregenc::*}
+	add 0.5 to {SB::oregenc::*}
 	add lapis ore to {SB::oregen::*}
-	add 2 to {SB::oregenc::*}
+	add 1 to {SB::oregenc::*}
 	add gold ore to {SB::oregen::*}
-	add 2.5 to {SB::oregenc::*}
+	add 1.5 to {SB::oregenc::*}
 	add emerald ore to {SB::oregen::*}
-	add 3.5 to {SB::oregenc::*}
+	add 1.5 to {SB::oregenc::*}
 	add iron ore to {SB::oregen::*}
-	add 4 to {SB::oregenc::*}
+	add 2 to {SB::oregenc::*}
 	add coal ore to {SB::oregen::*}
 	add 5 to {SB::oregenc::*}
 	add granite to {SB::oregen::*}
