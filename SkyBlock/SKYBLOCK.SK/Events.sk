@@ -235,6 +235,7 @@ on join:
 	if {Leave.%{_uuid}%} is set:
 		delete {Leave.%uuid of player%}
 		leaveisland(player, "member")
+		make player execute "/is leave"
 		send "%{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
 	if {SB::player::%uuid of player%::island::home::home} is set:
 		teleport player to {SB::player::%uuid of player%::island::home::home}
