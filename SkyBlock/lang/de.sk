@@ -150,3 +150,12 @@ on script load:
 	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
 	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
+
+	#
+	# > Ore Generator Addon
+	#
+	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
+	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
+	set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
+	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
+
