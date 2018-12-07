@@ -197,7 +197,7 @@ on load:
 	add andesite to {SB::oregen::*}
 	add 5 to {SB::oregenc::*}
 	add diorite to {SB::oregen::*}
-	add 1 to {SB::oregenc::*}
+	add 0.5 to {SB::oregenc::*}
 	add infested stone to {SB::oregen::*}
 	add 100 to {SB::oregenc::*}
 	add stone to {SB::oregen::*}
