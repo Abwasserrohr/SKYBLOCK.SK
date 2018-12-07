@@ -93,6 +93,9 @@ on script load:
 	set {SB::lang::isleave::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel verlassen %{_s1}%- %{_p1}%/is leave"
 	set {SB::lang::isgui::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSkyblock Menü %{_s1}%- %{_p1}%/is"
 	set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
+	set "%{_prefix}% %{SB::lang::isore::%{_lang}%" to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
+	set "%{_prefix}% %{SB::lang::isgen::%{_lang}%" to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
+
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
