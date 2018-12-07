@@ -353,7 +353,7 @@ command /island [<text>] [<text=1>]:
 				message "%{_p}% Calculate your level with /is calc -todo: translation" to player
 				message "%{SB::config::spacer}%"
 				set metadata value "IS-Level" of player to "%{_level}%"
-		else if arg-1 is "spawn" or "hub":
+		else if arg-1 is "spawn" or "lobby":
 			teleport player to {SB::config::spawn}
 		else if arg-1 is "invite":
 			if {SB::player::%uuid of player%::island::border1} is set:
