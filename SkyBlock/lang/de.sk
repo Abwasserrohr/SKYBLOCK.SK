@@ -158,4 +158,5 @@ on script load:
 	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
 	set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
 	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
+	set {SB::lang::og::disabled::%{_lang}%} to "Der Erz Generator kann nicht gelevelt werden."
 
