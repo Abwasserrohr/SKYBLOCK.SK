@@ -587,3 +587,21 @@ command /island [<text>] [<text=1>]:
 				# > Prints the defined spacer:
 				#
 				message "%{SB::config::spacer}%"
+		#
+		# > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
+		# > If a player types in /island generator, his current generator level is displayed
+		# > Actions:
+		# > Gets all the broken blocks and calculates the final level the player is currently on and
+		# > also display a visual appealing status, how far the next level is away. This is done in a function.
+		#
+		else if arg-1 is "generator" OR "gen" OR "oregen" OR "oregenerator":
+			generatorinfo(player)
+
+		#
+		# > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
+		# > If a player types in /island ores, his current chances are displayed
+		# > Actions:
+		# > Gets all the ore generator chances for the player
+		#
+		else if arg-1 is "ores" OR "ore" OR "orechances" OR "chances":
+			orechancesinfo(player)
