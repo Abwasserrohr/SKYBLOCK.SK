@@ -190,6 +190,11 @@ function generatorinfo(p:player):
 	set {_uuid} to uuid of {_p}
 	set {_player} to {_p}
 	#
+	# > If disabled, print the information to the player:
+	if {SB::config::oregeneratorleveling} is false:
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::og::disabled::%{SK::lang::%{_uuid}%}%}%" to {_player}
+		stop
+	#
 	# > If the player has no level, give him the level 0
 	if {SB::ogplayerlevel::%{_uuid}%} is not set:
 		set {SB::ogplayerlevel::%{_uuid}%} to 0
