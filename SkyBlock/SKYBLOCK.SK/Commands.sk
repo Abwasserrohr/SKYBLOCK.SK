@@ -525,6 +525,8 @@ command /island [<text>] [<text=1>]:
 				message "%{_prefix}% %{SB::lang::isleave::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isgui::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isspawn::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isore::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::isgen::%{SK::lang::%uuid of player%}%}%"
 			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/3 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 
