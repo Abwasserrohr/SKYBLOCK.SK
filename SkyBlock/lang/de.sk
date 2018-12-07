@@ -93,6 +93,8 @@ on script load:
 	set {SB::lang::isleave::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel verlassen %{_s1}%- %{_p1}%/is leave"
 	set {SB::lang::isgui::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSkyblock Menü %{_s1}%- %{_p1}%/is"
 	set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
+	set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
+	set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
@@ -150,3 +152,13 @@ on script load:
 	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
 	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
+
+	#
+	# > Ore Generator Addon
+	#
+	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
+	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
+	set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
+	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
+	set {SB::lang::og::disabled::%{_lang}%} to "Der Erz Generator kann nicht gelevelt werden."
+

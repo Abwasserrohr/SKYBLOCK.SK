@@ -1,4 +1,84 @@
-#If something flows:
+#
+# ==============
+# oregenerator.sk v0.0.2
+# ==============
+# Allows users to build cobblestone generators which generate ores.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > You need this only, if you want to use it without SKYBLOCK.SK, the configuration is already
+# > included in the default configuration of SKYBLOCK.SK.
+# > Place this file into your "plugins/Skript/scripts" folder.
+# > Add the following variables into your main skript on load to give them a chance
+# > of 0.2 to get a diamond ore in the generator, you can add more like you want.
+# > Add bigger chances at the end and delete before adding new ones on load:
+# > delete {SB::oregenc::*}
+# > delete {SB::oregen::*}
+# > add 0.2 to {SB::oregenc::*}
+# > add diamond ore to {SB::oregen::*}
+# > add 1 to {SB::oregenc::*}
+# > add iron ore to {SB::oregen::*}
+# > -------------
+# > Change the settings on load like you want, example:
+#
+# > Mutli level ore generator - Set to false to disable
+#
+# > set {SB::config::oregeneratorleveling} to true
+#
+# > Increase ore spawning chances by percentage for every level
+# > Example: 2 increases the chance of 0.2% to 0,204%
+#
+# > set {SB::config::oregenlevelbonus} to 2
+#
+# > How many stone blocks have to be produced until a new level is hit
+#
+# > set {SB::config::oregennewlevel} to 1000
+#
+# > Increase the difficulty to get the next ore generator level by multiplying it:
+#
+# > set {SB::config::oregenlevelmultiplyer} to 5
+#
+# > Set the max. level bonus in percentage
+# > 20 is a max. bonus of 20% on the chances
+#
+# > set {SB::config::oregenmaxlevelbonus} to 100
+#
+# > Ore generator leveling per island, set this to true to disable
+# > ore generation leveling for each player.
+#
+# > set {SB::config::oregenperisland} to false
+# > -------------
+# > Integrate the following translation variable into your skript:
+# > set {_lang} to en
+# > set {SB::lang::og::name::%{_lang}%} to "Ore Generator: "
+# > set {SB::lang::og::currentlvl::%{_lang}%} to "Current Level: "
+# > set {SB::lang::og::progress::%{_lang}%} to "Progress: <c> / <n> Blocks"
+# > set {SB::lang::og::chancesforyou::%{_lang}%} to "Ore Generator chances for you:"
+# > Now you're done. If you have a skript with commands, you can use the following functions
+# > to inform the player about his stats:
+# > generatorinfo(player) - Displays a message about the current ore generator level
+# > orechancesinfo(player) - Displays the current chances of ores spawning on the generator for the player
+# > ------------
+# > Setting a color scheme with variables is suggested:
+# > set {SB::config::color::primary::1} to "&6"
+# > set {SB::config::color::primary::2} to "&e"
+# > set {SB::config::color::secondary::2} to "&7"
+# > set {SB::config::color::background::1} to "&8"
+# > -------------
+# > You're done! Have fun using a ore generator.
+# ==============
+
+#
+# > Event: on flow
+# > Triggered if water or lava is flowing
+# > Actions:
+# > If the event-block is lava and in radius of 1 blocks around this block is a cobblestone,
+# > execute the oregeneratorplace function with the location of the cobblestone.
 on flow:
 	#If the block that flows is lava:
 	if event-block is lava:
@@ -7,11 +87,214 @@ on flow:
 		loop blocks in radius 1 of event-block:
 			if y-coordinate of event-block is y-coordinate of loop-block:
 				if loop-block is cobblestone:
-					#Loop through all chances:
-					loop {SB::oregenc::*}:
-						chance of loop-value-2%:
-							#If chance is successful, get the loop index number of the {SB::oregenc::*} list and 
-							#then get the block with the same index out of {SB::oregen::%loop-index-1%}
-							cancel event
-							set location of loop-block-1 to {SB::oregen::%loop-index-1%}
-							stop
+					oregeneratorplace(location of loop-block)
+
+#
+# > Function - oregeneratorplace:
+# > Arguments:
+# > <location>locaction of a on flow event-blockm
+# > Actions:
+# > Calculate the current level depending on how many blocks have been procuced and
+# > then generate the blocks depending on their chances. Either with enabled,
+# > ore generator leveling or without.
+function oregeneratorplace(l:location):
+	#
+	# > If ore generator leveling is on, go trough this code:
+	if {SB::config::oregeneratorleveling} is true:
+		#
+		# > Go trough all players in radius of 20 around the location and take the first one,
+		# > once one has been found, stop searching and go forward.
+		loop players in radius 20 of {_l}:
+			set {_uuid} to uuid of loop-player
+			set {_player} to loop-player
+			stop loop
+		#
+		# > Add 1 block to the stats variable, since one is being generated right now
+		add 1 to {SB::ogplayerblocks::%{_uuid}%}
+		#
+		# > If the ore generator level of the player using it has no level at all, set it to 0
+		if {SB::ogplayerlevel::%{_uuid}%} is not set:
+			set {SB::ogplayerlevel::%{_uuid}%} to 0
+		#
+		# > Set {_defaultlvl} to the current amount of blocks the player has created using a ore generator
+		set {_defaultlvl} to {SB::ogplayerblocks::%{_uuid}%} 
+		#
+		# > Set {_level} to 0, it is going to be calculated below:
+		set {_level} to 0
+		
+		#
+		# > Subtract the {_defaultlvl} with the in the configuration amount, how many blocks have be produced to get a new level:
+		set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregennewlevel})
+
+		#
+		# > Sets {_blocksneeded} to the blocks which are needed to level up:
+		set {_blocksneeded} to {SB::config::oregennewlevel}
+		#
+		# > Loop through as many times as needed until {_defaultlvl} gets smaller than 1.
+		# > If it is bigger than 1, add one level and apply the defined multiplyer to 
+		# > make it harder go get higher levels. (Configurable)
+		loop {_defaultlvl} times:
+			if {_defaultlvl} >= 1:
+				set {_blocksneeded} to ({_blocksneeded} * {SB::config::oregenlevelmultiplyer})
+				add 1 to {_level}
+				set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregenlevelmultiplyer})
+			else:
+				stop loop
+		#
+		# > Loop all blocks until a chance has been hit and a block is being set.
+		loop {SB::oregenc::*}:
+			#
+			# > Calculate the percentage, add it to the default percentages and set it into {_chance}:
+			set {_chance} to loop-value+((loop-value/100)*({SB::config::oregenlevelbonus}*{_level}))
+			#
+			# > Some players might do only this, limit the chance, with a maximum level bonus,
+			# > defined in the configuration. Does the samle like above.
+			set {_maxchance} to loop-value+((loop-value/100)*{SB::config::oregenmaxlevelbonus})
+			#
+			# > If the chance is either bigger than the {_maxchance} or 100, set it to {_maxchance} or 100.
+			if {_chance} is bigger than {_maxchance}:
+				set {_chance} to {_maxchance}
+			if {_chance} is bigger than 100:
+				set {_chance} to 100
+
+			#
+			# > This is going to give the player a chance in a percentage, which is defined in {_chance}.
+			chance of {_chance}%:
+				#
+				# > If the player has been lucky, this is setting the block to the new "lucky" block and then
+				# > stops the function.
+				set block at {_l} to {SB::oregen::%loop-index%}
+				stop
+	#
+	# > If ore generator leveling is disabled, go trough this code:
+	else:
+		loop {SB::oregenc::*}:
+			#
+			# > This is going to give the player a chance in a percentage, which is defined in loop-value.
+			chance of loop-value%:
+				#
+				# > If the player has been lucky, this is setting the block to the new "lucky" block and then
+				# > stops the function.
+				set block at {_l} to {SB::oregen::%loop-index%}
+				stop
+#
+# > Function - generatorinfo:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Prints the current ore generator level, also how many block are left
+# > until the next level up, a progress bar makes it fancier.
+function generatorinfo(p:player):
+	#
+	# > Set new variables for the player:
+	set {_uuid} to uuid of {_p}
+	set {_player} to {_p}
+	#
+	# > If disabled, print the information to the player:
+	if {SB::config::oregeneratorleveling} is false:
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::og::disabled::%{SK::lang::%{_uuid}%}%}%" to {_player}
+		stop
+	#
+	# > If the player has no level, give him the level 0
+	if {SB::ogplayerlevel::%{_uuid}%} is not set:
+		set {SB::ogplayerlevel::%{_uuid}%} to 0
+	#
+	# > Set {_defaultlvl} to all blocks that have been created in the past
+	set {_defaultlvl} to {SB::ogplayerblocks::%{_uuid}%}
+	#
+	# > Set {_level} to 0, calculate later
+	set {_level} to 0
+	#
+	# > Subtract the {_defaultlvl} with the in the configuration amount, how many blocks have be produced to get a new level:
+	set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregennewlevel})
+	#
+	# > Sets {_blocksneeded} to the blocks which are needed to level up:
+	set {_blocksneeded} to {SB::config::oregennewlevel}
+	#
+	# > Loop through as many times as needed until {_defaultlvl} gets smaller than 1.
+	# > If it is bigger than 1, add one level and apply the defined multiplyer to 
+	# > make it harder go get higher levels.
+	loop {_defaultlvl} times:
+		if {_defaultlvl} >= 1:
+			set {_blocksneeded} to ({_blocksneeded} * {SB::config::oregenlevelmultiplyer})
+			add 1 to {_level}
+			set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregenlevelmultiplyer})
+		else:
+			stop loop
+	#
+	# > Multible messages are being print below, set a {_prefix} variable to the prefix message
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	# 
+	# > Print a spacer
+	send "%{SB::config::spacer}%" to {_player}
+	#
+	# > Prints the name of the menu, here: ore generator
+	send "%{_prefix}% %{SB::lang::og::name::%{SK::lang::%{_uuid}%}%}%" to {_player}
+	#
+	# > Prints the current level
+	send "%{_prefix}% %{SB::lang::og::currentlvl::%{SK::lang::%{_uuid}%}%}% %{_level}%" to {_player}
+
+	#
+	# > This is the percentage bar, it contains out of 100 x | and for each percentage, &7| is getting replaced with &6|&7,
+	# > the color codes are a example, since predefined color schemes are used.
+	set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
+	set {_progressloop} to {_defaultlvl} * 100
+	loop {_progressloop} times:
+		replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
+	#
+	# > Print the visual level bar to the player, also show a percentage on the side.
+	send "%{_prefix}% %{_progress}% (%{_progressloop}%%%)" to {_player}
+	#
+	# > Set the progress {_pr} variable to the progress message from the language and replace <c> with current
+	# > block amount and <n> with the block amount needed for level up.
+	set {_pr} to {SB::lang::og::progress::%{SK::lang::%{_uuid}%}%}
+	replace all "<c>" with "%{SB::ogplayerblocks::%{_uuid}%}%" in {_pr}
+	replace all "<n>" with "%{_blocksneeded}%" in {_pr}
+	send "%{_prefix}% %{_pr}%" to {_player}
+	# 
+	# > Print a spacer
+	send "%{SB::config::spacer}%" to {_player}
+
+#
+# > Function - orechancesinfo:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Shows the current chances the player has to get ores.
+function orechancesinfo(p:player):
+	#
+	# > Sets the variables for the player
+	set {_uuid} to uuid of {_p}
+	set {_player} to {_p}
+	#
+	# > Prints a spacer
+	send "%{SB::config::spacer}%" to {_player}
+	#
+	# > Multible messages are being print below, set a {_prefix} variable to the prefix message
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	#
+	# > Prints the message from language file: Chances for you:
+	send "%{_prefix}% %{SB::lang::og::chancesforyou::%{SK::lang::%{_uuid}%}%}%" to {_player}
+	#
+	# > Loop trough all available blocks and display the actual chance, either if leveling disabled directly
+	# > or by the level of the player.
+	loop {SB::oregenc::*}:
+		if {SB::config::oregeneratorleveling} is false:
+			send "%{_prefix}% %loop-value%%%: %{SB::oregen::%loop-index%}%" to {_player}
+		else:
+			#
+			# > Calculate the chance depending on the level by percentage. Also the maxium chance.
+			set {_chance} to loop-value+((loop-value/100)*({SB::config::oregenlevelbonus}*{SB::ogplayerlevel::%{_uuid}%}))
+			set {_maxchance} to loop-value+((loop-value/100)*{SB::config::oregenmaxlevelbonus})
+			#
+			# > If {_chance} is bigger than {_maxchance}, set it to {_maxchance}
+			if {_chance} is bigger than {_maxchance}:
+				set {_chance} to {_maxchance}
+			#
+			# > If the chance is higher, set it to 100, since 100 is always.
+			if {_chance} is bigger than 100:
+				set {_chance} to 100
+			send "%{_prefix}% %{_chance}%%%: %{SB::oregen::%loop-index%}%" to {_player}
+	#
+	# > Prints a spacer
+	send "%{SB::config::spacer}%" to {_player}
