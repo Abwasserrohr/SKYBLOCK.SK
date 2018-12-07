@@ -161,33 +161,6 @@ on load:
 	set {SB::expblocks::sandstone_block} to 15
 	#Water blocks:
 	set {SB::expblocks::living_coral_block} to 15
-	
-	#
-	# > Mutli level ore generator - Set to false to disable
-	#
-	set {SB::config::oregeneratorleveling} to true
-	
-	#
-	# > Increase ore spawning chances by percentage for every level
-	# > Example: 2 increases the chance of 0.2% to 0,204%
-	#
-	set {SB::config::oregenlevelbonus} to 2
-
-	#
-	# > How many stone blocks have to be produced until a new level is hit
-	#
-	set {SB::config::oregennewlevel} to 1000
-	
-	#
-	# > Increase the difficulty to get the next ore generator level by multiplying it:
-	#
-	set {SB::config::oregenlevelmultiplyer} to 5
-	
-	#
-	# > Set the max. level bonus in percentage
-	# > 20 is a max. bonus of 20% on the chances
-	#
-	set {SB::config::oregenmaxlevelbonus} to 100
 
 #
 # ADDON Configurations
@@ -228,6 +201,33 @@ on load:
 	add infested stone to {SB::oregen::*}
 	add 100 to {SB::oregenc::*}
 	add stone to {SB::oregen::*}
+	
+	#
+	# > Mutli level ore generator - Set to false to disable
+	#
+	set {SB::config::oregeneratorleveling} to true
+	
+	#
+	# > Increase ore spawning chances by percentage for every level
+	# > Example: 2 increases the chance of 0.2% to 0,204%
+	#
+	set {SB::config::oregenlevelbonus} to 2
+
+	#
+	# > How many stone blocks have to be produced until a new level is hit
+	#
+	set {SB::config::oregennewlevel} to 1000
+	
+	#
+	# > Increase the difficulty to get the next ore generator level by multiplying it:
+	#
+	set {SB::config::oregenlevelmultiplyer} to 5
+	
+	#
+	# > Set the max. level bonus in percentage
+	# > 20 is a max. bonus of 20% on the chances
+	#
+	set {SB::config::oregenmaxlevelbonus} to 100
 
 #
 # > Functions to start after config loaded, do not change this if you don't know what you're doing.
