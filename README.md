@@ -14,7 +14,7 @@ SKYBLOCK.SK allows server operators to open the files plain in any editor of the
 Thanks to the simplicity of Skript, server operators can use pseudocode like code, which is very easy to read and to change without getting in contact with Java. Skript is [well documented](http://skriptlang.github.io/Skript/), free and accessible to everyone who can read and write.
 
 ### Demo servers
-If you're runnung SKYBLOCK.SK, feel free to inform us, then we add your server address into this section.
+If you're running SKYBLOCK.SK, feel free to create a issue to get your server displayed here.
 - join.skyroad.me
   - [Website](https://skyroad.me)
   - [Discord](https://discord.gg/FRuK5BC)
