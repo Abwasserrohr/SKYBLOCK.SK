@@ -138,6 +138,8 @@ function oregeneratorplace(l:location):
 				set {_blocksneeded} to ({_blocksneeded} * {SB::config::oregenlevelmultiplyer})
 				add 1 to {_level}
 				set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregenlevelmultiplyer})
+				if {_level} is bigger than {SB::ogplayerlevel::%{_uuid}%}:
+					set {SB::ogplayerlevel::%{_uuid}%} to {_level}
 			else:
 				stop loop
 		#
