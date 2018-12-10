@@ -11,8 +11,19 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		# > Set prefix for messages
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
 		#
+		# > Argument: "go" ("home" OR "tp")
+		# > Teleports the user to the defined player
+		# > Actions:
+		# > Teleports the player to the defined player island
+		if arg-1 is "go" OR "home" OR "tp":
+			set {_player} to arg-2 parsed as offline player
+			set {_uuid} to uuid of {_player}
+			if {SB::player::%{_uuid}%::island::home::home} is set:
+				teleport player to {SB::player::%{_uuid}%::island::home::home}
+			stop
+		#
 		# > If something should be done with an island, this is the code:
-		if arg-1 is "island":
+		else if arg-1 is "island":
 			#
 			# > Argument: "purge"
 			# > If the user types in /islandadmin island purge <number>, islands, which have been inactive for the defined
@@ -33,13 +44,163 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 				if arg-4 is "purgeok":
 					loop {_delislands::*}:
 						deleteisland({SB::island::%loop-index%::leader})
-					message "%size of {_delislands::*}% islands have been deleted."
-					message "The islands are removed on the next restart."
+					set {_a} to {SB::lang::isadmin::deletedxis::%{SK::lang::%uuid of player%}%}
+					replace all "<amount>" with "%size of {_delislands::*}%" in {_a}
+					message "%{_prefix}% %{_a}%"
+					message "%{_prefix}% %{SB::lang::isadmin::isremovedonrestart::%{SK::lang::%uuid of player%}%}%"
 					stop
-				message "%size of {_delislands::*}% islands would be deleted, do you want to delete?"
-				set {_prefix} to "Are you sure to delete %size of {_delislands::*}% islands?"
-				set {_msg} to "&6&lYes."
+				#
+				# > Create a tellraw to ask if the user really wants to purge the islands
+				set {_a} to {SB::lang::isadmin::xwouldbedeleted::%{SK::lang::%uuid of player%}%}
+				replace all "<amount>" with "%size of {_delislands::*}%" in {_a}
+				message "%{_prefix}% %{_a}%"
+				set {_a} to {SB::lang::isadmin::areyousuretodelete::%{SK::lang::%uuid of player%}%}
+				replace all "<amount>" with "%size of {_delislands::*}%" in {_a}
+				set {_prefix} to "%{_prefix}% %{_a}%"
+				set {_msg} to "%{SB::lang::isadmin::yes::%{SK::lang::%uuid of player%}%}%"
 				tellrawmsg1(player,{_prefix},{_msg},"/islandadmin island purge %arg-3% purgeok")
+			if arg-2 is "delete":
+				if arg-4 is "deleteok":
+					set {_player} to arg-3 parsed as offline player
+					#
+					# > Deletes the island
+					deleteisland({_player})
+					#
+					# > Prints a success message
+					set {_a} to {SB::lang::isadmin::islandofdeleted::%{SK::lang::%uuid of player%}%}
+					replace all "<player>" with "%{_player}%" in {_a}
+					message "%{_prefix}% %{_a}%"
+				set {_bedrock} to searchbedrock(player)
+				if y-coordinate of {_bedrock} is -5:
+					#
+					# > Prints the defined spacers and a message that the island could not be found:
+					#
+					message "%{SB::config::spacer}%"
+					message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+					message "%{SB::config::spacer}%"
+					stop
+				else:
+					set {_loc::1} to x-coord of {_bedrock}
+					set {_loc::2} to y-coord of {_bedrock}
+					set {_loc::3} to z-coord of {_bedrock}
+					#
+					# > If there is a leader set to this island, create a promt if it should be really deleted
+					if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is set:
+						set {_a} to {SB::lang::isadmin::suretodeleteisofp::%{SK::lang::%uuid of player%}%}
+						replace all "<player>" with "%{_player}%" in {_a}
+						set {_prefix} to "%{_prefix}% %{_a}%"
+						set {_msg} to "%{SB::lang::isadmin::yes::%{SK::lang::%uuid of player%}%}%"
+						tellrawmsg1(player,{_prefix},{_msg},"/islandadmin island delete %{SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player% deleteok")
+
+			#
+			# > Argument: "addmember"
+			# > If the user types in /islandadmin island addmember <player>, the defined player is added to the island.
+			# > Actions:
+			# > Adds the player to the island the executor is standing on.
+			if arg-2 is "addmember":
+				set {_player} to arg-3 parsed as offline player
+				set {_uuid} to uuid of {_player}
+				set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+				if {_bedrock} is set:
+					set {_a} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
+					replace all "<player>" with "%{_player}%" in {_a}
+					message "%{_prefix}% %{_a}%"
+					stop
+				
+				set {_bedrock} to searchbedrock(player)
+				if y-coordinate of {_bedrock} is -5:
+					#
+					# > Prints the defined spacers and a message that the island could not be found:
+					#
+					message "%{SB::config::spacer}%"
+					message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+					message "%{SB::config::spacer}%"
+					stop
+				else:
+
+					set {_loc::1} to x-coord of {_bedrock}
+					set {_loc::2} to y-coord of {_bedrock}
+					set {_loc::3} to z-coord of {_bedrock}
+					
+					if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is "---":
+						set {SB::player::%{_uuid}%::island::leader} to {_uuid}
+						set {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} to {_uuid}
+					else:
+						add uuid of player to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}
+
+					#
+					# > Sets everything needed to have a working island
+					set {SB::player::%{_uuid}%::island::bedrock} to {_bedrock}
+					set {SB::player::%{_uuid}%::island::leader} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
+					add 1 to y-coord of {_bedrock}
+					set {SB::player::%{_uuid}%::island::home::home} to {_bedrock}
+					
+					set {_l::1} to {_bedrock}
+					set {_l::2} to {_bedrock}
+					add ({SB::config::distance} - {SB::config::protect}) to x-coord of {_l::1}
+					add ({SB::config::distance} - {SB::config::protect}) to z-coord of {_l::1}
+					subtract ({SB::config::distance} - {SB::config::protect}) from x-coord of {_l::2}
+					subtract ({SB::config::distance} - {SB::config::protect}) from z-coord of {_l::2}
+					set y-coord of {_l::1} to 256
+					set y-coord of {_l::2} to 0
+					#
+					# > Creates the borders again. 
+					set {SB::player::%{_uuid}%::island::border1} to {_l::1}
+					set {SB::player::%{_uuid}%::island::border2} to {_l::2}
+				stop
+				
+			#
+			# > Argument: "kickall"
+			# > If the user types in /islandadmin island kickall, all players of the current island are kicked.
+			# > Actions:
+			# > Kicks everyone on the island the player is currently at without deleting it.
+			if arg-2 is "kickall":
+				#
+				# > "kickok" is a argument which is used by a tellraw prompt to accept if it
+				# > should really kick all players on that island.
+				if arg-3 is "kickok":
+					#
+					# > Set the leader and if the leader is existing, kick everyone from the island
+					set {_leader} to arg-4 parsed as offline player
+					if {_leader} is set:
+						set {_uuid} to uuid of {_leader}
+						set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+						set {_locx} to x-coord of {_bedrock}
+						set {_locy} to y-coord of {_bedrock}
+						set {_locz} to z-coord of {_bedrock}
+						#
+						# > Loop trough all members and also delete them from the list
+						loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+							set {_player} to loop-value parsed as offline player
+							leaveisland({_player}, "member")
+							delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
+						leaveisland({_leader}, "owner")
+						set {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader} to "---"
+						message "%{_prefix}% %{SB::lang::isadmin::kickall::%{SK::lang::%uuid of player%}%}%"
+				set {_bedrock} to searchbedrock(player)
+				if y-coordinate of {_bedrock} is -5:
+					#
+					# > Prints the defined spacers and a message that the island could not be found:
+					#
+					message "%{SB::config::spacer}%"
+					message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+					message "%{SB::config::spacer}%"
+				else:
+					set {_loc::1} to x-coord of {_bedrock}
+					set {_loc::2} to y-coord of {_bedrock}
+					set {_loc::3} to z-coord of {_bedrock}
+					#
+					# > Ask the user if everyone should be kicked, the user has to click on the tellraw prompt
+					# > to accept it, it runs another command which is going to kick all members.
+					set {_user} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
+					
+					#
+					# > Create a tellraw if everyone should be kicked from the island
+					set {_a} to {SB::lang::isadmin::kickallprompt::%{SK::lang::%uuid of player%}%}
+					replace all "<player>" with "%{_user}%" in {_a}
+					set {_prefix} to "%{_prefix}% %{_a}%"
+					set {_msg} to "%{SB::lang::isadmin::yes::%{SK::lang::%uuid of player%}%}%"
+					tellrawmsg1(player,{_prefix},{_msg},"/islandadmin island kickall kickok %{_user}%")
 
 			#
 			# > Argument: "changebiome"
@@ -54,7 +215,6 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 					if y-coordinate of {_bedrock} is -5:
 						#
 						# > Prints the defined spacers and a message that the island could not be found:
-						#
 						message "%{SB::config::spacer}%"
 						message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
 						message "%{SB::config::spacer}%"
@@ -81,6 +241,155 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 				#
 				# > Run the function to change the biome.
 				changebiome({_user},arg-3,arg-3)
+			if arg-2 is "changeleader":
+				if arg-4 is "changeok":
+					if arg-5 is set:
+						set {_newowner} to arg-3 parsed as offline player
+						set {_oldowner} to arg-5 parsed as offline player
+						set {_oldowneruuid} to uuid of {_oldowner}
+						set {_newowneruuid} to uuid of {_newowner}
+						
+						if {SB::player::%{_newowneruuid}%::island::leader} is not {_oldowneruuid}:
+							message "%{_prefix}% %{SB::lang::isadmin::newleaderhastobemember::%{SK::lang::%uuid of player%}%}%"
+							stop
+						#
+						# > Gets the bedrock of the old leader and takes the locations out to get members later
+						set {_bedrock} to {SB::player::%{_oldowneruuid}%::island::bedrock}
+						set {_locx} to x-coord of {_bedrock}
+						set {_locy} to y-coord of {_bedrock}
+						set {_locz} to z-coord of {_bedrock}
+						
+						#
+						# > Changes the leader uuid of the old leader entry
+						set {SB::player::%{_oldowneruuid}%::island::leader} to {_newowneruuid}
+						set {SB::player::%{_newowneruuid}%::island::leader} to {_newowneruuid}
+						
+						#
+						# > Changes the leader of this island to the new leader
+						set {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader} to {_newowneruuid}
+
+						#
+						# > Adds the old owner to the members list
+						add {_oldowneruuid} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+						#
+						# > Loop trough all members and change it to the new owner
+						loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+							set {SB::player::%loop-value%::island::leader} to {_newowneruuid}
+							if loop-value is {_newowneruuid}:
+								delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
+								
+						#
+						# > Print the message about the new leader
+						set {_a} to {SB::lang::isadmin::newleader::%{SK::lang::%uuid of player%}%}
+						replace all "<newleader>" with "%{_newowner}%" in {_a}
+						replace all "<oldleader>" with "%{_oldowner}%" in {_a}
+						message "%{_prefix}% %{_a}%"
+						stop
+				#
+				# > If the 4th argument was not "changeok", do the following code:
+				set {_bedrock} to searchbedrock(player)
+				if y-coordinate of {_bedrock} is -5:
+					#
+					# > Prints the defined spacers and a message that the island could not be found:
+					message "%{SB::config::spacer}%"
+					message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+					message "%{SB::config::spacer}%"
+				else:
+					set {_loc::1} to x-coord of {_bedrock}
+					set {_loc::2} to y-coord of {_bedrock}
+					set {_loc::3} to z-coord of {_bedrock}
+					
+					set {_user} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
+					
+					#
+					# > Prints a promt if the leader should be changed
+					set {_a} to {SB::lang::isadmin::changeleader::%{SK::lang::%uuid of player%}%}
+					replace all "<newleader>" with "%arg-3%" in {_a}
+					replace all "<oldleader>" with "%{_user}%" in {_a}
+					set {_prefix} to "%{_prefix}%" %{_a}%
+					set {_msg} to "%{SB::lang::isadmin::yes::%{SK::lang::%uuid of player%}%}%"
+					tellrawmsg1(player,{_prefix},{_msg},"/islandadmin island changeleader %arg-3% changeok %{_user}%")
+
+			#
+			# > Argument: "invite"
+			# > Invites a player for the owner of the island
+			# > Actions:
+			# > This is going to invite a player, like it would have been done by the owner directly.
+			# > Use addmember to add a member without asking the user.
+			if arg-2 is "invite":
+				#
+				# > Set the argument 3 to a offline player (owner)
+				set {_o} to arg-3 parsed as offline player
+				if {_o} is a offline player:
+					#
+					# > The invited player has to be online
+					set {_p} to arg-4 parsed as offline player
+					if {_p} is online:
+						#
+						# > Use the uuid of the player with a local variable
+						set {_ouuid} to uuid of {_o}
+						#
+						# > Check if the owner actually owns a island
+						if {SB::player::%{_ouuid}%::island::leader} is set:
+							if {SB::player::%{_ouuid}%::island::leader} is {_ouuid}:
+								set {_arg2} to {_p}
+								if {_arg2} is online:
+									if {_arg2} is not {_o}:
+										set {_p2} to {_arg2}
+										set {_tuuid} to uuid of {_p2}
+										#
+										# > If the invited player is already on an island, print error
+										if {SB::player::%{_tuuid}%::island::leader} is set:
+											set {_msg} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
+											replace all "<player>" with "%{_p2}%" in {_msg}
+											message "%{_prefix}% %{_msg}%"
+											stop
+										#
+										# > If everything is ok, send a invitation tellraw and wait for x seconds,
+										# > then stop it, if not accepted.
+										set {_uuid2} to uuid of {_arg2}
+										set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
+										message "%{_prefix}% %{SB::lang::sentrequest::%{SK::lang::%uuid of player%}%}%"
+										replace all "<player>" in {_b} with "%{_o}%"
+										message "%{_prefix}% %{_b}%" to {_p2}
+										set {_uuidp2} to uuid of {_p2}
+										set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
+										replace all "<player>" with "%{_o}%" in {_msg}
+										tellrawmsg1({_p2},{_prefix},{_msg},"/is join %{_o}%")
+										set {_cooldown} to {SB::config::invitecooldown}
+										set {_cooldown} to {_cooldown} parsed as number
+										set {Request::%{_arg2}%::%{_o}%} to {_cooldown}
+										while {Request::%{_arg2}%::%{_o}%} > 0:
+											subtract 1 from {Request::%{_arg2}%::%{_o}%}
+											wait a second
+										if {Request::%{_arg2}%::%{_o}%} is 0:
+											delete {Request::%{_arg2}%::%{_o}%}
+											set {_a} to {SB::lang::reqtoleader::%{SK::lang::%uuid of player%}%}
+											set {_c} to {SB::lang::reqtoleader::%{SK::lang::%{_ouuid}%}%}
+											set {_uuid2} to uuid of {_arg2}
+											set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
+											message "%{_prefix}% %{_a}%"
+											message "%{_prefix}% %{_c}%" to {_o}
+											message "%{_prefix}% %{_b}%" to {_p2}
+									else:
+										set {_a} to {SB::lang::cantinviteself::%{SK::lang::%uuid of player%}%}
+										message "%{_prefix}% %{_a}%"
+								else:
+									set {_a} to {SB::lang::playeroff::%{SK::lang::%uuid of player%}%}
+									message "%{_prefix}% %{_a}%"
+							else:
+								set {_a} to {SB::lang::notleader::%{SK::lang::%uuid of player%}%}
+								message "%{_prefix}% %{_a}%"
+						else:
+							message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+		#
+		# > If no argument has been used, tell the player what is possible:
+		else:
+			message "/isadmin island invite <Owner> <New Player> - Invite player to the island"
+			message "/isadmin island changeleader <New Owner> - Change the leader of the island on which you're standing to the new owner (has to be a member)"
+			message "/isadmin island changebiome <new biome> [<Owner>] - Changes the biome for the island you're standing on or the defined owner"
+			message "/isadmin island kickall - kicks everyone from the island you're standing on"
+			message "/isadmin island addmember player - adds the defined player to the island you're currently at, if no leader is set, the player gets the leader"
 
 command /island [<text>] [<text=1>]:
 	aliases: /is, /sb, /skyblock
