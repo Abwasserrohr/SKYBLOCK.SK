@@ -116,6 +116,23 @@ on script load:
 	set {SB::lang::helpsiteerror::%{_lang}%} to "%{_p1}%/is help <Seite>"
 
 	#
+	# > /isadmin - command feedback
+	#
+	set {SB::lang::isadmin::deletedxis::%{_lang}%} to "<amount> Inseln wurden gelöscht."
+	set {SB::lang::isadmin::xwouldbedeleted::%{_lang}%} to "<amount> Insel würden gelöscht werden, möchtest du löschen?"
+	set {SB::lang::isadmin::areyousuretodelete::%{_lang}%} to "Bist du sicher, <amount> Insel zu löschen?"
+	set {SB::lang::isadmin::yes::%{_lang}%} to "&6&lYes."
+	set {SB::lang::isadmin::suretodeleteisofp::%{_lang}%} to "Bist du sicher, dass die Insel von <player> gelöscht werden soll?"
+	set {SB::lang::isadmin::kickall::%{_lang}%} to "Jeder wurde von dieser Insel gekickt."
+	set {SB::lang::isadmin::kickallprompt::%{_lang}%} to "Möchtest du alle von <player> Insel kicken?"
+	set {SB::lang::isadmin::islandofdeleted::%{_lang}%} to "Die Insel von <player> wurde gelöscht."
+	set {SB::lang::isadmin::newleaderhastobemember::%{_lang}%} to "Der neue Inselleiter muss Inselmitglied sein."
+	set {SB::lang::isadmin::newleader::%{_lang}%} to "<newleader> ist nun der neue Leiter, <oldleader> ist nun Mitglied der Insel."
+	set {SB::lang::isadmin::changeleader::%{_lang}%} to "Möchtest du den Inselleiter von <oldleader> zu <newleader> wecchseln?"
+	set {SB::lang::isadmin::fcalc::%{_lang}%} to "Das Insellevel wird nun berechnet."
+	set {SB::lang::isadmin::isremovedonrestart::%{_lang}%} to "Die Inseln werden nach einem neustart gelöscht."
+
+	#
 	# > Event cancel messages
 	#
 	set {SB::lang::protect::%{_lang}%} to "Dieses Gebiet ist gesichert."
