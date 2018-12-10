@@ -38,7 +38,7 @@ function leaveisland(p:player, text:text):
 # > Calculates the island level by getting both borders on the island, then looping though all blocks and
 # > calculating all predefined experience bonuses from the configuration together to get a level.
 #
-function calcisland(p:player):
+function calcisland(p:offline player):
 	set {_exp} to 0 
 	set {_level} to 1
 	#set xp needed for next level:
