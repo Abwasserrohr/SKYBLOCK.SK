@@ -276,6 +276,23 @@ function skyblockgui(p: player):
 	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
 	setguiitem({_p},16,"barrier",1,"%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
 
+
+# > Function - buybiomechange:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Deducts the money from the player to change a biome, checks if the player
+# > has enough money and gives a error if not.
+function buybiomechange(p: player, biome:text, price:number, title:text):
+	wait 5 ticks
+	if balance of {_p} >= {_price}:
+		remove {_price} from {_p}'s balance
+		changebiome({_p},{_biome},{_title})
+	else:
+		set {_uuid} to uuid of {_uuid}
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{SK::lang::%{_uuid}%}%}%" to {_p}
+
+
 #
 # > Function - loadconfig:
 # > Actions:
