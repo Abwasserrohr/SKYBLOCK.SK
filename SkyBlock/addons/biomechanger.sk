@@ -78,11 +78,12 @@ function changebiome(player:offline player,biome:text,title:text):
 	set {_needed} to 0
 	set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
 	loop blocks within {_l::1} to {_l::2}:
-		#if y-coordinate of loop-block is 100.5:
 		add 1 to {_i}
 		add 1 to {_b}
 		if {_i} is 100:
 			wait 1 tick
+			#
+			# > Calculate the progress
 			set {_p} to ({_b}/{_size})*100
 			if {_p} >= {_needed}:
 				add 1 to {_needed}

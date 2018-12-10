@@ -1,23 +1,29 @@
-
-
-#Is used to leave a island
-#use text argument "owner", if the island is deleted by the island owner.
+#				
+# > Function: leaveisland
+# > Arguments:
+# > <player>player, <text>text
+# > Actions:
+# > Leaves an island, if the text argument is "ower", it removes all other members from the members list
 function leaveisland(p:player, text:text):
 	clear {_p}'s inventory
 	set {_uuid} to uuid of {_p}
+	delete {Leave.%{_uuid}%}
+	if {_p} is not online:
+		set {Leave.%{_uuid}%} to true
 	set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 	set {_locx} to x-coord of {_loc}
 	set {_locy} to y-coord of {_loc}
 	set {_locz} to z-coord of {_loc}
 	#todo needs to delete one by one
-	delete {SB::player::%{_uuid}%::island::*}
 	delete {SB::player::%{_uuid}%::island::leader}
 	delete {SB::player::%{_uuid}%::island::border1}
 	delete {SB::player::%{_uuid}%::island::border2}
 	delete {SB::player::%{_uuid}%::island::bedrock}
-	delete {SB::player::%{_uuid}%::island::home::*}		
+	loop {SB::player::%{_uuid}%::island::home::*}:
+		delete {SB::player::%{_uuid}%::island::home::%loop-index%}
+	delete {SB::player::%{_uuid}%::island::home::*}
+	delete {SB::player::%{_uuid}%::island::*}
 	teleport {_p} to {SB::config::spawn}
-
 	if {_text} is "owner":
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
 			if loop-value is uuid of {_p}:
@@ -178,14 +184,25 @@ function protectionmgs(p:player):
 function tellrawmsg1(p:player,t1:text,t2:text,c:text):
 	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
 
-#Deletes the island of the defined player
-function deleteisland(p1: player):
+#
+# > Function: deleteisland
+# > Arguments:
+# > <offline player>player
+# > Actions:
+# > Deletes the island of the defined player, also offline players are possible
+function deleteisland(p1: offline player):
 	set {_prefix} to {SB::lang::prefix::%{Language::%{_p1}%}%}
 	set {_uuid} to uuid of {_p1}
 	if {SB::player::%{_uuid}%::island::leader} is uuid of {_p1}:
 		clear {_p1}'s inventory
 
 		teleport {_p1} to {SB::config::spawn}
+		
+		#
+		# > If the player is not online, add a variable to delete the inventory once the
+		# > player joins the game
+		if {_p1} is not online:
+			set {Leave.%{_uuid}%} to true
 
 		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 		set {_locx} to x-coord of {_loc}
@@ -338,7 +355,7 @@ function buybiomechange(p: player, biome:text, price:number, title:text):
 		remove {_price} from {_p}'s balance
 		changebiome({_p},{_biome},{_title})
 	else:
-		set {_uuid} to uuid of {_uuid}
+		set {_uuid} to uuid of {_p}
 		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{SK::lang::%{_uuid}%}%}%" to {_p}
 
 

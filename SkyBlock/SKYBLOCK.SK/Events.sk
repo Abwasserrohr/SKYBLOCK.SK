@@ -224,10 +224,15 @@ on script unload:
 	execute console command "/whitelist on"
 	set {SB::ISDELPROCESS} to true
 
-	
+#
+# > Event: join
+# > Triggered once a player enters the server
+# > Actions:
+# > Makes the player invincible, checks if the user has been kicked from an island
+# > and also sets the lastactive state to now to prevent purge of the island.
 on join:
-	wait a tick
 	set {SB::invincible::%player%} to 1
+	wait a tick
 	#todo check for default language in config.sk if there is "custom" choosen, let the user choose, if there is "api" choosen, use a api or database which has to be added.
 	if {SK::lang::%uuid of player%} is not set:
 		set {SK::lang::%uuid of player%} to "de"
@@ -237,13 +242,22 @@ on join:
 		leaveisland(player, "member")
 		make player execute "/is leave"
 		send "%{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
+
+	#
+	# > Set the last activity of the island the player is on to now
+	set {_bedrock} to {SB::player::%uuid of player%::island::bedrock}
+	if {_bedrock} is set:
+		set {_l::1} to x-coord of {_bedrock}
+		set {_l::2} to y-coord of {_bedrock}
+		set {_l::3} to z-coord of {_bedrock}
+		set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
+
 	if {SB::player::%uuid of player%::island::home::home} is set:
 		teleport player to {SB::player::%uuid of player%::island::home::home}
 	else:
 		teleport player to {SB::config::spawn}
 	wait 5 seconds
-	delete {SB::invincible::%player%}
-	
+	delete {SB::invincible::%player%} 
 	
 on connect:
 	set {SK::lang::%uuid of player%} to "de"
