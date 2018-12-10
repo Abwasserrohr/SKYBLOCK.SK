@@ -12,7 +12,35 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
 		#
 		# > If something should be done with an island, this is the code:
-		if arg-1 is "island":			
+		if arg-1 is "island":
+			#
+			# > Argument: "purge"
+			# > If the user types in /islandadmin island purge <number>, islands, which have been inactive for the defined
+			# > number of days are going to be deleted. This is dangerous and a backup should be made prior entering this.
+			# > Actions:
+			# > Deleted all islands which have been inactive for more than x days.
+			if arg-2 is "purge":
+				if arg-3 is not set:
+					stop
+				set {_days} to "%arg-3% days" parsed as timespan
+				loop {SB::islvl::*}:
+					if {SB::island::%loop-index%::lastactive} is not set:
+						set {SB::island::%loop-index%::lastactive} to now
+					if {SB::island::%loop-index%::created} is not set:
+						set {SB::island::%loop-index%::created} to now
+					if difference between {SB::island::%loop-index%::lastactive} and now is bigger than {_days}:
+						add loop-index to {_delislands::*}
+				if arg-4 is "purgeok":
+					loop {_delislands::*}:
+						deleteisland({SB::island::%loop-index%::leader})
+					message "%size of {_delislands::*}% islands have been deleted."
+					message "The islands are removed on the next restart."
+					stop
+				message "%size of {_delislands::*}% islands would be deleted, do you want to delete?"
+				set {_prefix} to "Are you sure to delete %size of {_delislands::*}% islands?"
+				set {_msg} to "&6&lYes."
+				tellrawmsg1(player,{_prefix},{_msg},"/islandadmin island purge %arg-3% purgeok")
+
 			#
 			# > Argument: "changebiome"
 			# > If the user types in /islandadmin island changebiome <biome>, the biome of the current island is changed.
