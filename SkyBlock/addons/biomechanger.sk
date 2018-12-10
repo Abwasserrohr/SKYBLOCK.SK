@@ -34,8 +34,7 @@ import:
 # > Arguments:
 # > <player>player, <text>biome
 # > Actions:
-# > Is going to check if WeatherMan (dependency for this function) is installed, then takes the location of 
-# > the island of the player and then run a WeatherMan command.
+# > changebiome is going to change the biome of the island the player is owning to the defined biome
 function changebiome(player:offline player,biome:text):
 
 	#
