@@ -92,7 +92,7 @@ command /island [<text>] [<text=1>]:
 			if player has permission "%{SB::config::buildpermission}%":
 				make player execute "/sk reload SkyBlock/"
 		if arg-1 is "create":
-			if {SB::player::%uuid of player%::island::border1} is set:
+			if {SB::player::%uuid of player%::island::leader} is set:
 				message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
 				stop
 			if player is online:
@@ -284,7 +284,7 @@ command /island [<text>] [<text=1>]:
 				teleport player to {_loc}
 				message "%{_prefix}% %{SB::lang::tphome::%{SK::lang::%uuid of player%}%}%"
 		else if arg-1 is "sethome":
-			if {SB::player::%uuid of player%::island::border1} is not set:
+			if {SB::player::%uuid of player%::island::leader} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
 				set {_loc1} to {SB::player::%uuid of player%::island::border1}
@@ -298,7 +298,7 @@ command /island [<text>] [<text=1>]:
 				else:
 					message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%"
 		else if arg-1 is "go":
-			if {SB::player::%uuid of player%::island::border1} is not set:
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
 				set {_loc} to {SB::player::%uuid of player%::island::bedrock}
@@ -325,6 +325,9 @@ command /island [<text>] [<text=1>]:
 					tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%}%},"/is delete 2")
 
 		else if arg-1 is "calc":
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
+				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+				stop
 			#If there is more time between the las calculation and now than the set cooldown time in config.sk:
 			if difference between {SB::calcdown::%uuid of player%} and now < {SB::config::calccooldown}:
 				message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
@@ -423,7 +426,7 @@ command /island [<text>] [<text=1>]:
 			else:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 		else if arg-1 is "level" or "lvl":
-			if {SB::player::%uuid of player%::island::border1} is not set:
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}%  %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
 				set {_loc} to {SB::player::%uuid of player%::island::bedrock}
@@ -440,7 +443,7 @@ command /island [<text>] [<text=1>]:
 		else if arg-1 is "spawn" or "lobby":
 			teleport player to {SB::config::spawn}
 		else if arg-1 is "invite":
-			if {SB::player::%uuid of player%::island::border1} is set:
+			if {SB::player::%uuid of player%::island::bedrock} is set:
 				if {SB::player::%uuid of player%::island::leader} is uuid of player:
 					set {_arg2} to arg-2 parsed as offline player
 					if {_arg2} is online:
@@ -499,7 +502,7 @@ command /island [<text>] [<text=1>]:
 				stop
 			else if {_arg2} is set:
 				if {Request::%player%::%{_arg2}%} is set:
-					if {SB::player::%uuid of player%::island::border1} is set:
+					if {SB::player::%uuid of player%::island::bedrock} is set:
 						message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
 						set {_check} to {SB::player::%uuid of player%::island::leader}
 						if {_check} is uuid of player:
@@ -539,7 +542,7 @@ command /island [<text>] [<text=1>]:
 				set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
 				message "%{_prefix}% %{_a}%"
 		else if arg-1 is "leave":
-			if {SB::player::%uuid of player%::island::border1} is not set:
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
 				if {SB::player::%uuid of player%::island::leader} is uuid of player:
@@ -557,7 +560,7 @@ command /island [<text>] [<text=1>]:
 		# > player who should get kicked, then the following code is investigating if the user has an island, is the owner of his island,
 		# > has a member by that name on his member list and then fire the "leaveisland" function, if the player was found.
 		else if arg-1 is "kick":
-			if {SB::player::%uuid of player%::island::border1} is not set:
+			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
 				if {SB::player::%uuid of player%::island::leader} is uuid of player:
