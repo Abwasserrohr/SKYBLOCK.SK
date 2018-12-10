@@ -167,6 +167,7 @@ on script load:
 	set {SB::lang::bc::changing::%{_lang}%} to "Ändere das Biom zu: <biome>"
 	set {SB::lang::bc::done::%{_lang}%} to "Biomänderung abgeschlossen."
 	set {SB::lang::bc::changebiomeheader::%{_lang}%} to "Biom ändern"
+	set {SB::lang::bc::changebiomemenulore::%{_lang}%} to "&rÄndere dein Biom"
 	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
 	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
 	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
