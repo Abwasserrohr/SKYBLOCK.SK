@@ -274,7 +274,7 @@ function skyblockgui(p: player):
 	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
 	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
 	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
-	setguiitem({_p},16,"barrier",1,"%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
+	setguiitem({_p},16,"jungle leaves",1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%","&rÄndere dein Biom","biomemenu(""%{_p}%"" parsed as player)",true)
 
 # > Function - biomemenu:
 # > Arguments:
