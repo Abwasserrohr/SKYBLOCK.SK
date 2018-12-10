@@ -37,7 +37,7 @@ import:
 # > Is going to check if WeatherMan (dependency for this function) is installed, then takes the location of 
 # > the island of the player and then run a WeatherMan command.
 function changebiome(player:offline player,biome:text):
-  #
+	#
 	# > Get the uuid of the player to then get the location of the island
 	set {_uuid} to uuid of {_player}
 	#
@@ -83,13 +83,11 @@ function changebiome(player:offline player,biome:text):
 			if {_p} >= {_needed}:
 				add 1 to {_needed}
 				replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
-
 				execute console command "/title %{_player}% actionbar {""text"":""%{_progress}%""}"
 			set {_i} to 0
 		set {_x} to (location of loop-block).getBlockX()
 		set {_z} to (location of loop-block).getBlockZ()
 		{_world}.setBiome({_x}, {_z}, {_changebiome})
-
 	#
 	# > Print to the player that we're done with changing the biome
 	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::done::%{SK::lang::%{_uuid}%}%}%" to {_player}
