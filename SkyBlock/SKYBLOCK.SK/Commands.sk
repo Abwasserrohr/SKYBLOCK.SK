@@ -25,6 +25,18 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		# > If something should be done with an island, this is the code:
 		else if arg-1 is "island":
 			#
+			# > Argument: "calc"
+			# > If the user types in /islandadmin island calc, the island level gets calculated
+			# > Actions:
+			# > Checks if the defined user has a island and then run the calcisland function.
+			if arg-2 is "calc":
+				if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is set:
+					message "%{_prefix}% %{SB::lang::isadmin::fcalc::%{SK::lang::%uuid of player%}%}%"
+					set {_player} to arg-3 parsed as offline player
+					$ thread
+					calcisland({_player})
+
+			#
 			# > Argument: "purge"
 			# > If the user types in /islandadmin island purge <number>, islands, which have been inactive for the defined
 			# > number of days are going to be deleted. This is dangerous and a backup should be made prior entering this.
@@ -389,7 +401,9 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			message "/isadmin island changeleader <New Owner> - Change the leader of the island on which you're standing to the new owner (has to be a member)"
 			message "/isadmin island changebiome <new biome> [<Owner>] - Changes the biome for the island you're standing on or the defined owner"
 			message "/isadmin island kickall - kicks everyone from the island you're standing on"
-			message "/isadmin island addmember player - adds the defined player to the island you're currently at, if no leader is set, the player gets the leader"
+			message "/isadmin island addmember <player> - adds the defined player to the island you're currently at, if no leader is set, the player gets the leader"
+			message "/isadmin island calc <player> - calculates the island of the defined player"
+
 
 command /island [<text>] [<text=1>]:
 	aliases: /is, /sb, /skyblock
