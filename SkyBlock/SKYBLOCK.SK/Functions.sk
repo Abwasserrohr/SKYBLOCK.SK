@@ -274,15 +274,89 @@ function skyblockgui(p: player):
 	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
 	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
 	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
-	setguiitem({_p},16,"barrier",1,"%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
-	
-#This deletes variables and creates new ones on the startup:
-#Prevents old variables from being in the system
+	setguiitem({_p},16,"jungle leaves",1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%","&r%{SB::lang::bc::changebiomemenulore::%{SK::lang::%{_uuid}%}%}%","biomemenu(""%{_p}%"" parsed as player)",true)
+
+# > Function - biomemenu:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Opens the biome menu to the player where it is possible to get biomes for a fixed, predefined price,
+# > define biomes and prices in the config.sk or alter this function like you want.
+function biomemenu(p: player):
+	#
+	# > Open this menu (gui) only for the island owner
+	set {_uuid} to uuid of {_p}
+	if {SB::player::%{_uuid}%::island::leader} is uuid of {_p}:
+		#
+		# > Count how many lines are needed:
+		set {_size} to size of {SB::config::biome::menuitem::*}
+		set {_slots} to 9
+		loop 5 times:
+			if {_size} is bigger than {_slots}:
+				add 9 to {_slots}
+
+		#
+		# > Open a menu to the defined player, with the calculated slots and the translated menu header
+		opengui({_p},{_slots},"&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%")
+		#
+		# > Fill the inventory with empty glass panes to make it look nicer
+		loop {_slots} times:
+			set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+
+		#
+		# > Render all the biomes into the menu, they can be changed in the config.sk
+		loop {SB::config::biome::menuitem::*}:
+			set {_item} to {SB::config::biome::menuitem::%loop-index%}
+			set {_slot} to loop-index parsed as integer
+			remove 1 from {_slot}
+			set {_price} to {SB::config::biome::price::%loop-index%}
+			set {_title} to {SB::config::biome::lang::%{SK::lang::%{_uuid}%}%::%loop-index%}
+			set {_biome} to {SB::config::biome::biomename::%loop-index%}
+			#
+			# > If the price is over 0, set the price in lore to a price
+			if {_price} is bigger than 0:
+				set {_pricelore} to {SB::lang::bc::shopprice::%{SK::lang::%{_uuid}%}%}
+				replace all "<price>" with "%{_price}%" in {_pricelore}
+			# > If the price is 0 or lower, tell the player that it is free.
+			else:
+				set {_pricelore} to {SB::lang::bc::shopfree::%{SK::lang::%{_uuid}%}%}
+			setguiitem({_p},{_slot},{_item},1,"&r%{_title}%","&r%{_pricelore}%","buybiomechange(""%{_p}%"" parsed as player,""%{_biome}%"",%{_price}%,""%{_title}%"")",true)
+	#
+	# > If the player is not the owner, tell the player that this is for the island owner only
+	else:
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::notleader::%{SK::lang::%{_uuid}%}%}%" to {_p}
+
+# > Function - buybiomechange:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Deducts the money from the player to change a biome, checks if the player
+# > has enough money and gives a error if not.
+function buybiomechange(p: player, biome:text, price:number, title:text):
+	wait 5 ticks
+	if balance of {_p} >= {_price}:
+		remove {_price} from {_p}'s balance
+		changebiome({_p},{_biome},{_title})
+	else:
+		set {_uuid} to uuid of {_uuid}
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{SK::lang::%{_uuid}%}%}%" to {_p}
+
+
+#
+# > Function - loadconfig:
+# > Actions:
+# > This deletes variables to prevent old variables from being in the system
 function loadconfig():
 	delete {SB::schematics::*}
 	delete {SB::calcdown::*}
 	delete {SB::oregenc::*}
 	delete {SB::oregen::*}
+	delete {SB::config::biome::menuitem::*}
+	delete {SB::config::biome::biomename::*}
+	delete {SB::config::biome::price::*}
+	loop {SB::config::biome::biomename::*}:
+		delete {SB::config::biome::biomename::%loop-index%::*}
+	delete {SB::config::biome::biomename::*}
 
 # > Function - searchbedrock:
 # > Arguments:

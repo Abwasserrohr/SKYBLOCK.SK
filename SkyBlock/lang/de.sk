@@ -95,6 +95,7 @@ on script load:
 	set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
 	set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
 	set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
+	set {SB::lang::isbiome::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInselbiom ändern %{_s1}%- %{_p1}%/is biom"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
@@ -154,7 +155,7 @@ on script load:
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
 
 	#
-	# > Ore Generator Addon
+	# > Ore generator add-on
 	#
 	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
 	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
@@ -162,3 +163,12 @@ on script load:
 	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
 	set {SB::lang::og::disabled::%{_lang}%} to "Der Erz Generator kann nicht gelevelt werden."
 
+	#
+	# > Biome change add-on
+	set {SB::lang::bc::changing::%{_lang}%} to "Ändere das Biom zu: <biome>"
+	set {SB::lang::bc::done::%{_lang}%} to "Biomänderung abgeschlossen."
+	set {SB::lang::bc::changebiomeheader::%{_lang}%} to "Biom ändern"
+	set {SB::lang::bc::changebiomemenulore::%{_lang}%} to "&rÄndere dein Biom"
+	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
+	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
+	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
