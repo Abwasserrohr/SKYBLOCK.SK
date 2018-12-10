@@ -1,3 +1,59 @@
+#
+# > Command - /islandadmin 
+# > Actions:
+# > This command contains multible of actions which are meant to be used by an administrator for
+# > administration and moderation purposes.
+command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
+	permission:	is.admin
+	aliases: /isadmin
+	trigger:
+		#
+		# > Set prefix for messages
+		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+		#
+		# > If something should be done with an island, this is the code:
+		if arg-1 is "island":			
+			#
+			# > Argument: "changebiome"
+			# > If the user types in /islandadmin island changebiome <biome>, the biome of the current island is changed.
+			# > Optional: Define the owner of the island to take it instead of the current island.
+			# > Actions:
+			# > Changes the biome of the island the user is standing on or the defined 4nd argument.
+			if arg-2 is "changebiome":
+				set {_player} to arg-4 parsed as offline player
+				if {_player} is not set:
+					set {_bedrock} to searchbedrock(player)
+					if y-coordinate of {_bedrock} is -5:
+						#
+						# > Prints the defined spacers and a message that the island could not be found:
+						#
+						message "%{SB::config::spacer}%"
+						message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
+						message "%{SB::config::spacer}%"
+						stop
+				else:
+					#
+					# > The 4nd argument is valid, set it to the bedrock to get the leader.
+					set {_uuid} to uuid of {_player}
+					set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+
+				set {_loc::1} to x-coord of {_bedrock}
+				set {_loc::2} to y-coord of {_bedrock}
+				set {_loc::3} to z-coord of {_bedrock}
+				#
+				# > Get the leader from the bedrock location variable
+				set {_user} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
+				#
+				# > Print information to the admin that the biome is changed.
+				message "%{SB::config::spacer}%"
+				set {_a} to {SB::lang::bc::changing::%{SK::lang::%uuid of player%}%}
+				replace all "<biome>" with arg-3 in {_a}
+				message "%{_prefix}% %{_a}%"
+				message "%{SB::config::spacer}%"
+				#
+				# > Run the function to change the biome.
+				changebiome({_user},arg-3,arg-3)
+
 command /island [<text>] [<text=1>]:
 	aliases: /is, /sb, /skyblock
 	trigger:
