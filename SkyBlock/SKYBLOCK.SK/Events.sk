@@ -246,10 +246,11 @@ on join:
 	#
 	# > Set the last activity of the island the player is on to now
 	set {_bedrock} to {SB::player::%uuid of player%::island::bedrock}
-	set {_l::1} to x-coord of {_bedrock}
-	set {_l::2} to y-coord of {_bedrock}
-	set {_l::3} to z-coord of {_bedrock}
-	set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
+	if {_bedrock} is set:
+		set {_l::1} to x-coord of {_bedrock}
+		set {_l::2} to y-coord of {_bedrock}
+		set {_l::3} to z-coord of {_bedrock}
+		set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
 
 	if {SB::player::%uuid of player%::island::home::home} is set:
 		teleport player to {SB::player::%uuid of player%::island::home::home}
