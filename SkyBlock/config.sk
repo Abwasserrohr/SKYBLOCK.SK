@@ -9,7 +9,7 @@ on load:
 	# Set the World name of the Server:
 	set {SB::config::world} to "ASkyBlock"
 	
-	# Island storage type (Use either Schematic or Structure):
+	# Island storage type (Currently, only "Structure" is usable):
 	set {SB::config::isstorage} to "Structure"
 	
 	# Set where the players should spawn, change x, y, z to your desired location:
