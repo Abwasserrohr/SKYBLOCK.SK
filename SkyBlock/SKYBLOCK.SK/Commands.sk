@@ -30,7 +30,9 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			# > Actions:
 			# > Checks if the defined user has a island and then run the calcisland function.
 			if arg-2 is "calc":
-				if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is set:
+				set {_player} to arg-3 parsed as offline player
+				set {_uuid} to uuid of {_player}
+				if {SB::player::%{_uuid}%::island::leader} is set:
 					message "%{_prefix}% %{SB::lang::isadmin::fcalc::%{SK::lang::%uuid of player%}%}%"
 					set {_player} to arg-3 parsed as offline player
 					$ thread
