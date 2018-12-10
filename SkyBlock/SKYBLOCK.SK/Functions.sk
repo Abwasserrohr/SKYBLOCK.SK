@@ -355,7 +355,7 @@ function buybiomechange(p: player, biome:text, price:number, title:text):
 		remove {_price} from {_p}'s balance
 		changebiome({_p},{_biome},{_title})
 	else:
-		set {_uuid} to uuid of {_uuid}
+		set {_uuid} to uuid of {_p}
 		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{SK::lang::%{_uuid}%}%}%" to {_p}
 
 
