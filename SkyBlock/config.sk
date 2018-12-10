@@ -161,6 +161,9 @@ on load:
 	set {SB::expblocks::sandstone_block} to 15
 	#Water blocks:
 	set {SB::expblocks::living_coral_block} to 15
+	
+	#Other blocks:
+	set {SB::expblocks::other} to 0.5
 
 #
 # ADDON Configurations
