@@ -316,7 +316,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 					#
 					# > Prints a promt if the leader should be changed
 					set {_a} to {SB::lang::isadmin::changeleader::%{SK::lang::%uuid of player%}%}
-					replace all "<newleader>" with "%arg-3%" in {_a}
+					replace all "<newleader>" with arg-3 in {_a}
 					replace all "<oldleader>" with "%{_user}%" in {_a}
 					set {_prefix} to "%{_prefix}%" %{_a}%
 					set {_msg} to "%{SB::lang::isadmin::yes::%{SK::lang::%uuid of player%}%}%"
