@@ -35,7 +35,7 @@ import:
 # > <player>player, <text>biome
 # > Actions:
 # > changebiome is going to change the biome of the island the player is owning to the defined biome
-function changebiome(player:offline player,biome:text):
+function changebiome(player:offline player,biome:text,title:text):
 
 	#
 	# > Get the uuid of the player to then get the location of the island
@@ -70,7 +70,7 @@ function changebiome(player:offline player,biome:text):
 	#
 	# > Inform player about biome change
 	set {_a} to {SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}
-	replace all "<biome>" with "%{_changebiome}%" in {_a}
+	replace all "<biome>" with "%{_title}%" in {_a}
 	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}%" to {_player}
 	
 	#
