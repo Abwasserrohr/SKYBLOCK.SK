@@ -275,14 +275,22 @@ function skyblockgui(p: player):
 	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
 	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
 	setguiitem({_p},16,"barrier",1,"%{SB::lang::guisoonname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
-	
-#This deletes variables and creates new ones on the startup:
-#Prevents old variables from being in the system
+
+#
+# > Function - loadconfig:
+# > Actions:
+# > This deletes variables to prevent old variables from being in the system
 function loadconfig():
 	delete {SB::schematics::*}
 	delete {SB::calcdown::*}
 	delete {SB::oregenc::*}
 	delete {SB::oregen::*}
+	delete {SB::config::biome::menuitem::*}
+	delete {SB::config::biome::biomename::*}
+	delete {SB::config::biome::price::*}
+	loop {SB::config::biome::biomename::*}:
+		delete {SB::config::biome::biomename::%loop-index%::*}
+	delete {SB::config::biome::biomename::*}
 
 # > Function - searchbedrock:
 # > Arguments:
