@@ -1,23 +1,29 @@
-
-
-#Is used to leave a island
-#use text argument "owner", if the island is deleted by the island owner.
+#				
+# > Function: leaveisland
+# > Arguments:
+# > <player>player, <text>text
+# > Actions:
+# > Leaves an island, if the text argument is "ower", it removes all other members from the members list
 function leaveisland(p:player, text:text):
 	clear {_p}'s inventory
 	set {_uuid} to uuid of {_p}
+	delete {Leave.%{_uuid}%}
+	if {_p} is not online:
+		set {Leave.%{_uuid}%} to true
 	set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 	set {_locx} to x-coord of {_loc}
 	set {_locy} to y-coord of {_loc}
 	set {_locz} to z-coord of {_loc}
 	#todo needs to delete one by one
-	delete {SB::player::%{_uuid}%::island::*}
 	delete {SB::player::%{_uuid}%::island::leader}
 	delete {SB::player::%{_uuid}%::island::border1}
 	delete {SB::player::%{_uuid}%::island::border2}
 	delete {SB::player::%{_uuid}%::island::bedrock}
-	delete {SB::player::%{_uuid}%::island::home::*}		
+	loop {SB::player::%{_uuid}%::island::home::*}:
+		delete {SB::player::%{_uuid}%::island::home::%loop-index%}
+	delete {SB::player::%{_uuid}%::island::home::*}
+	delete {SB::player::%{_uuid}%::island::*}
 	teleport {_p} to {SB::config::spawn}
-
 	if {_text} is "owner":
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
 			if loop-value is uuid of {_p}:
