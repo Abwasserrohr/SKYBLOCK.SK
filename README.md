@@ -8,6 +8,8 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 - [Spigot](https://hub.spigotmc.org/stash/projects/SPIGOT) Minecraft Java version 1.13.2
 - [Skript](https://github.com/SkriptLang/Skript)
 - [skript-mirror](https://github.com/btk5h/skript-mirror)
+- [Vault](https://www.spigotmc.org/resources/vault.34315)
+
 
 ### Why SKYBLOCK.SK
 SKYBLOCK.SK allows server operators to open the files plain in any editor of their choice, like Notepad++ and saving it directly into the server folder. Then reload the server and it can be used.
