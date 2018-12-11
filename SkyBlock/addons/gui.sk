@@ -138,7 +138,7 @@ function setguiitem(player:player,slot:integer,item:text,amount:integer,name:tex
 	{_itemlore}.add({_lore})
 	{_ItemMeta}.setLore({_itemlore})
 	{_ItemStack}.setItemMeta({_ItemMeta})
-	set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_ItemStack}
+	set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}
 	if {_exec} != "":
 		set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
 	if {_close} is true:
