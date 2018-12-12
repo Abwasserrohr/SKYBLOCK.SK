@@ -1,0 +1,59 @@
+#
+# ==============
+# customheads.sk v0.0.1
+# ==============
+# Get custom heads as a {_item} variable with a small amount of dependencies.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > Add biomechanger.sk to your "plugins/Skript/scripts" folder and then reload.
+# > Use the changebiome(player,"biome") function to get a custom skin head.
+# --------------
+
+#
+# > We need to create a random UUID, thats why we import this class:
+import:
+	java.util.UUID
+
+# > Function - getcustomhead:
+# > Arguments:
+# > <text>name, <text>base64, <player>player
+# > Actions:
+# > Execute this function with a custom name, a base64 encoded texture value, you can get it here: https://minecraft-heads.com/
+# > and the player who should get it. This returns a custom player head in some hacky way.
+# > If there is someone who can do this better, please open a pull request or contact me on Discord.
+function getcustomhead(name:text,base64:text,p:player) :: item:
+	#
+	# > We check, if there is already a head with this name saved as variable, skip this, if that's the case.
+	if {SK::HEADS::%{_name}%} is not set:
+		#
+		# > Generate a random UUID to prevent the same UUIDs for the same head.
+		set {_ruuid} to UUID.randomUUID()
+		#
+		# > Create a backup of the player's hotbar slot 0.
+		set {_tool} to slot 0 of {_p}
+		#
+		# > Set the hotbar slot 0 of the player to the custom head using vanilla commands.
+		execute console command "/replaceitem entity %{_p}% hotbar.0 minecraft:player_head{display:{Name:""{\""text\"":\""%{_name}%\""}""},SkullOwner:{Id:""%{_ruuid}%"",Properties:{textures:[{Value:""%{_base64}%""}]}}}"
+		#
+		# > Get the custom head into the {_head} variable.
+		set {_head} to slot 0 of {_p}
+		#
+		# > Change the slot 0 of the player back to the backup we created above
+		set slot 0 of {_p} to {_tool}
+		#
+		# > Add this head as a variable to prevent repeating this process,
+		# > this process is instant and has no delay.
+		set {SK::HEADS::%{_name}%} to {_head}
+		#
+		# > Return the custom head
+		return {_head}
+	else:
+		#
+		# > Since we already have this custom head as a variable, return it directly.
+		return {SK::HEADS::%{_name}%}
