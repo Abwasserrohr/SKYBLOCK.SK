@@ -1,4 +1,5 @@
-
+#
+# > Import some Java classes which are needed to fire some triggers.
 import:
 	org.bukkit.event.player.PlayerArmorStandManipulateEvent
 	org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -6,25 +7,36 @@ import:
 	org.bukkit.Location
 	org.bukkit.event.player.PlayerInteractEvent
 
-#Events (Triggers) for protection purposes START
+#
+# > Events (Triggers) for protection purposes
 
-#If a armorstand is manipulated, check if the user is allowed:
+#
+# > Event - PlayerArmorStandManipulateEvent
+# > If someone tries to change a armor stand.
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it.
 on PlayerArmorStandManipulateEvent:
 	set {_player} to event.getPlayer()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_p} to checkprotect({_l},{_player})
-		if {_p} is "false":
+		set {_allowed} to checkislandaccess({_player},{_l})
+		if {_allowed} is false:
 			cancel event
 
-#If a entity is getting damage by a player, check if the player is allowed to do so:
+#
+# > Event - EntityDamageByEntityEvent
+# > If a entity gets damage by a entity, this event is called.
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it.
 on EntityDamageByEntityEvent:
 	set {_player} to event.getDamager()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_p} to checkprotect({_l},{_player})
-		if {_p} is "false":
+		set {_allowed} to checkislandaccess({_player},{_l})
+		if {_allowed} is false:
 			cancel event
+	if "%{_player}%" is "arrow" or "snowball":
+		cancel event
 
 # > Event: VehicleDamageEvent
 # > Triggered if a vehicle is damaged, this could be a minecart or a boat.
@@ -34,57 +46,84 @@ on VehicleDamageEvent:
 	set {_player} to event.getAttacker()
 	if {_player} is a player:
 		set {_l} to event.getVehicle().getLocation()
-		set {_p} to checkprotect({_l},{_player})
-		if {_p} is "false":
+		set {_allowed} to checkislandaccess({_player},{_l})
+		if {_allowed} is false:
 			cancel event
 
-#If the player interacts with soil, it is checked if the player is allowed to do this.
+#
+# > Event - PlayerInteractEvent
+# > Triggered, if the player interacts with something.
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it. (only if the block is soil)
 on PlayerInteractEvent:
+	#
+	# > Set the interaction block to a local variable.
 	set {_b} to event.getClickedBlock()
-	if {_b} is soil:
+	#
+	# > Since pressure plates might get called often, they dont have to be checked, we stop directly here.
+	if {_b} is pressure plate or tripwire:
+		stop
+	#
+	# > Only prevent these types of interactions and let others trough,
+	# > this gets called very often, should be very efficient.
+	if {_b} is soil or lever or button or door or trapdoor or fence gate or comparator or repeater or chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or daylight detector or flower pot:
 		set {_player} to event.getPlayer()
 		if {_player} is a player:
 			set {_l} to event.getClickedBlock().getLocation()
-			set {_p} to checkprotect({_l},{_player})
-			if {_p} is "false":
+			set {_allowed} to checkislandaccess({_player},{_l})
+			if {_allowed} is false:
 				cancel event
 
-#If player places something, check for rights, false means no rights.
+	#
+	# > If there is a potted plant, we check that kind of stuff with a text for now,
+	# > since almost every plant can be placed in a flower pot, this is faster than checking
+	# > through all types of flower pots.
+	if "%{_b}%" contains "potted" or "flower pot with":
+		set {_player} to event.getPlayer()
+		if {_player} is a player:
+			set {_l} to event.getClickedBlock().getLocation()
+			set {_allowed} to checkislandaccess({_player},{_l})
+			if {_allowed} is false:
+				cancel event
+
+#
+# > Event - place
+# > Triggered, if the player places a block.
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it.
 on place:
-	set {_r} to checkprotect(location of event-block,player)
-	if {_r} is "false":
+	set {_allowed} to checkislandaccess(player,location of event-block)
+	if {_allowed} is false:
 		cancel event
 
-#Player beaks something, this is going to check if the user has no right and cancels:
+#
+# > Event - place
+# > Triggered, if the player breaks a block.
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it.
 on break:
-	set {_r} to checkprotect(location of event-block,player)
-	if {_r} is "false":
+	set {_allowed} to checkislandaccess(player,location of event-block)
+	if {_allowed} is false:
 		cancel event
-
-#IF player clicks, this is checking if it should be cancelled
-on click:
-	#todo this can be done fancier than this: allow enderchest access from everywhere, also crafting table?
-	if "%clicked block%" contains "ender chest":
-		stop
-	set {_r} to checkprotect(location of event-entity,player)
-	if {_r} is "false":
-		cancel event
-
-#checks, if the player is rightclicking on a entitiy, like a villager and then cancels it.
-#todo this is already included in the on click event, could be removed here?
+		
+#
+# > Event - rightclick on a entity
+# > Triggered, if the player rightclicks on an entity
+# > Actions:
+# > Checks if the player is allowed to do it, if not, cancel it.
 on rightclick on entity:
-	set {_r} to checkprotect(location of event-entity,player)
-	if {_r} is "false":
+	set {_allowed} to checkislandaccess(player,location of event-entity)
+	if {_allowed} is false:
 		cancel event
-
-#Events (Triggers) for protection purposes END
-
 
 #Disable 1.13 phantoms:
 #todo check from config if enabled or disabled:
 on spawn of a phantom: 
 	cancel event
 
+#
+# > For now, we want to not allow people to change the world into the nether,
+# > the nether can be turned on in the config.sk but this is very unbalanced.
 on world change:
 	set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
 	if player has permission "%{SB::config::buildpermission}%":
@@ -154,35 +193,18 @@ on explode:
 	cancel event
 
 #Island removal process at startup:
-# > Event: on script load
-# > Actions:
-# > This is loaded once the skript is loaded, it deletes some variables which aren't needed anymore
-# > and also goes trough islands which should be deleted, all island locations are saved within
-# > the {deleteisland.1::*} and {deleteisland.2::*} array.
 on script load:
 	set {SB::searchprocess} to false
 	delete {SB::searchis::*}
 	delete {SB::hunger::*}
 	delete {SB::calcstatus::*}
 	delete {SB::actionload::*}
-	
-	#
-	# > Loop trough all islands which should be deleted
-	#
+
 	loop {deleteisland.1::*}:
-		#
-		# > Wait a short time to give the server some break
-		#
 		wait 0.5 seconds
-		#
-		# > Set the local variables {_loc1} and {_loc2} to the two borders of the island
-		#
 		set {_loc1} to loop-value
 		set {_loc2} to {deleteisland.2::%loop-index%}
 
-		#
-		# > Go trough all the blocks within the two borders and remove them.
-		#
 		loop blocks within {_loc1} to {_loc2}:
 			if loop-block is chest or trapped chest:
 				clear loop-block's inventory
@@ -192,12 +214,10 @@ on script load:
 			if {_i} is 500:
 				wait 1 tick
 				delete {_i}
-		#
-		# > Delete the array entry, we're completed with the code above:
-		#
 		delete {deleteisland.1::%loop-index%}
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
+
 	#
 	# > If we're done with deleting islands, also double check there is not a level entry left.
 	# > If there is one left, delete it and delete all variables to the island.
@@ -214,7 +234,6 @@ on script load:
 			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
 			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
 			delete {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
-
 	#
 	# > If we're done, allow players back on the server by disabling the whitelist.
 	#
@@ -224,7 +243,6 @@ on script unload:
 	execute console command "/whitelist on"
 	set {SB::ISDELPROCESS} to true
 
-#
 # > Event: join
 # > Triggered once a player enters the server
 # > Actions:
@@ -242,7 +260,7 @@ on join:
 		leaveisland(player, "member")
 		make player execute "/is leave"
 		send "%{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
-
+		
 	#
 	# > Set the last activity of the island the player is on to now
 	set {_bedrock} to {SB::player::%uuid of player%::island::bedrock}
