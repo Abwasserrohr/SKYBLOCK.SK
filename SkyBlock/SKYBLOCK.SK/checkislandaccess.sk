@@ -1,0 +1,130 @@
+#
+# ==============
+# checkislandaccess.sk
+# ==============
+# checkislandaccess.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - checkislandaccess:
+# > Arguments:
+# > <player>player, <location>location,[<integer>integer]
+# > Actions:
+# > Going to check if the player is allowed to build at the defined location, this
+# > calls getcurrentbedrock, which is searching for the right bedrock and then
+# > checks if the player is allowed to build there and then returns either true (allowed)
+# > or false (not allowed).
+function checkislandaccess(p:player,l: location,t: integer=1) :: boolean:
+	#
+	# > Call the function which generates new temporary variables and sets them
+	# > to the current border and also returns the bedrock location.
+	set {_bedrock} to getcurrentbedrock({_p},{_l})
+	#
+	# > The getcurrentbedrock function created some global temporary variables we can now check,
+	# > if the location parameter is within the temporary variables, we can use them.
+	if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
+		set {_uuid} to uuid of {_p}
+		set {_x} to x-coord of {_bedrock}
+		set {_y} to y-coord of {_bedrock}
+		set {_z} to z-coord of {_bedrock}
+		#
+		# > The leader of the island is allowed to build
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+			return true
+		else:
+			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::member::*}:
+				#
+				# > Members of the island are allowed to build
+				if "%loop-value%" is "%{_uuid}%":
+					return true
+			#
+			# > Since the player has no connection to this island, return false to block access.
+			return false
+	#
+	# > The locations aren't match, go forward and do another check, if that's also not
+	# > working, return false.
+	else:
+		if {_t} is 1:
+			return checkislandaccess({_p}, {_l}, 2)
+		else:
+			return false
+
+# > Function - getcurrentbedrock:
+# > Arguments:
+# > <player>player, <location>location
+# > Actions:
+# > Generatres temporary variables which store the current borders of the player,
+# > if the temporary variables are set, it returns them if everything is ok.
+function getcurrentbedrock(p:player, l:location) :: location:
+	if {SB::TEMPLOC::%{_p}%b1} is not set:
+		#
+		# > Get the current bedrock of the player,
+		# > this takes around 0.02 seconds, thats why we use caching here.
+		set {_bedrock} to getcurrentbedrockmain({_l})
+
+		#
+		# > Generate the new borders of the current bedrock
+		set {_pl::1} to location of {_bedrock}
+		set {_pl::2} to location of {_bedrock}
+		set {_dist} to {SB::config::distance}
+		add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
+		add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
+		subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
+		subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
+		set y-coordinate of {_pl::2} to 256
+		set y-coordinate of {_pl::1} to 0
+		#
+		# > Set border 1 location
+		set {SB::TEMPLOC::%{_p}%b1} to {_pl::1}
+		#
+		# > Set border 2 location
+		set {SB::TEMPLOC::%{_p}%b2} to {_pl::2}
+		#
+		# > Set the location of the bedrock
+		set {SB::TEMPLOC::%{_p}%} to location of {_bedrock}
+		#
+		# > Returns the bedrock location
+		return {_bedrock}
+	else:
+		#
+		# > If the temporary location is usable and within the location, return it
+		if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
+			return {SB::TEMPLOC::%{_p}%}
+		#
+		# > If the temporary location seems outdated, delete it and repeat.
+		else:
+			delete {SB::TEMPLOC::%{_p}%}
+			delete {SB::TEMPLOC::%{_p}%b1}
+			delete {SB::TEMPLOC::%{_p}%b2}
+			return getcurrentbedrock({_p},{_l})
+	
+# > Function - getcurrentbedrockmain:
+# > Arguments:
+# > <location>location
+# > Actions:
+# > Gets the bedrock of the location parameter and returns the location.
+function getcurrentbedrockmain(l:location) :: location:
+	#
+	# > Search 100 blocks around the player for the bedrock.
+	set {_pl::1} to {_l}
+	set {_pl::2} to {_l}
+	set {_dist} to {SB::config::distance}
+	add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
+	add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
+	subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
+	subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
+	#
+	# > Set the y-coordinate only to the height we need, the bedrock y-coordinate.
+	set y-coordinate of {_pl::1} to {SB::config::height}
+	set y-coordinate of {_pl::2} to {SB::config::height}
+	#
+	# > Loop trough all blocks between the two locations, if there is a bedrock, set it
+	# > to the {_bedrock} variable, once it is done, return the location of the bedrock variable.
+	loop blocks within {_pl::1} to {_pl::2}:
+		if loop-block is bedrock:
+			set {_bedrock} to loop-block
+	return location of {_bedrock}
+
+#
+# > Remove all temporary variables on load, which have been created trough the functions above.
+on load:
+	delete {SB::TEMPLOC::*}
