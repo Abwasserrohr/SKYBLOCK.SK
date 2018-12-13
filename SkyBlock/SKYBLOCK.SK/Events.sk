@@ -192,7 +192,11 @@ on explode:
 	#creeper explosion, true, false
 	cancel event
 
-#Island removal process at startup:
+# > Event: on script load
+# > Actions:
+# > This is loaded once the skript is loaded, it deletes some variables which aren't needed anymore
+# > and also goes trough islands which should be deleted, all island locations are saved within
+# > the {deleteisland.1::*} and {deleteisland.2::*} array.
 on script load:
 	set {SB::searchprocess} to false
 	delete {SB::searchis::*}
