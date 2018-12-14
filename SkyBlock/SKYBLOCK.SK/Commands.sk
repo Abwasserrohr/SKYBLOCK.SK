@@ -407,7 +407,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			message "/isadmin island calc <player> - calculates the island of the defined player"
 
 
-command /island [<text>] [<text=1>]:
+command /island [<text>] [<text=1>] [<text>]:
 	aliases: /is, /sb, /skyblock
 	trigger:
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
@@ -917,7 +917,7 @@ command /island [<text>] [<text=1>]:
 					actionload(player,{SB::lang::noperm::%{SK::lang::%uuid of player%}%})
 		else if arg-1 is "help":
 			set {_site} to arg-2 parsed as integer
-			if {_site} is more than 3:
+			if {_site} is more than 4:
 				message "%{_prefix}% %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%"""
 				stop
 			send "%{SB::config::spacer}%"
@@ -940,7 +940,11 @@ command /island [<text>] [<text=1>]:
 				message "%{_prefix}% %{SB::lang::isore::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isgen::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isbiome::%{SK::lang::%uuid of player%}%}%"
-			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/3 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
+			else if arg-2 is "4":
+				message "%{_prefix}% %{SB::lang::trustadd::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::trustremove::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::trustlist::%{SK::lang::%uuid of player%}%}%"
+			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/4 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 
 		# > Argument: "info"
@@ -1020,3 +1024,12 @@ command /island [<text>] [<text=1>]:
 		#
 		else if arg-1 is "ores" OR "ore" OR "orechances" OR "chances":
 			orechancesinfo(player)
+
+		#
+		# > Argument: "trust"
+		# > If a player types in /island trust, the trusthandler function is called.
+		# > Actions:
+		# > Calls the trusthandler function, which either lists all options, adds someone as
+		# > trusted or removes a trusted user, also can list all trusted users.
+		else if arg-1 is "trust":
+			trusthandler(player,arg-2,arg-3)
