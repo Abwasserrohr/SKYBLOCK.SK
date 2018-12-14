@@ -82,7 +82,7 @@ function trusthandler(p:player,a1:text,a2:text):
 				# > be added now. Also prints a success message to the player who executed the command.
 				add {_uuid2} to {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}
 				set {_m} to {SB::lang::trustnowtrusted::%{_lang}%}
-				replace all "<player>" with {_a2} in {_m}
+				replace all "<player>" with "%{_a2}%" in {_m}
 				message "%{_prefix}% %{_m}%" to {_p}
 
 			else:
@@ -126,7 +126,7 @@ function trusthandler(p:player,a1:text,a2:text):
 					if loop-value is {_uuid2}:
 						delete {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::%loop-index%}
 						set {_m} to {SB::lang::trustremoved::%{_lang}%}
-						replace all "<player>" with {_a2} in {_m}
+						replace all "<player>" with "%{_a2}%" in {_m}
 						message "%{_prefix}% %{_m}%" to {_p}
 						stop
 				#
