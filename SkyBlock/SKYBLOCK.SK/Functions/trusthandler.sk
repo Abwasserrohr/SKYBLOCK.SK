@@ -92,7 +92,7 @@ function trusthandler(p:player,a1:text,a2:text):
 		else:
 			#
 			# > The defined argument 2 couldn't be parsed into a player.
-				message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
+			message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
 
 	#
 	# > If the argument 1 is "remove", remove the argument 2 from the trusted list of the island.
