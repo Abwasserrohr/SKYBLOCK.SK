@@ -407,7 +407,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			message "/isadmin island calc <player> - calculates the island of the defined player"
 
 
-command /island [<text>] [<text=1>]:
+command /island [<text>] [<text=1>] [<text>]:
 	aliases: /is, /sb, /skyblock
 	trigger:
 		set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
