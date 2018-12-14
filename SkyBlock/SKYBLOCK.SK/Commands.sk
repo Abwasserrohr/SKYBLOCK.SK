@@ -917,7 +917,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					actionload(player,{SB::lang::noperm::%{SK::lang::%uuid of player%}%})
 		else if arg-1 is "help":
 			set {_site} to arg-2 parsed as integer
-			if {_site} is more than 3:
+			if {_site} is more than 4:
 				message "%{_prefix}% %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%"""
 				stop
 			send "%{SB::config::spacer}%"
