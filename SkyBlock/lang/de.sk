@@ -80,7 +80,7 @@ on script load:
 	#
 	# > /island trust:
 	#
-	set {SB::lang::trustplayerlist::%{_lang}%} to "Alle vertrauten Spieler."
+	set {SB::lang::trustplayerlist::%{_lang}%} to "Alle vertrauten Spieler:"
 	set {SB::lang::alreadytrusted::%{_lang}%} to "Diesem Spieler wird schon vertraut."
 	set {SB::lang::trustnowtrusted::%{_lang}%} to "<player> wird nun vertraut."
 	set {SB::lang::notfoundplayer::%{_lang}%} to "Der Spieler wurde nicht gefunden."
