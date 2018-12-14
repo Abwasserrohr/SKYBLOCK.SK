@@ -31,7 +31,16 @@ function checkislandaccess(p:player,l: location,t: integer=1) :: boolean:
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
 			return true
 		else:
+			#
+			# > Loop trough members, if the player is a member, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::member::*}:
+				#
+				# > Members of the island are allowed to build
+				if "%loop-value%" is "%{_uuid}%":
+					return true
+			#
+			# > Loop trough trusted players, if the player is trusted, return true.
+			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
 				#
 				# > Members of the island are allowed to build
 				if "%loop-value%" is "%{_uuid}%":
