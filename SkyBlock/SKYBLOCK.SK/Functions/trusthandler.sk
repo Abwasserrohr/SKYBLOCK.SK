@@ -1,0 +1,139 @@
+#
+# ==============
+# trusthandler.sk
+# ==============
+# trusthandler.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - trusthandler:
+# > Arguments:
+# > <player>player, <text>argument 1,<text>argument 2
+# > Actions:
+# > Gives the player either information about how the command works,
+# > or adds/removes player from the trusted list of his island.
+# > This function is used to shorten the Commands.sk
+function trusthandler(p:player,a1:text,a2:text):
+	#
+	# > Set the uuid of the player parameter to {_uuid}
+	set {_uuid} to uuid of {_p}
+
+	#
+	# > We need the language many times, setting it to a short local variable makes it
+	# > easier to read.
+	set {_lang} to {SK::lang::%{_uuid}%}
+
+	#
+	# > Set the prefix for messages into the local variable {_prefix}.
+	set {_prefix} to {SB::lang::prefix::%{_lang}%}
+	
+	#
+	# > If there is no agrument, send all possible options.
+	if {_a1} is not set:
+		message "%{_prefix}% %{SB::lang::trustadd::%{_lang}%}%" to {_p}
+		message "%{_prefix}% %{SB::lang::trustremove::%{_lang}%}%" to {_p}
+		message "%{_prefix}% %{SB::lang::trustlist::%{_lang}%}%" to {_p}
+
+	#
+	# > If the argument 1 is "list", list all trusted users.
+	if {_a1} is "list":
+		message "%{_prefix}% %{SB::lang::trustplayerlist::%{_lang}%}%" to {_p}
+		set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_x} to x-coordinate of {_bedrock}
+		set {_y} to y-coordinate of {_bedrock}
+		set {_z} to z-coordinate of {_bedrock}
+		loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
+			message "%{_prefix}% %loop-value parsed as offline player%" to {_p}
+	
+	#
+	# > If the argument 1 is "add", add the argument 2 to the trusted list of his island.
+	if {_a1} is "add":
+		#
+		# > The argument 2 is parsed as offline player.
+		set {_a2} to {_a2} parsed as offline player
+		#
+		# > {_uuid2} is the uuid of the player who should be added.
+		set {_uuid2} to uuid of {_a2}
+		#
+		# > If {_a2} is not an offline player, we print an error. If it is a player,
+		# > go trough the following code:
+		if {_a2} is a offline player:
+			#
+			# > Get the bedrock of the player who executed the command.
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			#
+			# > Get the x, y and z-coordinates of the bedrock to use the variables.
+			set {_x} to x-coordinate of {_bedrock}
+			set {_y} to y-coordinate of {_bedrock}
+			set {_z} to z-coordinate of {_bedrock}
+			#
+			# > Check, if the player who executed the command is also the leader of the island.
+			# > If the player has no island, this does both at the same time.
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+				#
+				# > To not add someone twice, check if the player is already on the list.
+				loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
+					#
+					# > If the player is on the list, print an error and stop here.
+					if loop-value is {_uuid2}:
+						message "%{_prefix}% %{SB::lang::alreadytrusted::%{_lang}%}%" to {_p}
+						stop
+				#
+				# > If this is happening here, the player is not added yet on the island and can
+				# > be added now. Also prints a success message to the player who executed the command.
+				add {_uuid2} to {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}
+				set {_m} to {SB::lang::trustnowtrusted::%{_lang}%}
+				replace all "<player>" with {_a2} in {_m}
+				message "%{_prefix}% %{_m}%" to {_p}
+
+			else:
+				#
+				# > The player is either not the leader or has no island to add someone.
+				message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
+		else:
+			#
+			# > The defined argument 2 couldn't be parsed into a player.
+				message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
+
+	#
+	# > If the argument 1 is "remove", remove the argument 2 from the trusted list of the island.
+	if {_a1} is "remove":
+		#
+		# > The argument 2 is parsed as offline player.
+		set {_a2} to {_a2} parsed as offline player
+		#
+		# > {_uuid2} is the uuid of the player who should be added.
+		set {_uuid2} to uuid of {_a2}
+		#
+		# > If {_a2} is not an offline player, we print an error. If it is a player,
+		# > go trough the following code:
+		if {_a2} is a offline player: 
+			#
+			# > Get the bedrock of the player who executed the command.
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			set {_x} to x-coordinate of {_bedrock}
+			set {_y} to y-coordinate of {_bedrock}
+			set {_z} to z-coordinate of {_bedrock}
+			#
+			# > Check, if the player who executed the command is also the leader of the island.
+			# > If the player has no island, this does both at the same time.
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+				#
+				# > Loop trough all trusted players to find the one to remove.
+				loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
+					#
+					# > If the player is on the list, remove the player and print a success message,
+					# > then stop the function.
+					if loop-value is {_uuid2}:
+						delete {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::%loop-index%}
+						set {_m} to {SB::lang::trustremoved::%{_lang}%}
+						replace all "<player>" with {_a2} in {_m}
+						message "%{_prefix}% %{_m}%" to {_p}
+						stop
+				#
+				# > Since the function hasn't stopped yet, there was no player to remove,
+				# > tell the player who executed the command that there is no such player.
+				message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
+			else:
+				#
+				# > The player has no island or is not the island leader, print a error for that.
+				message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
