@@ -32,7 +32,11 @@ on EntityDamageByEntityEvent:
 	set {_player} to event.getDamager()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l})
+		if event.getEntity() is a animal:
+			set {_type} to "animal"
+		if event.getEntity() is a monster:
+			set {_type} to "monster"
+		set {_allowed} to checkislandaccess({_player},{_l},"EntityDamageByEntityEvent-%{_type}%")
 		if {_allowed} is false:
 			cancel event
 	if "%{_player}%" is "arrow" or "snowball":
@@ -46,7 +50,7 @@ on VehicleDamageEvent:
 	set {_player} to event.getAttacker()
 	if {_player} is a player:
 		set {_l} to event.getVehicle().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l})
+		set {_allowed} to checkislandaccess({_player},{_l},"VehicleDamageEvent")
 		if {_allowed} is false:
 			cancel event
 
@@ -70,7 +74,7 @@ on PlayerInteractEvent:
 		set {_player} to event.getPlayer()
 		if {_player} is a player:
 			set {_l} to event.getClickedBlock().getLocation()
-			set {_allowed} to checkislandaccess({_player},{_l})
+			set {_allowed} to checkislandaccess({_player},{_l},"PlayerInteractEvent",{_b})
 			if {_allowed} is false:
 				cancel event
 
