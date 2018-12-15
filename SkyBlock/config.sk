@@ -52,6 +52,74 @@ on load:
 	#Set a cooldown for /is calc level calculation
 	set {SB::config::calccooldown} to 30 minutes
 
+	# 
+	# > Default Flags
+	# > Change the default flags for islands:
+	
+	#
+	# > Changeable Flags
+	# > Allow your players to toggle the flags for their island. True = allowed, false = denied.
+	set {SB::config::toggleflags} to true
+	
+	#
+	# > Default Flags for player islands:
+	#
+	# > Explosions. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::explosion} to false
+	#
+	# > Explosions. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::mob-spawning} to false
+	#
+	# > Let outsiders use buttons. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-button} to true
+	#
+	# > Let outsiders use the doors. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-door} to true
+	#
+	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+	# > Damage on mobs
+	set {SB::config::defaultlobbyflag::outsiders-mob-damage} to false
+	#
+	# > Damage on animals
+	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
+	#
+	# > Damage on item frames
+	set {SB::config::defaultlobbyflag::outsiders-itemframe-damage} to false
+
+	#
+	# > Interact with vehicles. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
+
+	#
+	# > Flags for not inhabited islands:
+	# > Islands like the lobby island or currently not used islands
+	#
+	# > Explosions. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::explosion} to false
+	#
+	# > Explosions. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::mob-spawning} to false
+	#
+	# > Let outsiders use buttons. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-button} to true
+	#
+	# > Let outsiders use the doors. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-door} to true
+	#
+	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+	# > Damage on mobs
+	set {SB::config::defaultlobbyflag::outsiders-mob-damage} to false
+	#
+	# > Damage on animals
+	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
+	#
+	# > Damage on item frames
+	set {SB::config::defaultlobbyflag::outsiders-itemframe-damage} to false
+
+	#
+	# > Interact with vehicles. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
+
 	#
 	# > Color scheme
 	# > Change this to match the colors with your corporate identity
@@ -90,8 +158,6 @@ on load:
 	add "1,lava bucket" to {SB::schematics::chest::%{_schematicname}%::*}
 	add "2,ice block" to {SB::schematics::chest::%{_schematicname}%::*}
 	add "50,bone meal" to {SB::schematics::chest::%{_schematicname}%::*}
-
-
 
 	#EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
 	set {SB::config::explevel} to 100
