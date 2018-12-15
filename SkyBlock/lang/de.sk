@@ -191,7 +191,7 @@ on script load:
 	# > Flag titles
 	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
 	set {SB::lang::flag::mob-spawningt::%{_lang}%} to "Monster erscheinen"
-	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe für Fremde"
+	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe & Hebel für Fremde"
 	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
 	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster schützen"
 	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere schützen"
