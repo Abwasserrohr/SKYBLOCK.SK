@@ -191,10 +191,17 @@ on ignition:
 		stop
 	cancel event
 
+# > Event: on explode
+# > Actions:
+# > Triggered on an explosion, checks for the nearest player and then check if the explosion is allowed.
 on explode:
-	#todo add, tnt, true, false
-	#creeper explosion, true, false
-	cancel event
+	set {_l} to event-location
+	loop players in radius 30 of {_l}:
+		set {_player} to loop-player
+		stop loop
+	set {_allowed} to checkislandaccess({_player},{_l},"Explode")
+	if {_allowed} is false:
+		cancel event
 
 # > Event: on script load
 # > Actions:
