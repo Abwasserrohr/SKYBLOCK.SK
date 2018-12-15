@@ -80,10 +80,6 @@ on load:
 	# > Damage on animals
 	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
 	#
-	# > Damage on item frames
-	set {SB::config::defaultlobbyflag::outsiders-itemframe-damage} to false
-
-	#
 	# > Interact with vehicles. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
 
