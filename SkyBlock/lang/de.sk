@@ -207,7 +207,7 @@ on script load:
 	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "Erlaubt Fremden, die\nTüren auf deiner Insel\nzu verwenden."
 	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nMonster zu schlagen."
 	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nTiere zu schlagen."
-	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "Erlaubt Fremden,\nmdeine Rahmen abzubauen."
+	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "Erlaubt Fremden,\ndeine Rahmen abzubauen."
 	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "Erlaubt Fremden,\nVehikel zu verwenden."
 	set {SB::lang::flag::publichomed::%{_lang}%} to "Erlaubt allen Spielern,\ndeine Insel zu besuchen."
 
