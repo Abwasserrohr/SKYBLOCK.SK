@@ -184,6 +184,34 @@ on script load:
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
 
 	#
+	# > Flags
+	#
+	
+	#
+	# > Flag titles
+	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
+	set {SB::lang::flag::mob-spawningt::%{_lang}%} to "Monster erscheinen"
+	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe für Fremde"
+	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
+	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster schützen"
+	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere schützen"
+	set {SB::lang::flag::outsiders-itemframe-damaget::%{_lang}%} to "Rahmen schützen"
+	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel schützen"
+	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause für Fremde"
+	
+	#
+	# > Flag descriptions
+	set {SB::lang::flag::explosiond::%{_lang}%} to "Erlaubt zerstörerische\nExplosionen an deiner\nInsel."
+	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "Erlaubt das erscheinen\nvon Monstern auf\ndeiner Insel."
+	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "Erlaubt Fremden, die\nKnöpfe auf deiner Insel\nzu verwenden."
+	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "Erlaubt Fremden, die\nTüren auf deiner Insel\nzu verwenden."
+	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nMonster zu schlagen."
+	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nTiere zu schlagen."
+	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "Erlaubt Fremden,\nmdeine Rahmen abzubauen."
+	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "Erlaubt Fremden,\nVehikel zu verwenden."
+	set {SB::lang::flag::publichomed::%{_lang}%} to "Erlaubt allen Spielern,\ndeine Insel zu besuchen."
+
+	#
 	# > Ore generator add-on
 	#
 	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
