@@ -190,24 +190,20 @@ on script load:
 	#
 	# > Flag titles
 	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
-	set {SB::lang::flag::mob-spawningt::%{_lang}%} to "Monster erscheinen"
 	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe & Hebel für Fremde"
 	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
 	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster schützen"
 	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere schützen"
-	set {SB::lang::flag::outsiders-itemframe-damaget::%{_lang}%} to "Rahmen schützen"
 	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel schützen"
 	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause für Fremde"
 	
 	#
 	# > Flag descriptions
 	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
-	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "%{_s1}%Erlaubt das erscheinen\n%{_s1}%von Monstern auf\n%{_s1}%deiner Insel."
 	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
 	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
 	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Monster zu schlagen."
 	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Tiere zu schlagen."
-	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%deine Rahmen abzubauen."
 	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%Vehikel zu verwenden."
 	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt allen Spielern,\n%{_s1}%deine Insel zu besuchen."
 
