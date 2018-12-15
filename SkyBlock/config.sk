@@ -115,7 +115,9 @@ on load:
 	#
 	# > Damage on item frames
 	set {SB::config::defaultlobbyflag::outsiders-itemframe-damage} to false
-
+	#
+	# > Allow others to visit the island. True = allowed, false = denied.
+	set {SB::config::defaultisflag::publichome} to false
 	#
 	# > Interact with vehicles. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
