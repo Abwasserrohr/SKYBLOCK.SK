@@ -67,9 +67,6 @@ on load:
 	# > Explosions. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::explosion} to false
 	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::mob-spawning} to false
-	#
 	# > Let outsiders use buttons. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-button} to true
 	#
