@@ -212,6 +212,14 @@ on script load:
 	set {SB::lang::flag::publichomed::%{_lang}%} to "Erlaubt allen Spielern,\ndeine Insel zu besuchen."
 
 	#
+	# > Flag settings
+	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "Diese Einstellung\nkann geändert werden."
+	set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "Diese Einstellung\nkann nicht geändert werden."
+	set {SB::lang::flag::currentsetting::%{_lang}%} to "Aktuelle Einstellung: "
+	set {SB::lang::flag::currenttrue::%{_lang}%} to "An"
+	set {SB::lang::flag::currentfalse::%{_lang}%} to "Aus"
+
+	#
 	# > Ore generator add-on
 	#
 	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
