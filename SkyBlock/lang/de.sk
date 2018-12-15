@@ -201,23 +201,23 @@ on script load:
 	
 	#
 	# > Flag descriptions
-	set {SB::lang::flag::explosiond::%{_lang}%} to "Erlaubt zerstörerische\nExplosionen an deiner\nInsel."
-	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "Erlaubt das erscheinen\nvon Monstern auf\ndeiner Insel."
-	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "Erlaubt Fremden, die\nKnöpfe auf deiner Insel\nzu verwenden."
-	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "Erlaubt Fremden, die\nTüren auf deiner Insel\nzu verwenden."
-	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nMonster zu schlagen."
-	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "Erlaubt Fremnden, deine\nTiere zu schlagen."
-	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "Erlaubt Fremden,\ndeine Rahmen abzubauen."
-	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "Erlaubt Fremden,\nVehikel zu verwenden."
-	set {SB::lang::flag::publichomed::%{_lang}%} to "Erlaubt allen Spielern,\ndeine Insel zu besuchen."
+	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
+	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "%{_s1}%Erlaubt das erscheinen\n%{_s1}%von Monstern auf\n%{_s1}%deiner Insel."
+	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Monster zu schlagen."
+	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Tiere zu schlagen."
+	set {SB::lang::flag::outsiders-itemframe-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%deine Rahmen abzubauen."
+	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%Vehikel zu verwenden."
+	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt allen Spielern,\n%{_s1}%deine Insel zu besuchen."
 
 	#
 	# > Flag settings
-	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "Diese Einstellung\nkann geändert werden."
-	set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "Diese Einstellung\nkann nicht geändert werden."
-	set {SB::lang::flag::currentsetting::%{_lang}%} to "Aktuelle Einstellung: "
-	set {SB::lang::flag::currenttrue::%{_lang}%} to "An"
-	set {SB::lang::flag::currentfalse::%{_lang}%} to "Aus"
+	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann geändert werden."
+	set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann nicht geändert werden."
+	set {SB::lang::flag::currentsetting::%{_lang}%} to "%{_s1}%Aktuelle Einstellung: "
+	set {SB::lang::flag::currenttrue::%{_lang}%} to "&2An"
+	set {SB::lang::flag::currentfalse::%{_lang}%} to "&4Aus"
 
 	#
 	# > Ore generator add-on
