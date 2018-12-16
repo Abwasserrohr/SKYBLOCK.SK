@@ -20,6 +20,25 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 	# > to the current border and also returns the bedrock location.
 	set {_bedrock} to getcurrentbedrock({_p},{_l})
 	#
+	# > If this is not a valid island, check trough default lobby flags:
+	if {_bedrock} is not set:
+		if {_p} has permission "is.admin":
+			return true
+		if {_event} is "Explode":
+			return {SB::config::defaultlobbyflag::explosion}
+		if {_event} is "PlayerInteractEvent":
+			if {_block} is lever or button:
+				return {SB::config::defaultlobbyflag::outsiders-button}
+			if {_block} is door:
+				return {SB::config::defaultlobbyflag::outsiders-door}
+		else if {_event} is "EntityDamageByEntityEvent-animal":
+			return {SB::config::defaultlobbyflag::outsiders-animal-damage}
+		else if {_event} is "EntityDamageByEntityEvent-monster":
+			return {SB::config::defaultlobbyflag::outsiders-mob-damage}
+		else if {_event} is "VehicleDamageEvent":
+			return {SB::config::defaultlobbyflag::outsiders-interact-vehicle}
+
+	#
 	# > The getcurrentbedrock function created some global temporary variables we can now check,
 	# > if the location parameter is within the temporary variables, we can use them.
 	if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
