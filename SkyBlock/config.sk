@@ -90,9 +90,6 @@ on load:
 	# > Explosions. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::explosion} to false
 	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::mob-spawning} to false
-	#
 	# > Let outsiders use buttons. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-button} to true
 	#
@@ -101,7 +98,7 @@ on load:
 	#
 	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
 	# > Damage on mobs
-	set {SB::config::defaultlobbyflag::outsiders-mob-damage} to false
+	set {SB::config::defaultlobbyflag::outsiders-mob-damage} to true
 	#
 	# > Damage on animals
 	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
