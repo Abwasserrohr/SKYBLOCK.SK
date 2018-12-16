@@ -108,6 +108,7 @@ on script load:
 	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
 	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
 	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
+	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
