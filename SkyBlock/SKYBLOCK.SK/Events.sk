@@ -32,7 +32,11 @@ on EntityDamageByEntityEvent:
 	set {_player} to event.getDamager()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l})
+		if event.getEntity() is a animal:
+			set {_type} to "animal"
+		if event.getEntity() is a monster:
+			set {_type} to "monster"
+		set {_allowed} to checkislandaccess({_player},{_l},"EntityDamageByEntityEvent-%{_type}%")
 		if {_allowed} is false:
 			cancel event
 	if "%{_player}%" is "arrow" or "snowball":
@@ -46,7 +50,7 @@ on VehicleDamageEvent:
 	set {_player} to event.getAttacker()
 	if {_player} is a player:
 		set {_l} to event.getVehicle().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l})
+		set {_allowed} to checkislandaccess({_player},{_l},"VehicleDamageEvent")
 		if {_allowed} is false:
 			cancel event
 
@@ -66,11 +70,11 @@ on PlayerInteractEvent:
 	#
 	# > Only prevent these types of interactions and let others trough,
 	# > this gets called very often, should be very efficient.
-	if {_b} is soil or lever or button or door or trapdoor or fence gate or comparator or repeater or chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or daylight detector or flower pot or hopper:
+	if {_b} is soil or lever or button or door or trapdoor or fence gate or comparator or repeater or chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or daylight detector or flower pot or hopper or dropper or dispenser:
 		set {_player} to event.getPlayer()
 		if {_player} is a player:
 			set {_l} to event.getClickedBlock().getLocation()
-			set {_allowed} to checkislandaccess({_player},{_l})
+			set {_allowed} to checkislandaccess({_player},{_l},"PlayerInteractEvent",{_b})
 			if {_allowed} is false:
 				cancel event
 
@@ -187,10 +191,17 @@ on ignition:
 		stop
 	cancel event
 
+# > Event: on explode
+# > Actions:
+# > Triggered on an explosion, checks for the nearest player and then check if the explosion is allowed.
 on explode:
-	#todo add, tnt, true, false
-	#creeper explosion, true, false
-	cancel event
+	set {_l} to event-location
+	loop players in radius 30 of {_l}:
+		set {_player} to loop-player
+		stop loop
+	set {_allowed} to checkislandaccess({_player},{_l},"Explode")
+	if {_allowed} is false:
+		cancel event
 
 # > Event: on script load
 # > Actions:

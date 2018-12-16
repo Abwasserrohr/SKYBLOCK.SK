@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.1
+# GUI.SK v0.0.2
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -135,7 +135,9 @@ function setguiitem(player:player,slot:integer,item:text,amount:integer,name:tex
 	set {_ItemStack} to {_ItemStack} named {_name}
 	set {_ItemMeta} to {_ItemStack}.getItemMeta()
 	set {_itemlore} to new ArrayList()
-	{_itemlore}.add({_lore})
+	set {_lore::*} to {_lore} split at "\n"
+	loop {_lore::*}:
+		{_itemlore}.add(coloured "&r%loop-value%")
 	{_ItemMeta}.setLore({_itemlore})
 	{_ItemStack}.setItemMeta({_ItemMeta})
 	set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}

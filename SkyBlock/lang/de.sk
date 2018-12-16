@@ -108,6 +108,7 @@ on script load:
 	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
 	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
 	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
+	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
@@ -182,6 +183,38 @@ on script load:
 	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
 	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
+
+	#
+	# > Flags
+	#
+	
+	#
+	# > Flag titles
+	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
+	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe & Hebel für Fremde"
+	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
+	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster für Fremde"
+	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere für Fremde"
+	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel für Fremde"
+	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause für Fremde"
+	
+	#
+	# > Flag descriptions
+	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
+	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden, deine\n%{_s1}%Monster zu schlagen."
+	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Tiere zu schlagen."
+	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%Vehikel zu verwenden."
+	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt allen Spielern,\n%{_s1}%deine Insel zu besuchen."
+
+	#
+	# > Flag settings
+	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann geändert werden."
+	set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann nicht geändert werden."
+	set {SB::lang::flag::currentsetting::%{_lang}%} to "%{_s1}%Aktuelle Einstellung: "
+	set {SB::lang::flag::currenttrue::%{_lang}%} to "&2An"
+	set {SB::lang::flag::currentfalse::%{_lang}%} to "&4Aus"
 
 	#
 	# > Ore generator add-on

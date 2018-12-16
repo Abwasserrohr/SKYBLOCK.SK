@@ -591,6 +591,57 @@ command /island [<text>] [<text=1>] [<text>]:
 					add 1 to {_s}
 				if {_s} is 3 or 5:
 					add 1 to {_l}
+		#
+		# > Argument "flag" ("flags")
+		# > Actions:
+		# > Opens the flag menu using the openflagmenu function.
+		else if arg-1 is "flag" or "flags":
+			openflagmenu(player)
+		#
+		# > Argument "tp"
+		# > Actions:
+		# > Teleports the executor to the island of the argument 2, if the flags are set to true.
+		else if arg-1 is "tp":
+			#
+			# > If argument 1 is empty, it is always "1".
+			if arg-2 is not "1":
+				#
+				# > Set argument 2 as offline player and get the uuid.
+				set {_p2} to arg-2 parsed as offline player
+				set {_uuid2} to uuid of {_p2}
+				#
+				# > Get the bedrock of the argument 2 (player)
+				set {_bedrock} to {SB::player::%{_uuid2}%::island::bedrock}
+				set {_x} to x-coord of {_bedrock}
+				set {_y} to y-coord of {_bedrock}
+				set {_z} to z-coord of {_bedrock}
+				#
+				# > Check, if the executor is allowed to teleport to the island.
+				loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
+					#
+					# > If the user is trusted, teleport:
+					if "%loop-value%" is "%uuid of player%":
+						teleport player to {SB::player::%{_uuid2}%::island::home::home}
+						stop
+				#
+				# > Check the flags, maybe the island is public:
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::publichome} is set:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::publichome} is false:
+						message "%{_prefix}% %{SB::lang::flag::errorfalse::%{SK::lang::%uuid of player%}%}%"
+						stop
+				#
+				# > If there is no custom flag, there might be a default flag:
+				else:
+					if {SB::config::defaultisflag::publichome} is false:
+						message "%{_prefix}% %{SB::lang::flag::errorfalse::%{SK::lang::%uuid of player%}%}%"
+						stop
+				#
+				# > Since this hasn't stopped yet, it is valid to teleport the executor.
+				teleport player to {SB::player::%{_uuid2}%::island::home::home}
+			else:
+				#
+				# > There is no player, print error.
+				message "%{_prefix}% %{SB::lang::notfoundplayer::%{SK::lang::%uuid of player%}%}%"
 		else if arg-1 is "home":
 			set {_loc} to {SB::player::%uuid of player%::island::home::home}
 			if {_loc} is not set:
@@ -944,6 +995,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				message "%{_prefix}% %{SB::lang::trustadd::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustremove::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustlist::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::flaglist::%{SK::lang::%uuid of player%}%}%"
 			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/4 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 

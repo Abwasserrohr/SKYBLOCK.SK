@@ -13,11 +13,31 @@
 # > calls getcurrentbedrock, which is searching for the right bedrock and then
 # > checks if the player is allowed to build there and then returns either true (allowed)
 # > or false (not allowed).
-function checkislandaccess(p:player,l: location,t: integer=1) :: boolean:
+function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t: integer=1) :: boolean:
+
 	#
 	# > Call the function which generates new temporary variables and sets them
 	# > to the current border and also returns the bedrock location.
 	set {_bedrock} to getcurrentbedrock({_p},{_l})
+	#
+	# > If this is not a valid island, check trough default lobby flags:
+	if {_bedrock} is not set:
+		if {_p} has permission "is.admin":
+			return true
+		if {_event} is "Explode":
+			return {SB::config::defaultlobbyflag::explosion}
+		if {_event} is "PlayerInteractEvent":
+			if {_block} is lever or button:
+				return {SB::config::defaultlobbyflag::outsiders-button}
+			if {_block} is door:
+				return {SB::config::defaultlobbyflag::outsiders-door}
+		else if {_event} is "EntityDamageByEntityEvent-animal":
+			return {SB::config::defaultlobbyflag::outsiders-animal-damage}
+		else if {_event} is "EntityDamageByEntityEvent-monster":
+			return {SB::config::defaultlobbyflag::outsiders-mob-damage}
+		else if {_event} is "VehicleDamageEvent":
+			return {SB::config::defaultlobbyflag::outsiders-interact-vehicle}
+
 	#
 	# > The getcurrentbedrock function created some global temporary variables we can now check,
 	# > if the location parameter is within the temporary variables, we can use them.
@@ -26,6 +46,19 @@ function checkislandaccess(p:player,l: location,t: integer=1) :: boolean:
 		set {_x} to x-coord of {_bedrock}
 		set {_y} to y-coord of {_bedrock}
 		set {_z} to z-coord of {_bedrock}
+		#
+		# > Check if the explosion should happen or not.
+		if {_event} is "Explode":
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is set:
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is false:
+					return false
+			else:
+				if {SB::config::defaultisflag::explosion} is false:
+					return false
+		#
+		# > Check for permissions:
+		if {_p} has permission "is.admin":
+			return true
 		#
 		# > The leader of the island is allowed to build
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
@@ -45,15 +78,55 @@ function checkislandaccess(p:player,l: location,t: integer=1) :: boolean:
 				# > Members of the island are allowed to build
 				if "%loop-value%" is "%{_uuid}%":
 					return true
+					
 			#
-			# > Since the player has no connection to this island, return false to block access.
+			# > Check if there is a flag which allows specific events:
+			if {_event} is "PlayerInteractEvent":
+				if {_block} is lever or button:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-button} is set:
+						if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-button} is true:
+							return true
+					else:
+						if {SB::config::defaultisflag::outsiders-button} is true:
+							return true
+				if {_block} is door:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-door} is set:
+						if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-door} is true:
+							return true
+					else:
+						if {SB::config::defaultisflag::outsiders-door} is true:
+							return true
+			else if {_event} is "EntityDamageByEntityEvent-animal":
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-animal-damage} is set:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-animal-damage} is true:
+						return true
+				else:
+					if {SB::config::defaultisflag::outsiders-animal-damage} is true:
+						return true
+			else if {_event} is "EntityDamageByEntityEvent-monster":
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-mob-damage} is set:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-mob-damage} is true:
+						return true
+				else:
+					if {SB::config::defaultisflag::outsiders-mob-damage} is true:
+						return true
+			else if {_event} is "VehicleDamageEvent":
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-interact-vehicle} is set:
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-interact-vehicle} is true:
+						return true
+				else:
+					if {SB::config::defaultisflag::outsiders-interact-vehicle} is true:
+						return true
+
+			#
+			# > Since the player has no connection to this island and flags haven't returned, return false to block access.
 			return false
 	#
 	# > The locations aren't match, go forward and do another check, if that's also not
 	# > working, return false.
 	else:
 		if {_t} is 1:
-			return checkislandaccess({_p}, {_l}, 2)
+			return checkislandaccess({_p}, {_l}, {_event}, {_block}, 2)
 		else:
 			return false
 
