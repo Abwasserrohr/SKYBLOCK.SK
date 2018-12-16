@@ -995,6 +995,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				message "%{_prefix}% %{SB::lang::trustadd::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustremove::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustlist::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::flaglist::%{SK::lang::%uuid of player%}%}%"
 			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/4 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 
