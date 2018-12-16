@@ -192,9 +192,9 @@ on script load:
 	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
 	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe & Hebel für Fremde"
 	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
-	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster schützen"
-	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere schützen"
-	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel schützen"
+	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster für Fremde"
+	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere für Fremde"
+	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel für Fremde"
 	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause für Fremde"
 	
 	#
