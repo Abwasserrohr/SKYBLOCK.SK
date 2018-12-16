@@ -592,6 +592,12 @@ command /island [<text>] [<text=1>] [<text>]:
 				if {_s} is 3 or 5:
 					add 1 to {_l}
 		#
+		# > Argument "flag" ("flags")
+		# > Actions:
+		# > Opens the flag menu using the openflagmenu function.
+		else if arg-1 is "flag" or "flags":
+			openflagmenu(player)
+		#
 		# > Argument "tp"
 		# > Actions:
 		# > Teleports the executor to the island of the argument 2, if the flags are set to true.
