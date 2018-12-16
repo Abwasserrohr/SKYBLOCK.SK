@@ -202,7 +202,7 @@ on script load:
 	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
 	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
 	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
-	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Monster zu schlagen."
+	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden, deine\n%{_s1}%Monster zu schlagen."
 	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremnden, deine\n%{_s1}%Tiere zu schlagen."
 	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%Vehikel zu verwenden."
 	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt allen Spielern,\n%{_s1}%deine Insel zu besuchen."
