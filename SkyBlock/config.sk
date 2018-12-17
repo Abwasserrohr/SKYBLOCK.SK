@@ -74,20 +74,20 @@ on load:
 	# > Default Flags for player islands:
 	#
 	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultisflag::explosion} to false #ok
+	set {SB::config::defaultisflag::explosion} to false
 	#
 	# > Let outsiders use buttons. True = allowed, false = denied.
-	set {SB::config::defaultisflag::outsiders-button} to false #ok
+	set {SB::config::defaultisflag::outsiders-button} to false
 	#
 	# > Let outsiders use the doors. True = allowed, false = denied.
-	set {SB::config::defaultisflag::outsiders-door} to false #ok
+	set {SB::config::defaultisflag::outsiders-door} to false
 	#
 	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
 	# > Damage on mobs
-	set {SB::config::defaultisflag::outsiders-mob-damage} to false #ok
+	set {SB::config::defaultisflag::outsiders-mob-damage} to false
 	#
 	# > Damage on animals
-	set {SB::config::defaultisflag::outsiders-animal-damage} to false #ok
+	set {SB::config::defaultisflag::outsiders-animal-damage} to false
 	#
 	# > Interact with vehicles. True = allowed, false = denied.
 	set {SB::config::defaultisflag::outsiders-interact-vehicle} to false
