@@ -60,28 +60,40 @@ on load:
 	# > Changeable Flags
 	# > Allow your players to toggle the flags for their island. True = allowed, false = denied.
 	set {SB::config::toggleflags} to true
+
+	# 
+	# > Default Flags
+	# > Change the default flags for islands:
+	
+	#
+	# > Changeable Flags
+	# > Allow your players to toggle the flags for their island. True = allowed, false = denied.
+	set {SB::config::toggleflags} to true
 	
 	#
 	# > Default Flags for player islands:
 	#
 	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::explosion} to false
+	set {SB::config::defaultisflag::explosion} to false #ok
 	#
 	# > Let outsiders use buttons. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::outsiders-button} to true
+	set {SB::config::defaultisflag::outsiders-button} to false #ok
 	#
 	# > Let outsiders use the doors. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::outsiders-door} to true
+	set {SB::config::defaultisflag::outsiders-door} to false #ok
 	#
 	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
 	# > Damage on mobs
-	set {SB::config::defaultlobbyflag::outsiders-mob-damage} to false
+	set {SB::config::defaultisflag::outsiders-mob-damage} to false #ok
 	#
 	# > Damage on animals
-	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
+	set {SB::config::defaultisflag::outsiders-animal-damage} to false #ok
 	#
 	# > Interact with vehicles. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
+	set {SB::config::defaultisflag::outsiders-interact-vehicle} to false
+	#
+	# > Allow others to visit the island. True = allowed, false = denied.
+	set {SB::config::defaultisflag::publichome} to false
 
 	#
 	# > Flags for not inhabited islands:
@@ -89,6 +101,9 @@ on load:
 	#
 	# > Explosions. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::explosion} to false
+	#
+	# > Explosions. True = allowed, false = denied.
+	set {SB::config::defaultlobbyflag::mob-spawning} to false
 	#
 	# > Let outsiders use buttons. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-button} to true
@@ -103,9 +118,13 @@ on load:
 	# > Damage on animals
 	set {SB::config::defaultlobbyflag::outsiders-animal-damage} to false
 	#
+	# > Damage on item frames
+	set {SB::config::defaultlobbyflag::outsiders-itemframe-damage} to false
+
+	#
 	# > Interact with vehicles. True = allowed, false = denied.
 	set {SB::config::defaultlobbyflag::outsiders-interact-vehicle} to false
-
+	
 	#
 	# > Color scheme
 	# > Change this to match the colors with your corporate identity
