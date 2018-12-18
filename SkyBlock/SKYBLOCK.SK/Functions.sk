@@ -111,8 +111,8 @@ function calcisland(p:offline player):
 					set {_tb} to "living_coral_block"
 			if {_tb} contains "carpet":
 				set {_tb} to "carpet"
-			if {_tb} contains "carpet":
-				set {_tb} to "carpet"
+			if loop-block is a hopper:
+				add 1 to {_hopper}
 			if {SB::expblocks::%{_tb}%} is set:
 				#add the xp of the block to the exp variable
 				add {SB::expblocks::%{_tb}%} to {_exp}
@@ -126,6 +126,9 @@ function calcisland(p:offline player):
 	set {_y} to y-coordinate of {_bedrockloc}
 	set {_z} to z-coordinate of {_bedrockloc}
 	set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to {_level}
+	#
+	# > Updates the hopper count to the new counted amount of hoppers:
+	set {_tmp} to hoppercounter({_p},"update",{_hopper})
 	delete {SB::calcstatus::%{_p}%}
 
 #Check, if the player is the island owner or member - usedd by checkprotect
