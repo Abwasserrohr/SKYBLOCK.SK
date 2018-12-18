@@ -236,5 +236,9 @@ on script load:
 	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
 
 	#
-	# > Increase size of the island
+	# > Island upgrades
 	set {SB::lang::bc::islandsizeshop::%{_lang}%} to "Vergrößert deine Insel\nauf <size>x<size> Blöcke."
+	set {SB::lang::bc::islandhoppershop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Trichter zu setzen."
+	set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
+	set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
+	
