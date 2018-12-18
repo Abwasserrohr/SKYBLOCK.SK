@@ -100,8 +100,9 @@ on place:
 	#
 	# > If the player is allowed to build and the event-block is also a hopper,
 	# > check, run the hoppercounter function.
-	if event-block is a hopper and {_allowed} is true:
-		set {_allowed} to hoppercounter(player, "place")
+	if event-block is hopper:
+		if {_allowed} is true:
+			set {_allowed} to hoppercounter(player, "place")
 	if {_allowed} is false:
 		cancel event
 
@@ -115,11 +116,12 @@ on break:
 	#
 	# > If the player is allowed to build and the event-block is also a hopper,
 	# > check, run the hoppercounter function.
-	if event-block is a hopper and {_allowed} is true:
-		set {_allowed} to hoppercounter(player, "break")
+	if event-block is hopper:
+		if {_allowed} is true:
+			set {_allowed} to hoppercounter(player, "break")
 	if {_allowed} is false:
 		cancel event
-		
+
 #
 # > Event - rightclick on a entity
 # > Triggered, if the player rightclicks on an entity
