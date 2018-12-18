@@ -97,6 +97,9 @@ on PlayerInteractEvent:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on place:
 	set {_allowed} to checkislandaccess(player,location of event-block)
+	#
+	# > If the player is allowed to build and the event-block is also a hopper,
+	# > check, run the hoppercounter function.
 	if event-block is a hopper and {_allowed} is true:
 		set {_allowed} to hoppercounter(player, "place")
 	if {_allowed} is false:
@@ -109,6 +112,9 @@ on place:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on break:
 	set {_allowed} to checkislandaccess(player,location of event-block)
+	#
+	# > If the player is allowed to build and the event-block is also a hopper,
+	# > check, run the hoppercounter function.
 	if event-block is a hopper and {_allowed} is true:
 		set {_allowed} to hoppercounter(player, "break")
 	if {_allowed} is false:
