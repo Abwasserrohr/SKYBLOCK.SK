@@ -250,4 +250,4 @@ on script load:
 	set {SB::lang::bc::islandhoppershop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Trichter zu setzen."
 	set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
 	set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
-	
+	set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"
