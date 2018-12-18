@@ -1,0 +1,135 @@
+#
+# ==============
+# homehandler.sk
+# ==============
+# homehandler.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - homehandler:
+# > Arguments:
+# > <player>player, <text>action, <text>arg1
+# > Actions:
+# > The homehandler handles all actions for homes, creating, teleporting and deleting homes
+# > is possible with this function.
+function homehandler(p:player,action:text,arg1:text):
+	#
+	# > If we have the argument 1 set to "1", the user had no input, set it to default "home".
+	if {_arg1} is "1":
+		set {_arg1} to "home"
+	#
+	# > Get the uuid of the player and the prefix in an local variable, since we
+	# > need the two variables quite often now.
+	set {_uuid} to uuid of {_p}
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	#
+	# > If the player wants to set a home:
+	if {_action} is "sethome":
+		#
+		# > If the player has no island, print an error.
+		if {SB::player::%{_uuid}%::island::bedrock} is not set:
+			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+		else:
+			#
+			# > Only allow the player to set a home, if he is allowed to do so at this location.
+			set {_allowed} to checkislandaccess({_p},location of {_p})
+			if {_allowed} is true:
+				set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+				set {_x} to x-coord of {_bedrock}
+				set {_y} to y-coord of {_bedrock}
+				set {_z} to z-coord of {_bedrock}
+				#
+				# > Check if the limit is not already reached:
+				set {_defaulthomes} to {SB::config::starthomes}
+				set {_maxhomes} to {SB::config::maxhomes}
+				#
+				# > Check if there are upgradeable islands sizes available are:
+				if {_maxhomes} is not {_defaulthomes}:
+					set {_lvl} to {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade}
+					#
+					# > Calculate how much we can upgrade the homes until the maximum is reached.
+					set {_upgradeablehome} to ({_maxhomes} - {_defaulthomes})
+					#
+					# > Calculate how much homes we can increase per level, we have default 5 levels to unlock.
+					set {_homeincreaseperlevel} to ({_upgradeablehome} / 5)
+					set {_maxhomes} to ({_lvl} * {_maxhomes})
+				#
+				# > Check if the home is already set and being overwritten, disable check
+				# > for the limit if that is the case.
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is not set:
+					#
+					# > If the limit is reached, print error and stop.
+					if size of {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*} >= {_maxhomes}:
+						message "%{_prefix}% %{SB::lang::sethomelmitreached::%{SK::lang::%{_uuid}%}%}%" to {_p}
+						stop
+				#
+				# > Limit is not reached, set the new home.
+				set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} to location of {_p}
+				message "%{_prefix}% %{SB::lang::sethomeok::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			else:
+				message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%" to {_p}
+	#
+	# > If the player wants to teleport to a home:
+	else if {_action} is "home":
+		#
+		# > If the player has no island, print an error.
+		set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+		if {_bedrock} is not set:
+			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			stop
+		#
+		# > Get the homes of the island:
+		set {_x} to x-coord of {_bedrock}
+		set {_y} to y-coord of {_bedrock}
+		set {_z} to z-coord of {_bedrock}
+		set {_loc} to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
+		#
+		# > If there is no location set to this arugment, there might be one on the old variable type:
+		if {_loc} is not set:
+			set {_loc} to {SB::player::%{_uuid}%::island::home::%{_arg1}%}
+			set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} to {_loc}
+		#
+		# > If there is nothing, print all available homes.
+		if {_loc} is not set:
+			set {_msg} to {SB::lang::notfoundhome::%{SK::lang::%{_uuid}%}%}
+			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*}:
+				add loop-index to {_homes::*}
+			replace all "<homes>" with "%{_homes::*}%" in {_msg}
+			message "%{_prefix}% %{_msg}%" to {_p}
+		#
+		# > If there is a location, check if it is safe and then teleport.
+		else:
+			if "%block at {_loc}%" contains "slab":
+				set {_skip} to true
+			if {_skip} is not set:
+				set {_loc2} to {_loc}
+				subtract 1 from y-coord of {_loc2}
+				if "%block at {_loc2}%" is "air":
+					message "%{_prefix}% %{SB::lang::homewarnair::%{SK::lang::%{_uuid}%}%}%" to {_p}
+					wait a tick
+					make {_p} execute command "/is go"
+					stop
+			teleport {_p} to {_loc}
+			message "%{_prefix}% %{SB::lang::tphome::%{SK::lang::%{_uuid}%}%}%" to {_p}
+	#
+	# > If the player wants to delete a home:
+	else if {_action} is "delhome":
+		#
+		# > Check if the user as an island:
+		if {SB::player::%{_uuid}%::island::bedrock} is not set:
+			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+		#
+		# > If the user has an island, and he wants to delete a home thats not named "home",
+		# > it is deleted.
+		else:
+			if {_arg1} is not "home":
+				set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+				set {_x} to x-coord of {_bedrock}
+				set {_y} to y-coord of {_bedrock}
+				set {_z} to z-coord of {_bedrock}
+				if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is set:
+					delete {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
+					message "%{_prefix}% %{SB::lang::homedeleted::%{SK::lang::%{_uuid}%}%}%" to {_p}
+				else:
+					message "%{_prefix}% %{SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			else:
+				message "%{_prefix}% %{SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}%" to {_p}
