@@ -217,6 +217,10 @@ function deleteisland(p1: offline player):
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag}
+		
+		#
+		# > Remove all upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::sizeupgrade}
 
 		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 		set {_locx} to x-coord of {_loc}
