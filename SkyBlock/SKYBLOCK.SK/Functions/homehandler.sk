@@ -51,7 +51,7 @@ function homehandler(p:player,action:text,arg1:text):
 					#
 					# > Calculate how much homes we can increase per level, we have default 5 levels to unlock.
 					set {_homeincreaseperlevel} to ({_upgradeablehome} / 5)
-					set {_maxhomes} to ({_lvl} * {_maxhomes})
+					set {_maxhomes} to ({_lvl} * {_homeincreaseperlevel})
 				#
 				# > Check if the home is already set and being overwritten, disable check
 				# > for the limit if that is the case.
