@@ -18,8 +18,12 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		if arg-1 is "go" OR "home" OR "tp":
 			set {_player} to arg-2 parsed as offline player
 			set {_uuid} to uuid of {_player}
-			if {SB::player::%{_uuid}%::island::home::home} is set:
-				teleport player to {SB::player::%{_uuid}%::island::home::home}
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			set {_locx} to x-coord of {_bedrock}
+			set {_locy} to y-coord of {_bedrock}
+			set {_locz} to z-coord of {_bedrock}
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} is set:
+				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 			stop
 		#
 		# > If something should be done with an island, this is the code:
@@ -892,7 +896,6 @@ command /island [<text>] [<text=1>] [<text>]:
 						set {SB::player::%{_joinuuid}%::island::border1} to {SB::player::%{_pluuid}%::island::border1}
 						set {SB::player::%{_joinuuid}%::island::border2} to {SB::player::%{_pluuid}%::island::border2}
 						delete {Request::%player%::%{_arg2}%}
-						broadcast "%{Request::%player%::%{_arg2}%}%"
 						make player execute command "/is home"
 						set {_a} to {SB::lang::joinedismember::%{SK::lang::%uuid of player%}%}
 						set {_uuid2} to uuid of {_arg2}
