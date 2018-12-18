@@ -1079,3 +1079,11 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > trusted or removes a trusted user, also can list all trusted users.
 		else if arg-1 is "trust":
 			trusthandler(player,arg-2,arg-3)
+
+		#
+		# > Argument: "upgrade" ("upgrades")
+		# > If a player types in /island upgrade, the islandupgrademenu function is called.
+		# > Actions:
+		# > Calls the islandupgrademenu function, which opens the upgrade menu.
+		else if arg-1 is "upgrade" or "upgrades":
+			islandupgrademenu(player)
