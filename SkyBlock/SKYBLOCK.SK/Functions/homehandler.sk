@@ -58,7 +58,7 @@ function homehandler(p:player,action:text,arg1:text):
 				if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is not set:
 					#
 					# > If the limit is reached, print error and stop.
-					if size of {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*} >= {_maxhomes}:
+					if size of {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*} > {_maxhomes}:
 						message "%{_prefix}% %{SB::lang::sethomelmitreached::%{SK::lang::%{_uuid}%}%}%" to {_p}
 						stop
 				#
