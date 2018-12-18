@@ -19,9 +19,9 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			set {_player} to arg-2 parsed as offline player
 			set {_uuid} to uuid of {_player}
 			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-			set {_locx} to x-coord of {_bedrock}
-			set {_locy} to y-coord of {_bedrock}
-			set {_locz} to z-coord of {_bedrock}
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
 			if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} is set:
 				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 			stop
