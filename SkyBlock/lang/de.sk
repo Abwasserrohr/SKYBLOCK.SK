@@ -234,4 +234,3 @@ on script load:
 	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
 	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
 	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
-	set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"
