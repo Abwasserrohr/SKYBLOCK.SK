@@ -128,8 +128,14 @@ function homehandler(p:player,action:text,arg1:text):
 				set {_z} to z-coord of {_bedrock}
 				if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is set:
 					delete {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
-					message "%{_prefix}% %{SB::lang::homedeleted::%{SK::lang::%{_uuid}%}%}%" to {_p}
+					set {_msg} to {SB::lang::homedeleted::%{SK::lang::%{_uuid}%}%}
+					replace all "<home>" with "%{_arg1}%" in {_msg}
+					message "%{_prefix}% %{_msg}%" to {_p}
 				else:
-					message "%{_prefix}% %{SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}%" to {_p}
+					set {_msg} to {SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}
+					replace all "<home>" with "%{_arg1}%" in {_msg}
+					message "%{_prefix}% %{_msg}%" to {_p}
 			else:
-				message "%{_prefix}% %{SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}%" to {_p}
+				set {_msg} to {SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}
+				replace all "<home>" with "%{_arg1}%" in {_msg}
+				message "%{_prefix}% %{_msg}%" to {_p}
