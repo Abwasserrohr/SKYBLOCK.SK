@@ -17,8 +17,15 @@ on load:
 	set {SB::config::spawn}'s pitch to 0
 	set {SB::config::spawn}'s yaw to -95
 
-	# How much distance should be between islands:
+	# How much distance should be between islands (100 means 200x200 islands)
 	set {SB::config::distance} to 100
+	
+	# Default size of the island, set it to the distance like above to make it as big as the distance is.
+	set {SB::config::defaultsize} to 100
+	
+	# If the default island size is smaller than the distance between players, you can enable island upgrades,
+	# these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
+	set {SB::config::islandupgrades} to true
 	
 	# On which height should islands be created
 	set {SB::config::height} to 100.5
