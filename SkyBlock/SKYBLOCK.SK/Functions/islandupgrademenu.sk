@@ -35,7 +35,7 @@ function islandupgrademenu(p:player):
 	# > Check, if the player who executed the command is also the leader of the island.
 	if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
 		set {_slots} to 54
-		opengui({_p},{_slots},"&lInsel Erweiterungen")
+		opengui({_p},{_slots},"&l%{SB::lang::bc::islandupgrades::%{_lang}%}%")
 		set {_i} to 0
 		loop 57 times:
 			set slot {_i} of {_p}'s current inventory to black glass pane named " "
