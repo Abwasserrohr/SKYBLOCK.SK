@@ -1,0 +1,97 @@
+#
+# ==============
+# hoppercounter.sk
+# ==============
+# hoppercounter.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - hoppercounter:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Counts the hoppers placed on an island and returns false if a limit is reached.
+# > Also counts down if hoppers are removed.
+function hoppercounter(p:player,action:text,amount:integer=1) :: boolean:
+	if {_action} is "place":
+		#
+		# > This function is called instantly after a bedrock check, we can use the temporary location variable.
+		set {_bedrock} to block at {SB::TEMPLOC::%{_p}%}
+		#
+		# > To be sure, we need the bedrock to continue.
+		if {_bedrock} is a bedrock:
+			#
+			# > Get the coordinates to access the current hopper count.
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			set {_count} to {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount}
+			#
+			# > Get the settings from the configuration.
+			set {_defaulthopper} to {SB::config::starthopper}
+			set {_maxhopper} to {SB::config::maxhopper}
+			#
+			# > Check if a upgradeable system is needed or not:
+			if {_maxhopper} is not {_defaulthopper}:
+				set {_lvl} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hopperupgrade}
+				#
+				# > Calculate how much we can upgrade the hoppers until the maximum is reached.
+				set {_upgradeablehopper} to ({_maxhopper} - {_defaulthopper})
+				#
+				# > Calculate how much hoppers we can increase per level, we have default 5 levels to unlock.
+				set {_hopperincreaseperlevel} to ({_upgradeablehopper} / 5)
+				#
+				# > Calculate the current hopper level * bonus per level.
+				set {_currenthopperbonus} to ({_lvl} * {_hopperincreaseperlevel})
+				#
+				# > Add the size bonus by current hopper level.
+				set {_hopper} to ({_defaulthopper} + {_currenthopperbonus})
+			#
+			# > If the max hoppers and default hoppers are the same, allow it until the maximum amount is hit.
+			else:
+				set {_hopper} to {_maxhopper}
+			#
+			# > Check if the hopper count is higher than the allowed hopper amount.
+			if {_count} >= {_hopper}:
+				#
+				# > Since it is bigger, print an error message and return false.
+				set {_uuid} to uuid of {_p}
+				set {_lang} to {SK::lang::%{_uuid}%}
+				set {_msg} to {SB::lang::bc::islandhopperlimitinfo::%{_lang}%}
+				replace all "<size>" with "" in {_msg}
+				message "%{SB::lang::prefix::%{_lang}%}% %{_msg}%" to {_p}
+				return false
+			else:
+				#
+				# > The limit is not reached, return true and count one up.
+				add 1 to {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount}
+				return true
+		else:
+			return false
+	else if {_action} is "break":
+		#
+		# > To be sure, we need the bedrock to continue.
+		set {_bedrock} to block at {SB::TEMPLOC::%{_p}%}
+		#
+		# > If we have a bedrock, we can continue and remove 1 of the hopper count.
+		if {_bedrock} is a bedrock:
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			remove 1 from {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount}
+		else:
+			return false
+	else if {_action} is "update":
+		#
+		# > Sometimes, there might get something out of sync, on /island calc,
+		# > the hopper count is set again to be sure everything is fine. This
+		# > parameter is for this purpose only.
+		set {_bedrock} to block at {SB::player::%{_p}%::island::bedrock}
+		if {_bedrock} is a bedrock:
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			set {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount} to {_amount}
+		else:
+			return false
+	else:
+		return false
