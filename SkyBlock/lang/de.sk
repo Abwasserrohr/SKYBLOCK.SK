@@ -65,7 +65,10 @@ on script load:
 	# > /island sethome
 	#
 	set {SB::lang::sethomeok::%{_lang}%} to "Zuhause erfolgreich erstellt."
-	set {SB::lang::ishomecancel::%{_lang}%} to "Du bist nicht auf deiner Insel."
+	set {SB::lang::ishomecancel::%{_lang}%} to "Das neue Zuhause muss auf deiner Insel sein."
+	set {SB::lang::sethomeoverwritten::%{_lang}%} to "Zuhause erfolgreich überschrieben."
+	set {SB::lang::homedeleted::%{_lang}%} to "Zuhause <home> wurde entfernt."
+	set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
 	#
 	# > /island info:
