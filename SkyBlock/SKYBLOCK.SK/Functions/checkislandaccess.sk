@@ -162,7 +162,7 @@ function getcurrentbedrock(p:player, l:location) :: location:
 			set {_x} to x-coord of {_bedrock}
 			set {_y} to y-coord of {_bedrock}
 			set {_z} to z-coord of {_bedrock}
-			set {_lvl} to {SB::island::%{_x}%_%{_y}}%_%{_z}%::sizeupgrade}
+			set {_lvl} to {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade}
 			#
 			# > Calculate how much we can upgrade the island until the maximum is reached.
 			set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
