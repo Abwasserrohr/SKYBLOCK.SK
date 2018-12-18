@@ -621,7 +621,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					#
 					# > If the user is trusted, teleport:
 					if "%loop-value%" is "%uuid of player%":
-						teleport player to {SB::player::%{_uuid2}%::island::home::home}
+						teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 						stop
 				#
 				# > Check the flags, maybe the island is public:
@@ -637,7 +637,8 @@ command /island [<text>] [<text=1>] [<text>]:
 						stop
 				#
 				# > Since this hasn't stopped yet, it is valid to teleport the executor.
-				teleport player to {SB::player::%{_uuid2}%::island::home::home}
+				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
+
 			else:
 				#
 				# > There is no player, print error.
