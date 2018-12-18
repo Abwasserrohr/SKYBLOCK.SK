@@ -243,6 +243,13 @@ function deleteisland(p1: offline player):
 		set {_locz} to z-coord of {_loc}
 		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
 
+		#
+		# > Delete all homes of the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
+
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
 		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
 		set {_loc1} to {SB::player::%{_uuid}%::island::border1}
