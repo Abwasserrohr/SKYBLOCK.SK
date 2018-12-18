@@ -21,7 +21,26 @@ on load:
 	set {SB::config::distance} to 100
 	
 	# Default size of the island, set it to the distance like above to make it as big as the distance is.
-	set {SB::config::defaultsize} to 100
+	# > Default Island is 50x50 big and can be upgraded 5 times á 30x30. until it is 200x200. (25)
+	set {SB::config::defaultsize} to 25
+	
+	#
+	# > The default amount of hoppers, the player is allowed to place until
+	# > the placement of hoppers is canceled.
+	set {SB::config::starthopper} to 50
+	
+	#
+	# > The maximum amount of hoppers, the player is allowed to place once the
+	# > hopper upgrade is upgraded to the level 5. 
+	set {SB::config::maxhopper} to 400
+	
+	#
+	# > The default amount of homes the island has to use.
+	set {SB::config::starthomes} to 1
+	
+	#
+	# > The maximum amount of homes, once the island hits home upgrade level 5.
+	set {SB::config::maxhomes} to 5
 	
 	# If the default island size is smaller than the distance between players, you can enable island upgrades,
 	# these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
