@@ -244,6 +244,10 @@ on script load:
 		delete {deleteisland.1::%loop-index%}
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
+	#
+	# > To prevent any data being kept here, delete it again completly:
+	delete {deleteisland.1::*}
+	delete {deleteisland.2::*}
 
 	#
 	# > If we're done with deleting islands, also double check there is not a level entry left.
