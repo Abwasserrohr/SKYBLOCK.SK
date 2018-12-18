@@ -234,3 +234,7 @@ on script load:
 	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
 	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
 	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
+
+	#
+	# > Increase size of the island
+	set {SB::lang::bc::islandsizeshop::%{_lang}%} to "Vergrößert deine Insel\nauf <size>x<size> Blöcke."
