@@ -78,6 +78,7 @@ function hoppercounter(p:player,action:text,amount:integer=1) :: boolean:
 			set {_y} to y-coord of {_bedrock}
 			set {_z} to z-coord of {_bedrock}
 			remove 1 from {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount}
+			return true
 		else:
 			return false
 	else if {_action} is "update":
@@ -91,6 +92,7 @@ function hoppercounter(p:player,action:text,amount:integer=1) :: boolean:
 			set {_y} to y-coord of {_bedrock}
 			set {_z} to z-coord of {_bedrock}
 			set {SB::island::%{_x}%_%{_y}%_%{_z}%::hoppercount} to {_amount}
+			return true
 		else:
 			return false
 	else:
