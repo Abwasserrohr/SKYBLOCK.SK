@@ -97,6 +97,12 @@ on PlayerInteractEvent:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on place:
 	set {_allowed} to checkislandaccess(player,location of event-block)
+	#
+	# > If the player is allowed to build and the event-block is also a hopper,
+	# > check, run the hoppercounter function.
+	if event-block is hopper:
+		if {_allowed} is true:
+			set {_allowed} to hoppercounter(player, "place")
 	if {_allowed} is false:
 		cancel event
 
@@ -107,9 +113,15 @@ on place:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on break:
 	set {_allowed} to checkislandaccess(player,location of event-block)
+	#
+	# > If the player is allowed to build and the event-block is also a hopper,
+	# > check, run the hoppercounter function.
+	if event-block is hopper:
+		if {_allowed} is true:
+			set {_allowed} to hoppercounter(player, "break")
 	if {_allowed} is false:
 		cancel event
-		
+
 #
 # > Event - rightclick on a entity
 # > Triggered, if the player rightclicks on an entity
@@ -232,6 +244,10 @@ on script load:
 		delete {deleteisland.1::%loop-index%}
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
+	#
+	# > To prevent any data being kept here, delete it again completly:
+	delete {deleteisland.1::*}
+	delete {deleteisland.2::*}
 
 	#
 	# > If we're done with deleting islands, also double check there is not a level entry left.
@@ -285,8 +301,8 @@ on join:
 		set {_l::3} to z-coord of {_bedrock}
 		set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
 
-	if {SB::player::%uuid of player%::island::home::home} is set:
-		teleport player to {SB::player::%uuid of player%::island::home::home}
+	if {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home} is set:
+		teleport player to {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home}
 	else:
 		teleport player to {SB::config::spawn}
 	wait 5 seconds

@@ -34,6 +34,8 @@ on script load:
 	set {SB::lang::alreadyotheris::%{_lang}%} to "%{_s1}%<player> ist bereits auf einer Insel."
 	set {SB::lang::waitis::%{_lang}%} to "%{_p2}%&lEinen Moment..."
 	set {SB::lang::cantleave::%{_lang}%} to "%{_s1}%Du kannst diese Insel nicht verlassen."
+	set {SB::lang::notfoundhome::%{_lang}%} to "%{_s1}%Dieses Zuhause wurde nicht gefunden."
+
 	
 	#
 	# > /island invite | /island join
@@ -65,7 +67,11 @@ on script load:
 	# > /island sethome
 	#
 	set {SB::lang::sethomeok::%{_lang}%} to "Zuhause erfolgreich erstellt."
-	set {SB::lang::ishomecancel::%{_lang}%} to "Du bist nicht auf deiner Insel."
+	set {SB::lang::ishomecancel::%{_lang}%} to "Das neue Zuhause muss auf deiner Insel sein."
+	set {SB::lang::sethomeoverwritten::%{_lang}%} to "Zuhause erfolgreich überschrieben."
+	set {SB::lang::homedeleted::%{_lang}%} to "Zuhause <home> wurde entfernt."
+	set {SB::lang::cantdeletehome::%{_lang}%} to "<home> kann nicht entfernt werden."
+	set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
 	#
 	# > /island info:
@@ -234,3 +240,14 @@ on script load:
 	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
 	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
 	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
+
+	#
+	# > Island upgrades
+	set {SB::lang::bc::islandsizeshop::%{_lang}%} to "Vergrößert deine Insel\nauf <size>x<size> Blöcke."
+	set {SB::lang::bc::islandsizetitle::%{_lang}%} to "Inselgröße "
+	set {SB::lang::bc::islandhoppertitle::%{_lang}%} to "Trichter "
+	set {SB::lang::bc::islandhometitle::%{_lang}%} to "Zuhause "
+	set {SB::lang::bc::islandhoppershop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Trichter zu setzen."
+	set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
+	set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
+	set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"

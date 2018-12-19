@@ -111,8 +111,8 @@ function calcisland(p:offline player):
 					set {_tb} to "living_coral_block"
 			if {_tb} contains "carpet":
 				set {_tb} to "carpet"
-			if {_tb} contains "carpet":
-				set {_tb} to "carpet"
+			if loop-block is a hopper:
+				add 1 to {_hopper}
 			if {SB::expblocks::%{_tb}%} is set:
 				#add the xp of the block to the exp variable
 				add {SB::expblocks::%{_tb}%} to {_exp}
@@ -126,6 +126,9 @@ function calcisland(p:offline player):
 	set {_y} to y-coordinate of {_bedrockloc}
 	set {_z} to z-coordinate of {_bedrockloc}
 	set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to {_level}
+	#
+	# > Updates the hopper count to the new counted amount of hoppers:
+	set {_tmp} to hoppercounter({_p},"update",{_hopper})
 	delete {SB::calcstatus::%{_p}%}
 
 #Check, if the player is the island owner or member - usedd by checkprotect
@@ -217,12 +220,35 @@ function deleteisland(p1: offline player):
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag}
+		
+		#
+		# > Remove size upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::sizeupgrade}
+		
+		#
+		# > Remove home upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::homeupgrade}
+		
+		#
+		# > Remove hopper upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hopperupgrade}
+		
+		#
+		# > Remove the hopper count of the island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hoppercount}
 
 		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 		set {_locx} to x-coord of {_loc}
 		set {_locy} to y-coord of {_loc}
 		set {_locz} to z-coord of {_loc}
 		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+
+		#
+		# > Delete all homes of the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
 
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
 		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}

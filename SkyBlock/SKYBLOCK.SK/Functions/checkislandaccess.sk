@@ -37,7 +37,10 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 			return {SB::config::defaultlobbyflag::outsiders-mob-damage}
 		else if {_event} is "VehicleDamageEvent":
 			return {SB::config::defaultlobbyflag::outsiders-interact-vehicle}
-
+	#
+	# > Bypass any island checks if the users is an admin.
+	if {_p} has permission "is.admin":
+		return true
 	#
 	# > The getcurrentbedrock function created some global temporary variables we can now check,
 	# > if the location parameter is within the temporary variables, we can use them.
@@ -147,6 +150,35 @@ function getcurrentbedrock(p:player, l:location) :: location:
 		# > Generate the new borders of the current bedrock
 		set {_pl::1} to location of {_bedrock}
 		set {_pl::2} to location of {_bedrock}
+		
+		#
+		# > Calculate the upgradeable border:
+		set {_defaultdist} to {SB::config::defaultsize}
+		set {_maxdist} to {SB::config::distance}
+		set {_dist} to {SB::config::distance}
+		
+		#
+		# > Only calculate, if there needs to be a upgradeable border calculation:
+		if {_maxdist} is not {_defaultdist}:
+			#
+			# > Get the coordintaes to then get the current size level of the island.
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			set {_lvl} to {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade}
+			#
+			# > Calculate how much we can upgrade the island until the maximum is reached.
+			set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
+			#
+			# > Calculate how much we can increase per level, we have default 5 levels to unlock.
+			set {_distincreaseperlevel} to ({_upgradeabledist} / 5)
+			#
+			# > Calculate the current size bonus using the calculated increase per level + the current size level.
+			set {_currentdistsizebonus} to ({_lvl} * {_distincreaseperlevel})
+			#
+			# > Add the size bonus by current size level to the distance of the island.
+			set {_dist} to ({_defaultdist} + {_currentdistsizebonus})
+		
 		set {_dist} to {SB::config::distance}
 		add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
 		add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}

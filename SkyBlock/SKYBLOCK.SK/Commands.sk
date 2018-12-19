@@ -18,8 +18,12 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		if arg-1 is "go" OR "home" OR "tp":
 			set {_player} to arg-2 parsed as offline player
 			set {_uuid} to uuid of {_player}
-			if {SB::player::%{_uuid}%::island::home::home} is set:
-				teleport player to {SB::player::%{_uuid}%::island::home::home}
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} is set:
+				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 			stop
 		#
 		# > If something should be done with an island, this is the code:
@@ -621,7 +625,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					#
 					# > If the user is trusted, teleport:
 					if "%loop-value%" is "%uuid of player%":
-						teleport player to {SB::player::%{_uuid2}%::island::home::home}
+						teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 						stop
 				#
 				# > Check the flags, maybe the island is public:
@@ -637,42 +641,33 @@ command /island [<text>] [<text=1>] [<text>]:
 						stop
 				#
 				# > Since this hasn't stopped yet, it is valid to teleport the executor.
-				teleport player to {SB::player::%{_uuid2}%::island::home::home}
+				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
+
 			else:
 				#
 				# > There is no player, print error.
 				message "%{_prefix}% %{SB::lang::notfoundplayer::%{SK::lang::%uuid of player%}%}%"
+		#
+		# > Argument: "home"
+		# > Actions:
+		# > If the player wants to teleport to a home, the homehandler is called.
+		# > Example command /island home [<name>]
 		else if arg-1 is "home":
-			set {_loc} to {SB::player::%uuid of player%::island::home::home}
-			if {_loc} is not set:
-				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-			else:
-				if "%block at {_loc}%" contains "slab":
-					set {_skip} to true
-				if {_skip} is not set:
-					set {_loc2} to {_loc}
-					subtract 1 from y-coord of {_loc2}
-					if "%block at {_loc2}%" is "air":
-						message "%{_prefix}% %{SB::lang::homewarnair::%{SK::lang::%uuid of player%}%}%"
-						wait a tick
-						make player execute command "/is go"
-						stop
-				teleport player to {_loc}
-				message "%{_prefix}% %{SB::lang::tphome::%{SK::lang::%uuid of player%}%}%"
+			homehandler(player,"home",arg-2)
+		#
+		# > Argument: "sethome"
+		# > Actions:
+		# > If the player wants to set a home, the homehandler is called.
+		# > Example command /island sethome [<name>]
 		else if arg-1 is "sethome":
-			if {SB::player::%uuid of player%::island::leader} is not set:
-				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-			else:
-				set {_loc1} to {SB::player::%uuid of player%::island::border1}
-				add 1 to x-coord of {_loc1}
-				add 1 to z-coord of {_loc1}
-				set {_loc2} to {SB::player::%uuid of player%::island::border2}
-				if location of player is within {_loc1} to {_loc2}:
-					#todo later, this could also save multible custom home names?
-					set {SB::player::%uuid of player%::island::home::home} to location of player
-					message "%{_prefix}% %{SB::lang::sethomeok::%{SK::lang::%uuid of player%}%}%"
-				else:
-					message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%"
+			homehandler(player,"sethome",arg-2)
+		#
+		# > Argument: "delhome"
+		# > Actions:
+		# > If the player wants to delete a home, the homehandler is called.
+		# > Example command /island sethome [<name>]
+		else if arg-1 is "delhome":
+			homehandler(player,"delhome",arg-2)
 		else if arg-1 is "go":
 			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
@@ -901,7 +896,6 @@ command /island [<text>] [<text=1>] [<text>]:
 						set {SB::player::%{_joinuuid}%::island::border1} to {SB::player::%{_pluuid}%::island::border1}
 						set {SB::player::%{_joinuuid}%::island::border2} to {SB::player::%{_pluuid}%::island::border2}
 						delete {Request::%player%::%{_arg2}%}
-						broadcast "%{Request::%player%::%{_arg2}%}%"
 						make player execute command "/is home"
 						set {_a} to {SB::lang::joinedismember::%{SK::lang::%uuid of player%}%}
 						set {_uuid2} to uuid of {_arg2}
@@ -1085,3 +1079,11 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > trusted or removes a trusted user, also can list all trusted users.
 		else if arg-1 is "trust":
 			trusthandler(player,arg-2,arg-3)
+
+		#
+		# > Argument: "upgrade" ("upgrades")
+		# > If a player types in /island upgrade, the islandupgrademenu function is called.
+		# > Actions:
+		# > Calls the islandupgrademenu function, which opens the upgrade menu.
+		else if arg-1 is "upgrade" or "upgrades":
+			islandupgrademenu(player)
