@@ -37,7 +37,10 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 			return {SB::config::defaultlobbyflag::outsiders-mob-damage}
 		else if {_event} is "VehicleDamageEvent":
 			return {SB::config::defaultlobbyflag::outsiders-interact-vehicle}
-
+	#
+	# > Bypass any island checks if the users is an admin.
+	if {_p} has permission "is.admin":
+		return true
 	#
 	# > The getcurrentbedrock function created some global temporary variables we can now check,
 	# > if the location parameter is within the temporary variables, we can use them.
