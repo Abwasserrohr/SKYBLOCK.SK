@@ -11,26 +11,33 @@
 # > <offline player>player
 # > Actions:
 # > Deletes the island of the defined player, also offline players are possible
-function deleteisland(p1: offline player):
-	set {_prefix} to {SB::lang::prefix::%{Language::%{_p1}%}%}
-	set {_uuid} to uuid of {_p1}
+function deleteisland(p: offline player):
+	set {_uuid} to uuid of {_p}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_lang}%}
+
 	#
 	# > Get the leader of the island the player is member (or leader) of.
-	set {_leader} to getleader({_p1})
+	set {_leader} to getleader({_p})
 	#
 	# > If the uuid of the leader is the same as the uuid of the player,
 	# > the player has to be the leader.
 	if {_leader} is {_uuid}:
-		clear {_p1}'s inventory
-
-		teleport {_p1} to {SB::config::spawn}
+		#
+		# > Clear the inventory of the player.
+		clear {_p}'s inventory
+		#
+		# > Teleport the player back to the SkyBlock lobby.
+		teleport {_p} to {SB::config::spawn}
 		
 		#
 		# > If the player is not online, add a variable to delete the inventory once the
 		# > player joins the game
-		if {_p1} is not online:
+		if {_p} is not online:
 			set {Leave.%{_uuid}%} to true
-
+		
+		#
+		# > Get the location of the bedrock (island middle) to get all members.
 		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 		set {_locx} to x-coord of {_loc}
 		set {_locy} to y-coord of {_loc}
@@ -104,23 +111,23 @@ function deleteisland(p1: offline player):
 		delete {SB::player::%{_uuid}%::island::bedrock}
 
 		loop {_member::*}:
-			set {_p} to "%loop-value%" parsed as offline player
-			if {_p} is online:
-				make {_p} execute command "/is leave"
+			set {_lp} to "%loop-value%" parsed as offline player
+			if {_lp} is online:
+				make {_lp} execute command "/is leave"
 			else:
-				set {_uuid} to uuid of {_p}
+				set {_uuid} to uuid of {_lp}
 				set {Leave.%{_uuid}%} to true
 		#
 		# > Print a success message:
-		set {_a} to {SB::lang::deledtedis::%{Language::%{_p1}%}%}
-		message "%{_prefix}% %{_a}%" to {_p1}
-		set {Islanddelete.%{_p1}%} to true
+		set {_a} to {SB::lang::deledtedis::%{_lang}%}
+		message "%{_prefix}% %{_a}%" to {_p}
+		set {Islanddelete.%{_p}%} to true
 		set {_size} to size of {deleteisland.1::*}
 		add 1 to {_size}
 		set {deleteisland.1::%{_size}%} to {_loc1}
 		set {deleteisland.2::%{_size}%} to {_loc2}
-		delete {Islanddelete.%{_p1}%}
+		delete {Islanddelete.%{_p}%}
 	else:
-		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
-		actionload({_p1}, {SB::lang::notallowed::%{Language::%{_p1}%}%})
-		message "%{_prefix}% %{_a}%" to {_p1}
+		#
+		# > If the player is not the island leader, print error message in actionbar.
+		actionload({_p}, {SB::lang::notallowed::%{_lang}%})
