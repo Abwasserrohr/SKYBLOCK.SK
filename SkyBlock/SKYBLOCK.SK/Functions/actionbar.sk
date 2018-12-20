@@ -1,0 +1,31 @@
+#
+# ==============
+# actionbar.sk
+# ==============
+# actionbar.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#Loading bar in actionbar and result
+function actionload(p: player, t:text):
+	if {_t} is "start":
+		set {SB::actionload::%{_p}%} to 1
+		set {_vs} to "&6█&7█████████"
+		while {SB::actionload::%{_p}%} is set:
+			if {_vs} is "&6█&7█████████": 
+				set {_s} to "&7[&r%{_vs}%&7]&r" 
+				execute console command "/title %{_p}% actionbar {""text"":""%{_vs}%""}"
+				wait 0.2 seconds
+			replace all "&6█&7█" with "&7█&6█&7" in {_vs}
+			set {_s} to "&7[&r%{_vs}%&7]&r" 
+			execute console command "/title %{_p}% actionbar {""text"":""%{_vs}%""}"
+			if {_vs} is "&7█&7█&7█&7█&7█&7█&7█&7█&7█&6█&7":
+				set {_vs} to "&6█&7█████████"
+			wait 0.2 seconds
+	else:
+		delete {SB::actionload::%{_p}%}
+		set {_s} to "&6█████████&r %{_t}% &6█████████"
+		loop 8 times:
+			replace all "&6██" with "&6█" in {_s}
+			execute console command "/title %{_p}% actionbar {""text"":""%{_s}%""}"
+			wait 10 ticks
+		execute console command "/title %{_p}% actionbar {""text"":""""}"

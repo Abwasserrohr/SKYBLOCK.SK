@@ -1,0 +1,126 @@
+#
+# ==============
+# deleteisland.sk
+# ==============
+# deleteisland.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function: deleteisland
+# > Arguments:
+# > <offline player>player
+# > Actions:
+# > Deletes the island of the defined player, also offline players are possible
+function deleteisland(p1: offline player):
+	set {_prefix} to {SB::lang::prefix::%{Language::%{_p1}%}%}
+	set {_uuid} to uuid of {_p1}
+	#
+	# > Get the leader of the island the player is member (or leader) of.
+	set {_leader} to getleader({_p1})
+	#
+	# > If the uuid of the leader is the same as the uuid of the player,
+	# > the player has to be the leader.
+	if {_leader} is {_uuid}:
+		clear {_p1}'s inventory
+
+		teleport {_p1} to {SB::config::spawn}
+		
+		#
+		# > If the player is not online, add a variable to delete the inventory once the
+		# > player joins the game
+		if {_p1} is not online:
+			set {Leave.%{_uuid}%} to true
+
+		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_locx} to x-coord of {_loc}
+		set {_locy} to y-coord of {_loc}
+		set {_locz} to z-coord of {_loc}
+		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+
+		#
+		# > Remove all trusted players from the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust}
+		
+		#
+		# > Remove size upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::sizeupgrade}
+		
+		#
+		# > Remove home upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::homeupgrade}
+		
+		#
+		# > Remove hopper upgrades from an island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hopperupgrade}
+		
+		#
+		# > Remove the hopper count of the island:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hoppercount}
+
+		#
+		# > Delete all available flags from the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag}
+		
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
+		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::level}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::exp}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::created}
+		
+		#
+		# > Delete all homes of the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home:home}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
+
+		#
+		# > Sets the local variables {_loc1} and {_loc2} to the bedrock location.
+		set {_loc1} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_loc2} to {SB::player::%{_uuid}%::island::bedrock}
+		
+		#
+		# > Add the distances to delete 
+		set {_dist} to {SB::config::distance}
+		add ({_dist}) to x-coord of {_loc1}
+		add ({_dist}) to z-coord of {_loc1}
+		subtract ({_dist}) from x-coord of {_loc2}
+		subtract ({_dist}) from z-coord of {_loc2}
+		#
+		# Set the y-coordinate to 0 to 256 to delete everything in between.
+		set y-coord of {_loc1} to 0
+		set y-coord of {_loc2} to 256
+		
+		#
+		# > Delete the bedrock location from the player.
+		delete {SB::player::%{_uuid}%::island::bedrock}
+
+		loop {_member::*}:
+			set {_p} to "%loop-value%" parsed as offline player
+			if {_p} is online:
+				make {_p} execute command "/is leave"
+			else:
+				set {_uuid} to uuid of {_p}
+				set {Leave.%{_uuid}%} to true
+		#
+		# > Print a success message:
+		set {_a} to {SB::lang::deledtedis::%{Language::%{_p1}%}%}
+		message "%{_prefix}% %{_a}%" to {_p1}
+		set {Islanddelete.%{_p1}%} to true
+		set {_size} to size of {deleteisland.1::*}
+		add 1 to {_size}
+		set {deleteisland.1::%{_size}%} to {_loc1}
+		set {deleteisland.2::%{_size}%} to {_loc2}
+		delete {Islanddelete.%{_p1}%}
+	else:
+		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
+		actionload({_p1}, {SB::lang::notallowed::%{Language::%{_p1}%}%})
+		message "%{_prefix}% %{_a}%" to {_p1}

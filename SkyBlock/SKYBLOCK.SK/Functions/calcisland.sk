@@ -1,0 +1,134 @@
+#
+# ==============
+# calcisland.sk
+# ==============
+# calcisland.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function: calcisland
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Calculates the island level by getting both borders on the island, then looping though all blocks and
+# > calculating all predefined experience bonuses from the configuration together to get a level.
+function calcisland(p:offline player):
+	set {_exp} to 0 
+	set {_level} to 1
+	#
+	# > Set the experience needed for the next level:
+	set {_xpn} to {_level}*{SB::config::explevel}
+	#
+	# > Get the uuid of the player
+	set {_uuid} to uuid of {_p}
+	#
+	# > Get the location of the bedrock of the island the player is on:
+	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+	#
+	# > Get the new borders of the island trough updating the current temporary locations:
+	set {_allowed} to checkislandaccess({_p},{_bedrock})
+	#
+	# > Set the temporary variables to a local variable:
+	set {_b1} to {SB::TEMPLOC::%{_p}%b1}
+	set {_b2} to {SB::TEMPLOC::%{_p}%b2}
+	#
+	# > Loop all blocks within the two borders:
+	loop blocks within {_b1} to {_b2}:
+		if loop-block is not void air or air:
+			set {_tb} to "%loop-block%" parsed as item
+			if {_tb} is not set:
+				set {_tb} to air
+			set {_tb} to "%{_tb}%"
+			replace all " " with "_" in {_tb}
+			#todo: maybe find another way to do this? looks not good...
+			if {_tb} is a chest:
+				set {_tb} to "%{_tb}%"
+			if {_tb} contains "chest":
+				set {_tb} to "chest"
+			if {_tb} contains "door":
+				set {_tb} to "door"
+			if {_tb} contains "plant":
+				set {_tb} to "plant"
+			if {_tb} contains "fence":
+				set {_tb} to "fence"
+			if {_tb} contains "cobblestone_wall":
+				set {_tb} to "fence"
+			if {_tb} contains "slab":
+				set {_tb} to "slab"
+			if {_tb} contains "leaf":
+				set {_tb} to "leaf"
+			if {_tb} contains "log":
+				set {_tb} to "log"
+			if {_tb} contains "grass":
+				set {_tb} to "grass"
+			if {_tb} contains "furnace":
+				set {_tb} to "furnace"
+			if {_tb} contains "sapling":
+				set {_tb} to "sapling"
+			if {_tb} contains "stem":
+				set {_tb} to "stem"
+			if {_tb} contains "quartz_pillar":
+				set {_tb} to "quartz_pillar"
+			if {_tb} contains "wool":
+				set {_tb} to "wool"
+			if {_tb} contains "beacon":
+				set {_tb} to "beacon"
+			if {_tb} contains "note_block":
+				set {_tb} to "note_block"
+			if {_tb} contains "jukeboxes":
+				set {_tb} to "jukeboxes"
+			if {_tb} contains "anvil":
+				set {_tb} to "anvil"
+			if {_tb} contains "piston":
+				set {_tb} to "piston"
+			if {_tb} contains "flower_pot":
+				set {_tb} to "flower_pot"
+			if {_tb} contains "cyan_glass":
+				set {_tb} to "glass_block"
+			if {_tb} contains "glass_pane":
+				set {_tb} to "glass_pane"
+			if {_tb} contains "glazed_terracotta":
+				set {_tb} to "glazed_terracotta"
+			if {_tb} contains "standing_banner":
+				set {_tb} to "standing_banner"
+			if {_tb} contains "carpet":
+				set {_tb} to "carpet"
+			if {_tb} contains "bed_head":
+				set {_tb} to "bed"
+			if {_tb} contains "sandstone_block":
+				set {_tb} to "sandstone_block"
+			if {_tb} contains "coral_block":
+				if {_tb} contains "living":
+					set {_tb} to "living_coral_block"
+			if {_tb} contains "carpet":
+				set {_tb} to "carpet"
+			if loop-block is a hopper:
+				add 1 to {_hopper}
+			if {SB::expblocks::%{_tb}%} is set:
+				#
+				# > Add the experience of the block to the local experience variable {_exp}
+				add {SB::expblocks::%{_tb}%} to {_exp}
+				#
+				# > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
+				# > and increase the difficulty to reach the next level.
+				if {_exp} is more than {_xpn}:
+					add 1 to {_level}
+					set {_xpn} to ({_level} * {SB::config::explevel})
+			else:
+				add {SB::expblocks::other} to {_exp}
+				#
+				# > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
+				# > and increase the difficulty to reach the next level.
+				if {_exp} is more than {_xpn}:
+					add 1 to {_level}
+					set {_xpn} to ({_level} * {SB::config::explevel})
+
+	set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
+	set {_x} to x-coordinate of {_bedrockloc}
+	set {_y} to y-coordinate of {_bedrockloc}
+	set {_z} to z-coordinate of {_bedrockloc}
+	set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to {_level}
+	#
+	# > Updates the hopper count to the new counted amount of hoppers:
+	set {_tmp} to hoppercounter({_p},"update",{_hopper})
+	delete {SB::calcstatus::%{_p}%}
