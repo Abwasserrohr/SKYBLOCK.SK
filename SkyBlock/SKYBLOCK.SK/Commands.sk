@@ -1087,3 +1087,24 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > Calls the islandupgrademenu function, which opens the upgrade menu.
 		else if arg-1 is "upgrade" or "upgrades":
 			islandupgrademenu(player)
+		#
+		# > Argument: "warp"
+		# > If a player types in /island warp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which opens teleports the player to a warp point.
+		else if arg-1 is "warp":
+			warphandler(player,"warp",arg-2)
+		#
+		# > Argument: "setwarp" 
+		# > If a player types in /island setwarp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which sets a warp.
+		else if arg-1 is "setwarp":
+			warphandler(player,"setwarp",arg-2)
+		#
+		# > Argument: "delwarp" 
+		# > If a player types in /island delwarp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which deletes a warp.
+		else if arg-1 is "delwarp":
+			warphandler(player,"delwarp",arg-2)
