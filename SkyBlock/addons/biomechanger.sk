@@ -1,6 +1,6 @@
 #
 # ==============
-# biomechanger.sk v0.0.2
+# biomechanger.sk v0.0.3
 # ==============
 # Adds biome changing capability to SKYBLOCK.SK
 # ==============
@@ -95,7 +95,7 @@ function changebiome(player:offline player,biome:text,title:text):
 	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::done::%{SK::lang::%{_uuid}%}%}%" to {_player}
 	#
 	# > Renew the player's chunks by teleporting the player to the lobby and then back:
-	set {_tloc} to {_p}'s location
-	teleport {_p} to {SB::config::spawn}
-	wait 1 tick
-	teleport {_p} to {_tloc}
+	set {_tloc} to {_player}'s location
+	teleport {_player} to {SB::config::spawn}
+	wait 2 ticks
+	teleport {_player} to {_tloc}
