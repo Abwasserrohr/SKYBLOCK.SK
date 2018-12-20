@@ -58,7 +58,7 @@ function calcisland(p:offline player):
 	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
 	#
 	# > Get the new borders of the island trough updating the current temporary locations:
-	set {_allowed} to checkislandaccess(player,{_bedrock})
+	set {_allowed} to checkislandaccess({_p},{_bedrock})
 	#
 	# > Set the temporary variables to a local variable:
 	set {_b1} to {SB::TEMPLOC::%{_p}%b1}
@@ -259,8 +259,9 @@ function deleteisland(p1: offline player):
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home:home}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
-		
+
 		#
 		# > Sets the local variables {_loc1} and {_loc2} to the bedrock location.
 		set {_loc1} to {SB::player::%{_uuid}%::island::bedrock}
