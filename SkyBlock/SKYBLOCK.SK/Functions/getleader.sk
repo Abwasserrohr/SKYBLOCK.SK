@@ -1,0 +1,27 @@
+#
+# ==============
+# getleader.sk
+# ==============
+# getleader.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - getleader:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Returns the leader of the island the parameter player is on.
+function getleader(p:player):
+	#
+	# > Get the uuid of the player.
+	set {_uuid} to uuid of {_p}
+	#
+	# > Get the bedrock (island middle) of the island the player is on.
+	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+	#
+	# > Get the coordinates of the {_bedrock} to get the leader.
+	set {_x} to x-coord of {_bedrock}
+	set {_y} to y-coord of {_bedrock}
+	set {_z} to z-coord of {_bedrock}
+	#
+	# > Return the uuid of the leader.
+	return {SB::island::%{_x}%_%{_y}%_%{_z}%::leader}
