@@ -122,6 +122,9 @@ on script load:
 	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
 	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
 	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
+	set {SB::lang::helpwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTeleportiert zum Warp %{_s1}%- %{_p1}%/is warp <Spieler>"
+	set {SB::lang::helpsetwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSetzt deinen Inselwarp %{_s1}%- %{_p1}%/is setwarp"
+	set {SB::lang::helpdelwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lLöscht deinen Inselwarp %{_s1}%- %{_p1}%/is delwarp"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#
