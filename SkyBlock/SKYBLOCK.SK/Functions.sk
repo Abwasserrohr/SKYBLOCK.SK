@@ -3,50 +3,73 @@
 # > Arguments:
 # > <player>player, <text>text
 # > Actions:
-# > Leaves an island, if the text argument is "ower", it removes all other members from the members list
-function leaveisland(p:player, text:text):
+# > Leaves an island, if the text argument is "owner", it removes all other members from the members list
+function leaveisland(p:offline player, text:text):
+	#
+	# > If a player leaves the island, the inventory of the player is cleared.
 	clear {_p}'s inventory
+	#
+	# > Get the uuid of the player.
 	set {_uuid} to uuid of {_p}
+	#
+	# > If the player was not only while this was executed, this has been generated and can now
+	# > be deleted.
 	delete {Leave.%{_uuid}%}
+	#
+	# > If the player is not online now, set the {Leave.%{_uuid}%} to true to do it later, since
+	# > the inventory can only be cleared if the player is online.
 	if {_p} is not online:
 		set {Leave.%{_uuid}%} to true
+	#
+	# > Get the location of the bedrock.
 	set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
 	set {_locx} to x-coord of {_loc}
 	set {_locy} to y-coord of {_loc}
 	set {_locz} to z-coord of {_loc}
-	#todo needs to delete one by one
-	delete {SB::player::%{_uuid}%::island::leader}
-	delete {SB::player::%{_uuid}%::island::border1}
-	delete {SB::player::%{_uuid}%::island::border2}
 	delete {SB::player::%{_uuid}%::island::bedrock}
-	loop {SB::player::%{_uuid}%::island::home::*}:
-		delete {SB::player::%{_uuid}%::island::home::%loop-index%}
-	delete {SB::player::%{_uuid}%::island::home::*}
-	delete {SB::player::%{_uuid}%::island::*}
 	teleport {_p} to {SB::config::spawn}
-	if {_text} is "owner":
-		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-			if loop-value is uuid of {_p}:
-				set {_i} to loop-index
-				delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
-				stop loop
-#				
+	delete {SB::islvl::%{_uuid}%}
+	#
+	# > Deletes the player out of the members list:
+	loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+		if loop-value is {_uuid}:
+			set {_i} to loop-index
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
+			stop loop
+
+#
 # > Function: calcisland
 # > Arguments:
 # > <player>player
 # > Actions:
 # > Calculates the island level by getting both borders on the island, then looping though all blocks and
 # > calculating all predefined experience bonuses from the configuration together to get a level.
-#
 function calcisland(p:offline player):
 	set {_exp} to 0 
 	set {_level} to 1
-	#set xp needed for next level:
+	#
+	# > Set the experience needed for the next level:
 	set {_xpn} to {_level}*{SB::config::explevel}
+	#
+	# > Get the uuid of the player
 	set {_uuid} to uuid of {_p}
-	loop blocks within {SB::player::%{_uuid}%::island::border1} to {SB::player::%{_uuid}%::island::border2}:
+	#
+	# > Get the location of the bedrock of the island the player is on:
+	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+	#
+	# > Get the new borders of the island trough updating the current temporary locations:
+	set {_allowed} to checkislandaccess(player,{_bedrock})
+	#
+	# > Set the temporary variables to a local variable:
+	set {_b1} to {SB::TEMPLOC::%{_p}%b1}
+	set {_b2} to {SB::TEMPLOC::%{_p}%b2}
+	#
+	# > Loop all blocks within the two borders:
+	loop blocks within {_b1} to {_b2}:
 		if loop-block is not void air or air:
 			set {_tb} to "%loop-block%" parsed as item
+			if {_tb} is not set:
+				set {_tb} to air
 			set {_tb} to "%{_tb}%"
 			replace all " " with "_" in {_tb}
 			#todo: maybe find another way to do this? looks not good...
@@ -114,12 +137,23 @@ function calcisland(p:offline player):
 			if loop-block is a hopper:
 				add 1 to {_hopper}
 			if {SB::expblocks::%{_tb}%} is set:
-				#add the xp of the block to the exp variable
+				#
+				# > Add the experience of the block to the local experience variable {_exp}
 				add {SB::expblocks::%{_tb}%} to {_exp}
-				#if the exp variable is bigger than the xp needed variable, add one level
+				#
+				# > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
+				# > and increase the difficulty to reach the next level.
 				if {_exp} is more than {_xpn}:
 					add 1 to {_level}
-					set {_xpn} to {_level}*{SB::config::explevel}
+					set {_xpn} to ({_level} * {SB::config::explevel})
+			else:
+				add {SB::expblocks::other} to {_exp}
+				#
+				# > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
+				# > and increase the difficulty to reach the next level.
+				if {_exp} is more than {_xpn}:
+					add 1 to {_level}
+					set {_xpn} to ({_level} * {SB::config::explevel})
 
 	set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
 	set {_x} to x-coordinate of {_bedrockloc}
@@ -131,59 +165,23 @@ function calcisland(p:offline player):
 	set {_tmp} to hoppercounter({_p},"update",{_hopper})
 	delete {SB::calcstatus::%{_p}%}
 
-#Check, if the player is the island owner or member - usedd by checkprotect
-function checkislandowner(l:location, p:player) :: text:
-	set {_uuid} to uuid of {_p}
-	set {_loc1} to {SB::player::%{_uuid}%::island::border1}
-	add 1 to x-coord of {_loc1}
-	add 1 to z-coord of {_loc1}
-	set {_loc2} to {SB::player::%{_uuid}%::island::border2}
-	if {_l} is not within {_loc1} to {_loc2}:
-		return "false"
-	else:
-		return "true"
-
-#Check, if a detailed check is needed - used by checkprotect
-function generaleventcheck(p:player) :: text:
-	if "%{_p}'s world%" is "%{SB::config::world}%":
-		if {_p} has permission "%{SB::config::buildpermission}%":
-			stop
-		set {_uuid} to uuid of {_p}
-		if {SB::player::%{_uuid}%::island::border1} is not set:
-			return "false"
-		else:
-			return "true"
-#Checks, if the player is allowed to build at the location, false = allowed, true = not allowed	
-function checkprotect(l:location,p:player) :: text:
-	set {_r} to generaleventcheck({_p})
-	if {_r} is "false":
-		protectionmgs({_p})
-		return {_r}
-	else if {_r} is "true":
-		set {_r} to checkislandowner({_l}, {_p})
-		if {_r} is "false":
-			protectionmgs({_p})
-		return {_r}
-	else:
-		return "true"
 #
 # > Function: protectionmgs
+# > Parameter: <player>player
 # > Actions:
-# > Prints a error message to the player that this area is protected.
-#
+# > Tells the player using an action bar that the area is protected.
 function protectionmgs(p:player):
 	set {_uuid} to uuid of {_p}
 	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
 	set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
 	actionload({_p}, {_a})
 
+#Prints tellraw message to player, on which the player can click and execute a command
 #
 # > Function: tellrawmsg1
-# > Arguments:
-# > <player>player, <text>text, <text>clickable text, <text>command
+# > Parameter: <player>player, <text>prefix, <text>clickable text, <text>click command
 # > Actions:
-# > Sends the player a clickable text message which executes a command on click.
-#
+# > Prints a clickable message into the chat of the player.
 function tellrawmsg1(p:player,t1:text,t2:text,c:text):
 	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
 
@@ -213,19 +211,18 @@ function deleteisland(p1: offline player):
 		if {_p1} is not online:
 			set {Leave.%{_uuid}%} to true
 
+		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_locx} to x-coord of {_loc}
+		set {_locy} to y-coord of {_loc}
+		set {_locz} to z-coord of {_loc}
+		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
+
 		#
 		# > Remove all trusted players from the island:
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::*}:
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust::*}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::trust}
-		
-		#
-		# > Delete all available flags for the island:
-		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}:
-			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::%loop-index%}
-		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}
-		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag}
 		
 		#
 		# > Remove size upgrades from an island:
@@ -243,41 +240,59 @@ function deleteisland(p1: offline player):
 		# > Remove the hopper count of the island:
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hoppercount}
 
-		set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
-		set {_locx} to x-coord of {_loc}
-		set {_locy} to y-coord of {_loc}
-		set {_locz} to z-coord of {_loc}
-		set {_member::*} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
-
+		#
+		# > Delete all available flags from the island:
+		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}:
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::%loop-index%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag::*}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::flag}
+		
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
+		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::level}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::exp}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::created}
+		
 		#
 		# > Delete all homes of the island:
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
-
-		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
-		delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
-		set {_loc1} to {SB::player::%{_uuid}%::island::border1}
-		set {_loc2} to {SB::player::%{_uuid}%::island::border2}
-
-		delete {SB::player::%{_uuid}%::island::leader}
-		delete {SB::player::%{_uuid}%::island::border1}
-		delete {SB::player::%{_uuid}%::island::border2}
+		
+		#
+		# > Sets the local variables {_loc1} and {_loc2} to the bedrock location.
+		set {_loc1} to {SB::player::%{_uuid}%::island::bedrock}
+		set {_loc2} to {SB::player::%{_uuid}%::island::bedrock}
+		
+		#
+		# > Add the distances to delete 
+		set {_dist} to {SB::config::distance}
+		add ({_dist}) to x-coord of {_loc1}
+		add ({_dist}) to z-coord of {_loc1}
+		subtract ({_dist}) from x-coord of {_loc2}
+		subtract ({_dist}) from z-coord of {_loc2}
+		#
+		# Set the y-coordinate to 0 to 256 to delete everything in between.
+		set y-coord of {_loc1} to 0
+		set y-coord of {_loc2} to 256
+		
+		#
+		# > Delete the bedrock location from the player.
 		delete {SB::player::%{_uuid}%::island::bedrock}
-		delete {SB::player::%{_uuid}%::island::home::*}		
 
 		loop {_member::*}:
 			set {_p} to "%loop-value%" parsed as offline player
 			if {_p} is online:
 				make {_p} execute command "/is leave"
 			else:
-				#this is the uuid, not the player name!:
 				set {_uuid} to uuid of {_p}
 				set {Leave.%{_uuid}%} to true
+		#
+		# > Print a success message:
 		set {_a} to {SB::lang::deledtedis::%{Language::%{_p1}%}%}
 		message "%{_prefix}% %{_a}%" to {_p1}
-		set {_loop} to 0
 		set {Islanddelete.%{_p1}%} to true
 		set {_size} to size of {deleteisland.1::*}
 		add 1 to {_size}
@@ -286,7 +301,8 @@ function deleteisland(p1: offline player):
 		delete {Islanddelete.%{_p1}%}
 	else:
 		set {_a} to {SB::lang::notallowed::%{Language::%{_p1}%}%}
-		actionload({_p1}, {_a})
+		actionload({_p1}, {SB::lang::notallowed::%{Language::%{_p1}%}%})
+		message "%{_prefix}% %{_a}%" to {_p1}
 
 #Loading bar in actionbar and result
 function actionload(p: player, t:text):
@@ -313,13 +329,11 @@ function actionload(p: player, t:text):
 			wait 10 ticks
 		execute console command "/title %{_p}% actionbar {""text"":""""}"
 
-
-#Opens the menu for the skyblock command: /is
-# > Function - skyblockgui:
-# > Arguments:
-# > <player>player
+#
+# > Function: skyblockgui
+# > Parameter: <player>player
 # > Actions:
-# > Opens a new inventory menu with gui.sk
+# > Opens the main menu for SkyBlock, this function is called if a player enters /island.
 function skyblockgui(p: player):
 	#open chest with 3 rows named "&b&lSkyBlock" to {_p}
 	opengui({_p},27,"&b&lSkyBlock")
@@ -328,15 +342,15 @@ function skyblockgui(p: player):
 		set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
 	#Render the items into the menu
 	set {_uuid} to uuid of {_p}
-	if {SB::player::%{_uuid}%::island::border1} is set:
-		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is home""",true)
+	if {SB::player::%{_uuid}%::island::bedrock} is set:
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","&rTeleport zur Insel","make ""%{_p}%"" parsed as player execute command ""/is home""",true)
 	else:
-		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is create""",true)
-	setguiitem({_p},11,"experience bottle",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
-	setguiitem({_p},12,"book and quill",1,"%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%","","message ""Challenges are coming soon!"" to ""%{_p}%"" parsed as player",true)
-	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
-	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
-	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","&rStarte eine neue Insel","make ""%{_p}%"" parsed as player execute command ""/is create""",true)
+	setguiitem({_p},11,"experience bottle",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","&rInsel Level","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
+	setguiitem({_p},12,"book and quill",1,"%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%","&rDemnächst...","message ""Aufgaben kommen demnächst!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","&rSchau dir die besten Inseln an","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
+	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","&rComing soon...","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","&rTeleport zum SkyBlock Spawn","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
 	setguiitem({_p},16,"jungle leaves",1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%","&r%{SB::lang::bc::changebiomemenulore::%{SK::lang::%{_uuid}%}%}%","biomemenu(""%{_p}%"" parsed as player)",true)
 
 # > Function - biomemenu:
@@ -347,9 +361,12 @@ function skyblockgui(p: player):
 # > define biomes and prices in the config.sk or alter this function like you want.
 function biomemenu(p: player):
 	#
-	# > Open this menu (gui) only for the island owner
+	# > Get the uuid of the player.
 	set {_uuid} to uuid of {_p}
-	if {SB::player::%{_uuid}%::island::leader} is uuid of {_p}:
+	#
+	# > Get the uuid of the island leader and check if the player is the leader.
+	set {_leader} to getleader({_p})
+	if {_leader} is {_uuid}:
 		#
 		# > Count how many lines are needed:
 		set {_size} to size of {SB::config::biome::menuitem::*}
@@ -404,7 +421,6 @@ function buybiomechange(p: player, biome:text, price:number, title:text):
 		set {_uuid} to uuid of {_p}
 		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{SK::lang::%{_uuid}%}%}%" to {_p}
 
-
 #
 # > Function - loadconfig:
 # > Actions:
@@ -417,9 +433,9 @@ function loadconfig():
 	delete {SB::config::biome::menuitem::*}
 	delete {SB::config::biome::biomename::*}
 	delete {SB::config::biome::price::*}
-	loop {SB::config::biome::biomename::*}:
-		delete {SB::config::biome::biomename::%loop-index%::*}
-	delete {SB::config::biome::biomename::*}
+	loop {SB::config::biome::lang::*}:
+		delete {SB::config::biome::lang::%loop-index%::*}
+	delete {SB::config::biome::lang::*}
 
 # > Function - searchbedrock:
 # > Arguments:
