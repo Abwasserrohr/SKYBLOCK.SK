@@ -1,6 +1,6 @@
 #
 # ==============
-# biomechanger.sk v0.0.1
+# biomechanger.sk v0.0.2
 # ==============
 # Adds biome changing capability to SKYBLOCK.SK
 # ==============
@@ -39,6 +39,9 @@ function changebiome(player:offline player,biome:text,title:text):
 	#
 	# > Get the uuid of the player to then get the location of the island
 	set {_uuid} to uuid of {_player}
+	#
+	# > Get the bedrock of player's island.
+	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
 	#
 	# > Get the new borders of the island trough updating the current temporary locations:
 	set {_allowed} to checkislandaccess({_player},{_bedrock})
