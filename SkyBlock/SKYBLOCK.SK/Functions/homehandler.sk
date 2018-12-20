@@ -20,19 +20,33 @@ function homehandler(p:player,action:text,arg1:text):
 	# > Get the uuid of the player and the prefix in an local variable, since we
 	# > need the two variables quite often now.
 	set {_uuid} to uuid of {_p}
-	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_lang}%}
 	#
 	# > If the player wants to set a home:
 	if {_action} is "sethome":
 		#
 		# > If the player has no island, print an error.
 		if {SB::player::%{_uuid}%::island::bedrock} is not set:
-			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
 		else:
 			#
-			# > Only allow the player to set a home, if he is allowed to do so at this location.
-			set {_allowed} to checkislandaccess({_p},location of {_p})
-			if {_allowed} is true:
+			# > If the returned {_leader} is the {_uuid} of the player,
+			# > the player is the leader.
+			set {_leader} to getleader({_p})
+			#
+			# > Update the current temporary bedrock location.
+			set {_allowed} to checkislandaccess({_p},location of {_p}) 
+			#
+			# > Get the uuid of the current island leader the player is standing on.
+			set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+			set {_cx} to x-coord of {_cbedrock}
+			set {_cy} to y-coord of {_cbedrock}
+			set {_cz} to z-coord of {_cbedrock}
+			set {_cleader} to {SB::island::%{_cx}%_%{_cy}%_%{_cz}%::leader}
+			#
+			# > Only go forward if the player is a leader and also the leader of this island.
+			if {_uuid} is {_leader} AND {_cleader}:
 				set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
 				set {_x} to x-coord of {_bedrock}
 				set {_y} to y-coord of {_bedrock}
@@ -59,12 +73,12 @@ function homehandler(p:player,action:text,arg1:text):
 					#
 					# > If the limit is reached, print error and stop.
 					if size of {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*} > {_maxhomes}:
-						message "%{_prefix}% %{SB::lang::sethomelmitreached::%{SK::lang::%{_uuid}%}%}%" to {_p}
+						message "%{_prefix}% %{SB::lang::sethomelmitreached::%{_lang}%}%" to {_p}
 						stop
 				#
 				# > Limit is not reached, set the new home.
 				set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} to location of {_p}
-				message "%{_prefix}% %{SB::lang::sethomeok::%{SK::lang::%{_uuid}%}%}%" to {_p}
+				message "%{_prefix}% %{SB::lang::sethomeok::%{_lang}%}%" to {_p}
 			else:
 				message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%" to {_p}
 	#
@@ -74,7 +88,7 @@ function homehandler(p:player,action:text,arg1:text):
 		# > If the player has no island, print an error.
 		set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
 		if {_bedrock} is not set:
-			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
 			stop
 		#
 		# > Get the homes of the island:
@@ -90,7 +104,7 @@ function homehandler(p:player,action:text,arg1:text):
 		#
 		# > If there is nothing, print all available homes.
 		if {_loc} is not set:
-			set {_msg} to {SB::lang::notfoundhome::%{SK::lang::%{_uuid}%}%}
+			set {_msg} to {SB::lang::notfoundhome::%{_lang}%}
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*}:
 				add loop-index to {_homes::*}
 			replace all "<homes>" with "%{_homes::*}%" in {_msg}
@@ -104,38 +118,57 @@ function homehandler(p:player,action:text,arg1:text):
 				set {_loc2} to {_loc}
 				subtract 1 from y-coord of {_loc2}
 				if "%block at {_loc2}%" is "air":
-					message "%{_prefix}% %{SB::lang::homewarnair::%{SK::lang::%{_uuid}%}%}%" to {_p}
+					message "%{_prefix}% %{SB::lang::homewarnair::%{_lang}%}%" to {_p}
 					wait a tick
 					make {_p} execute command "/is go"
 					stop
 			teleport {_p} to {_loc}
-			message "%{_prefix}% %{SB::lang::tphome::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			message "%{_prefix}% %{SB::lang::tphome::%{_lang}%}%" to {_p}
 	#
 	# > If the player wants to delete a home:
 	else if {_action} is "delhome":
 		#
 		# > Check if the user as an island:
 		if {SB::player::%{_uuid}%::island::bedrock} is not set:
-			message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
 		#
 		# > If the user has an island, and he wants to delete a home thats not named "home",
 		# > it is deleted.
 		else:
 			if {_arg1} is not "home":
-				set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-				set {_x} to x-coord of {_bedrock}
-				set {_y} to y-coord of {_bedrock}
-				set {_z} to z-coord of {_bedrock}
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is set:
-					delete {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
-					set {_msg} to {SB::lang::homedeleted::%{SK::lang::%{_uuid}%}%}
-					replace all "<home>" with "%{_arg1}%" in {_msg}
-					message "%{_prefix}% %{_msg}%" to {_p}
+				#
+				# > If the returned {_leader} is the {_uuid} of the player,
+				# > the player is the leader.
+				set {_leader} to getleader({_p})
+				#
+				# > Update the current temporary bedrock location.
+				set {_allowed} to checkislandaccess({_p},location of {_p}) 
+				#
+				# > Get the uuid of the current island leader the player is standing on.
+				set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+				set {_cx} to x-coord of {_cbedrock}
+				set {_cy} to y-coord of {_cbedrock}
+				set {_cz} to z-coord of {_cbedrock}
+				set {_cleader} to {SB::island::%{_cx}%_%{_cy}%_%{_cz}%::leader}
+				#
+				# > Only go forward if the player is a leader and also the leader of this island.
+				if {_uuid} is {_leader} AND {_cleader}:
+					set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+					set {_x} to x-coord of {_bedrock}
+					set {_y} to y-coord of {_bedrock}
+					set {_z} to z-coord of {_bedrock}
+					if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is set:
+						delete {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
+						set {_msg} to {SB::lang::homedeleted::%{_lang}%}
+						replace all "<home>" with "%{_arg1}%" in {_msg}
+						message "%{_prefix}% %{_msg}%" to {_p}
+					else:
+						set {_msg} to {SB::lang::cantdeletehome::%{_lang}%}
+						replace all "<home>" with "%{_arg1}%" in {_msg}
+						message "%{_prefix}% %{_msg}%" to {_p}
 				else:
-					set {_msg} to {SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}
-					replace all "<home>" with "%{_arg1}%" in {_msg}
-					message "%{_prefix}% %{_msg}%" to {_p}
+					message "%{SB::lang::notleader::%{_lang}%}%" to {_p}
 			else:
-				set {_msg} to {SB::lang::cantdeletehome::%{SK::lang::%{_uuid}%}%}
+				set {_msg} to {SB::lang::cantdeletehome::%{_lang}%}
 				replace all "<home>" with "%{_arg1}%" in {_msg}
 				message "%{_prefix}% %{_msg}%" to {_p}
