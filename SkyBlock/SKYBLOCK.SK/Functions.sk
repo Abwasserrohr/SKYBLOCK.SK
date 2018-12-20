@@ -196,7 +196,13 @@ function tellrawmsg1(p:player,t1:text,t2:text,c:text):
 function deleteisland(p1: offline player):
 	set {_prefix} to {SB::lang::prefix::%{Language::%{_p1}%}%}
 	set {_uuid} to uuid of {_p1}
-	if {SB::player::%{_uuid}%::island::leader} is uuid of {_p1}:
+	#
+	# > Get the leader of the island the player is member (or leader) of.
+	set {_leader} to getleader({_p1})
+	#
+	# > If the uuid of the leader is the same as the uuid of the player,
+	# > the player has to be the leader.
+	if {_leader} is {_uuid}:
 		clear {_p1}'s inventory
 
 		teleport {_p1} to {SB::config::spawn}
