@@ -27,7 +27,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			stop
 		#
 		# > If something should be done with an island, this is the code:
-		else if arg-1 is "island":		
+		else if arg-1 is "island":
 			#
 			# > Argument: "calc"
 			# > If the user types in /islandadmin island calc, the island level gets calculated
