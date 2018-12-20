@@ -49,8 +49,8 @@ function changebiome(player:offline player,biome:text,title:text):
 	#
 	# > Since we only need to loop trough one y-coordinate per x- and z-axis, we set the y-coordinate to 0
 	# > to prevent looping multiple times trough the same x- and z-axis.
-	set {_l::1} to location at x-coord of {_l::1}, 0, z-coord of {_l::1} in world "%world of {_l::1}%" parsed as world
-	set {_l::2} to location at x-coord of {_l::2}, 0, z-coord of {_l::2} in world "%world of {_l::2}%" parsed as world
+	set y-coord of {_l::1} to 0
+	set y-coord of {_l::2} to 0
 	#
 	# > Set {_world} to the defined world in the configuration
 	set {_world} to Bukkit.getServer().getWorld("%{SB::config::world}%")
