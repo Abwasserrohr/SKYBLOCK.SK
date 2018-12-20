@@ -10,7 +10,7 @@
 # > <player>player
 # > Actions:
 # > Returns the leader of the island the parameter player is on.
-function getleader(p:player):
+function getleader(p:player) :: text:
 	#
 	# > Get the uuid of the player.
 	set {_uuid} to uuid of {_p}
