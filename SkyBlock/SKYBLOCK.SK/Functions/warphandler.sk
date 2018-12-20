@@ -1,0 +1,126 @@
+#
+# ==============
+# warphandler.sk
+# ==============
+# warphandler.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - warphandler:
+# > Arguments:
+# > <player>player, <text>action, <text>arg1
+# > Actions:
+# > The warphandler handles all warps being created, deleted and also teleports.
+function warphandler(p:player,action:text,arg1:text=1):
+	#
+	# > Get the uuid of the player, the current language code and also the chat prefix:
+	set {_uuid} to uuid of {_p}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_lang}%}
+	
+	#
+	# > If the function has been called to teleport:
+	if {_action} is "warp":
+		#
+		# > If the argument 1 parameter {_arg1} is 1 (default), there was no input,
+		# > print error message: There is no such player, print error message, then stop.
+		if {_arg1} is "1":
+			message "%{_prefix}% " to {_p}
+			stop
+		#
+		# > Make sure that this is a valid player and name the valid player {_target}.
+		set {_target} to {_arg1} parsed as offline player
+		#
+		# > Check if the arg1 has been parsed as offline player.
+		if {_target} is a offline player:
+			#
+			# > Get the uuid of the {_target}.
+			set {_tuuid} to uuid of {_target}
+			#
+			# > Get the bedrock of the player, if there is one:
+			set {_bedrock} to {SB::player::%{_tuuid}%::island::bedrock}
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			#
+			# > Check, if a warp is set.
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::warp} is set:
+				#
+				# > Since the warp is set, warp the player to the location.
+				teleport {_p} to {SB::island::%{_x}%_%{_y}%_%{_z}%::warp}				
+			else:
+				#
+				# > There is no warp, print error message.
+				message "%{_prefix}% %{SB::lang::warpnotfound::%{_lang}%}%" to {_p}
+		else:
+			#
+			# > There is no such player, print error message.
+			message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
+	if {_action} is "setwarp":
+		#
+		# > If the returned {_leader} is the {_uuid} of the player,
+		# > the player is the leader.
+		set {_leader} to getleader({_p})
+		#
+		# > Update the current temporary bedrock location.
+		set {_allowed} to checkislandaccess({_p},location of {_p}) 
+		#
+		# > Get the uuid of the current island leader the player is standing on.
+		set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+		set {_cx} to x-coord of {_cbedrock}
+		set {_cy} to y-coord of {_cbedrock}
+		set {_cz} to z-coord of {_cbedrock}
+		set {_cleader} to {SB::island::%{_cx}%_%{_cy}%_%{_cz}%::leader}
+		if {_uuid} is {_leader} AND {_cleader}:
+			#
+			# > Since the player is the leader, set the warp and print succcess message.
+			#
+			# > Get the bedrock location (island center) to write the warp location into the
+			# > variable named after the bedrock location (island center).
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			#
+			# > Set the new warp to the location of the player parameter.
+			set {SB::island::%{_x}%_%{_y}%_%{_z}%::warp} to {_p}'s location
+			#
+			# > Print success message.
+			message "%{_prefix}% %{SB::lang::setwarpok::%{_lang}%}%" to {_p}
+		else:
+			#
+			# > The player is not the leader of this island, print error message.
+			message "%{_prefix}% %{SB::lang::notleaderofthisisland::%{_lang}%}%" to {_p}
+	if {_action} is "delwarp":
+		#
+		# > If the returned {_leader} is the {_uuid} of the player,
+		# > the player is the leader.
+		set {_leader} to getleader({_p})
+		#
+		# > Update the current temporary bedrock location.
+		set {_allowed} to checkislandaccess({_p},location of {_p}) 
+		#
+		# > Get the uuid of the current island leader the player is standing on.
+		set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+		set {_cx} to x-coord of {_cbedrock}
+		set {_cy} to y-coord of {_cbedrock}
+		set {_cz} to z-coord of {_cbedrock}
+		set {_cleader} to {SB::island::%{_cx}%_%{_cy}%_%{_cz}%::leader}
+		if {_uuid} is {_leader} AND {_cleader}:
+			#
+			# > Since the player is the leader, delete the warp and print success message.
+			#
+			# > Get the bedrock location (island center) to delete the warp location.
+			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+			set {_x} to x-coord of {_bedrock}
+			set {_y} to y-coord of {_bedrock}
+			set {_z} to z-coord of {_bedrock}
+			#
+			# > Deletes the warp of the island.
+			delete {SB::island::%{_x}%_%{_y}%_%{_z}%::warp}
+			#
+			# > Print success message.
+			message "%{_prefix}% %{SB::lang::delwarpok::%{_lang}%}%" to {_p}
+		else:
+			#
+			# > The player is not the leader of this island, print error message.
+			message "%{_prefix}% %{SB::lang::notleaderofthisisland::%{_lang}%}%" to {_p}

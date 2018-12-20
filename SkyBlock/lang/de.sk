@@ -74,6 +74,13 @@ on script load:
 	set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
 	#
+	# > /island warp|setwarp|delwarp
+	#
+	set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
+	set {SB::lang::delwarpok::%{_lang}%} to "Der Warp wurde erfolgreich gelöscht."
+	set {SB::lang::warpnotfound::%{_lang}%} to "Dieser Warp wurde nicht gefunden."
+
+	#
 	# > /island info:
 	#
 	set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
@@ -111,10 +118,13 @@ on script load:
 	set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
 	set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
 	set {SB::lang::isbiome::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInselbiom ändern %{_s1}%- %{_p1}%/is biom"
-	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
-	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
+	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <Spieler>"
+	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <Spieler>"
 	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
 	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
+	set {SB::lang::helpwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTeleportiert zum Warp %{_s1}%- %{_p1}%/is warp <Spieler>"
+	set {SB::lang::helpsetwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSetzt deinen Inselwarp %{_s1}%- %{_p1}%/is setwarp"
+	set {SB::lang::helpdelwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lLöscht deinen Inselwarp %{_s1}%- %{_p1}%/is delwarp"
 	set {SB::lang::helps2::%{_lang}%} to "Seite"
 
 	#

@@ -962,7 +962,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					actionload(player,{SB::lang::noperm::%{SK::lang::%uuid of player%}%})
 		else if arg-1 is "help":
 			set {_site} to arg-2 parsed as integer
-			if {_site} is more than 4:
+			if {_site} is more than 5:
 				message "%{_prefix}% %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%"""
 				stop
 			send "%{SB::config::spacer}%"
@@ -984,13 +984,15 @@ command /island [<text>] [<text=1>] [<text>]:
 				message "%{_prefix}% %{SB::lang::isspawn::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isore::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::isgen::%{SK::lang::%uuid of player%}%}%"
-				message "%{_prefix}% %{SB::lang::isbiome::%{SK::lang::%uuid of player%}%}%"
 			else if arg-2 is "4":
 				message "%{_prefix}% %{SB::lang::trustadd::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustremove::%{SK::lang::%uuid of player%}%}%"
 				message "%{_prefix}% %{SB::lang::trustlist::%{SK::lang::%uuid of player%}%}%"
-				message "%{_prefix}% %{SB::lang::flaglist::%{SK::lang::%uuid of player%}%}%"
-			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/4 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
+				message "%{_prefix}% %{SB::lang::helpwarp::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% %{SB::lang::helpsetwarp::%{SK::lang::%uuid of player%}%}%"
+			else if arg-2 is "5":
+				message "%{_prefix}% %{SB::lang::helpdelwarp::%{SK::lang::%uuid of player%}%}%"
+			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 
 		# > Argument: "info"
@@ -1087,3 +1089,24 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > Calls the islandupgrademenu function, which opens the upgrade menu.
 		else if arg-1 is "upgrade" or "upgrades":
 			islandupgrademenu(player)
+		#
+		# > Argument: "warp"
+		# > If a player types in /island warp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which opens teleports the player to a warp point.
+		else if arg-1 is "warp":
+			warphandler(player,"warp",arg-2)
+		#
+		# > Argument: "setwarp" 
+		# > If a player types in /island setwarp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which sets a warp.
+		else if arg-1 is "setwarp":
+			warphandler(player,"setwarp",arg-2)
+		#
+		# > Argument: "delwarp" 
+		# > If a player types in /island delwarp, the warphandler function is called.
+		# > Actions:
+		# > Calls the warphandler function, which deletes a warp.
+		else if arg-1 is "delwarp":
+			warphandler(player,"delwarp",arg-2)
