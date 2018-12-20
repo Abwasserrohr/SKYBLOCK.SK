@@ -424,6 +424,11 @@ command /island [<text>] [<text=1>] [<text>]:
 			if {SB::player::%uuid of player%::island::leader} is set:
 				message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
 				stop
+			#
+			# > If we're already searching for an island for the player, print information and stop.
+			if {SB::searchis::%player%} is set:
+				message "%{_prefix}% %{SB::lang::waitis::%{SK::lang::%uuid of player%}%}%"
+				stop
 			if player is online:
 				if arg-2 is "1":
 					#todo translation
