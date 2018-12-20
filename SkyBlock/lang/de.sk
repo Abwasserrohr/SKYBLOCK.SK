@@ -74,6 +74,13 @@ on script load:
 	set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
 	#
+	# > /island warp|setwarp|delwarp
+	#
+	set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
+	set {SB::lang::delwarpok::%{_lang}%} to "Der Warp wurde erfolgreich gelöscht."
+	set {SB::lang::warpnotfound::%{_lang}%} to "Dieser Warp wurde nicht gefunden."
+
+	#
 	# > /island info:
 	#
 	set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
