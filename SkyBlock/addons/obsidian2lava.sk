@@ -1,18 +1,27 @@
 #
-# > SKYBLOCK.SK Addon: obsidian2lava
-# > Revert obsidian to lava with a empty bucket.
-#
+# ==============
+# obsidian2lava.sk v0.0.2
+# ==============
+# Let users revert obsidian back to lava.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
 
 #
 # > Event: on rightclick on a obsidian block while holding a empty bucket
 # > Actions:
 # > The code below reverts obsidian back to lava, if the player has a empty bucket in his hand.
-#
 on rightclick on obsidian with a empty bucket:
-	#Check, if the player is not allowed:
-	set {_r} to checkprotect(location of event-block,player)
-	if {_r} is "false":
+	#
+	# > Check if the player is not allowed to do this action.
+	set {_allowed} to checkislandaccess(player,location of event-block)
+	if {_allowed} is false:
 		cancel event
+	#
+	# > If the player is allowed, change the obsidian to lava.
 	else:
 		if player's tool is a empty bucket:
 			set event-block to air
@@ -31,7 +40,6 @@ on rightclick on obsidian with a empty bucket:
 # > Actions:
 # > Once this event is triggered, it loops all players on the server and if the distance between
 # > the loop-player and event-location is lower than 30, it informs the player about this addon.
-#
 on block form of obsidian:
 	$ thread
 	loop all players:
