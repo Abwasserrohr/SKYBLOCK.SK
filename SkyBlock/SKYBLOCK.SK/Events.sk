@@ -103,6 +103,12 @@ on place:
 	if event-block is hopper:
 		if {_allowed} is true:
 			set {_allowed} to hoppercounter(player, "place")
+	#
+	# > If the placed block is dirt, grass or farmland, check if it is bound to
+	# > an specific island.
+	if event-block is dirt or grass or farmland:
+		if {_allowed} is true:
+			set {_allowed} to bindcheck(player's tool, player)
 	if {_allowed} is false:
 		cancel event
 
@@ -121,6 +127,14 @@ on break:
 			set {_allowed} to hoppercounter(player, "break")
 	if {_allowed} is false:
 		cancel event
+	if {_allowed} is true:
+		#
+		# > If the player is allowed to break the block, check if the block is
+		# > dirt, grass or farmland and then add a island binding to it, if the
+		# > island is below level 100.
+		if event-block is dirt or grass or farmland:
+			cancel event
+			binddirt(event-location, player)
 
 #
 # > Event - rightclick on a entity
