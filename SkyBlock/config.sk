@@ -23,7 +23,12 @@ on load:
 	# Default size of the island, set it to the distance like above to make it as big as the distance is.
 	# > Default Island is 50x50 big and can be upgraded 5 times á 30x30. until it is 200x200. (25)
 	set {SB::config::defaultsize} to 25
-	
+
+	#
+	# > Set a island level until which dirt, grass and farmland blocks should be bound to the
+	# > island to prevent island creation abuse.
+	set {SB::config::binduntillevel} to 100
+
 	#
 	# > The default amount of hoppers, the player is allowed to place until
 	# > the placement of hoppers is canceled.
