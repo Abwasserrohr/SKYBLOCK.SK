@@ -1,0 +1,212 @@
+#
+# ==============
+# searchbedrock.sk
+# ==============
+# searchbedrock.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - searchbedrock:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Goes trough all possible island locations and check if player's location is within a calculated island and returns the location,
+# > if no island matches, the function returns a location with y-coordinate -5 as a error.
+function searchbedrock(p:player) :: location:
+	#
+	# > Here, {_loc} is set to the center of the map, which is always at x0.5, yconfigured height, z0.5 and in a configured world.
+	# > This also gets parsed as a world to make it a valid location.
+	#
+	set {_loc} to location at 0.5, {SB::config::height}, 0.5 in "%{SB::config::world}%" parsed as world
+	#
+	# > The {_search} variable is for the while loop, once this is deleted or changed, the while loop stops.
+	#
+	set {_search} to true
+	#
+	# > The {_s} variable is important to run trough all islands in a organized way.
+	# > Since the loop searches for a specific location on a 2D map, it has to find the next point
+	# > to check, {_s} tells what should happen next within the while loop.
+	#
+	set {_s} to 1
+	#
+	# > The {_l} variable is here to set the amount of times the loop (within the while loop) should
+	# > be executed, the {_l} variable is changed within the while loop if the destination was not found.
+	#
+	set {_l} to 1
+	#
+	# > The {_distance} variable is set to a local variable and defines the radius of
+	# > the island, it is multiplicated by 2 and used to determine the right island size,
+	# > distances between islands and protections. Here know which bedrock is nearest
+	# > to the specified player.
+	#
+	set {_distance} to {SB::config::distance}
+	#
+	# > Start the while loop as long as the local {_search} variable is set to true.
+	#
+	while {_search} is true:
+		#
+		# > Counting how many islands are already been searched:
+		#
+		add 1 to {_i}
+		#
+		# > If the specified player ({_p} variable) is not online, stop here,
+		# > since the location of the specified player is necessary to determine the right bedrock.
+		#
+		if {_p} is not online:
+			delete {_search}
+			stop
+		#
+		# > Loop trough the following code as many times as defined in {_l}. 
+		#
+		loop {_l} times:
+			#
+			# > If the {_s} variable is 1 or 5, add the {_distance}*2 to the z- and x-coordinate.
+			# > Example, at the beginning, we are at the x like you can view below, then
+			# > if {_s} is 1 or 5, we're adding the {_distance}*2 to the z-coordinate.
+			# > Every "*" is a island, "x" is the center, where we start, example: server lobby.
+			# > Now, if {_s} is 1 or 5, the added {_distance}*2 points to "N", our new island location
+			# > which we calculated:
+			# > X
+			# > ^
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > | *  *  x  N  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > #-------------> Z
+			# > (Each "*" is {_distance}*2)
+			if {_s} is 1 or 5:
+				add ({_distance}*2) to z-coord of {_loc}
+			#
+			# > If {_s} is 2, we add {_distance}*2 to the x-coordinate, like this:
+			# > X
+			# > ^
+			# > | *  *  *  N  *
+			# > | *  *  *  x  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > #-------------> Z
+			#
+			if {_s} is 2:
+				add  ({_distance}*2) to x-coord of {_loc}
+			#
+			# > If {_s} is 3, we remove {_distance}*2 from the z-coordinate of the location:
+			# > X
+			# > ^
+			# > | *  *  N  x  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > #-------------> Z
+			#
+			if {_s} is 3:
+				subtract  ({_distance}*2) from z-coord of {_loc}
+			#
+			# > If {_s} is 4, we remove {_distance}*2 from the x-coordinate of the location:
+			# > X
+			# > ^
+			# > | *  *  x  *  *
+			# > | *  *  N  *  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > | *  *  *  *  *
+			# > #-------------> Z
+			#
+			if {_s} is 4:
+				subtract  ({_distance}*2) from x-coord of {_loc}
+			#
+			# > With the if statements above, we can control the scan process very easy by changing the
+			# > {_s} variable, since this is a while loop, we just change the variable at the end,
+			# > and then it gets executed again with the new local {_s} variable.
+			#
+			
+			#
+			# > The {_loc} is a new island location, this is where the bedrock of the island.
+			# > To be sure that we're not within a protected border or somewhere else, there
+			# > is a variable created (array/list), which is set to the location twice.
+			# 
+			set {_lc::1} to {_loc}
+			set {_lc::2} to {_loc}
+			#
+			# > Here, it is calculated, how big the island actually is, by setting the variables
+			# > to point A and B. This is a 3D Model. We take the lowest point on the one corner and
+			# > the highest point on the other corner to check, if the player is within this selected area.
+			#
+			add ({_distance} - {SB::config::protect}) to x-coord of {_lc::1}
+			add ({_distance} - {SB::config::protect}) to z-coord of {_lc::1}
+			subtract ({_distance} - {SB::config::protect}) from x-coord of {_lc::2}
+			subtract ({_distance} - {SB::config::protect}) from z-coord of {_lc::2}
+			set y-coord of {_lc::1} to 256
+			set y-coord of {_lc::2} to 0
+			#
+			# > If the player is actually in this space, we return the location of the bedrock and
+			# > delete the {_search} variable to stop the while loop from doing more loops.
+			#
+			if location of {_p} is within {_lc::1} to {_lc::2}:
+				return {_loc}
+				delete {_search}
+		#
+		# > We're here if we couldn't find the right island we wanted, now we try to find it
+		# > by changing the {_s} variable and looping through this code above again,
+		# > we can go trough all islands until we have it found.
+		# > Now lets visualise to make it easier to understand what this is actually doing:
+		#
+		# > If {_s} is 6, it is changed back to 2, this does the following in the next loop cycle:
+		# > (x is the old island, N the new island location)
+		# > X
+		# > ^
+		# > | *  *  *  N  *
+		# > | *  *  *  x  *
+		# > | *  *  *  *  *
+		# > | *  *  *  *  *
+		# > | *  *  *  *  *
+		# > #-------------> Z
+		#
+		if {_s} is 6:
+			set {_s} to 2
+		#
+		# > If {_s} is not 6, add 1 to {_s} and go forward, if it is 4 after 1 was added, it does the following:
+		# > (x is the old island, N the new island location)
+		# > X
+		# > ^
+		# > | *  *  x  *  *
+		# > | *  *  N  *  *
+		# > | *  *  *  *  *
+		# > | *  *  *  *  *
+		# > | *  *  *  *  *
+		# > #-------------> Z
+		#
+		else:
+			add 1 to {_s}
+		#
+		# > If {_s} is either 3 or 5, add 1 to {_l} to loop once more.
+		# > The loop within the while loop is going to looped one more time to go one step further.
+		if {_s} is 3 or 5:
+			add 1 to {_l}
+		#
+		# > To make this whole process more visible how it would look in action, i made the same like above
+		# > and visualised it with integers. 1 = first, 9 = last island of this example being calculated.
+		# > (x is the lobby at X=0,Z=0)
+		# > X
+		# > ^
+		# > | *  *  *  *  *
+		# > | *  4  3  2  *
+		# > | *  5  x  1  *
+		# > | *  6  7  8  9
+		# > | *  *  *  *  *
+		# > #-------------> Z
+		#
+		# > If we're seaching already for more islands than there are, stop it and return a error.
+		#
+		if {_i} is bigger than size of {SB::islvl::*}:
+			#
+			# > Delete {_search} to stop the while loop.
+			#
+			delete {_search}
+			#
+			# > Set a new location with a y-coordinate of -5, which is a error. The return has
+			# > to be a location, that is why we're not returning false.
+			#
+			set {_loc} to location at 5, -5, 5 in "%{SB::config::world}%" parsed as world
+			return {_loc}

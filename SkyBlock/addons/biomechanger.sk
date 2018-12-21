@@ -1,6 +1,6 @@
 #
 # ==============
-# biomechanger.sk v0.0.1
+# biomechanger.sk v0.0.3
 # ==============
 # Adds biome changing capability to SKYBLOCK.SK
 # ==============
@@ -36,54 +36,51 @@ import:
 # > Actions:
 # > changebiome is going to change the biome of the island the player is owning to the defined biome
 function changebiome(player:offline player,biome:text,title:text):
-
 	#
 	# > Get the uuid of the player to then get the location of the island
 	set {_uuid} to uuid of {_player}
-	
+	#
+	# > Get the bedrock of player's island.
+	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+	#
+	# > Get the new borders of the island trough updating the current temporary locations:
+	set {_allowed} to checkislandaccess({_player},{_bedrock})
 	#
 	# > Set {_l::1} and {_l::2} to the location of the island borders.
-	set {_l::1} to {SB::player::%{_uuid}%::island::border1}
-	set {_l::2} to {SB::player::%{_uuid}%::island::border2}
-
+	set {_l::1} to {SB::TEMPLOC::%{_player}%b1}
+	set {_l::2} to {SB::TEMPLOC::%{_player}%b2}
 	#
 	# > Since we only need to loop trough one y-coordinate per x- and z-axis, we set the y-coordinate to 0
 	# > to prevent looping multiple times trough the same x- and z-axis.
-	set {_l::1} to location at x-coord of {_l::1}, 0, z-coord of {_l::1} in world "%world of {_l::1}%" parsed as world
-	set {_l::2} to location at x-coord of {_l::2}, 0, z-coord of {_l::2} in world "%world of {_l::2}%" parsed as world
-	
+	set y-coord of {_l::1} to 0
+	set y-coord of {_l::2} to 0
 	#
 	# > Set {_world} to the defined world in the configuration
 	set {_world} to Bukkit.getServer().getWorld("%{SB::config::world}%")
 	replace all "_" with " " in {_biome}
-	
 	#
 	# > Set {_changebiome} to the {_biome} parsed as biome, since the function accepts biomes as string (text)
 	set {_changebiome} to {_biome} parsed as biome
-	
 	#
 	# > Loop trough all blocks within the two locations
 	set {_blocks::*} to blocks within {_l::1} to {_l::2}
 	set {_size} to size of {_blocks::*}
 	delete {_blocks::*}
-	
 	#
 	# > Inform player about biome change
 	set {_a} to {SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}
 	replace all "<biome>" with "%{_title}%" in {_a}
-	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}%" to {_player}
-	
+	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{_a}%" to {_player}
 	#
 	# > A progress bar to show how long it takes until it's done
 	set {_needed} to 0
 	set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
 	loop blocks within {_l::1} to {_l::2}:
+		set {_chunk} to chunk at loop-block
 		add 1 to {_i}
 		add 1 to {_b}
 		if {_i} is 100:
 			wait 1 tick
-			#
-			# > Calculate the progress
 			set {_p} to ({_b}/{_size})*100
 			if {_p} >= {_needed}:
 				add 1 to {_needed}
@@ -93,7 +90,12 @@ function changebiome(player:offline player,biome:text,title:text):
 		set {_x} to (location of loop-block).getBlockX()
 		set {_z} to (location of loop-block).getBlockZ()
 		{_world}.setBiome({_x}, {_z}, {_changebiome})
-
 	#
 	# > Print to the player that we're done with changing the biome
 	send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::done::%{SK::lang::%{_uuid}%}%}%" to {_player}
+	#
+	# > Renew the player's chunks by teleporting the player to the lobby and then back:
+	set {_tloc} to {_player}'s location
+	teleport {_player} to {SB::config::spawn}
+	wait 2 ticks
+	teleport {_player} to {_tloc}

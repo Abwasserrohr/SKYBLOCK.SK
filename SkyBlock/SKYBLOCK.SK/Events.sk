@@ -163,7 +163,7 @@ on death of player:
 				set {SB::hunger::%{_p}%} to hunger of {_p}
 on respawn:
 	wait a tick
-	if {SB::player::%uuid of player%::island::border1} is set:
+	if {SB::player::%uuid of player%::island::bedrock} is set:
 		make player execute command "/is home"
 	else:
 		make player execute command "/is spawn"
@@ -186,7 +186,7 @@ on damage:
 			stop
 	#todo double check this part, something doesnt work right here:
 	else:
-		if {SB::player::%uuid of attacker%::island::border1} is not set:
+		if {SB::player::%uuid of attacker%::island::bedrock} is not set:
 			cancel event
 			actionload(attacker, {_a})
 		else:
@@ -244,7 +244,7 @@ on script load:
 		delete {deleteisland.1::%loop-index%}
 		delete {deleteisland.2::%loop-index%}
 	delete {SB::ISDELPROCESS}
-	#
+ 	#
 	# > To prevent any data being kept here, delete it again completly:
 	delete {deleteisland.1::*}
 	delete {deleteisland.2::*}
@@ -300,7 +300,6 @@ on join:
 		set {_l::2} to y-coord of {_bedrock}
 		set {_l::3} to z-coord of {_bedrock}
 		set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
-
 	if {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home} is set:
 		teleport player to {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home}
 	else:

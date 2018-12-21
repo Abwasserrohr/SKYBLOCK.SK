@@ -1,0 +1,45 @@
+#
+# ==============
+# leaveisland.sk
+# ==============
+# leaveisland.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function: leaveisland
+# > Arguments:
+# > <player>player, <text>text
+# > Actions:
+# > Leaves an island, if the text argument is "owner", it removes all other members from the members list
+function leaveisland(p:offline player, text:text):
+	#
+	# > If a player leaves the island, the inventory of the player is cleared.
+	clear {_p}'s inventory
+	#
+	# > Get the uuid of the player.
+	set {_uuid} to uuid of {_p}
+	#
+	# > If the player was not only while this was executed, this has been generated and can now
+	# > be deleted.
+	delete {Leave.%{_uuid}%}
+	#
+	# > If the player is not online now, set the {Leave.%{_uuid}%} to true to do it later, since
+	# > the inventory can only be cleared if the player is online.
+	if {_p} is not online:
+		set {Leave.%{_uuid}%} to true
+	#
+	# > Get the location of the bedrock.
+	set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+	set {_locx} to x-coord of {_loc}
+	set {_locy} to y-coord of {_loc}
+	set {_locz} to z-coord of {_loc}
+	delete {SB::player::%{_uuid}%::island::bedrock}
+	teleport {_p} to {SB::config::spawn}
+	delete {SB::islvl::%{_uuid}%}
+	#
+	# > Deletes the player out of the members list:
+	loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
+		if loop-value is {_uuid}:
+			set {_i} to loop-index
+			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%{_i}%}
+			stop loop

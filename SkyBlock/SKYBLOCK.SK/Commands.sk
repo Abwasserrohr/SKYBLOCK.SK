@@ -36,9 +36,8 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			if arg-2 is "calc":
 				set {_player} to arg-3 parsed as offline player
 				set {_uuid} to uuid of {_player}
-				if {SB::player::%{_uuid}%::island::leader} is set:
+				if {SB::player::%{_uuid}%::island::bedrock} is set:
 					message "%{_prefix}% %{SB::lang::isadmin::fcalc::%{SK::lang::%uuid of player%}%}%"
-					set {_player} to arg-3 parsed as offline player
 					$ thread
 					calcisland({_player})
 
@@ -141,30 +140,13 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 					set {_loc::3} to z-coord of {_bedrock}
 					
 					if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is "---":
-						set {SB::player::%{_uuid}%::island::leader} to {_uuid}
 						set {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} to {_uuid}
 					else:
 						add uuid of player to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}
 
 					#
-					# > Sets everything needed to have a working island
+					# > Sets the new bedrock of the player.
 					set {SB::player::%{_uuid}%::island::bedrock} to {_bedrock}
-					set {SB::player::%{_uuid}%::island::leader} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
-					add 1 to y-coord of {_bedrock}
-					set {SB::player::%{_uuid}%::island::home::home} to {_bedrock}
-					
-					set {_l::1} to {_bedrock}
-					set {_l::2} to {_bedrock}
-					add ({SB::config::distance} - {SB::config::protect}) to x-coord of {_l::1}
-					add ({SB::config::distance} - {SB::config::protect}) to z-coord of {_l::1}
-					subtract ({SB::config::distance} - {SB::config::protect}) from x-coord of {_l::2}
-					subtract ({SB::config::distance} - {SB::config::protect}) from z-coord of {_l::2}
-					set y-coord of {_l::1} to 256
-					set y-coord of {_l::2} to 0
-					#
-					# > Creates the borders again. 
-					set {SB::player::%{_uuid}%::island::border1} to {_l::1}
-					set {SB::player::%{_uuid}%::island::border2} to {_l::2}
 				stop
 				
 			#
@@ -267,7 +249,10 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 						set {_oldowneruuid} to uuid of {_oldowner}
 						set {_newowneruuid} to uuid of {_newowner}
 						
-						if {SB::player::%{_newowneruuid}%::island::leader} is not {_oldowneruuid}:
+						#
+						# > Checks if the new leader is member of the island from the old leader:
+						set {_newownerscurrentleader} to getleader({_newowner})
+						if {_newownerscurrentleader} is not {_oldowneruuid}:
 							message "%{_prefix}% %{SB::lang::isadmin::newleaderhastobemember::%{SK::lang::%uuid of player%}%}%"
 							stop
 						#
@@ -276,11 +261,6 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 						set {_locx} to x-coord of {_bedrock}
 						set {_locy} to y-coord of {_bedrock}
 						set {_locz} to z-coord of {_bedrock}
-						
-						#
-						# > Changes the leader uuid of the old leader entry
-						set {SB::player::%{_oldowneruuid}%::island::leader} to {_newowneruuid}
-						set {SB::player::%{_newowneruuid}%::island::leader} to {_newowneruuid}
 						
 						#
 						# > Changes the leader of this island to the new leader
@@ -292,7 +272,6 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 						#
 						# > Loop trough all members and change it to the new owner
 						loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-							set {SB::player::%loop-value%::island::leader} to {_newowneruuid}
 							if loop-value is {_newowneruuid}:
 								delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
 								
@@ -348,8 +327,9 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 						set {_ouuid} to uuid of {_o}
 						#
 						# > Check if the owner actually owns a island
-						if {SB::player::%{_ouuid}%::island::leader} is set:
-							if {SB::player::%{_ouuid}%::island::leader} is {_ouuid}:
+						set {_leader} to getleader({_o})
+						if {_leader} is set:
+							if {_leader} is {_ouuid}:
 								set {_arg2} to {_p}
 								if {_arg2} is online:
 									if {_arg2} is not {_o}:
@@ -357,7 +337,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 										set {_tuuid} to uuid of {_p2}
 										#
 										# > If the invited player is already on an island, print error
-										if {SB::player::%{_tuuid}%::island::leader} is set:
+										if {SB::player::%{_tuuid}%::island::bedrock} is set:
 											set {_msg} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
 											replace all "<player>" with "%{_p2}%" in {_msg}
 											message "%{_prefix}% %{_msg}%"
@@ -409,8 +389,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			message "/isadmin island kickall - kicks everyone from the island you're standing on"
 			message "/isadmin island addmember <player> - adds the defined player to the island you're currently at, if no leader is set, the player gets the leader"
 			message "/isadmin island calc <player> - calculates the island of the defined player"
-
-
+	
 command /island [<text>] [<text=1>] [<text>]:
 	aliases: /is, /sb, /skyblock
 	trigger:
@@ -421,7 +400,7 @@ command /island [<text>] [<text=1>] [<text>]:
 			if player has permission "%{SB::config::buildpermission}%":
 				make player execute "/sk reload SkyBlock/"
 		if arg-1 is "create":
-			if {SB::player::%uuid of player%::island::leader} is set:
+			if {SB::player::%uuid of player%::island::bedrock} is set:
 				message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
 				stop
 			#
@@ -562,7 +541,6 @@ command /island [<text>] [<text=1>] [<text>]:
 						remove slowness from player
 						set {_l::1} to {_loc}
 						set {_l::2} to {_loc}
-						set {_option4} to {SB::config::protect} parsed as number
 						add ({SB::config::distance} - {SB::config::protect}) to x-coord of {_l::1}
 						add ({SB::config::distance} - {SB::config::protect}) to z-coord of {_l::1}
 						subtract ({SB::config::distance} - {SB::config::protect}) from x-coord of {_l::2}
@@ -581,17 +559,7 @@ command /island [<text>] [<text=1>] [<text>]:
 						
 						add 1 to y-coord of {_loc}
 						set {_y} to y-coord of {_loc}						
-						set {SB::player::%uuid of player%::island::leader} to uuid of player
-						set {SB::player::%uuid of player%::island::home::home} to {_homeloc}
-						
-						set {_x} to x-coord of {_l::1}
-						set {_y} to y-coord of {_l::1}
-						set {_z} to z-coord of {_l::1}
-						set {SB::player::%uuid of player%::island::border1} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
-						set {_x} to x-coord of {_l::2}
-						set {_y} to y-coord of {_l::2}
-						set {_z} to z-coord of {_l::2}
-						set {SB::player::%uuid of player%::island::border2} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
+						set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} to {_homeloc}
 						stop loop
 					wait a ticks
 				if {_s} is 6:
@@ -629,7 +597,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
 					#
 					# > If the user is trusted, teleport:
-					if "%loop-value%" is "%uuid of player%":
+					if "%loop-value%" is uuid of player:
 						teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
 						stop
 				#
@@ -647,7 +615,6 @@ command /island [<text>] [<text=1>] [<text>]:
 				#
 				# > Since this hasn't stopped yet, it is valid to teleport the executor.
 				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
-
 			else:
 				#
 				# > There is no player, print error.
@@ -688,6 +655,7 @@ command /island [<text>] [<text=1>] [<text>]:
 			else:
 				#If the 2. argument is 2, then delete, else, create a tellraw which executes this command with the 2. argument.
 				if arg-2 is "2":
+					#todo - ask, if the player really want to delete the island
 					set {_uuid} to uuid of player
 					set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
 					set {_x} to x-coordinate of {_bedrockloc}
@@ -701,9 +669,6 @@ command /island [<text>] [<text=1>] [<text>]:
 					tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%}%},"/is delete 2")
 
 		else if arg-1 is "calc":
-			if {SB::player::%uuid of player%::island::bedrock} is not set:
-				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-				stop
 			#If there is more time between the las calculation and now than the set cooldown time in config.sk:
 			if difference between {SB::calcdown::%uuid of player%} and now < {SB::config::calccooldown}:
 				message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
@@ -795,7 +760,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					set {_p} to "%loop-value%" parsed as offline player
 					if player is {_p}:
 						set {_rank} to loop-index
-					send  "&e&l%loop-index%&8 - &a%{_p}%&8&l: &e%{_Level::%loop-value%}% &7||&8 %{_Member}%"
+					send  "&e&l%loop-index%&8 - &6%{_p}%&7&l: &e%{_Level::%loop-value%}% &7||&8 %{_Member}%"
 				set {_size} to size of {SB::islvl::*}
 				send "%{SB::lang::prefix::%{SK::lang::%uuid of player%}%}% &eDu bist auf Platz %{_rank}% von %{_size}% Inseln. todo: translate"
 				message "%{SB::config::spacer}%"
@@ -815,18 +780,18 @@ command /island [<text>] [<text=1>] [<text>]:
 				message "%{_p}%%{SB::lang::levelheader::%{SK::lang::%uuid of player%}%}%%{_level}%" to player
 				message "%{_p}% Calculate your level with /is calc -todo: translation" to player
 				message "%{SB::config::spacer}%"
-				set metadata value "IS-Level" of player to "%{_level}%"
 		else if arg-1 is "spawn" or "lobby":
 			teleport player to {SB::config::spawn}
 		else if arg-1 is "invite":
 			if {SB::player::%uuid of player%::island::bedrock} is set:
-				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+				set {_leader} to getleader(player)
+				if {_leader} is uuid of player:
 					set {_arg2} to arg-2 parsed as offline player
 					if {_arg2} is online:
 						if {_arg2} is not player:
 							set {_p2} to {_arg2}
 							set {_tuuid} to uuid of {_p2}
-							if {SB::player::%{_tuuid}%::island::border1} is set:
+							if {SB::player::%{_tuuid}%::island::bedrock} is set:
 								set {_msg} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
 								replace all "<player>" with "%{_p2}%" in {_msg}
 								message "%{_prefix}% %{_msg}%"
@@ -880,7 +845,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				if {Request::%player%::%{_arg2}%} is set:
 					if {SB::player::%uuid of player%::island::bedrock} is set:
 						message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
-						set {_check} to {SB::player::%uuid of player%::island::leader}
+						set {_check} to getleader(player)
 						if {_check} is uuid of player:
 							message "%{_prefix}% %{SB::lang::havetodelete::%{SK::lang::%uuid of player%}%}%"
 						else:
@@ -896,10 +861,6 @@ command /island [<text>] [<text=1>] [<text>]:
 						set {_pluuid} to uuid of {_arg2}
 						set {_joinuuid} to uuid of player
 						set {SB::player::%{_joinuuid}%::island::bedrock} to {SB::player::%{_pluuid}%::island::bedrock}
-						set {SB::player::%{_joinuuid}%::island::leader} to {SB::player::%{_pluuid}%::island::leader}
-						set {SB::player::%{_joinuuid}%::island::home::home} to {SB::player::%{_pluuid}%::island::home::home}
-						set {SB::player::%{_joinuuid}%::island::border1} to {SB::player::%{_pluuid}%::island::border1}
-						set {SB::player::%{_joinuuid}%::island::border2} to {SB::player::%{_pluuid}%::island::border2}
 						delete {Request::%player%::%{_arg2}%}
 						make player execute command "/is home"
 						set {_a} to {SB::lang::joinedismember::%{SK::lang::%uuid of player%}%}
@@ -920,8 +881,13 @@ command /island [<text>] [<text=1>] [<text>]:
 			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
-				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+				#
+				# > Doesn't allow the leader to leave the island.
+				set {_leader} to getleader(player)
+				if {_leader} is uuid of player:
 					message "%{_prefix}% %{SB::lang::leaderleaveinfo::%{SK::lang::%uuid of player%}%}%"
+				#
+				# > If the player is not a leader, the player can leave.
 				else:
 					if arg-2 is player:
 						message "%{_prefix}% %{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
@@ -929,7 +895,7 @@ command /island [<text>] [<text=1>] [<text>]:
 					else:
 						message "%{_prefix}% %{SB::lang::leftis::%{SK::lang::%uuid of player%}%}%"
 						leaveisland(player, "owner")
-		
+
 		# > Argument: "kick"
 		# > If a player types in /island with the first argument "kick" and the second argument with the player name of the
 		# > player who should get kicked, then the following code is investigating if the user has an island, is the owner of his island,
@@ -938,7 +904,10 @@ command /island [<text>] [<text=1>] [<text>]:
 			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
 			else:
-				if {SB::player::%uuid of player%::island::leader} is uuid of player:
+				#
+				# > Check if the executor is the island leader.
+				set {_leader} to getleader(player)
+				if {_leader} is uuid of player:
 					if arg-2 is set:
 						set {_kickplayer} to arg-2 parsed as offline player
 						set {_uuid} to uuid of {_kickplayer}
@@ -1000,6 +969,7 @@ command /island [<text>] [<text=1>] [<text>]:
 			send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
 			send "%{SB::config::spacer}%"
 
+		#
 		# > Argument: "info"
 		# > If a player types in /island info, the the following code is being executed.
 		# > Actions:
@@ -1022,9 +992,11 @@ command /island [<text>] [<text=1>] [<text>]:
 				set {_loc::3} to z-coord of {_bedrock}
 				
 				set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
+				set {_realuuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
 				set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
 				set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
 				set {_created} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
+
 				#
 				# > Go trough all members and add them as a player to a new array.
 				#
@@ -1059,6 +1031,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				# > Prints the defined spacer:
 				#
 				message "%{SB::config::spacer}%"
+
 		#
 		# > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
 		# > If a player types in /island generator, his current generator level is displayed
@@ -1077,6 +1050,14 @@ command /island [<text>] [<text=1>] [<text>]:
 		#
 		else if arg-1 is "ores" OR "ore" OR "orechances" OR "chances":
 			orechancesinfo(player)
+
+		#
+		# > Argument: "biome" ("biomes" OR "biom")
+		# > If a player types in /island biome, a biome select menu is opened.
+		# > Actions:
+		# > Opens biome menu
+		else if arg-1 is "biome" OR "biomes" OR "biom":
+			biomemenu(player)
 
 		#
 		# > Argument: "trust"

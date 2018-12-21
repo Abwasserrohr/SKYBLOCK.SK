@@ -1,0 +1,84 @@
+#
+# ==============
+# menues.sk
+# ==============
+# menues.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function: skyblockgui
+# > Parameter: <player>player
+# > Actions:
+# > Opens the main menu for SkyBlock, this function is called if a player enters /island.
+function skyblockgui(p: player):
+	#open chest with 3 rows named "&b&lSkyBlock" to {_p}
+	opengui({_p},27,"&b&lSkyBlock")
+	#Fill the Inventory with empty glass panes:
+	loop 3 * 9 times:
+		set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+	#Render the items into the menu
+	set {_uuid} to uuid of {_p}
+	if {SB::player::%{_uuid}%::island::bedrock} is set:
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","&rTeleport zur Insel","make ""%{_p}%"" parsed as player execute command ""/is home""",true)
+	else:
+		setguiitem({_p},10,"grass",1,"%{SB::lang::guigrassname::%{SK::lang::%{_uuid}%}%}%","&rStarte eine neue Insel","make ""%{_p}%"" parsed as player execute command ""/is create""",true)
+	setguiitem({_p},11,"experience bottle",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","&rInsel Level","make ""%{_p}%"" parsed as player execute command ""/is level""",true)
+	setguiitem({_p},12,"book and quill",1,"%{SB::lang::guichallangename::%{SK::lang::%{_uuid}%}%}%","&rDemnächst...","message ""Aufgaben kommen demnächst!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},13,"wall sign",1,"%{SB::lang::guitopname::%{SK::lang::%{_uuid}%}%}%","&rSchau dir die besten Inseln an","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
+	setguiitem({_p},14,"ender chest",1,"%{SB::lang::guirewardsname::%{SK::lang::%{_uuid}%}%}%","&rComing soon...","message ""Rewards are coming soon!"" to ""%{_p}%"" parsed as player",true)
+	setguiitem({_p},15,"end portal frame",1,"%{SB::lang::guihubname::%{SK::lang::%{_uuid}%}%}%","&rTeleport zum SkyBlock Spawn","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
+	setguiitem({_p},16,"jungle leaves",1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%","&r%{SB::lang::bc::changebiomemenulore::%{SK::lang::%{_uuid}%}%}%","biomemenu(""%{_p}%"" parsed as player)",true)
+
+# > Function - biomemenu:
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Opens the biome menu to the player where it is possible to get biomes for a fixed, predefined price,
+# > define biomes and prices in the config.sk or alter this function like you want.
+function biomemenu(p: player):
+	#
+	# > Get the uuid of the player.
+	set {_uuid} to uuid of {_p}
+	#
+	# > Get the uuid of the island leader and check if the player is the leader.
+	set {_leader} to getleader({_p})
+	broadcast "%{_leader}%"
+	if {_leader} is {_uuid}:
+		#
+		# > Count how many lines are needed:
+		set {_size} to size of {SB::config::biome::menuitem::*}
+		set {_slots} to 9
+		loop 5 times:
+			if {_size} is bigger than {_slots}:
+				add 9 to {_slots}
+
+		#
+		# > Open a menu to the defined player, with the calculated slots and the translated menu header
+		opengui({_p},{_slots},"&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%")
+		#
+		# > Fill the inventory with empty glass panes to make it look nicer
+		loop {_slots} times:
+			set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+
+		#
+		# > Render all the biomes into the menu, they can be changed in the config.sk
+		loop {SB::config::biome::menuitem::*}:
+			set {_item} to {SB::config::biome::menuitem::%loop-index%}
+			set {_slot} to loop-index parsed as integer
+			remove 1 from {_slot}
+			set {_price} to {SB::config::biome::price::%loop-index%}
+			set {_title} to {SB::config::biome::lang::%{SK::lang::%{_uuid}%}%::%loop-index%}
+			set {_biome} to {SB::config::biome::biomename::%loop-index%}
+			#
+			# > If the price is over 0, set the price in lore to a price
+			if {_price} is bigger than 0:
+				set {_pricelore} to {SB::lang::bc::shopprice::%{SK::lang::%{_uuid}%}%}
+				replace all "<price>" with "%{_price}%" in {_pricelore}
+			# > If the price is 0 or lower, tell the player that it is free.
+			else:
+				set {_pricelore} to {SB::lang::bc::shopfree::%{SK::lang::%{_uuid}%}%}
+			setguiitem({_p},{_slot},{_item},1,"&r%{_title}%","&r%{_pricelore}%","buybiomechange(""%{_p}%"" parsed as player,""%{_biome}%"",%{_price}%,""%{_title}%"")",true)
+	#
+	# > If the player is not the owner, tell the player that this is for the island owner only
+	else:
+		send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::notleader::%{SK::lang::%{_uuid}%}%}%" to {_p}

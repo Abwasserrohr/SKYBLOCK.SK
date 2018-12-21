@@ -1,0 +1,17 @@
+#
+# ==============
+# protectionmgs.sk
+# ==============
+# protectionmgs.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function: protectionmgs
+# > Parameter: <player>player
+# > Actions:
+# > Tells the player using an action bar that the area is protected.
+function protectionmgs(p:player):
+	set {_uuid} to uuid of {_p}
+	set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+	set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
+	actionload({_p}, {_a})

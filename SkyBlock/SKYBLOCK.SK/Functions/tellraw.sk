@@ -1,0 +1,15 @@
+#
+# ==============
+# tellraw.sk
+# ==============
+# tellraw.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#Prints tellraw message to player, on which the player can click and execute a command
+#
+# > Function: tellrawmsg1
+# > Parameter: <player>player, <text>prefix, <text>clickable text, <text>click command
+# > Actions:
+# > Prints a clickable message into the chat of the player.
+function tellrawmsg1(p:player,t1:text,t2:text,c:text):
+	execute console command "/tellraw %{_p}% ["""",{""text"":""%{_t1}% ""},{""text"":""%{_t2}%"",""clickEvent"":{""action"":""run_command"",""value"":""%{_c}%""}}]"
