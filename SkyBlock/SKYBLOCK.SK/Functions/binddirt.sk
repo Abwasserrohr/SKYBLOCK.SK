@@ -1,0 +1,85 @@
+#
+# ==============
+# binddirt.sk
+# ==============
+# binddirt.sk is part of the SKYBLOCK.SK functions.
+# ==============
+#
+
+# > To get the enchantment of the tool the player is using, we need this class.
+import:
+	org.bukkit.enchantments.Enchantment
+
+#
+# > Function: binddirt
+# > Arguments:
+# > <location>event location, <player>player
+# > Actions:
+# > If the island of the player is lower than the configured level, the dirt|grass|farmland
+# > is going to be island bound and can only be used on exactly this island.
+function binddirt(el:location,p:player):
+	#
+	# > Get the block at the location as a new item.
+	set {_block} to "%block at {_el}%" parsed as item
+	#
+	# > Get the tool the player is holding to check, know later, if
+	# > the player holds an enchanted tool.
+	set {_item} to {_p}'s tool
+	set {_enchantments} to {_item}.getEnchantments()
+	#
+	# > Set the block to air to then later drop a item there.
+	set block at {_el} to air
+	#
+	# > Get the current bedrock where the player wants to break an block:
+	set {_bedrock} to {SB::TEMPLOC::%{_p}%}
+	set {_x} to x-coord of {_bedrock}
+	set {_y} to y-coord of {_bedrock}
+	set {_z} to z-coord of {_bedrock}
+	#
+	# > If the tool the player is using is not enchanted with silk touch,
+	# > do overwrite the {_block} with a new created dirt item.
+	if "%{_enchantments}%" does not contain "silk_touch":
+		set {_block} to "dirt" parsed as item
+	#
+	# > If the island level is below a specified level in the configuration:
+	if {SB::island::%{_x}%_%{_y}%_%{_z}%::level} < {SB::config::binduntillevel}:
+		#
+		# > Set the item lore to check later that it is island bound. It is also,
+		# > marked as island bound.
+		set {_uuid} to uuid of {_p}
+		set lore of {_block} to "&r%{SB::lang::islandbound::%{SK::lang::%{_uuid}%}%}%||&7%{_x}%_%{_z}%"
+	#
+	# > Now drop the item, either dirt or the block at the location.
+	# > If the island is over the specified level, the item doesn't have a lore.
+	drop 1 of {_block} at {_el}
+
+#
+# > Function: bindcheck
+# > Arguments:
+# > <item>item, <player>player
+# > Actions:
+# > This is called if a player wants to build a dirt, grass or farmland block,
+# > bindcheck checks, if the block is not marked as island bound or is bound to the
+# > island where it is going to be placed.
+function bindcheck(i:item, p:player) :: boolean:
+	#
+	# > Get the current bedrock where the player wants to build something:
+	set {_bedrock} to {SB::TEMPLOC::%{_p}%}
+	#
+	# > If the lore is not empty, it has to be the bindcheck. Since dirt doesn't
+	# > have any lore by default.
+	if lore of {_i} is not "":
+		#
+		# > Get the x- and z-coordinate to check if the lore contains them.
+		set {_x} to x-coord of {_bedrock}
+		set {_z} to z-coord of {_bedrock}
+		#
+		# > If it is the block bound to this island, let it trough.
+		if lore of {_i} contains "%{_x}%_%{_z}%":
+			return true
+		else:
+		#
+		# > If the block is bound to another island, print error and return false.
+			set {_uuid} to uuid of {_p}
+			message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::boundtoanotherisland::%{SK::lang::%{_uuid}%}%}%" to {_p}
+			return false
