@@ -86,8 +86,12 @@ function deleteisland(p: offline player):
 		loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}:
 			delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::%loop-index%}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::*}
-		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home:home}
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home::home}
 		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::home}
+		
+		#
+		# > Delete the island warp:
+		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::warp}
 
 		#
 		# > Sets the local variables {_loc1} and {_loc2} to the bedrock location.
