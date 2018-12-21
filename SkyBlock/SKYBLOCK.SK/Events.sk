@@ -190,8 +190,8 @@ on damage:
 			cancel event
 			actionload(attacker, {_a})
 		else:
-			set {_r} to checkislandowner(location of attacker, attacker)
-			if {_r} is "false":
+			set {_allowed} to checkislandaccess(attacker,location of attacker)
+			if {_allowed} is false:
 				cancel event
 				actionload(attacker, {_a})
 
