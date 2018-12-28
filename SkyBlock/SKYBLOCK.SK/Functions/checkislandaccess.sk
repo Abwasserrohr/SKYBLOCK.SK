@@ -67,7 +67,8 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 			# > Check if the explosion should happen or not.
 			if {_event} is "Explode":
 				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
-				return {_check}
+				if {_check} is set:
+					return {_check}
 			return true
 		else:
 			#
@@ -79,7 +80,8 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					#
 					# > Flag check for trusted players:
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
-					return {_check}
+					if {_check} is set:
+						return {_check}
 			#
 			# > Loop trough trusted players, if the player is trusted, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
@@ -89,7 +91,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					#
 					# > Flag check for trusted players:
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
-					return {_check}
+					broadcast "%{_check}%"
+					if {_check} is set:
+						return {_check}
 					
 			# 
 			# > Flag check for foreign players (other islands).
@@ -220,39 +224,41 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
 	if {_event} is "PlayerInteractEvent":
 		if {_block} is lever or button:
 			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is true:
-					return true
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button}
 			else:
-				if {SB::config::defaultisflag::%{_playertype}%::button} is true:
-					return true
+				if {SB::config::defaultisflag::%{_playertype}%::button} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::button}
 		if {_block} is door:
 			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door} is set:
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door} is true:
-					return true
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door}
 			else:
-				if {SB::config::defaultisflag::%{_playertype}%::door} is true:
-					return true
+				if {SB::config::defaultisflag::%{_playertype}%::door} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::door}
+		if {_block} is chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest} is set:
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest}
+			else:
+				if {SB::config::defaultisflag::%{_playertype}%::chest} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::chest}
+
 	else if {_event} is "EntityDamageByEntityEvent-animal":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is set:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is true:
-				return true
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage}
 		else:
-			if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is true:
-				return true
+			if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::animal-damage}
 	else if {_event} is "EntityDamageByEntityEvent-monster":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is set:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is true:
-				return true
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage}
 		else:
-			if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is true:
-				return true
-	else if {_event} is "VehicleDamageEvent":
+			if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::mob-damage}
+	else if {_event} is "VehicleDamageEvent" or "vehicle-click":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is set:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is true:
-				return true
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle}
 		else:
-			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is true:
-				return true
+			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::interact-vehicle}
 	else if {_event} is "Explode":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
@@ -265,7 +271,21 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::publichome}
-	return false
+	else if {_event} is "build":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::build} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::build}
+	else if {_event} is "entity-click":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+
+				
+				
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
 on load:
