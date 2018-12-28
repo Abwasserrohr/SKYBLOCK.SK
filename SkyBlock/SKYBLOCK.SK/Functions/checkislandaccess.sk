@@ -216,7 +216,7 @@ function getcurrentbedrockmain(l:location) :: location:
 # > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>flag,<item>block
 # > Actions:
 # > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
-function checkflagevent(x:text,y:text,z:text,event:text,playertype:text,block:item) :: boolean:
+function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
 	if {_event} is "PlayerInteractEvent":
 		if {_block} is lever or button:
 			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
@@ -255,18 +255,16 @@ function checkflagevent(x:text,y:text,z:text,event:text,playertype:text,block:it
 				return true
 	else if {_event} is "Explode":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is false:
-				return false
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
 		else:
-			if {SB::config::defaultisflag::%{_playertype}%::explosion} is false:
-				return false
+			if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::explosion}
 	else if {_event} is "Home":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is false:
-				return false
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome}
 		else:
-			if {SB::config::defaultisflag::%{_playertype}%::publichome} is false:
-				return false
+			if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::publichome}
 	return false
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
