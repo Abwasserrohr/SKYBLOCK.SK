@@ -28,15 +28,15 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 			return {SB::config::defaultlobbyflag::explosion}
 		if {_event} is "PlayerInteractEvent":
 			if {_block} is lever or button:
-				return {SB::config::defaultlobbyflag::outsiders-button}
+				return {SB::config::defaultlobbyflag::button}
 			if {_block} is door:
-				return {SB::config::defaultlobbyflag::outsiders-door}
+				return {SB::config::defaultlobbyflag::door}
 		else if {_event} is "EntityDamageByEntityEvent-animal":
-			return {SB::config::defaultlobbyflag::outsiders-animal-damage}
+			return {SB::config::defaultlobbyflag::animal-damage}
 		else if {_event} is "EntityDamageByEntityEvent-monster":
-			return {SB::config::defaultlobbyflag::outsiders-mob-damage}
+			return {SB::config::defaultlobbyflag::mob-damage}
 		else if {_event} is "VehicleDamageEvent":
-			return {SB::config::defaultlobbyflag::outsiders-interact-vehicle}
+			return {SB::config::defaultlobbyflag::interact-vehicle}
 	#
 	# > Bypass any island checks if the users is an admin.
 	if {_p} has permission "is.admin":
@@ -44,86 +44,63 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 	#
 	# > The getcurrentbedrock function created some global temporary variables we can now check,
 	# > if the location parameter is within the temporary variables, we can use them.
+
 	if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
 		set {_uuid} to uuid of {_p}
 		set {_x} to x-coord of {_bedrock}
 		set {_y} to y-coord of {_bedrock}
 		set {_z} to z-coord of {_bedrock}
-		#
-		# > Check if the explosion should happen or not.
-		if {_event} is "Explode":
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is set:
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is false:
-					return false
-			else:
-				if {SB::config::defaultisflag::explosion} is false:
-					return false
+
 		#
 		# > Check for permissions:
 		if {_p} has permission "is.admin":
+			#
+			# > Check if the explosion should happen or not.
+			if {_event} is "Explode":
+				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
+				return {_check}
 			return true
 		#
 		# > The leader of the island is allowed to build
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+			#
+			# > Check if the explosion should happen or not.
+			if {_event} is "Explode":
+				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
+				if {_check} is set:
+					return {_check}
 			return true
 		else:
 			#
 			# > Loop trough members, if the player is a member, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::member::*}:
 				#
-				# > Members of the island are allowed to build
+				# > Check if the user is a member, if it is, return the result of the function getcurrentbedrockmain.
 				if "%loop-value%" is "%{_uuid}%":
-					return true
+					#
+					# > Flag check for trusted players:
+					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
+					if {_check} is set:
+						return {_check}
 			#
 			# > Loop trough trusted players, if the player is trusted, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
 				#
-				# > Members of the island are allowed to build
+				# > Check if the user is a trusted player, return the result of the function getcurrentbedrockmain.
 				if "%loop-value%" is "%{_uuid}%":
-					return true
+					#
+					# > Flag check for trusted players:
+					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
+					broadcast "%{_check}%"
+					if {_check} is set:
+						return {_check}
 					
-			#
+			# 
+			# > Flag check for foreign players (other islands).
 			# > Check if there is a flag which allows specific events:
-			if {_event} is "PlayerInteractEvent":
-				if {_block} is lever or button:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-button} is set:
-						if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-button} is true:
-							return true
-					else:
-						if {SB::config::defaultisflag::outsiders-button} is true:
-							return true
-				if {_block} is door:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-door} is set:
-						if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-door} is true:
-							return true
-					else:
-						if {SB::config::defaultisflag::outsiders-door} is true:
-							return true
-			else if {_event} is "EntityDamageByEntityEvent-animal":
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-animal-damage} is set:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-animal-damage} is true:
-						return true
-				else:
-					if {SB::config::defaultisflag::outsiders-animal-damage} is true:
-						return true
-			else if {_event} is "EntityDamageByEntityEvent-monster":
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-mob-damage} is set:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-mob-damage} is true:
-						return true
-				else:
-					if {SB::config::defaultisflag::outsiders-mob-damage} is true:
-						return true
-			else if {_event} is "VehicleDamageEvent":
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-interact-vehicle} is set:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::outsiders-interact-vehicle} is true:
-						return true
-				else:
-					if {SB::config::defaultisflag::outsiders-interact-vehicle} is true:
-						return true
+			set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
+			return {_check}
 
-			#
-			# > Since the player has no connection to this island and flags haven't returned, return false to block access.
-			return false
 	#
 	# > The locations aren't match, go forward and do another check, if that's also not
 	# > working, return false.
@@ -179,13 +156,13 @@ function getcurrentbedrock(p:player, l:location) :: location:
 			# > Add the size bonus by current size level to the distance of the island.
 			set {_dist} to ({_defaultdist} + {_currentdistsizebonus})
 		
-		set {_dist} to {SB::config::distance}
 		add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
 		add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
 		subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
 		subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
 		set y-coordinate of {_pl::2} to 256
 		set y-coordinate of {_pl::1} to 0
+		
 		#
 		# > Set border 1 location
 		set {SB::TEMPLOC::%{_p}%b1} to {_pl::1}
@@ -238,6 +215,77 @@ function getcurrentbedrockmain(l:location) :: location:
 			set {_bedrock} to loop-block
 	return location of {_bedrock}
 
+# > Function - checkflagevent:
+# > Arguments:
+# > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>flag,<item>block
+# > Actions:
+# > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
+function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
+	if {_event} is "PlayerInteractEvent":
+		if {_block} is lever or button:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button}
+			else:
+				if {SB::config::defaultisflag::%{_playertype}%::button} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::button}
+		if {_block} is door:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door} is set:
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door}
+			else:
+				if {SB::config::defaultisflag::%{_playertype}%::door} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::door}
+		if {_block} is chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest} is set:
+				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest}
+			else:
+				if {SB::config::defaultisflag::%{_playertype}%::chest} is set:
+					return {SB::config::defaultisflag::%{_playertype}%::chest}
+
+	else if {_event} is "EntityDamageByEntityEvent-animal":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::animal-damage}
+	else if {_event} is "EntityDamageByEntityEvent-monster":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::mob-damage}
+	else if {_event} is "VehicleDamageEvent" or "vehicle-click":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::interact-vehicle}
+	else if {_event} is "Explode":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::explosion}
+	else if {_event} is "Home":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::publichome}
+	else if {_event} is "build":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::build} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::build}
+	else if {_event} is "entity-click":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+
+				
+				
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
 on load:
