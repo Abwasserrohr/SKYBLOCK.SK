@@ -91,7 +91,6 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					#
 					# > Flag check for trusted players:
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
-					broadcast "%{_check}%"
 					if {_check} is set:
 						return {_check}
 					
