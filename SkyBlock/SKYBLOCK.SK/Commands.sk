@@ -580,7 +580,7 @@ command /island [<text>] [<text=1>] [<text>]:
 			# > the specified player.
 			if arg-3 is set:
 				set {_p} to arg-2 parsed as offline player
-				homehandler(player,"home",arg-3,{_p})
+				homehandler({_p},"home",arg-3,player)
 				stop
 			#
 			# > If the player has not set a third argument, just try to teleport.
