@@ -18,12 +18,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 		if arg-1 is "go" OR "home" OR "tp":
 			set {_player} to arg-2 parsed as offline player
 			set {_uuid} to uuid of {_player}
-			set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-			set {_x} to x-coord of {_bedrock}
-			set {_y} to y-coord of {_bedrock}
-			set {_z} to z-coord of {_bedrock}
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} is set:
-				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
+			homehandler({_player},"home",arg-3,player)
 			stop
 		#
 		# > If something should be done with an island, this is the code:
@@ -60,7 +55,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 						add loop-index to {_delislands::*}
 				if arg-4 is "purgeok":
 					loop {_delislands::*}:
-						deleteisland({SB::island::%loop-index%::leader})
+						deleteisland({SB::island::%loop-index%::leader} parsed as offline player)
 					set {_a} to {SB::lang::isadmin::deletedxis::%{SK::lang::%uuid of player%}%}
 					replace all "<amount>" with "%size of {_delislands::*}%" in {_a}
 					message "%{_prefix}% %{_a}%"
@@ -575,71 +570,26 @@ command /island [<text>] [<text=1>] [<text>]:
 		else if arg-1 is "flag" or "flags":
 			openflagmenu(player,"")
 		#
-		# > Argument "tp"
-		# > Actions:
-		# > Teleports the executor to the island of the argument 2, if the flags are set to true.
-		else if arg-1 is "tp":
-			#
-			# > If argument 1 is empty, it is always "1".
-			if arg-2 is not "1":
-				#
-				# > Set argument 2 as offline player and get the uuid.
-				set {_p2} to arg-2 parsed as offline player
-				set {_uuid2} to uuid of {_p2}
-				#
-				# > Get the bedrock of the argument 2 (player)
-				set {_bedrock} to {SB::player::%{_uuid2}%::island::bedrock}
-				set {_x} to x-coord of {_bedrock}
-				set {_y} to y-coord of {_bedrock}
-				set {_z} to z-coord of {_bedrock}
-				#
-				# > Check, if the executor is allowed to teleport to the island.
-				loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
-					#
-					# > If the user is trusted, teleport:
-					if "%loop-value%" is uuid of player:
-						teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
-						stop
-				#
-				# > Check the flags, maybe the island is public:
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::publichome} is set:
-					if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::publichome} is false:
-						message "%{_prefix}% %{SB::lang::flag::errorfalse::%{SK::lang::%uuid of player%}%}%"
-						stop
-				#
-				# > If there is no custom flag, there might be a default flag:
-				else:
-					if {SB::config::defaultisflag::publichome} is false:
-						message "%{_prefix}% %{SB::lang::flag::errorfalse::%{SK::lang::%uuid of player%}%}%"
-						stop
-				#
-				# > Since this hasn't stopped yet, it is valid to teleport the executor.
-				teleport player to {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home}
-			else:
-				#
-				# > There is no player, print error.
-				message "%{_prefix}% %{SB::lang::notfoundplayer::%{SK::lang::%uuid of player%}%}%"
-		#
 		# > Argument: "home"
 		# > Actions:
 		# > If the player wants to teleport to a home, the homehandler is called.
 		# > Example command /island home [<name>]
 		else if arg-1 is "home":
-			homehandler(player,"home",arg-2)
+			homehandler(player,"home",arg-2,player)
 		#
 		# > Argument: "sethome"
 		# > Actions:
 		# > If the player wants to set a home, the homehandler is called.
 		# > Example command /island sethome [<name>]
 		else if arg-1 is "sethome":
-			homehandler(player,"sethome",arg-2)
+			homehandler(player,"sethome",arg-2,player)
 		#
 		# > Argument: "delhome"
 		# > Actions:
 		# > If the player wants to delete a home, the homehandler is called.
 		# > Example command /island sethome [<name>]
 		else if arg-1 is "delhome":
-			homehandler(player,"delhome",arg-2)
+			homehandler(player,"delhome",arg-2,player)
 		else if arg-1 is "go":
 			if {SB::player::%uuid of player%::island::bedrock} is not set:
 				message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
