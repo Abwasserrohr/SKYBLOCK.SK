@@ -19,7 +19,7 @@ on PlayerArmorStandManipulateEvent:
 	set {_player} to event.getPlayer()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l})
+		set {_allowed} to checkislandaccess({_player},{_l},"ArmorStand")
 		if {_allowed} is false:
 			cancel event
 
@@ -86,7 +86,7 @@ on PlayerInteractEvent:
 		set {_player} to event.getPlayer()
 		if {_player} is a player:
 			set {_l} to event.getClickedBlock().getLocation()
-			set {_allowed} to checkislandaccess({_player},{_l})
+			set {_allowed} to checkislandaccess({_player},{_l},"build")
 			if {_allowed} is false:
 				cancel event
 
@@ -96,7 +96,7 @@ on PlayerInteractEvent:
 # > Actions:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on place:
-	set {_allowed} to checkislandaccess(player,location of event-block)
+	set {_allowed} to checkislandaccess(player,location of event-block,"build")
 	#
 	# > If the player is allowed to build and the event-block is also a hopper,
 	# > check, run the hoppercounter function.
@@ -118,7 +118,7 @@ on place:
 # > Actions:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on break:
-	set {_allowed} to checkislandaccess(player,location of event-block)
+	set {_allowed} to checkislandaccess(player,location of event-block,"build")
 	#
 	# > If the player is allowed to build and the event-block is also a hopper,
 	# > check, run the hoppercounter function.
@@ -142,7 +142,10 @@ on break:
 # > Actions:
 # > Checks if the player is allowed to do it, if not, cancel it.
 on rightclick on entity:
-	set {_allowed} to checkislandaccess(player,location of event-entity)
+	if "%event-entity%" contains "minecart" or "boat":
+		set {_allowed} to checkislandaccess(player,location of event-entity,"vehicle-click")
+	else:
+		set {_allowed} to checkislandaccess(player,location of event-entity,"entity-click")
 	if {_allowed} is false:
 		cancel event
 
@@ -314,10 +317,6 @@ on join:
 		set {_l::2} to y-coord of {_bedrock}
 		set {_l::3} to z-coord of {_bedrock}
 		set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
-	if {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home} is set:
-		teleport player to {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::home::home}
-	else:
-		teleport player to {SB::config::spawn}
 	wait 5 seconds
 	delete {SB::invincible::%player%} 
 	
