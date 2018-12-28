@@ -50,22 +50,24 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 		set {_x} to x-coord of {_bedrock}
 		set {_y} to y-coord of {_bedrock}
 		set {_z} to z-coord of {_bedrock}
-		#
-		# > Check if the explosion should happen or not.
-		if {_event} is "Explode":
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is set:
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::explosion} is false:
-					return false
-			else:
-				if {SB::config::defaultisflag::explosion} is false:
-					return false
+
 		#
 		# > Check for permissions:
 		if {_p} has permission "is.admin":
+			#
+			# > Check if the explosion should happen or not.
+			if {_event} is "Explode":
+				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
+				return {_check}
 			return true
 		#
 		# > The leader of the island is allowed to build
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+			#
+			# > Check if the explosion should happen or not.
+			if {_event} is "Explode":
+				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
+				return {_check}
 			return true
 		else:
 			#
@@ -251,6 +253,20 @@ function checkflagevent(x:text,y:text,z:text,event:text,playertype:text,block:it
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is true:
 				return true
+	else if {_event} is "Explode":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is false:
+				return false
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::explosion} is false:
+				return false
+	else if {_event} is "Home":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
+			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is false:
+				return false
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::publichome} is false:
+				return false
 	return false
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
