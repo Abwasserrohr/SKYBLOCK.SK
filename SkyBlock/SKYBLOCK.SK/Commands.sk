@@ -573,8 +573,17 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > Argument: "home"
 		# > Actions:
 		# > If the player wants to teleport to a home, the homehandler is called.
-		# > Example command /island home [<name>]
+		# > Example command /island home [<player>] [<name>]
 		else if arg-1 is "home":
+			#
+			# > If the player has set a third argument, try to teleport to the home of
+			# > the specified player.
+			if arg-3 is set:
+				set {_p} to arg-2 parsed as offline player
+				homehandler(player,"home",arg-3,{_p})
+				stop
+			#
+			# > If the player has not set a third argument, just try to teleport.
 			homehandler(player,"home",arg-2,player)
 		#
 		# > Argument: "sethome"
