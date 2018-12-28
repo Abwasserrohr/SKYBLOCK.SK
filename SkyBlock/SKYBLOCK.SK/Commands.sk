@@ -573,7 +573,7 @@ command /island [<text>] [<text=1>] [<text>]:
 		# > Actions:
 		# > Opens the flag menu using the openflagmenu function.
 		else if arg-1 is "flag" or "flags":
-			openflagmenu(player)
+			openflagmenu(player,"")
 		#
 		# > Argument "tp"
 		# > Actions:
