@@ -5,6 +5,9 @@
 on script load:
 	set {_lang} to "de"
 	
+	set {SB::lang::language::%{_lang}%} to "Deutsch"
+	set {SB::lang::languageskin::%{_lang}%} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ=="
+
 	#
 	# > Local variables for color schemes:
 	#
@@ -34,8 +37,7 @@ on script load:
 	set {SB::lang::alreadyotheris::%{_lang}%} to "%{_s1}%<player> ist bereits auf einer Insel."
 	set {SB::lang::waitis::%{_lang}%} to "%{_p2}%&lEinen Moment..."
 	set {SB::lang::cantleave::%{_lang}%} to "%{_s1}%Du kannst diese Insel nicht verlassen."
-	set {SB::lang::notfoundhome::%{_lang}%} to "%{_s1}%Dieses Zuhause wurde nicht gefunden."
-
+	set {SB::lang::notfoundhome::%{_lang}%} to "%{_s1}%Deine Zuhause: <homes>"
 	
 	#
 	# > /island invite | /island join
@@ -117,9 +119,8 @@ on script load:
 	set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
 	set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
 	set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
-	set {SB::lang::isbiome::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInselbiom ändern %{_s1}%- %{_p1}%/is biom"
-	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <Spieler>"
-	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <Spieler>"
+	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
+	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
 	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
 	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
 	set {SB::lang::helpwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTeleportiert zum Warp %{_s1}%- %{_p1}%/is warp <Spieler>"
@@ -132,6 +133,7 @@ on script load:
 	#
 	set {SB::lang::notallowed::%{_lang}%} to "&cDer Befehl ist dem Inselbesitzer vorbehalten."
 	set {SB::lang::notleader::%{_lang}%} to " &cDu bist nicht der Inselbesitzer."
+	set {SB::lang::notleaderofthisisland::%{_lang}%} to " &cDu bist nicht der Inselbesitzer dieser Insel."
 	set {SB::lang::noperm::%{_lang}%} to "&c&lDu besitzt keine Berechtigung für diesen Befehl."
 	set {SB::lang::leaderleaveinfo::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
 	set {SB::lang::havetodelete::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
@@ -199,7 +201,7 @@ on script load:
 	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
 	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
 	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
-
+	
 	#
 	# > Flags
 	#
@@ -207,23 +209,32 @@ on script load:
 	#
 	# > Flag titles
 	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
-	set {SB::lang::flag::outsiders-buttont::%{_lang}%} to "Knöpfe & Hebel für Fremde"
-	set {SB::lang::flag::outsiders-doort::%{_lang}%} to "Türen für Fremde"
-	set {SB::lang::flag::outsiders-mob-damaget::%{_lang}%} to "Monster für Fremde"
-	set {SB::lang::flag::outsiders-animal-damaget::%{_lang}%} to "Tiere für Fremde"
-	set {SB::lang::flag::outsiders-interact-vehiclet::%{_lang}%} to "Vehikel für Fremde"
-	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause für Fremde"
+	set {SB::lang::flag::buttont::%{_lang}%} to "Knöpfe & Hebel"
+	set {SB::lang::flag::doort::%{_lang}%} to "Türen"
+	set {SB::lang::flag::mob-damaget::%{_lang}%} to "Monster"
+	set {SB::lang::flag::animal-damaget::%{_lang}%} to "Tiere"
+	set {SB::lang::flag::interact-vehiclet::%{_lang}%} to "Vehikel"
+	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause"
+	set {SB::lang::flag::flagst::%{_lang}%} to "&lFlags"
+	set {SB::lang::flag::foreignt::%{_lang}%} to "Flags für Fremde"
+	set {SB::lang::flag::trustedt::%{_lang}%} to "Flags für Vertraute"
+	set {SB::lang::flag::membert::%{_lang}%} to "Flags für Mitglieder"
 	
 	#
 	# > Flag descriptions
 	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
-	set {SB::lang::flag::outsiders-buttond::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
-	set {SB::lang::flag::outsiders-doord::%{_lang}%} to "%{_s1}%Erlaubt Fremden, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
-	set {SB::lang::flag::outsiders-mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden, deine\n%{_s1}%Monster zu schlagen."
-	set {SB::lang::flag::outsiders-animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt Fremden, deine\n%{_s1}%Tiere zu schlagen."
-	set {SB::lang::flag::outsiders-interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt Fremden,\n%{_s1}%Vehikel zu verwenden."
-	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt allen Spielern,\n%{_s1}%deine Insel zu besuchen."
-
+	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "%{_s1}%Erlaubt das erscheinen\n%{_s1}%von Monstern auf\n%{_s1}%deiner Insel."
+	set {SB::lang::flag::buttond::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::doord::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
+	set {SB::lang::flag::mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Monster zu schlagen."
+	set {SB::lang::flag::animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Tiere zu schlagen."
+	set {SB::lang::flag::itemframe-damaged::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%deine Rahmen abzubauen."
+	set {SB::lang::flag::interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%Vehikel zu verwenden."
+	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt diese Spieler,\n%{_s1}%deine Insel zu besuchen."
+	set {SB::lang::flag::foreignd::%{_lang}%} to "%{_s1}%Erlaube Fremden diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+	set {SB::lang::flag::trustedd::%{_lang}%} to "%{_s1}%Erlaube Vertrauten diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+	set {SB::lang::flag::memberd::%{_lang}%} to "%{_s1}%Erlaube Mitgliedern diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+	
 	#
 	# > Flag settings
 	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann geändert werden."
@@ -231,7 +242,8 @@ on script load:
 	set {SB::lang::flag::currentsetting::%{_lang}%} to "%{_s1}%Aktuelle Einstellung: "
 	set {SB::lang::flag::currenttrue::%{_lang}%} to "&2An"
 	set {SB::lang::flag::currentfalse::%{_lang}%} to "&4Aus"
-
+	set {SB::lang::flag::errorfalse::%{_lang}%} to "Der Besitzer hat diese Funktion abgeschaltet."
+	
 	#
 	# > Ore generator add-on
 	#
@@ -239,7 +251,6 @@ on script load:
 	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
 	set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
 	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
-	set {SB::lang::og::disabled::%{_lang}%} to "Der Erz Generator kann nicht gelevelt werden."
 
 	#
 	# > Biome change add-on
@@ -261,9 +272,8 @@ on script load:
 	set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
 	set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
 	set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"
-
+	
 	#
 	# > Island item binding
 	set {SB::lang::islandbound::%{_lang}%} to "Inselgebunden"
 	set {SB::lang::boundtoanotherisland::%{_lang}%} to "Dieser Block ist an eine andere Insel gebunden."
-
