@@ -118,6 +118,15 @@ on load:
 	#
 	# > Allow others to visit the island. True = allowed, false = denied.
 	set {SB::config::defaultisflag::foreign::publichome} to false
+	#
+	# > Allow others to build on the island. True = allowed, false = denied.
+	set {SB::config::defaultisflag::foreign::build} to false
+	#
+	# > Allow others to access to chests. True = allowed, false = denied.
+	set {SB::config::defaultisflag::foreign::chest} to false
+	#
+	# > Allow others to click on the entitiy. True = allowed, false = denied.
+	set {SB::config::defaultisflag::foreign::entityclick} to false
 
 	#
 	# > Default Flags for player islands (trusted flags):
@@ -143,6 +152,15 @@ on load:
 	#
 	# > Allow others to visit the island. True = allowed, false = denied.
 	set {SB::config::defaultisflag::trusted::publichome} to true
+	#
+	# > Allow others to build on the island. True = allowed, false = denied.
+	set {SB::config::defaultisflag::trusted::build} to false
+	#
+	# > Allow others to access to chests. True = allowed, false = denied.
+	set {SB::config::defaultisflag::trusted::chest} to false
+	#
+	# > Allow others to click on the entitiy. True = allowed, false = denied.
+	set {SB::config::defaultisflag::trusted::entityclick} to false
 
 	#
 	# > Default Flags for player islands (foreign flags):
@@ -168,6 +186,15 @@ on load:
 	#
 	# > Allow others to visit the island. True = allowed, false = denied.
 	set {SB::config::defaultisflag::member::publichome} to true
+	#
+	# > Allow others to build on the island. True = allowed, false = denied.
+	set {SB::config::defaultisflag::member::build} to true
+	#
+	# > Allow others to access to chests. True = allowed, false = denied.
+	set {SB::config::defaultisflag::member::chest} to false
+	#
+	# > Allow others to click on the entitiy. True = allowed, false = denied.
+	set {SB::config::defaultisflag::member::entityclick} to false
 
 	#
 	# > Flags for not inhabited islands:
