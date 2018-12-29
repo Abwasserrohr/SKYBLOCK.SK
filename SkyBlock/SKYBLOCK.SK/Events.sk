@@ -19,8 +19,20 @@ on PlayerArmorStandManipulateEvent:
 	set {_player} to event.getPlayer()
 	if {_player} is a player:
 		set {_l} to event.getEntity().getLocation()
-		set {_allowed} to checkislandaccess({_player},{_l},"ArmorStand")
+		set {_allowed} to checkislandaccess({_player},{_l})
 		if {_allowed} is false:
+			cancel event
+
+#
+# > Event - rightclick
+# > If rightclicks, this event is triggered
+# > Actions:
+# > Checks for some tools which can be placed and if it is allowed to be placed, if not, cancel the event.
+on rightclick:
+	if player's tool is armor stand:
+		set {_l} to location of targeted block
+		set {_allowed} to checkislandaccess(player,{_l})
+		if {_allowed} is not true:
 			cancel event
 
 #
@@ -34,8 +46,10 @@ on EntityDamageByEntityEvent:
 		set {_l} to event.getEntity().getLocation()
 		if event.getEntity() is a animal:
 			set {_type} to "animal"
-		if event.getEntity() is a monster:
+		else if event.getEntity() is a monster:
 			set {_type} to "monster"
+		else:
+			set {_type} to "entity"
 		set {_allowed} to checkislandaccess({_player},{_l},"EntityDamageByEntityEvent-%{_type}%")
 		if {_allowed} is false:
 			cancel event
@@ -90,6 +104,7 @@ on PlayerInteractEvent:
 			if {_allowed} is false:
 				cancel event
 
+	
 #
 # > Event - place
 # > Triggered, if the player places a block.
@@ -134,7 +149,7 @@ on break:
 		# > island is below level 100.
 		if event-block is dirt or grass or farmland:
 			cancel event
-			binddirt(event-location, player)
+			binddirt(event-location, player,dirt)
 
 #
 # > Event - rightclick on a entity
