@@ -88,8 +88,11 @@ on script load:
 	set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
 	set {SB::lang::isleader::%{_lang}%} to "Inselleiter:"
 	set {SB::lang::ismember::%{_lang}%} to "Mitglieder:"
+	set {SB::lang::istrusted::%{_lang}%} to "Vertraute:"
 	set {SB::lang::isinfolevel::%{_lang}%} to "Level:"
 	set {SB::lang::iscreated::%{_lang}%} to "Erstellt:"
+	set {SB::lang::islastactive::%{_lang}%} to "Zuletzt aktiv:"
+	set {SB::lang::isupgrades::%{_lang}%} to "Inselverbesserungen:"
 	set {SB::lang::isinfonotfound::%{_lang}%} to "Insel konnte nicht gefunden werden."
 
 	#
