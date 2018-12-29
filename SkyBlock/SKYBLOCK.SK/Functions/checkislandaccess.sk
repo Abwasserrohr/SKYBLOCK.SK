@@ -220,7 +220,7 @@ function getcurrentbedrockmain(l:location) :: location:
 
 # > Function - checkflagevent:
 # > Arguments:
-# > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>flag,<item>block
+# > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>player type,<item>block
 # > Actions:
 # > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
 function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
