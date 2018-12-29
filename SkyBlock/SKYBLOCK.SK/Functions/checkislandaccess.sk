@@ -98,8 +98,12 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 			# > Flag check for foreign players (other islands).
 			# > Check if there is a flag which allows specific events:
 			set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
-			return {_check}
-
+			if {_check} is set:
+				return {_check}
+			#
+			# > If there hasn't been a return yet, return false now, since the player has no
+			# > right to do this action here.
+			return false
 	#
 	# > The locations aren't match, go forward and do another check, if that's also not
 	# > working, return false.
@@ -220,6 +224,8 @@ function getcurrentbedrockmain(l:location) :: location:
 # > Actions:
 # > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
 function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
+	#
+	# > This flag is for all kinds of interactions, like switching buttons or levers, opening/closing doors or looking into chests.
 	if {_event} is "PlayerInteractEvent":
 		if {_block} is lever or button:
 			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
@@ -239,43 +245,64 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
 			else:
 				if {SB::config::defaultisflag::%{_playertype}%::chest} is set:
 					return {SB::config::defaultisflag::%{_playertype}%::chest}
-
+	#
+	# > This is for animals like pigs and cows.
 	else if {_event} is "EntityDamageByEntityEvent-animal":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::animal-damage}
+	#
+	# > This is for entities like armor stands, villagers and item frames.
+	else if {_event} is "EntityDamageByEntityEvent-entity":
+		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
+			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
+		else:
+			if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
+				return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+	#
+	# > This is for monsters like zombies.
 	else if {_event} is "EntityDamageByEntityEvent-monster":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::mob-damage}
+	#
+	# > This flag is for vehicles like minecarts and boats.
 	else if {_event} is "VehicleDamageEvent" or "vehicle-click":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::interact-vehicle}
+	#
+	# > This flag is for explosions from creepers and tnt.
 	else if {_event} is "Explode":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::explosion}
+	#
+	# > This flag is for the public home trough /island home [<player>] [<home>]
 	else if {_event} is "Home":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::publichome}
+	#
+	# > This flag is for building on the island.
 	else if {_event} is "build":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
 		else:
 			if {SB::config::defaultisflag::%{_playertype}%::build} is set:
 				return {SB::config::defaultisflag::%{_playertype}%::build}
+	#
+	# > This flag is for clicks on entities, like villagers.
 	else if {_event} is "entity-click":
 		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
 			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}

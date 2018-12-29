@@ -955,40 +955,61 @@ command /island [<text>] [<text=1>] [<text>]:
 				set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
 				set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
 				set {_created} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
-
+				set {_lastactive} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::lastactive}
+				set {_hopperlevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::hopperupgrade}
+				set {_sizelevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::sizeupgrade}
+				set {_homelevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::homeupgrade}
+				#
+				# > If the levels aren't set, set them to 0.
+				if {_hopperlevel} is not set:
+					set {_hopperlevel} to 0
+				if {_sizelevel} is not set:
+					set {_sizelevel} to 0
+				if {_homelevel} is not set:
+					set {_homelevel} to 0
+				
 				#
 				# > Go trough all members and add them as a player to a new array.
-				#
 				loop {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}:
 					add "%loop-value%" parsed as offline player to {_member::*} 
 				#
-				# > Prints the defined spacer:
+				# > Go trough all trusted players and add them as a player to a new array.
+				loop {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::trust::*}:
+					add "%loop-value%" parsed as offline player to {_trusted::*} 
+
 				#
+				# > Prints the defined spacer:
 				message "%{SB::config::spacer}%"
 				#
 				# > Prints the header:
-				#
 				message "%{_prefix}% %{SB::lang::isinfo::%{SK::lang::%uuid of player%}%}%"
 				#
 				# > Prints the leader of the island:
-				#
 				message "%{_prefix}% %{SB::lang::isleader::%{SK::lang::%uuid of player%}%}% %{_uuid}%"
 				#
 				# > Prints the members, if there is at least one member:
-				#
 				if size of {_member::*} is not 0:
 					message "%{_prefix}% %{SB::lang::ismember::%{SK::lang::%uuid of player%}%}% %{_member::*}%"
 				#
-				# > Prints the island info:
+				# > Prints the trusted player, if there is at least one trusted player:
+				if size of {_trusted::*} is not 0:
+					message "%{_prefix}% %{SB::lang::istrusted::%{SK::lang::%uuid of player%}%}% %{_trusted::*}%"
 				#
+				# > Prints the island info:
 				message "%{_prefix}% %{SB::lang::isinfolevel::%{SK::lang::%uuid of player%}%}% %{_level}%"
 				#
 				# > Prints the creation date of the island:
-				#
 				message "%{_prefix}% %{SB::lang::iscreated::%{SK::lang::%uuid of player%}%}% %{_created}%"
 				#
-				# > Prints the defined spacer:
+				# > Prints the last active date of the island:
+				message "%{_prefix}% %{SB::lang::islastactive::%{SK::lang::%uuid of player%}%}% %{_lastactive}%"
 				#
+				# > Prints island upgrades
+				message "%{_prefix}% %{SB::lang::isupgrades::%{SK::lang::%uuid of player%}%}%"
+				message "%{_prefix}% | %{SB::lang::bc::islandhometitle::%{SK::lang::%uuid of player%}%}%%{_homelevel}% | %{SB::lang::bc::islandhoppertitle::%{SK::lang::%uuid of player%}%}%%{_hopperlevel}% | %{SB::lang::bc::islandsizetitle::%{SK::lang::%uuid of player%}%}%%{_sizelevel}% |"
+
+				#
+				# > Prints the defined spacer:
 				message "%{SB::config::spacer}%"
 
 		#
