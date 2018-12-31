@@ -82,6 +82,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
 					if {_check} is set:
 						return {_check}
+				#
+				# > If the there is no flag set, allow the action for members.
+				return true
 			#
 			# > Loop trough trusted players, if the player is trusted, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
@@ -93,6 +96,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
 					if {_check} is set:
 						return {_check}
+				#
+				# > If the there is no flag set, allow the action for trusted players.
+				return true
 					
 			# 
 			# > Flag check for foreign players (other islands).
@@ -220,7 +226,7 @@ function getcurrentbedrockmain(l:location) :: location:
 
 # > Function - checkflagevent:
 # > Arguments:
-# > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>player type,<item>block
+# > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>flag,<item>block
 # > Actions:
 # > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
 function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
