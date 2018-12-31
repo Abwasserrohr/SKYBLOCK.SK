@@ -1,8 +1,8 @@
 #
 # ==============
-# binddirt.sk
+# binditem.sk
 # ==============
-# binddirt.sk is part of the SKYBLOCK.SK functions.
+# binditem.sk is part of the SKYBLOCK.SK functions.
 # ==============
 #
 
@@ -11,13 +11,13 @@ import:
 	org.bukkit.enchantments.Enchantment
 
 #
-# > Function: binddirt
+# > Function: binditem
 # > Arguments:
 # > <location>event location, <player>player
 # > Actions:
 # > If the island of the player is lower than the configured level, the dirt|grass|farmland
 # > is going to be island bound and can only be used on exactly this island.
-function binddirt(el:location,p:player):
+function binditem(el:location,p:player,block1:item):
 	#
 	# > Get the block at the location as a new item.
 	set {_block} to "%block at {_el}%" parsed as item
@@ -39,7 +39,9 @@ function binddirt(el:location,p:player):
 	# > If the tool the player is using is not enchanted with silk touch,
 	# > do overwrite the {_block} with a new created dirt item.
 	if "%{_enchantments}%" does not contain "silk_touch":
-		set {_block} to "dirt" parsed as item
+		set {_block} to {_block1}
+	#
+	# > If the block is lava or water, set it to bucket:
 	#
 	# > If the island level is below a specified level in the configuration:
 	if {SB::island::%{_x}%_%{_y}%_%{_z}%::level} < {SB::config::binduntillevel}:
@@ -51,7 +53,20 @@ function binddirt(el:location,p:player):
 	#
 	# > Now drop the item, either dirt or the block at the location.
 	# > If the island is over the specified level, the item doesn't have a lore.
-	drop 1 of {_block} at {_el}
+	# > If the block is not a lava bucket, drop it.
+	if {_block} is not lava bucket:
+		drop 1 of {_block} at {_el}
+	#
+	# > If the {_block} is a lava bucket, try to give it to the player, if
+	# > the inventory is full, drop it. Also remove one bucket from player's
+	# > inventory.
+	else:
+		if {_p}'s inventory has not enough space for 1 of {_block}:
+			remove 1 of bucket from {_p}'s inventory
+			drop 1 of {_block} at {_el}
+		else:
+			remove 1 of bucket from {_p}'s inventory
+			give {_p} 1 of {_block}
 
 #
 # > Function: bindcheck

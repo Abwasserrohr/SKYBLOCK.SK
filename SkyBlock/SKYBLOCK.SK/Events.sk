@@ -25,7 +25,7 @@ on PlayerArmorStandManipulateEvent:
 
 #
 # > Event - rightclick
-# > If rightclicks, this event is triggered
+# > If a player rightclicks, this event is triggered
 # > Actions:
 # > Checks for some tools which can be placed and if it is allowed to be placed, if not, cancel the event.
 on rightclick:
@@ -35,6 +35,32 @@ on rightclick:
 		if {_allowed} is not true:
 			cancel event
 
+#
+# > Event - bucket fill
+# > Once, a player fills a bucket, this event is triggered
+# > Actions:
+# > If the player is allowed to do this action, cancel the event and then give a island
+# > bound lava bucket out.
+on bucket fill:
+	if target block is lava:
+		set {_allowed} to checkislandaccess(player,event-location)
+		if {_allowed} is not false:
+			cancel event
+			binditem(event-location, player,lava bucket)
+
+#
+# > Event - bucket fill
+# > Once, a player empties a bucket, this event is triggered
+# > Actions:
+# > If the player is allowed to do this action and the bucket is bound to an island,
+# > cancel the event.
+on bucket empty:
+	if player's tool is lava bucket:
+		set {_allowed} to checkislandaccess(player,event-location)
+		if {_allowed} is not false:
+			set {_allowed} to bindcheck(player's tool, player)
+			if {_allowed} is false:
+				cancel event
 #
 # > Event - EntityDamageByEntityEvent
 # > If a entity gets damage by a entity, this event is called.
@@ -121,7 +147,7 @@ on place:
 	#
 	# > If the placed block is dirt, grass or farmland, check if it is bound to
 	# > an specific island.
-	if event-block is dirt or grass or farmland:
+	if event-block is dirt or grass or farmland or obsidian or grass path:
 		if {_allowed} is true:
 			set {_allowed} to bindcheck(player's tool, player)
 	if {_allowed} is false:
@@ -147,9 +173,12 @@ on break:
 		# > If the player is allowed to break the block, check if the block is
 		# > dirt, grass or farmland and then add a island binding to it, if the
 		# > island is below level 100.
-		if event-block is dirt or grass or farmland:
+		if event-block is dirt or grass or farmland or grass path:
 			cancel event
-			binddirt(event-location, player,dirt)
+			binditem(event-location, player,dirt)
+		if event-block is obsidian:
+			cancel event
+			binditem(event-location, player,obsidian)
 
 #
 # > Event - rightclick on a entity
