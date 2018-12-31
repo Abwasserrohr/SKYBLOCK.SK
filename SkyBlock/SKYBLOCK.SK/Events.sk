@@ -147,7 +147,7 @@ on place:
 	#
 	# > If the placed block is dirt, grass or farmland, check if it is bound to
 	# > an specific island.
-	if event-block is dirt or grass or farmland or obsidian:
+	if event-block is dirt or grass or farmland or obsidian or grass path:
 		if {_allowed} is true:
 			set {_allowed} to bindcheck(player's tool, player)
 	if {_allowed} is false:
@@ -173,7 +173,7 @@ on break:
 		# > If the player is allowed to break the block, check if the block is
 		# > dirt, grass or farmland and then add a island binding to it, if the
 		# > island is below level 100.
-		if event-block is dirt or grass or farmland:
+		if event-block is dirt or grass or farmland or grass path:
 			cancel event
 			binditem(event-location, player,dirt)
 		if event-block is obsidian:
