@@ -13,7 +13,7 @@ import:
 #
 # > Function: binditem
 # > Arguments:
-# > <location>event location, <player>player
+# > <location>event location, <player>player, <item> item that should be bound
 # > Actions:
 # > If the island of the player is lower than the configured level, the dirt|grass|farmland
 # > is going to be island bound and can only be used on exactly this island.
