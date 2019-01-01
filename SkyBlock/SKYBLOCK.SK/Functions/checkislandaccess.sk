@@ -82,9 +82,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
 					if {_check} is set:
 						return {_check}
-				#
-				# > If the there is no flag set, allow the action for members.
-				return true
+					#
+					# > If no return happened for a flag, return true for members.
+					return true
 			#
 			# > Loop trough trusted players, if the player is trusted, return true.
 			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
@@ -96,9 +96,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
 					if {_check} is set:
 						return {_check}
-				#
-				# > If the there is no flag set, allow the action for trusted players.
-				return true
+					#
+					# > If no return happened for a flag, return true for trusted players.
+					return true
 					
 			# 
 			# > Flag check for foreign players (other islands).
