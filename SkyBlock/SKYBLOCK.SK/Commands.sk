@@ -128,7 +128,7 @@ command /island [<text>] [<text=1>] [<text>]:
 				stop
 			if player is online:
 				if arg-2 is "1":
-					opengui(player,9,"&6Inseln")
+					opengui(player,9,"%{SB::lang::islands::%{SK::lang::%uuid of player%}%}%")
 					set {_s} to 0
 					# 
 					# > Go trough all available schematics or structures, which where set in the config.sk and display it in the islands gui.
