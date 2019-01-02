@@ -32,8 +32,38 @@ function calcisland(p:offline player):
 	set {_b1} to {SB::TEMPLOC::%{_p}%b1}
 	set {_b2} to {SB::TEMPLOC::%{_p}%b2}
 	#
+	# > Calculate, how many blocks have be checked to make a fully working progress bar:
+	set {_cb1} to {_b1}
+	set {_cb2} to {_b2}
+	set y-coordinate of {_cb1} to 0 
+	set y-coordinate of {_cb2} to 0 
+	set {_cblock::*} to blocks within {_cb1} to {_cb2}
+	set {_size} to size of {_cblock::*}
+	set {_size} to {_size}*255
+	set {_needed} to 0
+	set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
+	#
 	# > Loop all blocks within the two borders:
 	loop blocks within {_b1} to {_b2}:
+		add 1 to {_i}
+		add 1 to {_b}
+		#
+		# > Every 10000 blocks, check for new percentages for the progress bar.
+		if {_i} is 10000:
+			set {_percent} to ({_b}/{_size})*100
+			#
+			# > If the percentage is bigger than the one before, replace one of the | progress bars with a colored one.
+			if {_percent} >= {_needed}:
+				add 1 to {_needed}
+				replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
+			#
+			# > Send the current progress bar to the player.
+			actionbar({_p},"%{_progress}% %{SB::config::color::secondary::2}%[%{_b}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::2}%%{_size}%]")
+			#
+			# > Set the counter back to 0 to do this again in 10000 blocks.
+			set {_i} to 0
+		#
+		# > Count blocks that aren't air and check them.
 		if loop-block is not void air or air:
 			set {_tb} to "%loop-block%" parsed as item
 			if {_tb} is not set:
@@ -131,4 +161,7 @@ function calcisland(p:offline player):
 	#
 	# > Updates the hopper count to the new counted amount of hoppers:
 	set {_tmp} to hoppercounter({_p},"update",{_hopper})
+	#
+	# > Print the new level to the player trough the actionbar.
+	actionload({_p},"&rLevel: &6&l%{_level}%")
 	delete {SB::calcstatus::%{_p}%}
