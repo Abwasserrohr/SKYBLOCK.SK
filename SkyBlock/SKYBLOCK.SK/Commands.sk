@@ -128,13 +128,13 @@ command /island [<text>] [<text=1>] [<text>]:
 				stop
 			if player is online:
 				if arg-2 is "1":
-					#todo translation
-					open chest with 1 rows named "&6Inseln" to player
+					opengui(player,9,"&6Inseln")
 					set {_s} to 0
-					#go trough all available schematics or structures, which where set in the config.sk and post it here:
+					# 
+					# > Go trough all available schematics or structures, which where set in the config.sk and display it in the islands gui.
 					loop {SB::schematics::schematic::*}:
 						set {_item} to grass named "%{SB::schematics::name::%{SK::lang::%uuid of player%}%::%loop-index%}%"
-						make gui slot {_s} of player with {_item} to run player command "/is create %loop-value%"
+						setguiitem(player,{_s},"grass",1,"%{SB::schematics::name::%{SK::lang::%uuid of player%}%::%loop-index%}%","","make ""%player%"" parsed as player execute ""/is create %loop-value%""",false)
 						add 1 to {_s}
 					delete {_s}
 					delete {_Bla::*}
