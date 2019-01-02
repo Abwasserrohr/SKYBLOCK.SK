@@ -347,7 +347,6 @@ command /island [<text>] [<text=1>] [<text>]:
 			else:
 				set {SB::calcdown::%uuid of player%} to now
 				set {SB::calcstatus::%player%} to 1
-				make player execute "/is calcwait"
 				$ thread
 				calcisland(player)
 		else if arg-1 is "calcwait":
