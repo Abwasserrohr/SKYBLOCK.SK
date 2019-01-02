@@ -85,7 +85,7 @@ function changebiome(player:offline player,biome:text,title:text):
 			if {_p} >= {_needed}:
 				add 1 to {_needed}
 				replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
-				execute console command "/title %{_player}% actionbar {""text"":""%{_progress}%""}"
+				actionbar({_player},{_progress})
 			set {_i} to 0
 		set {_x} to (location of loop-block).getBlockX()
 		set {_z} to (location of loop-block).getBlockZ()

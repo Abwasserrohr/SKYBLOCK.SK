@@ -42,7 +42,6 @@ function biomemenu(p: player):
 	#
 	# > Get the uuid of the island leader and check if the player is the leader.
 	set {_leader} to getleader({_p})
-	broadcast "%{_leader}%"
 	if {_leader} is {_uuid}:
 		#
 		# > Count how many lines are needed:
