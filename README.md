@@ -10,6 +10,7 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 - [skript-mirror](https://github.com/btk5h/skript-mirror)
 - [SkQuery](https://www.spigotmc.org/resources/unofficial-skquery-fork-1-6-1-12.36631/)
 - [Vault](https://www.spigotmc.org/resources/vault.34315)
+- Any economy plugin supporting Vault: [Fe](https://www.spigotmc.org/resources/fe.723/)
 
 
 ### Why SKYBLOCK.SK
