@@ -56,6 +56,9 @@ function loadislandstoworld():
 				set {_sourceChannel} to null
 				set {_destChannel} to null
 				#
+				# > Generate the structure file folders in the world, catch errors.
+				try new File("%{SB::config::world}%/generated/minecraft/structures/").mkdirs()
+				#
 				# > Open a new input and output stream to copy the files using transferFrom
 				set {_sourceChannel} to new FileInputStream({_source}).getChannel()
 				set {_destChannel} to new FileOutputStream({_dest}).getChannel()
