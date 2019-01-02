@@ -14,6 +14,7 @@
 function purgeislands(p:player,arg3:text,arg4:text):
 	set {_uuid} to uuid of {_p}
 	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	set {_days} to "%{_arg3}% days" parsed as timespan
 	loop {SB::islvl::*}:
 		if {SB::island::%loop-index%::lastactive} is not set:
@@ -42,14 +43,15 @@ function purgeislands(p:player,arg3:text,arg4:text):
 	tellrawmsg1({_p},{_prefix},{_msg},"/islandadmin island purge %{_arg3}% purgeok")
 
 #
-# > Function: admintools-deleteisland
+# > Function: admintools_deleteisland
 # > Arguments:
 # > <player>player,<text>arg3 player as text, <text>confirm argument
 # > Actions:
 # > Deletes the specified island, if the confirm argument is set to "deleteok".
-function admintools-deleteisland(p:player,arg3:text,arg4:text):
+function admintools_deleteisland(p:player,arg3:text,arg4:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	if {_arg4} is "deleteok":
 		set {_player} to {_arg3} parsed as offline player
 		#
@@ -83,14 +85,15 @@ function admintools-deleteisland(p:player,arg3:text,arg4:text):
 			tellrawmsg1({_p},{_prefix},{_msg},"/islandadmin island delete %{SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player% deleteok")
 
 #
-# > Function: admintools-addmember
+# > Function: admintools_addmember
 # > Arguments:
 # > <player>player,<text>arg3 player as text, <text>confirm argument
 # > Actions:
 # > Adds a member to an island the admin is standing on. If there is no owner, set the player as owner.
-function admintools-addmember(p:player,arg3:text):
+function admintools_addmember(p:player,arg3:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	set {_player} to {_arg3} parsed as offline player
 	set {_uuid} to uuid of {_player}
 	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
@@ -100,7 +103,7 @@ function admintools-addmember(p:player,arg3:text):
 		message "%{_prefix}% %{_a}%" to {_p}
 		stop
 	
-	set {_bedrock} to searchbedrock(player)
+	set {_bedrock} to searchbedrock({_p})
 	if y-coordinate of {_bedrock} is -5:
 		#
 		# > Prints the defined spacers and a message that the island could not be found:
@@ -120,14 +123,14 @@ function admintools-addmember(p:player,arg3:text):
 			set {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} to {_uuid}
 		#
 		# > If there is no leader, there is no island and should created first.
-		if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is not set:
+		else if {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} is not set:
 			message "%{SB::config::spacer}%" to {_p}
 			message "%{_prefix}% %{SB::lang::isinfonotfound::%{_adminlang}%}%" to {_p}
 			message "%{SB::config::spacer}%" to {_p}
 		#
 		# > If a island leader is existing, add the user as a member to the island.
 		else:
-			add uuid of player to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}
+			add {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}
 
 		#
 		# > Sets the new bedrock of the player.
@@ -135,15 +138,15 @@ function admintools-addmember(p:player,arg3:text):
 	stop
 
 #
-# > Function: admintools-kickall
+# > Function: admintools_kickall
 # > Arguments:
 # > <player>player,<text>confirm argument, <text>island leader
 # > Actions:
 # > Kicks all players from the island the player argument is standing on
-function admintools-kickall(p:player,arg3:text,arg4:text):
+function admintools_kickall(p:player,arg3:text,arg4:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
-
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	#
 	# > "kickok" is a argument which is used by a tellraw prompt to accept if it
 	# > should really kick all players on that island.
@@ -160,13 +163,13 @@ function admintools-kickall(p:player,arg3:text,arg4:text):
 			#
 			# > Loop trough all members and also delete them from the list
 			loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-	set {_player} to loop-value parsed as offline player
-	leaveisland({_player}, "member")
-	delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
+				set {_player} to loop-value parsed as offline player
+				leaveisland({_player}, "member")
+				delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
 			leaveisland({_leader}, "owner")
 			set {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader} to "---"
 			message "%{_prefix}% %{SB::lang::isadmin::kickall::%{_adminlang}%}%" to {_p}
-	set {_bedrock} to searchbedrock(player)
+	set {_bedrock} to searchbedrock({_p})
 	if y-coordinate of {_bedrock} is -5:
 		#
 		# > Prints the defined spacers and a message that the island could not be found:
@@ -192,14 +195,15 @@ function admintools-kickall(p:player,arg3:text,arg4:text):
 		tellrawmsg1({_p},{_prefix},{_msg},"/islandadmin island kickall kickok %{_user}%")
 
 #
-# > Function: admintools-changebiome
+# > Function: admintools_changebiome
 # > Arguments:
 # > <player>player,<text>biome name, <text>island player
 # > Actions:
 # > Changes the biome of island players island. If island player is not set, use the island on which the admin stands on.
-function admintools-changebiome(p:player,arg3:text,arg4:text):
+function admintools_changebiome(p:player,arg3:text,arg4:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	set {_player} to {_arg4} parsed as offline player
 	if {_player} is not set:
 		set {_bedrock} to searchbedrock({_p})
@@ -234,14 +238,15 @@ function admintools-changebiome(p:player,arg3:text,arg4:text):
 	changebiome({_user},{_arg3},{_arg3})
 
 #
-# > Function: admintools-changebiome
+# > Function: admintools_changebiome
 # > Arguments:
 # > <player>player,<text>new island leader, <text>confirm message, <text>old islannd leader
 # > Actions:
 # > Changes the leader of an island with a member of the island.
-function admintools-changeleader(p:player,arg3:text,arg4:text,arg5:text):
+function admintools_changeleader(p:player,arg3:text,arg4:text,arg5:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	if {_arg4} is "changeok":
 		if {_arg5} is set:
 			set {_newowner} to {_arg3} parsed as offline player
@@ -272,8 +277,8 @@ function admintools-changeleader(p:player,arg3:text,arg4:text,arg5:text):
 			#
 			# > Loop trough all members and change it to the new owner
 			loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-	if loop-value is {_newowneruuid}:
-		delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
+				if loop-value is {_newowneruuid}:
+					delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
 		
 			#
 			# > Print the message about the new leader
@@ -284,7 +289,7 @@ function admintools-changeleader(p:player,arg3:text,arg4:text,arg5:text):
 			stop
 	#
 	# > If the 4th argument was not "changeok", do the following code:
-	set {_bedrock} to searchbedrock(player)
+	set {_bedrock} to searchbedrock({_p})
 	if y-coordinate of {_bedrock} is -5:
 		#
 		# > Prints the defined spacers and a message that the island could not be found:
@@ -308,14 +313,15 @@ function admintools-changeleader(p:player,arg3:text,arg4:text,arg5:text):
 		tellrawmsg1({_p},{_prefix},{_msg},"/islandadmin island changeleader %{_arg3}% changeok %{_user}%")
 
 #
-# > Function: admintools-invite
+# > Function: admintools_invite
 # > Arguments:
 # > <player>player,<text>island leader, <text>player to invite
 # > Actions:
 # > Invites the player to the island of the island leader.
-function admintools-invite(p:player,arg3:text,arg4:text):
+function admintools_invite(p:player,arg3:text,arg4:text):
 	set {_adminuuid} to uuid of {_p}
 	set {_adminlang} to {SK::lang::%{_adminuuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_adminlang}%}
 	#
 	# > Set the argument 3 to a offline player (owner)
 	set {_o} to {_arg3} parsed as offline player
@@ -332,61 +338,58 @@ function admintools-invite(p:player,arg3:text,arg4:text):
 			set {_leader} to getleader({_o})
 			if {_leader} is set:
 				if {_leader} is {_ouuid}:
-		set {_arg2} to {_p}
-		if {_arg2} is online:
-			if {_arg2} is not {_o}:
-				set {_p2} to {_arg2}
-				set {_tuuid} to uuid of {_p2}
-				#
-				# > If the invited player is already on an island, print error
-				if {SB::player::%{_tuuid}%::island::bedrock} is set:
-					set {_msg} to {SB::lang::alreadyotheris::%{_adminlang}%}
-					replace all "<player>" with "%{_p2}%" in {_msg}
-					message "%{_prefix}% %{_msg}%" to {_p}
-					stop
-				#
-				# > If everything is ok, send a invitation tellraw and wait for x seconds,
-				# > then stop it, if not accepted.
-				set {_uuid2} to uuid of {_arg2}
-				set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
-				message "%{_prefix}% %{SB::lang::sentrequest::%{_adminlang}%}%" to {_p}
-				replace all "<player>" in {_b} with "%{_o}%"
-				message "%{_prefix}% %{_b}%" to {_p2}
-				set {_uuidp2} to uuid of {_p2}
-				set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
-				replace all "<player>" with "%{_o}%" in {_msg}
-				tellrawmsg1({_p2},{_prefix},{_msg},"/is join %{_o}%")
-				set {_cooldown} to {SB::config::invitecooldown}
-				set {_cooldown} to {_cooldown} parsed as number
-				set {Request::%{_arg2}%::%{_o}%} to {_cooldown}
-				while {Request::%{_arg2}%::%{_o}%} > 0:
-					subtract 1 from {Request::%{_arg2}%::%{_o}%}
-					wait a second
-				if {Request::%{_arg2}%::%{_o}%} is 0:
-					delete {Request::%{_arg2}%::%{_o}%}
-					#
-					# > 
-					set {_a} to {SB::lang::reqtoleader::%{_adminlang}%}
-					set {_c} to {SB::lang::reqtoleader::%{SK::lang::%{_ouuid}%}%}
-					set {_uuid2} to uuid of {_arg2}
-					set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
-					#
-					# > Sends the message to the admin
-					message "%{_prefix}% %{_a}%" to {_p}
-					#
-					# > Sends the message to the island leader
-					message "%{_prefix}% %{_c}%" to {_o}
-					#
-					# > Sends the message to the player who has been invited
-					message "%{_prefix}% %{_b}%" to {_p2}
-			else:
-				set {_a} to {SB::lang::cantinviteself::%{_adminlang}%}
-				message "%{_prefix}% %{_a}%" to {_p}
-		else:
-			set {_a} to {SB::lang::playeroff::%{_adminlang}%}
-			message "%{_prefix}% %{_a}%" to {_p}
+					set {_arg2} to {_p}
+					if {_arg2} is online:
+						if {_arg2} is not {_o}:
+							set {_p2} to {_arg2}
+							set {_tuuid} to uuid of {_p2}
+							#
+							# > If the invited player is already on an island, print error
+							if {SB::player::%{_tuuid}%::island::bedrock} is set:
+								set {_msg} to {SB::lang::alreadyotheris::%{_adminlang}%}
+								replace all "<player>" with "%{_p2}%" in {_msg}
+								message "%{_prefix}% %{_msg}%" to {_p}
+								stop
+							#
+							# > If everything is ok, send a invitation tellraw and wait for x seconds,
+							# > then stop it, if not accepted.
+							set {_uuid2} to uuid of {_arg2}
+							set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
+							message "%{_prefix}% %{SB::lang::sentrequest::%{_adminlang}%}%" to {_p}
+							replace all "<player>" in {_b} with "%{_o}%"
+							message "%{_prefix}% %{_b}%" to {_p2}
+							set {_uuidp2} to uuid of {_p2}
+							set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
+							replace all "<player>" with "%{_o}%" in {_msg}
+							tellrawmsg1({_p2},{_prefix},{_msg},"/is join %{_o}%")
+							set {_cooldown} to {SB::config::invitecooldown}
+							set {_cooldown} to {_cooldown} parsed as number
+							set {Request::%{_arg2}%::%{_o}%} to {_cooldown}
+							while {Request::%{_arg2}%::%{_o}%} > 0:
+								subtract 1 from {Request::%{_arg2}%::%{_o}%}
+								wait a second
+							if {Request::%{_arg2}%::%{_o}%} is 0:
+								delete {Request::%{_arg2}%::%{_o}%}
+								set {_a} to {SB::lang::reqtoleader::%{_adminlang}%}
+								set {_c} to {SB::lang::reqtoleader::%{SK::lang::%{_ouuid}%}%}
+								set {_uuid2} to uuid of {_arg2}
+								set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
+								#
+								# > Sends the message to the admin
+								message "%{_prefix}% %{_a}%" to {_p}
+								#
+								# > Sends the message to the island leader
+								message "%{_prefix}% %{_c}%" to {_o}
+								#
+								# > Sends the message to the player who has been invited
+						else:
+							set {_a} to {SB::lang::cantinviteself::%{_adminlang}%}
+							message "%{_prefix}% %{_a}%" to {_p}
+					else:
+						set {_a} to {SB::lang::playeroff::%{_adminlang}%}
+						message "%{_prefix}% %{_a}%" to {_p}
 				else:
-		set {_a} to {SB::lang::notleader::%{_adminlang}%}
-		message "%{_prefix}% %{_a}%" to {_p}
+					set {_a} to {SB::lang::notleader::%{_adminlang}%}
+					message "%{_prefix}% %{_a}%" to {_p}
 			else:
 				message "%{_prefix}% %{SB::lang::nois::%{_adminlang}%}%" to {_p}
