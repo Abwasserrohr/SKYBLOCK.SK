@@ -52,7 +52,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			if arg-2 is "delete":
 				#
 				# > Calls the admintool-deleteisland function, which is going to handle island deletation by admins.
-				admintools-deleteisland(player,arg-3,arg-4)
+				admintools_deleteisland(player,arg-3,arg-4)
 
 			#
 			# > Argument: "addmember"
@@ -60,15 +60,15 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			# > Actions:
 			# > Adds the player to the island the executor is standing on.
 			if arg-2 is "addmember":
-				admintools-addmember(player,arg-3)
+				admintools_addmember(player,arg-3)
 				
 			#
 			# > Argument: "kickall"
 			# > If the user types in /islandadmin island kickall, all players of the current island are kicked.
 			# > Actions:
-			# > Kicks everyone on the island the player is currently at without deleting it using the admintools-kickall function.
+			# > Kicks everyone on the island the player is currently at without deleting it using the admintools_kickall function.
 			if arg-2 is "kickall":
-				admintools-kickall(player,arg-3,arg-4)
+				admintools_kickall(player,arg-3,arg-4)
 
 			#
 			# > Argument: "changebiome"
@@ -77,16 +77,16 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			# > Actions:
 			# > Changes the biome of the island the user is standing on or the defined 4nd argument.
 			if arg-2 is "changebiome":
-				admintools-changebiome(player,arg-3,arg-4)
+				admintools_changebiome(player,arg-3,arg-4)
 	
 			#
 			# > Argument: "changeleader"
 			# > If the user types in /islandadmin island changeleader <new leader>, the leader is changed to this player on which the admin
 			# > is currently standing on, works only, if there is already a leader and a member in the island.
 			# > Actions:
-			# > Changes the leader using the admintools-changeleader function.
+			# > Changes the leader using the admintools_changeleader function.
 			if arg-2 is "changeleader":
-				admintools-changeleader(player,arg-3,arg-4,arg-5)
+				admintools_changeleader(player,arg-3,arg-4,arg-5)
 
 			#
 			# > Argument: "invite"
@@ -95,7 +95,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			# > This is going to invite a player, like it would have been done by the owner directly.
 			# > Use addmember to add a member without asking the user.
 			if arg-2 is "invite":
-				admintools-invite(player,arg-3,arg-4)
+				admintools_invite(player,arg-3,arg-4)
 
 		#
 		# > If no argument has been used, tell the player what is possible:
