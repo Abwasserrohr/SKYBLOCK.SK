@@ -25,6 +25,7 @@ on script load:
 	#
 	set {SB::lang::searchis::%{_lang}%} to "%{_p2}%Freie Inseln werden gesucht."
 	set {SB::lang::foundis::%{_lang}%} to "%{_p1}%Deine neue Insel wurde erstellt."
+	set {SB::lang::islands::%{_lang}%} to "%{_s1}%&lInseln"
 	
 	#
 	# > /island home | /island go
