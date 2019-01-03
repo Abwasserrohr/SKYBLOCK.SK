@@ -494,5 +494,4 @@ on load:
 
 #
 # > Functions to start after config loaded, do not change this if you don't know what you're doing.
-#
 	loadislandstoworld()
