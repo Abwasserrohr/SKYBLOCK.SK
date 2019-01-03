@@ -97,6 +97,15 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 			if arg-2 is "invite":
 				admintools_invite(player,arg-3,arg-4)
 
+			#
+			# > Argument: "create"
+			# > Invites a player for the owner of the island
+			# > Actions:
+			# > This argument calls the admintools_create function, which creates a new island at the location
+			# > of the player, if available.
+			if arg-2 is "create":
+				admintools_create(player)
+
 		#
 		# > If no argument has been used, tell the player what is possible:
 		else:
