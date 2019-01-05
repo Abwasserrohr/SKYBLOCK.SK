@@ -79,8 +79,38 @@ on EntityDamageByEntityEvent:
 		set {_allowed} to checkislandaccess({_player},{_l},"EntityDamageByEntityEvent-%{_type}%")
 		if {_allowed} is false:
 			cancel event
+	#
+	# > If the damage has been done by an arrow or snowball.
 	if "%{_player}%" is "arrow" or "snowball":
-		cancel event
+		#
+		# > Check, if the shooter is a player, allow skeletons to throw arrows like they want.
+		if {_player}.getShooter() is a player:
+			#
+			# > Get the entity type to check if the shooter is allowed to do this.
+			if event.getEntity() is a animal:
+				set {_type} to "animal"
+			#
+			# > If the victim is a player and then check for the pvp setting, if false, cancel the event.
+			else if event.getEntity() is a player:
+				if {SB::config::pvp} is false:
+					cancel event
+					stop
+			#
+			# > If the victim is a monster, set the type to monster.
+			else if event.getEntity() is a monster:
+				set {_type} to "monster"
+			#
+			# > If the victim is something else, set it to "entity".
+			else:
+				set {_type} to "entity"
+			#
+			# > Check, if the shooter is allowed to shoot and check the location of the entity.
+			set {_allowed} to checkislandaccess({_player}.getShooter(),location of event.getEntity(),"EntityDamageByEntityEvent-%{_type}%")
+			#
+			# > If now allowed, cancel the event.
+			if {_allowed} is false:
+				cancel event
+				stop
 
 # > Event: VehicleDamageEvent
 # > Triggered if a vehicle is damaged, this could be a minecart or a boat.
