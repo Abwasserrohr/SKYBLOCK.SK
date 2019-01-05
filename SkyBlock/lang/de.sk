@@ -204,7 +204,7 @@ on script load:
 	set {SB::lang::delismsg::%{_lang}%} to "%{_p2}%Alte Inseln werden gerade gelöscht, bitte warte kurz."
 	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
 	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
-	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Bist du sicher? %{_p1}%Klicke Hier%{_s1}%"
+	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Du möchtest deine Insel löschen? %{_p1}%Klicke Hier%{_s1}%"
 	
 	#
 	# > Admintools:
