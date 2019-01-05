@@ -86,8 +86,16 @@ on EntityDamageByEntityEvent:
 		# > Check, if the shooter is a player, allow skeletons to throw arrows like they want.
 		if {_player}.getShooter() is a player:
 			#
+			# > Get the entity type to check if the shooter is allowed to do this.
+			if event.getEntity() is a animal:
+				set {_type} to "animal"
+			else if event.getEntity() is a monster:
+				set {_type} to "monster"
+			else:
+				set {_type} to "entity"
+			#
 			# > Check, if the shooter is allowed to shoot and check the location of the entity.
-			set {_allowed} to checkislandaccess({_player}.getShooter(),location of event.getEntity())
+			set {_allowed} to checkislandaccess({_player}.getShooter(),location of event.getEntity(),"EntityDamageByEntityEvent-%{_type}%")
 			#
 			# > If now allowed, cancel the event.
 			if {_allowed} is false:
