@@ -1,6 +1,6 @@
-#
+^#
 # ==============
-# elevator.sk v0.0.1
+# elevator.sk v0.0.2
 # ==============
 # Let users build elevators using signs
 # ==============
@@ -11,8 +11,7 @@
 # ==============
 # How to use it:
 # ==============
-# > This skript doesn't need any special setup on server side.
-# > First use: Place elevator.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > This skript doesn't need any setup on server side.
 # > Steps for users:
 # > 1: Place a sign on the bottom with the following contents:
 # > =Line 1: [Lift]
@@ -30,83 +29,85 @@
 
 #
 # > The following options change the look of the skript
-#
 options:
-	#
-	# > Defines how the "Down" sign should look like:
-	#
-	sign_down: "↓ DOWN ↓"
-	#
-	# > Defines how the "Up" sign should look like:
-	#
-	sign_up: "↑ UP ↑"
-	#
-	# > Defines how the 1st line of the elevator sign should look like:
-	#
-	sign_lift: "&l[LIFT]"
+  #
+  # > Defines how the "Down" sign should look like:
+  sign_down: "↓ DOWN ↓"
+  #
+  # > Defines how the "Up" sign should look like:
+  sign_up: "↑ UP ↑"
+  #
+  # > Defines how the 1st line of the elevator sign should look like:
+  sign_lift: "&l[LIFT]"
 
 #
 # > Event - on rightclick on a sign
 # > Actions:
-# > This event gets triggered if someone rightclicks on a sign, then it is checked if
-# > the clicked block (event-block) is a elevator by checking the {@sign_lift} option.
-# > If it is a elevator, check if its going up or down and then go trough all blocks,
-# > below the sign or above, depending if it is going up or down.
-# > Then change the y-coordinate of the player to the difference between the two signs.
-#
+# > This event triggers the elevator skript. It either teleports the
+# > player up or down, depending on the text thats on the sign.
+# > The destination has to be valid.
 on rightclick on sign:
-	if line 1 of event-block is {@sign_lift}:
-		set {_loc::1} to location of event-block
-		set {_loc::2} to {_loc::1}
-		#
-		# > If the event-block has the down content, set y-coordinate to 0
-		# > and remove 1 from the y-coordinate of the clicked block.
-		#
-		if line 2 of event-block is {@sign_down}:
-			set y-coordinate of {_loc::1} to 0
-			remove 1 from y-coordinate of {_loc::2}
-		#
-		# > If the event-block has the up content, set y-coordinate to 256
-		# > and add 1 to the y-coordinate of the clicked block.
-		#
-		else if line 2 of event-block is {@sign_up}:
-			set y-coordinate of {_loc::1} to 256
-			add 1 to y-coordinate of {_loc::2}
-		#
-		# > If the event-block has not either "Up" or "Down", stop here.
-		#
-		else:
-			stop
-		#
-		# > Loop trough all blocks between the elevator sign and the possible other elevator sign,
-		# > if found, it takes the difference between the clicked elevator and the found elevator and
-		# > changes the y-coordinate of the players location by this difference and then teleports the player.
-		#
-		loop blocks within {_loc::1} to {_loc::2}:
-			if loop-block is sign:
-				if line 1 of loop-block is {@sign_lift}:
-					set {_ploc} to location of player
-					if line 2 of event-block is {@sign_down}:
-						set {_diff} to difference between y-coordinate of event-block and y-coordinate of loop-block
-						remove {_diff} from y-coordinate of {_ploc}
-					else if line 2 of event-block is {@sign_up}:
-						set {_diff} to difference between y-coordinate of event-block and y-coordinate of loop-block
-						add {_diff} to y-coordinate of {_ploc}
-					#
-					# > If the block below the new player location is air, try to add 0.5 blocks to
-					# > make this save.
-					#
-					if the block below {_ploc} is air:
-						add 0.5 to y-coordinate of {_ploc}
-					#
-					# > If it is not save to stay on the now location now, stop here.
-					#
-					if the block below {_ploc} is air:
-						stop
-					#
-					# > It should be save to teleport the player to the new location now.
-					#
-					teleport player to {_ploc}
+  if line 1 of event-block is {@sign_lift}:
+    #
+    # > Set the current lift sign to loop trough the world.
+    set {_clift} to location of event-block
+    #
+    # > If the event-block has the down content, loop trough blocks below it.
+    if line 2 of event-block is {@sign_down}:
+      #
+      # > Loop trough the world, start at the current lift and go down until
+      # > the loop hits the right lift to stop the loop.
+      loop 255 times:
+        remove 1 from y-coordinate of {_clift}
+        if line 2 of block at {_clift} is {@sign_up}:
+          #
+          # > {_liftdest} is the coordinate of the destination lift sign we want to go.
+          set {_liftdest} to {_clift}
+          stop loop
+
+    #
+    # > If the event-block has the up content, loop trough blocks above it.
+    else if line 2 of event-block is {@sign_up}:
+      #
+      # > Loop trough the world, start at the current lift and go up until
+      # > the loop hits the right lift to stop the loop.
+      loop 255 times:
+        add 1 to y-coordinate of {_clift}
+        if line 2 of block at {_clift} is {@sign_down}:
+          #
+          # > {_liftdest} is the coordinate of the destination lift sign we want to go.
+          set {_liftdest} to {_clift}
+          stop loop
+
+    #
+    # > If {_liftdest} is not set, no matching lift sign has been found.
+    if {_liftdest} is not set:
+      stop
+    
+    #
+    # > Set a new location where the player should be teleported to by removing/adding the y-coordinate from/to the {_ploc} location.
+    set {_ploc} to location of player
+    if line 2 of event-block is {@sign_down}:
+      set {_diff} to difference between y-coordinate of event-block and y-coordinate of {_liftdest}
+      remove {_diff} from y-coordinate of {_ploc}
+    else if line 2 of event-block is {@sign_up}:
+      set {_diff} to difference between y-coordinate of event-block and y-coordinate of {_liftdest}
+      add {_diff} to y-coordinate of {_ploc}
+    #
+    # > Once the difference is calculated by either removing or adding the difference to/from the y-coordinate of
+    # > player's location, the player can now teleported. Do some checks to prevent falling into void.
+    #
+    # > If the block below the new player location is air, try to add 0.5 blocks to
+    # > make this save.
+    if the block below {_ploc} is air:
+      add 0.5 to y-coordinate of {_ploc}
+    #
+    # > If it is not save to stay on the now location now, stop here.
+    if the block below {_ploc} is air:
+      stop
+    #
+    # > It should be save to teleport the player to the new location now.
+    teleport player to {_ploc}
 
 #
 # > Event - on sign change
@@ -114,12 +115,11 @@ on rightclick on sign:
 # > Once a sign is changed, this trigger is going to check if the first line of the
 # > changed sign has "[Lift]" as first line and "Up" or "Down" on the second line, if so,
 # > it is going to format the sign into the right format like defined in the options. 
-#
 on sign change:
-	if line 1 of event-block is "[Lift]":
-		if line 2 of event-block is "Up" or "Down":
-			set line 1 of event-block to {@sign_lift}
-			if line 2 of event-block is "Down":
-				set line 2 of event-block to {@sign_down}
-			if line 2 of event-block is "Up":
-				set line 2 of event-block to {@sign_up}
+  if line 1 of event-block is "[Lift]":
+    if line 2 of event-block is "Up" or "Down":
+      set line 1 of event-block to {@sign_lift}
+      if line 2 of event-block is "Down":
+        set line 2 of event-block to {@sign_down}
+      if line 2 of event-block is "Up":
+        set line 2 of event-block to {@sign_up}
