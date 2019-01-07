@@ -4,7 +4,7 @@
 # > This command contains multible of actions which are meant to be used by an administrator for
 # > administration and moderation purposes.
 command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
-  permission:  is.admin
+  permission: is.admin
   aliases: /isadmin
   trigger:
     #
@@ -382,7 +382,12 @@ command /island [<text>] [<text=1>] [<text>]:
           set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
           set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
 		  #
-		  # > If there is already a level set for this player, delete the list entry.
+		  # > Check for duplicate entries, if there are any, delete this entry in the list.
+          if {_duplicationcheck::%loop-index%} is set:
+            delete {SB::islvl::%loop-index%}
+          set {_duplicationcheck::%loop-index%} to loop-value
+          #
+          # > If there is already a level set for this player, delete the list entry.
           if {_Level::%{_uuid}%} is set:
             delete {SB::islvl::%loop-index%}
           set {_Level::%{_uuid}%} to {_level}
