@@ -748,11 +748,9 @@ command /island [<text>] [<text=1>] [<text>]:
         # > Prints island upgrades
         message "%{_prefix}% %{SB::lang::isupgrades::%{SK::lang::%uuid of player%}%}%"
         message "%{_prefix}% | %{SB::lang::bc::islandhometitle::%{SK::lang::%uuid of player%}%}%%{_homelevel}% | %{SB::lang::bc::islandhoppertitle::%{SK::lang::%uuid of player%}%}%%{_hopperlevel}% | %{SB::lang::bc::islandsizetitle::%{SK::lang::%uuid of player%}%}%%{_sizelevel}% |"
-
         #
         # > Prints the defined spacer:
         message "%{SB::config::spacer}%"
-
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
     # > If a player types in /island generator, his current generator level is displayed
@@ -762,7 +760,6 @@ command /island [<text>] [<text=1>] [<text>]:
     #
     else if arg-1 is "generator" OR "gen" OR "oregen" OR "oregenerator":
       generatorinfo(player)
-
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
     # > If a player types in /island ores, his current chances are displayed
@@ -771,7 +768,6 @@ command /island [<text>] [<text=1>] [<text>]:
     #
     else if arg-1 is "ores" OR "ore" OR "orechances" OR "chances":
       orechancesinfo(player)
-
     #
     # > Argument: "biome" ("biomes" OR "biom")
     # > If a player types in /island biome, a biome select menu is opened.
@@ -779,7 +775,6 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Opens biome menu
     else if arg-1 is "biome" OR "biomes" OR "biom":
       biomemenu(player)
-
     #
     # > Argument: "trust"
     # > If a player types in /island trust, the trusthandler function is called.
@@ -788,7 +783,6 @@ command /island [<text>] [<text=1>] [<text>]:
     # > trusted or removes a trusted user, also can list all trusted users.
     else if arg-1 is "trust":
       trusthandler(player,arg-2,arg-3)
-
     #
     # > Argument: "upgrade" ("upgrades")
     # > If a player types in /island upgrade, the islandupgrademenu function is called.
@@ -803,3 +797,10 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Calls the warphandler function, which allows to teleport, set and delete warps.
     else if arg-1 is "warp" or "setwarp" or "delwarp":
       warphandler(player,arg-1,arg-2)
+    #
+    # > Argument: "lang" OR "language"
+    # > If a player types in /island lang|language, the selectlanguage function is called.
+    # > Actions:
+    # > Calls the selectlanguage function, which opens a menu where the player can change the language.
+    else if arg-1 is "lang" or "language":
+      selectlanguage(player)
