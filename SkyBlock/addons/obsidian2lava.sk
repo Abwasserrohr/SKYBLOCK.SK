@@ -15,23 +15,23 @@
 # > Actions:
 # > The code below reverts obsidian back to lava, if the player has a empty bucket in his hand.
 on rightclick on obsidian with a empty bucket:
-	#
-	# > Check if the player is not allowed to do this action.
-	set {_allowed} to checkislandaccess(player,location of event-block)
-	if {_allowed} is false:
-		cancel event
-	#
-	# > If the player is allowed, change the obsidian to lava.
-	else:
-		if player's tool is a empty bucket:
-			set event-block to air
-			remove 1 of empty bucket from player's inventory
-			if player's tool is air:
-				set player's tool to lava bucket
-				cancel event
-			else:
-				give 1 of lava bucket to player
-				cancel event
+  #
+  # > Check if the player is not allowed to do this action.
+  set {_allowed} to checkislandaccess(player,location of event-block)
+  if {_allowed} is false:
+    cancel event
+  #
+  # > If the player is allowed, change the obsidian to lava.
+  else:
+    if player's tool is a empty bucket:
+      set event-block to air
+      remove 1 of empty bucket from player's inventory
+      if player's tool is air:
+        set player's tool to lava bucket
+        cancel event
+      else:
+        give 1 of lava bucket to player
+        cancel event
 
 #
 # > Event: on block form of obsidian
@@ -41,7 +41,7 @@ on rightclick on obsidian with a empty bucket:
 # > Once this event is triggered, it loops all players on the server and if the distance between
 # > the loop-player and event-location is lower than 30, it informs the player about this addon.
 on block form of obsidian:
-	$ thread
-	loop all players:
-		if distance between loop-player and event-location < 30:
-			send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player
+  $ thread
+  loop all players:
+    if distance between loop-player and event-location < 30:
+      send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player
