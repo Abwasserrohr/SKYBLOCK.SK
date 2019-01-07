@@ -8,9 +8,9 @@
 #
 # > Import of all necessary classes for the loadislandstoworld function
 import:
-	java.io.File
-	java.io.FileInputStream
-	java.io.FileOutputStream
+  java.io.File
+  java.io.FileInputStream
+  java.io.FileOutputStream
 
 # > Function - loadislandstoworld:
 # > Arguments:
@@ -20,53 +20,50 @@ import:
 # > This function loads ".nbt" files from the "plugins/Skript/scripts/SkyBlock/islands" folder
 # > into the defined world folder.
 function loadislandstoworld():
-	#
-	# > Get a list all files in the folder of the "plugins/Skript/scripts/SkyBlock/islands" folder
-	set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/islands").listFiles()
-	#
-	# > Loop trough all the files
-	loop {_files::*}:
-		#
-		# > If the loop-value (file) ends with ".nbt", it should continue
-		set {_check} to loop-value.toString().endsWith(".nbt")
-		if {_check} is true:
-			#
-			# > Prints to console that it tries to copy import the files.
-			send "[SkyBlock] > Try to import %{_fname}% into your world..." to console
-			#
-			# > Get the name of the loop file.
-			set {_fname} to loop-value.getName()
-			#
-			# > Look if there is already a file with that name
-			set {_checkfile} to new File("%{SB::config::world}%/generated/minecraft/structures/%{_fname}%")
-			if {_checkfile}.isFile() is true:
-				#
-				# > Print that there is already a file with this name
-				send "[SkyBlock] > %{_fname}% is already set." to console
-			else:
-				#
-				# > There is no file with that name, copy it.
-				# > Set the {_source} to the loop file (our source)
-				set {_source} to loop-value
-				#
-				# > Set the {_dest} to our destination, which we already used with {_checckfile} above
-				set {_dest} to {_checkfile}
-				#
-				# > Set both stream channels to null
-				set {_sourceChannel} to null
-				set {_destChannel} to null
-				#
-				# > Generate the structure file folders in the world, catch errors.
-				try new File("%{SB::config::world}%/generated/minecraft/structures/").mkdirs()
-				#
-				# > Open a new input and output stream to copy the files using transferFrom
-				set {_sourceChannel} to new FileInputStream({_source}).getChannel()
-				set {_destChannel} to new FileOutputStream({_dest}).getChannel()
-				#
-				# > Copy the file from the {_sourceChannel} to the {_destChannel}
-				{_destChannel}.transferFrom({_sourceChannel}, 0, {_sourceChannel}.size())
-				#
-				# > Close both streams and print a success message to console
-				{_sourceChannel}.close()
-				{_destChannel}.close()
-				send "[SkyBlock] > Successfully imported %{_fname}%!" to console
+  #
+  # > Get a list all files in the folder of the "plugins/Skript/scripts/SkyBlock/islands" folder
+  set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/islands").listFiles()
+  #
+  # > Loop trough all the files
+  loop {_files::*}:
+    #
+    # > If the loop-value (file) ends with ".nbt", it should continue
+    set {_check} to loop-value.toString().endsWith(".nbt")
+    if {_check} is true:
+      #
+      # > Prints to console that it tries to copy import the files.
+      send "[SkyBlock] > Try to import %{_fname}% into your world..." to console
+      #
+      # > Get the name of the loop file.
+      set {_fname} to loop-value.getName()
+      #
+      # > Look if there is already a file with that name
+      set {_checkfile} to new File("%{SB::config::world}%/generated/minecraft/structures/%{_fname}%")
+      if {_checkfile}.isFile() is true:
+        #
+        # > Print that there is already a file with this name
+        send "[SkyBlock] > %{_fname}% is already set." to console
+      else:
+        #
+        # > There is no file with that name, copy it.
+        # > Set the {_source} to the loop file (our source)
+        set {_source} to loop-value
+        #
+        # > Set the {_dest} to our destination, which we already used with {_checckfile} above
+        set {_dest} to {_checkfile}
+        #
+        # > Set both stream channels to null
+        set {_sourceChannel} to null
+        set {_destChannel} to null
+        #
+        # > Open a new input and output stream to copy the files using transferFrom
+        set {_sourceChannel} to new FileInputStream({_source}).getChannel()
+        set {_destChannel} to new FileOutputStream({_dest}).getChannel()
+        #
+        # > Copy the file from the {_sourceChannel} to the {_destChannel}
+        {_destChannel}.transferFrom({_sourceChannel}, 0, {_sourceChannel}.size())
+        #
+        # > Close both streams and print a success message to console
+        {_sourceChannel}.close()
+        {_destChannel}.close()
+        send "[SkyBlock] > Successfully imported %{_fname}%!" to console
