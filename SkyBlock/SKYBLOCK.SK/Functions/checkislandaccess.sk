@@ -288,6 +288,14 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
       if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
         return {SB::config::defaultisflag::%{_playertype}%::explosion}
   #
+  # > This flag is for redstone tools, like comparators and repeaters.
+  else if {_event} is "Redstone":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::redstone} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::redstone}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::redstone} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::redstone}
+  #
   # > This flag is for the public home trough /island home [<player>] [<home>]
   else if {_event} is "Home":
     if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
