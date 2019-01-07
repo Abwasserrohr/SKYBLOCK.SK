@@ -14,110 +14,106 @@
 # > checks if the player is allowed to build there and then returns either true (allowed)
 # > or false (not allowed).
 function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t: integer=1) :: boolean:
+  #
+  # > Call the function which generates new temporary variables and sets them
+  # > to the current border and also returns the bedrock location.
+  set {_bedrock} to getcurrentbedrock({_p},{_l})
+  #
+  # > If this is not a valid island, check trough default lobby flags:
+  if {_bedrock} is not set:
+    if {_event} is "Explode":
+      return {SB::config::defaultlobbyflag::explosion}
+    if {_p} has permission "is.admin":
+      return true
+    if {_event} is "PlayerInteractEvent":
+      if {_block} is lever or button:
+        return {SB::config::defaultlobbyflag::button}
+      if {_block} is door:
+        return {SB::config::defaultlobbyflag::door}
+    else if {_event} is "EntityDamageByEntityEvent-animal":
+      return {SB::config::defaultlobbyflag::animal-damage}
+    else if {_event} is "EntityDamageByEntityEvent-monster":
+      return {SB::config::defaultlobbyflag::mob-damage}
+    else if {_event} is "VehicleDamageEvent":
+      return {SB::config::defaultlobbyflag::interact-vehicle}
 
-	#
-	# > Call the function which generates new temporary variables and sets them
-	# > to the current border and also returns the bedrock location.
-	set {_bedrock} to getcurrentbedrock({_p},{_l})
-	#
-	# > If this is not a valid island, check trough default lobby flags:
-	if {_bedrock} is not set:
-		if {_p} has permission "is.admin":
-			return true
-		if {_event} is "Explode":
-			return {SB::config::defaultlobbyflag::explosion}
-		if {_event} is "PlayerInteractEvent":
-			if {_block} is lever or button:
-				return {SB::config::defaultlobbyflag::button}
-			if {_block} is door:
-				return {SB::config::defaultlobbyflag::door}
-		else if {_event} is "EntityDamageByEntityEvent-animal":
-			return {SB::config::defaultlobbyflag::animal-damage}
-		else if {_event} is "EntityDamageByEntityEvent-monster":
-			return {SB::config::defaultlobbyflag::mob-damage}
-		else if {_event} is "VehicleDamageEvent":
-			return {SB::config::defaultlobbyflag::interact-vehicle}
-	#
-	# > Bypass any island checks if the users is an admin.
-	if {_p} has permission "is.admin":
-		return true
-	#
-	# > The getcurrentbedrock function created some global temporary variables we can now check,
-	# > if the location parameter is within the temporary variables, we can use them.
+  #
+  # > The getcurrentbedrock function created some global temporary variables we can now check,
+  # > if the location parameter is within the temporary variables, we can use them.
 
-	if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
-		set {_uuid} to uuid of {_p}
-		set {_x} to x-coord of {_bedrock}
-		set {_y} to y-coord of {_bedrock}
-		set {_z} to z-coord of {_bedrock}
+  if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
+    set {_uuid} to uuid of {_p}
+    set {_x} to x-coord of {_bedrock}
+    set {_y} to y-coord of {_bedrock}
+    set {_z} to z-coord of {_bedrock}
 
-		#
-		# > Check for permissions:
-		if {_p} has permission "is.admin":
-			#
-			# > Check if the explosion should happen or not.
-			if {_event} is "Explode":
-				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
-				return {_check}
-			return true
-		#
-		# > The leader of the island is allowed to build
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
-			#
-			# > Check if the explosion should happen or not.
-			if {_event} is "Explode":
-				set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
-				if {_check} is set:
-					return {_check}
-			return true
-		else:
-			#
-			# > Loop trough members, if the player is a member, return true.
-			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::member::*}:
-				#
-				# > Check if the user is a member, if it is, return the result of the function getcurrentbedrockmain.
-				if "%loop-value%" is "%{_uuid}%":
-					#
-					# > Flag check for trusted players:
-					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
-					if {_check} is set:
-						return {_check}
-					#
-					# > If no return happened for a flag, return true for members.
-					return true
-			#
-			# > Loop trough trusted players, if the player is trusted, return true.
-			loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
-				#
-				# > Check if the user is a trusted player, return the result of the function getcurrentbedrockmain.
-				if "%loop-value%" is "%{_uuid}%":
-					#
-					# > Flag check for trusted players:
-					set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
-					if {_check} is set:
-						return {_check}
-					#
-					# > If no return happened for a flag, return true for trusted players.
-					return true
-					
-			# 
-			# > Flag check for foreign players (other islands).
-			# > Check if there is a flag which allows specific events:
-			set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
-			if {_check} is set:
-				return {_check}
-			#
-			# > If there hasn't been a return yet, return false now, since the player has no
-			# > right to do this action here.
-			return false
-	#
-	# > The locations aren't match, go forward and do another check, if that's also not
-	# > working, return false.
-	else:
-		if {_t} is 1:
-			return checkislandaccess({_p}, {_l}, {_event}, {_block}, 2)
-		else:
-			return false
+    #
+    # > Check for permissions:
+    if {_p} has permission "is.admin":
+      #
+      # > Check if the explosion should happen or not.
+      if {_event} is "Explode":
+        set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
+        return {_check}
+      return true
+    #
+    # > The leader of the island is allowed to build
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+      #
+      # > Check if the explosion should happen or not.
+      if {_event} is "Explode":
+        set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
+        if {_check} is set:
+          return {_check}
+      return true
+    else:
+      #
+      # > Loop trough members, if the player is a member, return true.
+      loop {SB::island::%{_x}%_%{_y}%_%{_z}%::member::*}:
+        #
+        # > Check if the user is a member, if it is, return the result of the function getcurrentbedrockmain.
+        if "%loop-value%" is "%{_uuid}%":
+          #
+          # > Flag check for trusted players:
+          set {_check} to checkflagevent({_x},{_y},{_z},{_event},"member",{_block})
+          if {_check} is set:
+            return {_check}
+          #
+          # > If no return happened for a flag, return true for members.
+          return true
+      #
+      # > Loop trough trusted players, if the player is trusted, return true.
+      loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
+        #
+        # > Check if the user is a trusted player, return the result of the function getcurrentbedrockmain.
+        if "%loop-value%" is "%{_uuid}%":
+          #
+          # > Flag check for trusted players:
+          set {_check} to checkflagevent({_x},{_y},{_z},{_event},"trusted",{_block})
+          if {_check} is set:
+            return {_check}
+          #
+          # > If no return happened for a flag, return true for trusted players.
+          return true
+          
+      # 
+      # > Flag check for foreign players (other islands).
+      # > Check if there is a flag which allows specific events:
+      set {_check} to checkflagevent({_x},{_y},{_z},{_event},"foreign",{_block})
+      if {_check} is set:
+        return {_check}
+      #
+      # > If there hasn't been a return yet, return false now, since the player has no
+      # > right to do this action here.
+      return false
+  #
+  # > The locations aren't match, go forward and do another check, if that's also not
+  # > working, return false.
+  else:
+    if {_t} is 1:
+      return checkislandaccess({_p}, {_l}, {_event}, {_block}, 2)
+    else:
+      return false
 
 # > Function - getcurrentbedrock:
 # > Arguments:
@@ -126,103 +122,103 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 # > Generatres temporary variables which store the current borders of the player,
 # > if the temporary variables are set, it returns them if everything is ok.
 function getcurrentbedrock(p:player, l:location) :: location:
-	if {SB::TEMPLOC::%{_p}%b1} is not set:
-		#
-		# > Get the current bedrock of the player,
-		# > this takes around 0.02 seconds, thats why we use caching here.
-		set {_bedrock} to getcurrentbedrockmain({_l})
+  if {SB::TEMPLOC::%{_p}%b1} is not set:
+    #
+    # > Get the current bedrock of the player,
+    # > this takes around 0.02 seconds, thats why we use caching here.
+    set {_bedrock} to getcurrentbedrockmain({_l})
 
-		#
-		# > Generate the new borders of the current bedrock
-		set {_pl::1} to location of {_bedrock}
-		set {_pl::2} to location of {_bedrock}
-		
-		#
-		# > Calculate the upgradeable border:
-		set {_defaultdist} to {SB::config::defaultsize}
-		set {_maxdist} to {SB::config::distance}
-		set {_dist} to {SB::config::distance}
-		
-		#
-		# > Only calculate, if there needs to be a upgradeable border calculation:
-		if {_maxdist} is not {_defaultdist}:
-			#
-			# > Get the coordintaes to then get the current size level of the island.
-			set {_x} to x-coord of {_bedrock}
-			set {_y} to y-coord of {_bedrock}
-			set {_z} to z-coord of {_bedrock}
-			set {_lvl} to {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade}
-			#
-			# > Calculate how much we can upgrade the island until the maximum is reached.
-			set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
-			#
-			# > Calculate how much we can increase per level, we have default 5 levels to unlock.
-			set {_distincreaseperlevel} to ({_upgradeabledist} / 5)
-			#
-			# > Calculate the current size bonus using the calculated increase per level + the current size level.
-			set {_currentdistsizebonus} to ({_lvl} * {_distincreaseperlevel})
-			#
-			# > Add the size bonus by current size level to the distance of the island.
-			set {_dist} to ({_defaultdist} + {_currentdistsizebonus})
-		
-		add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
-		add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
-		subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
-		subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
-		set y-coordinate of {_pl::2} to 256
-		set y-coordinate of {_pl::1} to 0
-		
-		#
-		# > Set border 1 location
-		set {SB::TEMPLOC::%{_p}%b1} to {_pl::1}
-		#
-		# > Set border 2 location
-		set {SB::TEMPLOC::%{_p}%b2} to {_pl::2}
-		#
-		# > Set the location of the bedrock
-		set {SB::TEMPLOC::%{_p}%} to location of {_bedrock}
-		#
-		# > Returns the bedrock location
-		return {_bedrock}
-	else:
-		#
-		# > If the temporary location is usable and within the location, return it
-		if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
-			return {SB::TEMPLOC::%{_p}%}
-		#
-		# > If the temporary location seems outdated, delete it and repeat.
-		else:
-			delete {SB::TEMPLOC::%{_p}%}
-			delete {SB::TEMPLOC::%{_p}%b1}
-			delete {SB::TEMPLOC::%{_p}%b2}
-			return getcurrentbedrock({_p},{_l})
-	
+    #
+    # > Generate the new borders of the current bedrock
+    set {_pl::1} to location of {_bedrock}
+    set {_pl::2} to location of {_bedrock}
+    
+    #
+    # > Calculate the upgradeable border:
+    set {_defaultdist} to {SB::config::defaultsize}
+    set {_maxdist} to {SB::config::distance}
+    set {_dist} to {SB::config::distance}
+    
+    #
+    # > Only calculate, if there needs to be a upgradeable border calculation:
+    if {_maxdist} is not {_defaultdist}:
+      #
+      # > Get the coordintaes to then get the current size level of the island.
+      set {_x} to x-coord of {_bedrock}
+      set {_y} to y-coord of {_bedrock}
+      set {_z} to z-coord of {_bedrock}
+      set {_lvl} to {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade}
+      #
+      # > Calculate how much we can upgrade the island until the maximum is reached.
+      set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
+      #
+      # > Calculate how much we can increase per level, we have default 5 levels to unlock.
+      set {_distincreaseperlevel} to ({_upgradeabledist} / 5)
+      #
+      # > Calculate the current size bonus using the calculated increase per level + the current size level.
+      set {_currentdistsizebonus} to ({_lvl} * {_distincreaseperlevel})
+      #
+      # > Add the size bonus by current size level to the distance of the island.
+      set {_dist} to ({_defaultdist} + {_currentdistsizebonus})
+    
+    add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
+    add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
+    subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
+    subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
+    set y-coordinate of {_pl::2} to 256
+    set y-coordinate of {_pl::1} to 0
+    
+    #
+    # > Set border 1 location
+    set {SB::TEMPLOC::%{_p}%b1} to {_pl::1}
+    #
+    # > Set border 2 location
+    set {SB::TEMPLOC::%{_p}%b2} to {_pl::2}
+    #
+    # > Set the location of the bedrock
+    set {SB::TEMPLOC::%{_p}%} to location of {_bedrock}
+    #
+    # > Returns the bedrock location
+    return {_bedrock}
+  else:
+    #
+    # > If the temporary location is usable and within the location, return it
+    if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
+      return {SB::TEMPLOC::%{_p}%}
+    #
+    # > If the temporary location seems outdated, delete it and repeat.
+    else:
+      delete {SB::TEMPLOC::%{_p}%}
+      delete {SB::TEMPLOC::%{_p}%b1}
+      delete {SB::TEMPLOC::%{_p}%b2}
+      return getcurrentbedrock({_p},{_l})
+  
 # > Function - getcurrentbedrockmain:
 # > Arguments:
 # > <location>location
 # > Actions:
 # > Gets the bedrock of the location parameter and returns the location.
 function getcurrentbedrockmain(l:location) :: location:
-	#
-	# > Search 100 blocks around the player for the bedrock.
-	set {_pl::1} to {_l}
-	set {_pl::2} to {_l}
-	set {_dist} to {SB::config::distance}
-	add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
-	add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
-	subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
-	subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
-	#
-	# > Set the y-coordinate only to the height we need, the bedrock y-coordinate.
-	set y-coordinate of {_pl::1} to {SB::config::height}
-	set y-coordinate of {_pl::2} to {SB::config::height}
-	#
-	# > Loop trough all blocks between the two locations, if there is a bedrock, set it
-	# > to the {_bedrock} variable, once it is done, return the location of the bedrock variable.
-	loop blocks within {_pl::1} to {_pl::2}:
-		if loop-block is bedrock:
-			set {_bedrock} to loop-block
-	return location of {_bedrock}
+  #
+  # > Search 100 blocks around the player for the bedrock.
+  set {_pl::1} to {_l}
+  set {_pl::2} to {_l}
+  set {_dist} to {SB::config::distance}
+  add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
+  add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
+  subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
+  subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
+  #
+  # > Set the y-coordinate only to the height we need, the bedrock y-coordinate.
+  set y-coordinate of {_pl::1} to {SB::config::height}
+  set y-coordinate of {_pl::2} to {SB::config::height}
+  #
+  # > Loop trough all blocks between the two locations, if there is a bedrock, set it
+  # > to the {_bedrock} variable, once it is done, return the location of the bedrock variable.
+  loop blocks within {_pl::1} to {_pl::2}:
+    if loop-block is bedrock:
+      set {_bedrock} to loop-block
+  return location of {_bedrock}
 
 # > Function - checkflagevent:
 # > Arguments:
@@ -230,95 +226,93 @@ function getcurrentbedrockmain(l:location) :: location:
 # > Actions:
 # > Returns if a flag is set to true or false for a specific event and playertype (foreign, trusted, member).
 function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,block:item) :: boolean:
-	#
-	# > This flag is for all kinds of interactions, like switching buttons or levers, opening/closing doors or looking into chests.
-	if {_event} is "PlayerInteractEvent":
-		if {_block} is lever or button:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
-				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button}
-			else:
-				if {SB::config::defaultisflag::%{_playertype}%::button} is set:
-					return {SB::config::defaultisflag::%{_playertype}%::button}
-		if {_block} is door:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door} is set:
-				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door}
-			else:
-				if {SB::config::defaultisflag::%{_playertype}%::door} is set:
-					return {SB::config::defaultisflag::%{_playertype}%::door}
-		if {_block} is chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest} is set:
-				return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest}
-			else:
-				if {SB::config::defaultisflag::%{_playertype}%::chest} is set:
-					return {SB::config::defaultisflag::%{_playertype}%::chest}
-	#
-	# > This is for animals like pigs and cows.
-	else if {_event} is "EntityDamageByEntityEvent-animal":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::animal-damage}
-	#
-	# > This is for entities like armor stands, villagers and item frames.
-	else if {_event} is "EntityDamageByEntityEvent-entity":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::entityclick}
-	#
-	# > This is for monsters like zombies.
-	else if {_event} is "EntityDamageByEntityEvent-monster":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::mob-damage}
-	#
-	# > This flag is for vehicles like minecarts and boats.
-	else if {_event} is "VehicleDamageEvent" or "vehicle-click":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::interact-vehicle}
-	#
-	# > This flag is for explosions from creepers and tnt.
-	else if {_event} is "Explode":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::explosion}
-	#
-	# > This flag is for the public home trough /island home [<player>] [<home>]
-	else if {_event} is "Home":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::publichome}
-	#
-	# > This flag is for building on the island.
-	else if {_event} is "build":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::build} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::build}
-	#
-	# > This flag is for clicks on entities, like villagers.
-	else if {_event} is "entity-click":
-		if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
-			return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
-		else:
-			if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
-				return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+  #
+  # > This flag is for all kinds of interactions, like switching buttons or levers, opening/closing doors or looking into chests.
+  if {_event} is "PlayerInteractEvent":
+    if {_block} is lever or button:
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button} is set:
+        return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::button}
+      else:
+        if {SB::config::defaultisflag::%{_playertype}%::button} is set:
+          return {SB::config::defaultisflag::%{_playertype}%::button}
+    if {_block} is door:
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door} is set:
+        return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::door}
+      else:
+        if {SB::config::defaultisflag::%{_playertype}%::door} is set:
+          return {SB::config::defaultisflag::%{_playertype}%::door}
+    if {_block} is chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest} is set:
+        return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest}
+      else:
+        if {SB::config::defaultisflag::%{_playertype}%::chest} is set:
+          return {SB::config::defaultisflag::%{_playertype}%::chest}
+  #
+  # > This is for animals like pigs and cows.
+  else if {_event} is "EntityDamageByEntityEvent-animal":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::animal-damage}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::animal-damage} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::animal-damage}
+  #
+  # > This is for entities like armor stands, villagers and item frames.
+  else if {_event} is "EntityDamageByEntityEvent-entity":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+  #
+  # > This is for monsters like zombies.
+  else if {_event} is "EntityDamageByEntityEvent-monster":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::mob-damage}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::mob-damage} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::mob-damage}
+  #
+  # > This flag is for vehicles like minecarts and boats.
+  else if {_event} is "VehicleDamageEvent" or "vehicle-click":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::interact-vehicle}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::interact-vehicle} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::interact-vehicle}
+  #
+  # > This flag is for explosions from creepers and tnt.
+  else if {_event} is "Explode":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::explosion}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::explosion} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::explosion}
+  #
+  # > This flag is for the public home trough /island home [<player>] [<home>]
+  else if {_event} is "Home":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::publichome}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::publichome}
+  #
+  # > This flag is for building on the island.
+  else if {_event} is "build":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::build} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::build}
+  #
+  # > This flag is for clicks on entities, like villagers.
+  else if {_event} is "entity-click":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::entityclick}
 
-				
-				
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
 on load:
-	delete {SB::TEMPLOC::*}
+  delete {SB::TEMPLOC::*}
