@@ -41,21 +41,23 @@
 # ==============
 # > Example, simply uncomment to test it out, ingame command: /test
 #command /test:
-#	trigger:
-#		opengui(player,9,"&6FREE STUFF","HOPPER")
-#		setguiitem(player,0,"diamond ore",1,"&r&6&lFREE DIAMONDS!!!1","&r&fFREEEEEE! Click here!","execute console command ""give %player% diamond_ore 1""",true)
+#  trigger:
+#    opengui(player,9,"&6FREE STUFF","HOPPER")
+#    setguiitem(player,0,"diamond ore",1,"&r&6&lFREE DIAMONDS!!!1","&r&fFREEEEEE! Click here!","execute console command ""give %player% diamond_ore 1""",true)
 
 #Import all necessary java classes:
 import:
-	java.util.ArrayList
-	org.bukkit.Bukkit
-	org.bukkit.event.inventory.InventoryClickEvent
-	org.bukkit.event.inventory.InventoryCloseEvent
-	org.bukkit.inventory.Inventory
-	org.bukkit.inventory.ItemStack
-	org.bukkit.inventory.meta.ItemMeta
-	org.bukkit.event.inventory.InventoryType
-
+  java.util.ArrayList
+  org.bukkit.Bukkit
+  org.bukkit.event.inventory.InventoryClickEvent
+  org.bukkit.event.inventory.InventoryCloseEvent
+  org.bukkit.inventory.Inventory
+  org.bukkit.inventory.ItemStack
+  org.bukkit.inventory.meta.ItemMeta
+  org.bukkit.event.inventory.InventoryType
+#  org.bukkit.event.inventory.InventoryMoveItemEvent
+#on InventoryMoveItemEvent:
+#  broadcast "test"
 # Function: opengui - Opens a GUI
 # Arguments:
 # > <player>player, <integer>size, <text>name,[<text>inventory type]
@@ -65,58 +67,58 @@ import:
 # > Deletes set items from any old GUI by the defined player and opens the specified inventory,
 # > set the {SK::GUI::inv::%{_player}%} variable to inventory and then return
 function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolean:
-	delete {SK::GUI::items::%{_player}%::*}
-	# > If {_type} is CHEST (default)
-	if {_type} is "CHEST":
-		set {_invtype} to InventoryType.CHEST!
-	# > If it is not a chest, check the input and set the InventoryType:
-	# > This is done like this to avoid errors:
-	else:
-		if {_type} is "ANVIL":
-			set {_invtype} to InventoryType.ANVIL!
-		else if {_type} is "BEACON":
-			set {_invtype} to InventoryType.BEACON!
-		else if {_type} is "BREWING":
-			set {_invtype} to InventoryType.BREWING!
-		else if {_type} is "CHEST":
-			set {_invtype} to InventoryType.CHEST!
-		else if {_type} is "CRAFTING":
-			set {_invtype} to InventoryType.CRAFTING!
-		else if {_type} is "CREATIVE":
-			set {_invtype} to InventoryType.CREATIVE!
-		else if {_type} is "DISPENSER":
-			set {_invtype} to InventoryType.DISPENSER!
-		else if {_type} is "ENCHANTING":
-			set {_invtype} to InventoryType.ENCHANTING!
-		else if {_type} is "ENDER_CHEST":
-			set {_invtype} to InventoryType.ENDER_CHEST!
-		else if {_type} is "HOPPER":
-			set {_invtype} to InventoryType.HOPPER!
-		else if {_type} is "MERCHANT":
-			set {_invtype} to InventoryType.MERCHANT!
-		else if {_type} is "PLAYER":
-			set {_invtype} to InventoryType.PLAYER!
-		else if {_type} is "SHULKER_BOX":
-			set {_invtype} to InventoryType.SHULKER_BOX!
-		else if {_type} is "WORKBENCH":
-			set {_invtype} to InventoryType.WORKBENCH!
-		# > If {_invtype} has been found and set go forward:
-	if {_invtype} is set:
-		# > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
-		if {_type} is "CHEST":
-			set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
-		else:
-			set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
-		# > Open the inventory to the player
-		{_player}.openInventory({_inventory})
-		# > Set the created inventory into the variable to check later, if the user clicks in the correct gui
-		set {SK::GUI::inv::%{_player}%} to {_inventory}
-		# > Everything went fine, return true.
-		return true
-	# > If not, print an error to the player who wanted to open the gui menu and stop the skript
-	else:
-		message "&5&lInvalid InventoryType: %{_type}%" to {_player}
-		stop
+  delete {SK::GUI::items::%{_player}%::*}
+  # > If {_type} is CHEST (default)
+  if {_type} is "CHEST":
+    set {_invtype} to InventoryType.CHEST!
+  # > If it is not a chest, check the input and set the InventoryType:
+  # > This is done like this to avoid errors:
+  else:
+    if {_type} is "ANVIL":
+      set {_invtype} to InventoryType.ANVIL!
+    else if {_type} is "BEACON":
+      set {_invtype} to InventoryType.BEACON!
+    else if {_type} is "BREWING":
+      set {_invtype} to InventoryType.BREWING!
+    else if {_type} is "CHEST":
+      set {_invtype} to InventoryType.CHEST!
+    else if {_type} is "CRAFTING":
+      set {_invtype} to InventoryType.CRAFTING!
+    else if {_type} is "CREATIVE":
+      set {_invtype} to InventoryType.CREATIVE!
+    else if {_type} is "DISPENSER":
+      set {_invtype} to InventoryType.DISPENSER!
+    else if {_type} is "ENCHANTING":
+      set {_invtype} to InventoryType.ENCHANTING!
+    else if {_type} is "ENDER_CHEST":
+      set {_invtype} to InventoryType.ENDER_CHEST!
+    else if {_type} is "HOPPER":
+      set {_invtype} to InventoryType.HOPPER!
+    else if {_type} is "MERCHANT":
+      set {_invtype} to InventoryType.MERCHANT!
+    else if {_type} is "PLAYER":
+      set {_invtype} to InventoryType.PLAYER!
+    else if {_type} is "SHULKER_BOX":
+      set {_invtype} to InventoryType.SHULKER_BOX!
+    else if {_type} is "WORKBENCH":
+      set {_invtype} to InventoryType.WORKBENCH!
+    # > If {_invtype} has been found and set go forward:
+  if {_invtype} is set:
+    # > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
+    if {_type} is "CHEST":
+      set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
+    else:
+      set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
+    # > Open the inventory to the player
+    {_player}.openInventory({_inventory})
+    # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
+    set {SK::GUI::inv::%{_player}%} to {_inventory}
+    # > Everything went fine, return true.
+    return true
+  # > If not, print an error to the player who wanted to open the gui menu and stop the skript
+  else:
+    message "&5&lInvalid InventoryType: %{_type}%" to {_player}
+    stop
 
 # Function: setguiitem - Sets a item in a GUI
 # Arguments:
@@ -131,20 +133,20 @@ function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolea
 # > If {_close} is set to true, the variable {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is set to true,
 # > this allows the inventory to be closed on a click on the specified item.
 function setguiitem(player:player,slot:integer,item:text,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
-	set {_ItemStack} to {_item} parsed as item
-	set {_ItemStack} to {_ItemStack} named {_name}
-	set {_ItemMeta} to {_ItemStack}.getItemMeta()
-	set {_itemlore} to new ArrayList()
-	set {_lore::*} to {_lore} split at "\n"
-	loop {_lore::*}:
-		{_itemlore}.add(coloured "&r%loop-value%")
-	{_ItemMeta}.setLore({_itemlore})
-	{_ItemStack}.setItemMeta({_ItemMeta})
-	set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}
-	if {_exec} != "":
-		set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
-	if {_close} is true:
-		set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+  set {_ItemStack} to {_item} parsed as item
+  set {_ItemStack} to {_ItemStack} named {_name}
+  set {_ItemMeta} to {_ItemStack}.getItemMeta()
+  set {_itemlore} to new ArrayList()
+  set {_lore::*} to {_lore} split at "\n"
+  loop {_lore::*}:
+    {_itemlore}.add(coloured "&r%loop-value%")
+  {_ItemMeta}.setLore({_itemlore})
+  {_ItemStack}.setItemMeta({_ItemMeta})
+  set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}
+  if {_exec} != "":
+    set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+  if {_close} is true:
+    set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
 
 # > Event - InventoryClickEvent
 # > This event gets triggered if a player clicks in his inventory.
@@ -155,31 +157,31 @@ function setguiitem(player:player,slot:integer,item:text,amount:integer,name:tex
 # > evaluate is a function to execute a string as skript code, which is used to allow the execution of functions trough a click on a item.
 # > If it was defined to close the players inventory, it is going to happen, if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true.
 on InventoryClickEvent:
-	set {_player} to event.getWhoClicked()
-	if {SK::GUI::inv::%{_player}%} is set:
-		if size of {SK::GUI::items::%{_player}%::*} is not 0:
-			cancel event
-			set {_slot} to event.getRawSlot()
-			evaluate "%{SK::GUI::items::%{_player}%::%{_slot}%}%"
-			if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
-				wait 1 tick
-				close {_player}'s inventory
+  set {_player} to event.getWhoClicked()
+  if {SK::GUI::inv::%{_player}%} is set:
+    if size of {SK::GUI::items::%{_player}%::*} is not 0:
+      cancel event
+      set {_slot} to event.getRawSlot()
+      evaluate "%{SK::GUI::items::%{_player}%::%{_slot}%}%"
+      if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
+        wait 1 tick
+        close {_player}'s inventory
 
 # > Event - InventoryCloseEvent
 # > This event gets triggered if a player closes his.
 # > Actions:
 # > Deletes variables which may exist:
 on InventoryCloseEvent:
-	set {_player} to event.getPlayer()
-	delete {SK::GUI::inv::%{_player}%}
-	delete {SK::GUI::items::%{_player}%::*}
-	delete {SK::GUI::itemsclose::%{_player}%::*}
+  set {_player} to event.getPlayer()
+  delete {SK::GUI::inv::%{_player}%}
+  delete {SK::GUI::items::%{_player}%::*}
+  delete {SK::GUI::itemsclose::%{_player}%::*}
 
 # > Event - load
 # > This event is triggered on load of the skript.
 # > Actions:
 # > Deletes any variables that may exist due to corruption or server crash.
 on load:
-	delete {SK::GUI::inv::*}
-	delete {SK::GUI::items::*}
-	delete {SK::GUI::itemsclose::*}	
+  delete {SK::GUI::inv::*}
+  delete {SK::GUI::items::*}
+  delete {SK::GUI::itemsclose::*}

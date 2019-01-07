@@ -10,13 +10,13 @@
 # > Actions:
 # > This deletes variables to prevent old variables from being in the system
 function loadconfig():
-	delete {SB::schematics::*}
-	delete {SB::calcdown::*}
-	delete {SB::oregenc::*}
-	delete {SB::oregen::*}
-	delete {SB::config::biome::menuitem::*}
-	delete {SB::config::biome::biomename::*}
-	delete {SB::config::biome::price::*}
-	loop {SB::config::biome::lang::*}:
-		delete {SB::config::biome::lang::%loop-index%::*}
-	delete {SB::config::biome::lang::*}
+  delete {SB::schematics::*}
+  delete {SB::calcdown::*}
+  delete {SB::oregenc::*}
+  delete {SB::oregen::*}
+  delete {SB::config::biome::menuitem::*}
+  delete {SB::config::biome::biomename::*}
+  delete {SB::config::biome::price::*}
+  loop {SB::config::biome::lang::*}:
+    delete {SB::config::biome::lang::%loop-index%::*}
+  delete {SB::config::biome::lang::*}

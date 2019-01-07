@@ -13,34 +13,34 @@
 # > Creates a endless loading bar which stops once the function is
 # > called with text. Call it with "start" to start the loading bar.
 function actionload(p: player, t:text):
-	if {_t} is "start":
-		set {SB::actionload::%{_p}%} to 1
-		set {_vs} to "&6█&7█████████"
-		while {SB::actionload::%{_p}%} is set:
-			if {_vs} is "&6█&7█████████": 
-				set {_s} to "&7[&r%{_vs}%&7]&r" 
-				actionbar({_p},{_vs})
-				wait 0.2 seconds
-			replace all "&6█&7█" with "&7█&6█&7" in {_vs}
-			set {_s} to "&7[&r%{_vs}%&7]&r" 
-			actionbar({_p},{_vs})
-			if {_vs} is "&7█&7█&7█&7█&7█&7█&7█&7█&7█&6█&7":
-				set {_vs} to "&6█&7█████████"
-			wait 0.2 seconds
-	else:
-		delete {SB::actionload::%{_p}%}
-		set {_s} to "&6█████████&r %{_t}% &6█████████"
-		loop 8 times:
-			replace all "&6██" with "&6█" in {_s}
-			actionbar({_p},{_s})
-			wait 10 ticks
-		actionbar({_p},"")
+  if {_t} is "start":
+    set {SB::actionload::%{_p}%} to 1
+    set {_vs} to "&6█&7█████████"
+    while {SB::actionload::%{_p}%} is set:
+      if {_vs} is "&6█&7█████████": 
+        set {_s} to "&7[&r%{_vs}%&7]&r" 
+        actionbar({_p},{_vs})
+        wait 0.2 seconds
+      replace all "&6█&7█" with "&7█&6█&7" in {_vs}
+      set {_s} to "&7[&r%{_vs}%&7]&r" 
+      actionbar({_p},{_vs})
+      if {_vs} is "&7█&7█&7█&7█&7█&7█&7█&7█&7█&6█&7":
+        set {_vs} to "&6█&7█████████"
+      wait 0.2 seconds
+  else:
+    delete {SB::actionload::%{_p}%}
+    set {_s} to "&6█████████&r %{_t}% &6█████████"
+    loop 8 times:
+      replace all "&6██" with "&6█" in {_s}
+      actionbar({_p},{_s})
+      wait 10 ticks
+    actionbar({_p},"")
 
 #
 # > Import Java classes for the actionbar function.
 import:
-	net.md_5.bungee.api.ChatMessageType
-	net.md_5.bungee.api.chat.TextComponent	
+  net.md_5.bungee.api.ChatMessageType
+  net.md_5.bungee.api.chat.TextComponent  
 
 #
 # > Function: actionbar
@@ -50,12 +50,12 @@ import:
 # > Displays the actionbar to the player trough the bungee api, which is
 # > also available in Spigot without BungeeCord.
 function actionbar(p: player, t:text):
-	#
-	# > Set the text parameter to a TextComponent.
-	set {_tc} to new TextComponent({_t})
-	#
-	# > Set the chat message type to action bar.
-	set {_cmt} to ChatMessageType.ACTION_BAR!
-	#
-	# > Send the message to the player.
-	{_p}.spigot().sendMessage({_cmt}, {_tc})
+  #
+  # > Set the text parameter to a TextComponent.
+  set {_tc} to new TextComponent({_t})
+  #
+  # > Set the chat message type to action bar.
+  set {_cmt} to ChatMessageType.ACTION_BAR!
+  #
+  # > Send the message to the player.
+  {_p}.spigot().sendMessage({_cmt}, {_tc})
