@@ -11,160 +11,160 @@
 # > Actions:
 # > Opens the island upgrade menu to the player.
 function islandupgrademenu(p:player):
-	#
-	# > Get the uuid of the player and set it to a local variable.
-	set {_uuid} to uuid of {_p}
+  #
+  # > Get the uuid of the player and set it to a local variable.
+  set {_uuid} to uuid of {_p}
 
-	#
-	# > Get the language of the player in a local variable.
-	set {_lang} to {SK::lang::%{_uuid}%}
+  #
+  # > Get the language of the player in a local variable.
+  set {_lang} to {SK::lang::%{_uuid}%}
 
-	#
-	# > Set the prefix for messages into the local variable {_prefix}.
-	set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  #
+  # > Set the prefix for messages into the local variable {_prefix}.
+  set {_prefix} to {SB::lang::prefix::%{_lang}%}
 
-	#
-	# > Get the bedrock of the player who executed the command.
-	set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-	#
-	# > Get the x, y and z-coordinates of the bedrock to use the variables.
-	set {_x} to x-coordinate of {_bedrock}
-	set {_y} to y-coordinate of {_bedrock}
-	set {_z} to z-coordinate of {_bedrock}
-	#
-	# > Check, if the player who executed the command is also the leader of the island.
-	if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
-		set {_slots} to 54
-		opengui({_p},{_slots},"&l%{SB::lang::bc::islandupgrades::%{_lang}%}%")
-		set {_i} to 0
-		loop 57 times:
-			set slot {_i} of {_p}'s current inventory to black glass pane named " "
-			add 1 to {_i}
-		#
-		# > Set {_i} to 0, to order the items in the menu right.
-		set {_i} to 1
-		set {_lvl} to 0
-		
-		set {_defaultdist} to {SB::config::defaultsize}
-		set {_maxdist} to {SB::config::distance}
-		
-		#
-		# > Check if there are upgradeable islands sizes available are:
-		if {_maxdist} is not {_defaultdist}:
-			#
-			# > Calculate how much we can upgrade the island until the maximum is reached.
-			set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
-			#
-			# > Calculate how much we can increase per level, we have default 5 levels to unlock.
-			set {_distincreaseperlevel} to ({_upgradeabledist} / 5)
-			#
-			# > Calculate the current size bonus using the calculated increase per level + the current size level.
-			set {_currentdistsizebonus} to ({_lvl} * {_distincreaseperlevel})
-			#
-			# > Add the size bonus by current size level to the distance of the island.
-			set {_dist} to ({_defaultdist} + ({_lvl} * {_distincreaseperlevel}))
-		
-			#
-			# > Loop trough island size upgrades, max cap for every level is 5.
-			loop 5 times:
-				add 9 to {_i}
-				#
-				# > Add 1 to the level local variable:
-				add 1 to {_lvl}
-				set {_lore1} to "%{SB::lang::bc::islandsizeshop::%{_lang}%}%"
-				#
-				# > Calculate the distance for this level (default distance + (level * distance per level))
-				replace all "<size>" with "%({_defaultdist} + ({_lvl} * {_distincreaseperlevel}))*2%" in {_lore1}
-				#
-				# > If the size upgrade is higher or the same as the level, set it to a green glass pane
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} >= {_lvl}:
-					setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
-				#
-				# > If the upgrade level is lower, set it to a red glass pane (the player doesn't has this yet).
-				else:
-					set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
-					replace all "<price>" with "%{SB::config::sizeupgrade%{_lvl}%}%" in {_lore2}
-					setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
-			#
-			# > Add 3 to {_i} to create a new row in the inventory menu.
-			set {_i} to 3
-			#
-			# > Set the level to 0 to loop again for the next upgrades.
-			set {_lvl} to 0
+  #
+  # > Get the bedrock of the player who executed the command.
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  #
+  # > Get the x, y and z-coordinates of the bedrock to use the variables.
+  set {_x} to x-coordinate of {_bedrock}
+  set {_y} to y-coordinate of {_bedrock}
+  set {_z} to z-coordinate of {_bedrock}
+  #
+  # > Check, if the player who executed the command is also the leader of the island.
+  if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
+    set {_slots} to 54
+    opengui({_p},{_slots},"&l%{SB::lang::bc::islandupgrades::%{_lang}%}%")
+    set {_i} to 0
+    loop 57 times:
+      set slot {_i} of {_p}'s current inventory to black glass pane named " "
+      add 1 to {_i}
+    #
+    # > Set {_i} to 0, to order the items in the menu right.
+    set {_i} to 1
+    set {_lvl} to 0
+    
+    set {_defaultdist} to {SB::config::defaultsize}
+    set {_maxdist} to {SB::config::distance}
+    
+    #
+    # > Check if there are upgradeable islands sizes available are:
+    if {_maxdist} is not {_defaultdist}:
+      #
+      # > Calculate how much we can upgrade the island until the maximum is reached.
+      set {_upgradeabledist} to ({_maxdist} - {_defaultdist})
+      #
+      # > Calculate how much we can increase per level, we have default 5 levels to unlock.
+      set {_distincreaseperlevel} to ({_upgradeabledist} / 5)
+      #
+      # > Calculate the current size bonus using the calculated increase per level + the current size level.
+      set {_currentdistsizebonus} to ({_lvl} * {_distincreaseperlevel})
+      #
+      # > Add the size bonus by current size level to the distance of the island.
+      set {_dist} to ({_defaultdist} + ({_lvl} * {_distincreaseperlevel}))
+    
+      #
+      # > Loop trough island size upgrades, max cap for every level is 5.
+      loop 5 times:
+        add 9 to {_i}
+        #
+        # > Add 1 to the level local variable:
+        add 1 to {_lvl}
+        set {_lore1} to "%{SB::lang::bc::islandsizeshop::%{_lang}%}%"
+        #
+        # > Calculate the distance for this level (default distance + (level * distance per level))
+        replace all "<size>" with "%({_defaultdist} + ({_lvl} * {_distincreaseperlevel}))*2%" in {_lore1}
+        #
+        # > If the size upgrade is higher or the same as the level, set it to a green glass pane
+        if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} >= {_lvl}:
+          setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
+        #
+        # > If the upgrade level is lower, set it to a red glass pane (the player doesn't has this yet).
+        else:
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          replace all "<price>" with "%{SB::config::sizeupgrade%{_lvl}%}%" in {_lore2}
+          setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
+      #
+      # > Add 3 to {_i} to create a new row in the inventory menu.
+      set {_i} to 3
+      #
+      # > Set the level to 0 to loop again for the next upgrades.
+      set {_lvl} to 0
 
-		#
-		# > The following code works like the code above. This may changed into a function to reduce code in the future.
-		set {_defaulthopper} to {SB::config::starthopper}
-		set {_maxhopper} to {SB::config::maxhopper}
-		#
-		# > Check if there are upgradeable islands sizes available are:
-		if {_maxhopper} is not {_defaulthopper}:
-			set {_lvl} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hopperupgrade}
-			#
-			# > Calculate how much we can upgrade the hoppers until the maximum is reached.
-			set {_upgradeablehopper} to ({_maxhopper} - {_defaulthopper})
-			#
-			# > Calculate how much hoppers we can increase per level, we have default 5 levels to unlock.
-			set {_hopperincreaseperlevel} to ({_upgradeablehopper} / 5)
-			#
-			# > Calculate the current hopper level * bonus per level.
-			set {_currenthopperbonus} to ({_lvl} * {_hopperincreaseperlevel})
-			#
-			# > Add the size bonus by current hopper level.
-			set {_hopper} to ({_defaulthopper} + {_currenthopperbonus})
+    #
+    # > The following code works like the code above. This may changed into a function to reduce code in the future.
+    set {_defaulthopper} to {SB::config::starthopper}
+    set {_maxhopper} to {SB::config::maxhopper}
+    #
+    # > Check if there are upgradeable islands sizes available are:
+    if {_maxhopper} is not {_defaulthopper}:
+      set {_lvl} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::hopperupgrade}
+      #
+      # > Calculate how much we can upgrade the hoppers until the maximum is reached.
+      set {_upgradeablehopper} to ({_maxhopper} - {_defaulthopper})
+      #
+      # > Calculate how much hoppers we can increase per level, we have default 5 levels to unlock.
+      set {_hopperincreaseperlevel} to ({_upgradeablehopper} / 5)
+      #
+      # > Calculate the current hopper level * bonus per level.
+      set {_currenthopperbonus} to ({_lvl} * {_hopperincreaseperlevel})
+      #
+      # > Add the size bonus by current hopper level.
+      set {_hopper} to ({_defaulthopper} + {_currenthopperbonus})
 
-			#
-			# > Loop trough island size upgrades
-			loop 5 times:
-				add 9 to {_i}
-				add 1 to {_lvl}
-				set {_lore1} to "%{SB::lang::bc::islandhoppershop::%{_lang}%}%"
-				replace all "<size>" with "%({_defaulthopper} + ({_lvl} * {_hopperincreaseperlevel}))%" in {_lore1}
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} >= {_lvl}:
-					setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
-				else:
-					set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
-					replace all "<price>" with "%{SB::config::hopperupgrade%{_lvl}%}%" in {_lore2}
+      #
+      # > Loop trough island hopper upgrades
+      loop 5 times:
+        add 9 to {_i}
+        add 1 to {_lvl}
+        set {_lore1} to "%{SB::lang::bc::islandhoppershop::%{_lang}%}%"
+        replace all "<size>" with "%({_defaulthopper} + ({_lvl} * {_hopperincreaseperlevel}))%" in {_lore1}
+        if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} >= {_lvl}:
+          setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
+        else:
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          replace all "<price>" with "%{SB::config::hopperupgrade%{_lvl}%}%" in {_lore2}
 
-					setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
+          setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
 
-			set {_i} to 5
-			set {_lvl} to 0
-		set {_defaulthomes} to {SB::config::starthomes}
-		set {_maxhomes} to {SB::config::maxhomes}
-		#
-		# > Check if there are upgradeable islands sizes available are:
-		if {_maxhomes} is not {_defaulthomes}:
-			set {_lvl} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::homeupgrade}
-			#
-			# > Calculate how much we can upgrade the homes until the maximum is reached.
-			set {_upgradeablehome} to ({_maxhomes} - {_defaulthomes})
-			#
-			# > Calculate how much homes we can increase per level, we have default 5 levels to unlock.
-			set {_homeincreaseperlevel} to ({_upgradeablehome} / 5)
-			#
-			# > Calculate the current home level * bonus per level.
-			set {_currenthomebonus} to ({_lvl} * {_homeincreaseperlevel})
-			#
-			# > Add the size bonus by current home level.
-			set {_homes} to ({_defaulthomes} + {_currenthomebonus})
+      set {_i} to 5
+      set {_lvl} to 0
+    set {_defaulthomes} to {SB::config::starthomes}
+    set {_maxhomes} to {SB::config::maxhomes}
+    #
+    # > Check if there are upgradeable islands sizes available are:
+    if {_maxhomes} is not {_defaulthomes}:
+      set {_lvl} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::homeupgrade}
+      #
+      # > Calculate how much we can upgrade the homes until the maximum is reached.
+      set {_upgradeablehome} to ({_maxhomes} - {_defaulthomes})
+      #
+      # > Calculate how much homes we can increase per level, we have default 5 levels to unlock.
+      set {_homeincreaseperlevel} to ({_upgradeablehome} / 5)
+      #
+      # > Calculate the current home level * bonus per level.
+      set {_currenthomebonus} to ({_lvl} * {_homeincreaseperlevel})
+      #
+      # > Add the size bonus by current home level.
+      set {_homes} to ({_defaulthomes} + {_currenthomebonus})
 
-			#
-			# > Loop trough island size upgrades
-			loop 5 times:
-				add 9 to {_i}
-				add 1 to {_lvl}
-				set {_lore1} to "%{SB::lang::bc::islandhomeshop::%{_lang}%}%"
-				replace all "<size>" with "%({_defaulthomes} + ({_lvl} * {_homeincreaseperlevel}))%" in {_lore1}
-				if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} >= {_lvl}:
-					setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
-				else:
-					set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
-					replace all "<price>" with "%{SB::config::homeupgrade%{_lvl}%}%" in {_lore2}
+      #
+      # > Loop trough island size upgrades
+      loop 5 times:
+        add 9 to {_i}
+        add 1 to {_lvl}
+        set {_lore1} to "%{SB::lang::bc::islandhomeshop::%{_lang}%}%"
+        replace all "<size>" with "%({_defaulthomes} + ({_lvl} * {_homeincreaseperlevel}))%" in {_lore1}
+        if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} >= {_lvl}:
+          setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
+        else:
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          replace all "<price>" with "%{SB::config::homeupgrade%{_lvl}%}%" in {_lore2}
 
-					setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
-	else:
-		message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
+          setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
+  else:
+    message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
 
 # > Function - buyislandupgrade:
 # > Arguments:
@@ -172,57 +172,57 @@ function islandupgrademenu(p:player):
 # > Actions:
 # > Buys an island upgrade for a player.
 function buyislandupgrade(p:player, upgrade:text, level:integer):
-	if {SB::config::islandupgrades} is true:
-		#
-		# > Get the uuid of the player and set it to a local variable.
-		set {_uuid} to uuid of {_p}
-		#
-		# > Get the language because we need it quite often here:
-		set {_lang} to {SK::lang::%{_uuid}%}
-		#
-		# > Get the bedrock of the player who executed the command.
-		set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-		#
-		# > Get the x, y and z-coordinates of the bedrock to use the variables.
-		set {_x} to x-coordinate of {_bedrock}
-		set {_y} to y-coordinate of {_bedrock}
-		set {_z} to z-coordinate of {_bedrock}
-		if {_upgrade} is "size":
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} is not set:
-				set {_buylvl} to 1
-			else if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} < 5:
-				set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} + 1)
-			if {_buylvl} is set:
-				set {_price} to {SB::config::sizeupgrade%{_buylvl}%}
-				if {_p}'s balance >= {_price}:
-					remove {_price} from {_p}'s balance
-					set {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} to {_buylvl}
-				else:
-					message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
-		if {_upgrade} is "hopper":
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} is not set:
-				set {_buylvl} to 1
-			else if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} < 5:
-				set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} + 1)
-			if {_buylvl} is set:
-				set {_price} to {SB::config::hopperupgrade%{_buylvl}%}
-				if {_p}'s balance >= {_price}:
-					remove {_price} from {_p}'s balance
-					set {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} to {_buylvl}
-				else:
-					message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
-		if {_upgrade} is "home":
-			if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} is not set:
-				set {_buylvl} to 1
-			else if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} < 5:
-				set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} + 1)
-			if {_buylvl} is set:
-				set {_price} to {SB::config::homeupgrade%{_buylvl}%}
-				if {_p}'s balance >= {_price}:
-					remove {_price} from {_p}'s balance
-					set {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} to {_buylvl}
-				else:
-					message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
-		#
-		# > Reopen the upgrade menu.
-		islandupgrademenu({_p})
+  if {SB::config::islandupgrades} is true:
+    #
+    # > Get the uuid of the player and set it to a local variable.
+    set {_uuid} to uuid of {_p}
+    #
+    # > Get the language because we need it quite often here:
+    set {_lang} to {SK::lang::%{_uuid}%}
+    #
+    # > Get the bedrock of the player who executed the command.
+    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+    #
+    # > Get the x, y and z-coordinates of the bedrock to use the variables.
+    set {_x} to x-coordinate of {_bedrock}
+    set {_y} to y-coordinate of {_bedrock}
+    set {_z} to z-coordinate of {_bedrock}
+    if {_upgrade} is "size":
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} is not set:
+        set {_buylvl} to 1
+      else if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} < 5:
+        set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} + 1)
+      if {_buylvl} is set:
+        set {_price} to {SB::config::sizeupgrade%{_buylvl}%}
+        if {_p}'s balance >= {_price}:
+          remove {_price} from {_p}'s balance
+          set {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} to {_buylvl}
+        else:
+          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+    if {_upgrade} is "hopper":
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} is not set:
+        set {_buylvl} to 1
+      else if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} < 5:
+        set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} + 1)
+      if {_buylvl} is set:
+        set {_price} to {SB::config::hopperupgrade%{_buylvl}%}
+        if {_p}'s balance >= {_price}:
+          remove {_price} from {_p}'s balance
+          set {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} to {_buylvl}
+        else:
+          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+    if {_upgrade} is "home":
+      if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} is not set:
+        set {_buylvl} to 1
+      else if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} < 5:
+        set {_buylvl} to ({SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} + 1)
+      if {_buylvl} is set:
+        set {_price} to {SB::config::homeupgrade%{_buylvl}%}
+        if {_p}'s balance >= {_price}:
+          remove {_price} from {_p}'s balance
+          set {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} to {_buylvl}
+        else:
+          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+    #
+    # > Reopen the upgrade menu.
+    islandupgrademenu({_p})
