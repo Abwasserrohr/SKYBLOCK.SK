@@ -1,497 +1,513 @@
 on load:
-	loadconfig()
+  loadconfig()
 #
 # SKYBLOCK.SK CONFIGURATION
 # Configurate most of the skript parts here easily
 # You can also edit the skripts itself like you want
 #
 
-	# Set the World name of the Server:
-	set {SB::config::world} to "ASkyBlock"
+  # Set the World name of the Server:
+  set {SB::config::world} to "ASkyBlock"
 
-	# Island storage type (Use either Schematic or Structure):
-	set {SB::config::isstorage} to "Structure"
+  # Island storage type (Use either Schematic or Structure):
+  set {SB::config::isstorage} to "Structure"
 
-	# Set where the players should spawn, change x, y, z to your desired location:
-	set {SB::config::spawn} to location at 20.0, 87.0, 81.5 in "%{SB::config::world}%" parsed as world
-	set {SB::config::spawn}'s pitch to 0
-	set {SB::config::spawn}'s yaw to -95
+  # Set where the players should spawn, change x, y, z to your desired location:
+  set {SB::config::spawn} to location at 20.0, 87.0, 81.5 in "%{SB::config::world}%" parsed as world
+  set {SB::config::spawn}'s pitch to 0
+  set {SB::config::spawn}'s yaw to -95
 
-	# How much distance should be between islands (100 means 200x200 islands)
-	set {SB::config::distance} to 100
+  # How much distance should be between islands (100 means 200x200 islands)
+  set {SB::config::distance} to 100
 
-	# Default size of the island, set it to the distance like above to make it as big as the distance is.
-	# > Do not change the value once you have islands, since it messes up existing islands.
-	# Set it to the same amount as the distance to disable this feature.
-	set {SB::config::defaultsize} to 95
+  # Default size of the island, set it to the distance like above to make it as big as the distance is.
+  # > Do not change the value once you have islands, since it messes up existing islands.
+  # Set it to the same amount as the distance to disable this feature.
+  set {SB::config::defaultsize} to 95
 
-	#
-	# > Set a island level until which dirt, grass and farmland blocks should be bound to the
-	# > island to prevent island creation abuse.
-	set {SB::config::binduntillevel} to 100
+  #
+  # > Set a island level until which dirt, grass and farmland blocks should be bound to the
+  # > island to prevent island creation abuse.
+  set {SB::config::binduntillevel} to 100
 
-	#
-	# > The default amount of hoppers, the player is allowed to place until
-	# > the placement of hoppers is canceled.
-	set {SB::config::starthopper} to 50
+  #
+  # > The default amount of hoppers, the player is allowed to place until
+  # > the placement of hoppers is canceled.
+  set {SB::config::starthopper} to 50
 
-	#
-	# > The maximum amount of hoppers, the player is allowed to place once the
-	# > hopper upgrade is upgraded to the level 5. 
-	set {SB::config::maxhopper} to 400
+  #
+  # > The maximum amount of hoppers, the player is allowed to place once the
+  # > hopper upgrade is upgraded to the level 5. 
+  set {SB::config::maxhopper} to 400
 
-	#
-	# > The default amount of homes the island has to use.
-	set {SB::config::starthomes} to 1
+  #
+  # > The default amount of homes the island has to use.
+  set {SB::config::starthomes} to 1
 
-	#
-	# > The maximum amount of homes, once the island hits home upgrade level 5.
-	set {SB::config::maxhomes} to 6
+  #
+  # > The maximum amount of homes, once the island hits home upgrade level 5.
+  set {SB::config::maxhomes} to 6
 
-	# If the default island size is smaller than the distance between players, you can enable island upgrades,
-	# these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
-	set {SB::config::islandupgrades} to true
+  # If the default island size is smaller than the distance between players, you can enable island upgrades,
+  # these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
+  set {SB::config::islandupgrades} to true
 
-	# On which height should islands be created
-	set {SB::config::height} to 100.5
+  # On which height should islands be created
+  set {SB::config::height} to 100.5
 
-	# Set the protection border between islands, 0 = no border:
-	# With a border of 0, 
-	set {SB::config::protect} to 0
+  # Set the protection border between islands, 0 = no border:
+  # With a border of 0, 
+  set {SB::config::protect} to 0
 
-	# Cooldown, how long to wait until the invite is no longer valid:
-	set {SB::config::invitecooldown} to 30
+  # Cooldown, how long to wait until the invite is no longer valid:
+  set {SB::config::invitecooldown} to 30
 
-	# Delete Cooldown - The user has to wait at least this time to delete a newly created island:
-	set {SB::config::deletecooldown} to 30 minutes
+  # Delete Cooldown - The user has to wait at least this time to delete a newly created island:
+  set {SB::config::deletecooldown} to 30 minutes
 
-	# Permission to build everywhere:
-	set {SB::config::buildpermission} to "is.admin"
+  # Permission to build everywhere:
+  set {SB::config::buildpermission} to "is.admin"
 
-	# Are players allowed to enter portals? true = yes, false = no:
-	set {SB::config::portalenter} to false
+  # Are players allowed to enter portals? true = yes, false = no:
+  set {SB::config::portalenter} to false
 
-	# Only allow elytra in own skyblock island? true = yes, false = everywhere
-	set {SB::config::elytra} to true
+  # Only allow elytra in own skyblock island? true = yes, false = everywhere
+  set {SB::config::elytra} to true
 
-	# Enable pvp: true = yes, false = no:
-	set {SB::config::pvp} to false
-
-
-	# Prevent hunger reset on death: true = yes, false = no:
-	set {SB::config::preventhungerreset} to true
+  # Enable pvp: true = yes, false = no:
+  set {SB::config::pvp} to false
 
 
-	#Set a cooldown for /is calc level calculation
-	set {SB::config::calccooldown} to 30 minutes
+  # Prevent hunger reset on death: true = yes, false = no:
+  set {SB::config::preventhungerreset} to true
 
-	# 
-	# > Default Flags
-	# > Change the default flags for islands:
 
-	#
-	# > Changeable Flags
-	# > Allow your players to toggle the flags for their island. True = allowed, false = denied.
-	set {SB::config::toggleflags} to true
+  #Set a cooldown for /is calc level calculation
+  set {SB::config::calccooldown} to 30 minutes
 
-	#
-	# > Default Flags for player islands (foreign flags):
-	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::explosion} to false
-	#
-	# > Let users use buttons. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::button} to false
-	#
-	# > Let users use the doors. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::door} to false
-	#
-	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-	# > Damage on mobs
-	set {SB::config::defaultisflag::foreign::mob-damage} to false
-	#
-	# > Damage on animals
-	set {SB::config::defaultisflag::foreign::animal-damage} to false
-	#
-	# > Interact with vehicles. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::interact-vehicle} to false
-	#
-	# > Allow others to visit the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::publichome} to false
-	#
-	# > Allow others to build on the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::build} to false
-	#
-	# > Allow others to access to chests. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::chest} to false
-	#
-	# > Allow others to click on the entitiy. True = allowed, false = denied.
-	set {SB::config::defaultisflag::foreign::entityclick} to false
+  # 
+  # > Default Flags
+  # > Change the default flags for islands:
 
-	#
-	# > Default Flags for player islands (trusted flags):
-	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::explosion} to false
-	#
-	# > Let users use buttons. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::button} to true
-	#
-	# > Let users use the doors. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::door} to true
-	#
-	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-	# > Damage on mobs
-	set {SB::config::defaultisflag::trusted::mob-damage} to true
-	#
-	# > Damage on animals
-	set {SB::config::defaultisflag::trusted::animal-damage} to true
-	#
-	# > Interact with vehicles. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::interact-vehicle} to true
-	#
-	# > Allow others to visit the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::publichome} to true
-	#
-	# > Allow others to build on the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::build} to false
-	#
-	# > Allow others to access to chests. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::chest} to false
-	#
-	# > Allow others to click on the entitiy. True = allowed, false = denied.
-	set {SB::config::defaultisflag::trusted::entityclick} to false
+  #
+  # > Changeable Flags
+  # > Allow your players to toggle the flags for their island. True = allowed, false = denied.
+  set {SB::config::toggleflags} to true
 
-	#
-	# > Default Flags for player islands (foreign flags):
-	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::explosion} to false
-	#
-	# > Let users use buttons. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::button} to true
-	#
-	# > Let users use the doors. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::door} to true
-	#
-	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-	# > Damage on mobs
-	set {SB::config::defaultisflag::member::mob-damage} to true
-	#
-	# > Damage on animals
-	set {SB::config::defaultisflag::member::animal-damage} to true
-	#
-	# > Interact with vehicles. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::interact-vehicle} to true
-	#
-	# > Allow others to visit the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::publichome} to true
-	#
-	# > Allow others to build on the island. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::build} to true
-	#
-	# > Allow others to access to chests. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::chest} to false
-	#
-	# > Allow others to click on the entitiy. True = allowed, false = denied.
-	set {SB::config::defaultisflag::member::entityclick} to false
+  #
+  # > Default Flags for player islands (foreign flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::button} to false
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::door} to false
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::foreign::mob-damage} to false
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::foreign::animal-damage} to false
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::interact-vehicle} to false
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::publichome} to false
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::build} to false
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::chest} to false
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::entityclick} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::redstone} to false
 
-	#
-	# > Flags for not inhabited islands:
-	# > Islands like the lobby island or currently not used islands
-	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::explosion} to false
-	#
-	# > Explosions. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::mob-spawning} to false
-	#
-	# > Let players use buttons. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::button} to true
-	#
-	# > Let players use the doors. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::door} to true
-	#
-	# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-	# > Damage on mobs
-	set {SB::config::defaultlobbyflag::mob-damage} to true
-	#
-	# > Damage on animals
-	set {SB::config::defaultlobbyflag::animal-damage} to false
-	#
-	# > Damage on item frames
-	set {SB::config::defaultlobbyflag::itemframe-damage} to false
+  #
+  # > Default Flags for player islands (trusted flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::button} to true
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::trusted::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::trusted::animal-damage} to true
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::interact-vehicle} to true
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::publichome} to true
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::build} to false
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::chest} to false
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::entityclick} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::redstone} to true
 
-	#
-	# > Interact with vehicles. True = allowed, false = denied.
-	set {SB::config::defaultlobbyflag::interact-vehicle} to false
+  #
+  # > Default Flags for player islands (foreign flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::button} to true
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::member::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::member::animal-damage} to true
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::interact-vehicle} to true
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::publichome} to true
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::build} to true
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::chest} to true
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::entityclick} to true
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::redstone} to true
 
-	#
-	# > Color Scheme
-	# > Change this to match the colors with your corporate identity
-	#
-	set {SB::config::color::primary::1} to "&6"
-	set {SB::config::color::primary::2} to "&e"
-	set {SB::config::color::secondary::2} to "&7"
-	set {SB::config::color::background::1} to "&8"
 
-	#
-	# > If a spacer is needed in the chat, this is used as a spacer:
-	set {SB::config::spacer} to "%{SB::config::color::secondary::2}%&l&m---------------------------------------------"
+  #
+  # > Flags for not inhabited islands:
+  # > Islands like the lobby island or currently not used islands
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::explosion} to false
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::mob-spawning} to false
+  #
+  # > Let players use buttons. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::button} to true
+  #
+  # > Let players use the doors. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultlobbyflag::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultlobbyflag::animal-damage} to false
+  #
+  # > Damage on item frames
+  set {SB::config::defaultlobbyflag::itemframe-damage} to false
 
-	#
-	# > If a spacer is needed in the item gui, this is used as a spacer:
-	set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::interact-vehicle} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::redstone} to false
 
-	#
-	# > Schematics/Structure Files:
-	# > Add the name of the file here, it should be in the islands folder of this skript, structures have to be 32x32x32 big:
-	set {_schematicname} to "default"
-	add {_schematicname} to {SB::schematics::schematic::*}
-	#
-	# > Add the name that should be visible to the player, add a name for every language:
-	add "&rStandard" to {SB::schematics::name::de::*}
-	#
-	# > Add the lore and also for every language you want to have:
-	add "Die Standard Insel" to {SB::schematics::lore::de::*}
-	#
-	# > Set a price, if the Island should cost something, if it should be free, set it to 0:
-	add "0" to {SB::schematics::price::*}
-	#
-	# > Set chest content for this schematic and also the relative location for the chest
-	set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
-	#
-	# > Set the teleport location for this shematic in relation:
-	set {SB::schematics::loc::%{_schematicname}%::home} to "-1,5,-1"
+  #
+  # > Color Scheme
+  # > Change this to match the colors with your corporate identity
+  #
+  set {SB::config::color::primary::1} to "&6"
+  set {SB::config::color::primary::2} to "&e"
+  set {SB::config::color::secondary::2} to "&7"
+  set {SB::config::color::background::1} to "&8"
 
-	#
-	# > Set the chest for this island:
-	add "5,grass" to {SB::schematics::chest::%{_schematicname}%::*}
-	add "20,stone" to {SB::schematics::chest::%{_schematicname}%::*}
-	add "1,lava bucket" to {SB::schematics::chest::%{_schematicname}%::*}
-	add "2,ice block" to {SB::schematics::chest::%{_schematicname}%::*}
-	add "50,bone meal" to {SB::schematics::chest::%{_schematicname}%::*}
+  #
+  # > If a spacer is needed in the chat, this is used as a spacer:
+  set {SB::config::spacer} to "%{SB::config::color::secondary::2}%&l&m---------------------------------------------"
 
-	#
-	# > Island upgrade prices (economy plugin required):
-	
-	#
-	# > Island size upgrades:
-	# > Island size 1:
-	set {SB::config::sizeupgrade1} to 10000
-	# > Island size 2:
-	set {SB::config::sizeupgrade2} to 25000
-	# > Island size 3:
-	set {SB::config::sizeupgrade3} to 35000
-	# > Island size 4:
-	set {SB::config::sizeupgrade4} to 45000
-	# > Island size 5:
-	set {SB::config::sizeupgrade5} to 55000
-	
-	#
-	# > Island home upgrades:
-	# > Island home 1:
-	set {SB::config::homeupgrade1} to 1000
-	# > Island home 2:
-	set {SB::config::homeupgrade2} to 2000
-	# > Island home 3:
-	set {SB::config::homeupgrade3} to 3000
-	# > Island home 4:
-	set {SB::config::homeupgrade4} to 4000
-	# > Island home 5:
-	set {SB::config::homeupgrade5} to 5000
-	
-	#
-	# > Island hopper upgrades:
-	# > Island hopper 1:
-	set {SB::config::hopperupgrade1} to 4000
-	# > Island hopper 2:
-	set {SB::config::hopperupgrade2} to 6000
-	# > Island hopper 3:
-	set {SB::config::hopperupgrade3} to 12000
-	# > Island hopper 4:
-	set {SB::config::hopperupgrade4} to 14000
-	# > Island hopper 5:
-	set {SB::config::hopperupgrade5} to 20000
+  #
+  # > If a spacer is needed in the item gui, this is used as a spacer:
+  set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
 
-	#EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
-	set {SB::config::explevel} to 100
+  #
+  # > Schematics/Structure Files:
+  # > Add the name of the file here, it should be in the islands folder of this skript, structures have to be 32x32x32 big:
+  set {_schematicname} to "default"
+  add {_schematicname} to {SB::schematics::schematic::*}
+  #
+  # > Add the name that should be visible to the player, add a name for every language:
+  add "&rStandard" to {SB::schematics::name::de::*}
+  #
+  # > Add the lore and also for every language you want to have:
+  add "Die Standard Insel" to {SB::schematics::lore::de::*}
+  #
+  # > Set a price, if the Island should cost something, if it should be free, set it to 0:
+  add "0" to {SB::schematics::price::*}
+  #
+  # > Set chest content for this schematic and also the relative location for the chest
+  set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
+  #
+  # > Set the teleport location for this shematic in relation:
+  set {SB::schematics::loc::%{_schematicname}%::home} to "-1,5,-1"
 
-	#EXP Blocks - Set how much experience a block should give for the level calculation:
-	#Only blocks, which are here, are going to give experience.
-	set {SB::expblocks::dirt_block} to 20
-	set {SB::expblocks::grass} to 20
-	set {SB::expblocks::sand} to 15
-	set {SB::expblocks::soil} to 5
-	set {SB::expblocks::cobble_block} to 1
-	set {SB::expblocks::stone_block} to 1.5
-	set {SB::expblocks::slab} to 1
-	set {SB::expblocks::fence} to 2
-	set {SB::expblocks::dry_wall_sign} to 5
-	set {SB::expblocks::floor_torch} to 2
-	set {SB::expblocks::wall_torch} to 2
-	set {SB::expblocks::crafting_table} to 2
-	set {SB::expblocks::wheat_item} to 2
-	set {SB::expblocks::chest} to 2
-	set {SB::expblocks::door} to 2
-	set {SB::expblocks::plant} to 2
-	set {SB::expblocks::sapling} to 2
-	set {SB::expblocks::stem} to 2
-	set {SB::expblocks::stationary_water} to 0
-	set {SB::expblocks::stationary_lava} to 0
-	set {SB::expblocks::log} to 3
-	set {SB::expblocks::furnace} to 8
-	set {SB::expblocks::bedrock} to 0
-	set {SB::expblocks::wool} to 2
-	set {SB::expblocks::pumpkin} to 1
+  #
+  # > Set the chest for this island:
+  add "5,grass" to {SB::schematics::chest::%{_schematicname}%::*}
+  add "20,stone" to {SB::schematics::chest::%{_schematicname}%::*}
+  add "1,lava bucket" to {SB::schematics::chest::%{_schematicname}%::*}
+  add "2,ice block" to {SB::schematics::chest::%{_schematicname}%::*}
+  add "50,bone meal" to {SB::schematics::chest::%{_schematicname}%::*}
 
-	#Blocks:
-	set {SB::expblocks::iron_block} to 20
-	set {SB::expblocks::block_of_diamond} to 150
-	set {SB::expblocks::block_of_redstone} to 30
-	set {SB::expblocks::block_of_lapis_lazuli} to 50
-	set {SB::expblocks::emerald_block} to 75
-	set {SB::expblocks::gold_block} to 50
-	set {SB::expblocks::chiseled_quartz} to 25
-	set {SB::expblocks::quartz_pillar} to 25
-	set {SB::expblocks::nether_quartz_slab} to 10
-	
-	#Other Blocks
-	set {SB::expblocks::stone_brick} to 1.5
-	#Special Blocks:
-	set {SB::expblocks::enchantment_table} to 250
-	set {SB::expblocks::beacon} to 1000
-	set {SB::expblocks::note_block} to 20
-	set {SB::expblocks::jukeboxes} to 15
-	set {SB::expblocks::anvil} to 60
-	set {SB::expblocks::piston} to 4
-	set {SB::expblocks::hopper} to 4
-	set {SB::expblocks::glowstone_block} to 4
-	set {SB::expblocks::flower_pot} to 20
-	set {SB::expblocks::standing_banner} to 10
-	set {SB::expblocks::carpet} to 1.5
-	set {SB::expblocks::bed} to 3
-	set {SB::expblocks::redstone_wire} to 1
+  #
+  # > Island upgrade prices (economy plugin required):
+  
+  #
+  # > Island size upgrades:
+  # > Island size 1:
+  set {SB::config::sizeupgrade1} to 10000
+  # > Island size 2:
+  set {SB::config::sizeupgrade2} to 25000
+  # > Island size 3:
+  set {SB::config::sizeupgrade3} to 35000
+  # > Island size 4:
+  set {SB::config::sizeupgrade4} to 45000
+  # > Island size 5:
+  set {SB::config::sizeupgrade5} to 55000
+  
+  #
+  # > Island home upgrades:
+  # > Island home 1:
+  set {SB::config::homeupgrade1} to 1000
+  # > Island home 2:
+  set {SB::config::homeupgrade2} to 2000
+  # > Island home 3:
+  set {SB::config::homeupgrade3} to 3000
+  # > Island home 4:
+  set {SB::config::homeupgrade4} to 4000
+  # > Island home 5:
+  set {SB::config::homeupgrade5} to 5000
+  
+  #
+  # > Island hopper upgrades:
+  # > Island hopper 1:
+  set {SB::config::hopperupgrade1} to 4000
+  # > Island hopper 2:
+  set {SB::config::hopperupgrade2} to 6000
+  # > Island hopper 3:
+  set {SB::config::hopperupgrade3} to 12000
+  # > Island hopper 4:
+  set {SB::config::hopperupgrade4} to 14000
+  # > Island hopper 5:
+  set {SB::config::hopperupgrade5} to 20000
 
-	#Glass:
-	set {SB::expblocks::glass_block} to 20
-	set {SB::expblocks::glass_pane} to 7
-	#terracotta
-	set {SB::expblocks::glazed_terracotta} to 20
-	#Sandstone:
-	set {SB::expblocks::sandstone_block} to 15
-	#Water blocks:
-	set {SB::expblocks::living_coral_block} to 15
+  #EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
+  set {SB::config::explevel} to 100
+
+  #EXP Blocks - Set how much experience a block should give for the level calculation:
+  #Only blocks, which are here, are going to give experience.
+  set {SB::expblocks::dirt_block} to 20
+  set {SB::expblocks::grass} to 20
+  set {SB::expblocks::sand} to 15
+  set {SB::expblocks::soil} to 5
+  set {SB::expblocks::cobble_block} to 1
+  set {SB::expblocks::stone_block} to 1.5
+  set {SB::expblocks::slab} to 1
+  set {SB::expblocks::fence} to 2
+  set {SB::expblocks::dry_wall_sign} to 5
+  set {SB::expblocks::floor_torch} to 2
+  set {SB::expblocks::wall_torch} to 2
+  set {SB::expblocks::crafting_table} to 2
+  set {SB::expblocks::wheat_item} to 2
+  set {SB::expblocks::chest} to 2
+  set {SB::expblocks::door} to 2
+  set {SB::expblocks::plant} to 2
+  set {SB::expblocks::sapling} to 2
+  set {SB::expblocks::stem} to 2
+  set {SB::expblocks::stationary_water} to 0
+  set {SB::expblocks::stationary_lava} to 0
+  set {SB::expblocks::log} to 3
+  set {SB::expblocks::furnace} to 8
+  set {SB::expblocks::bedrock} to 0
+  set {SB::expblocks::wool} to 2
+  set {SB::expblocks::pumpkin} to 1
+
+  #Blocks:
+  set {SB::expblocks::iron_block} to 20
+  set {SB::expblocks::block_of_diamond} to 150
+  set {SB::expblocks::block_of_redstone} to 30
+  set {SB::expblocks::block_of_lapis_lazuli} to 50
+  set {SB::expblocks::emerald_block} to 75
+  set {SB::expblocks::gold_block} to 50
+  set {SB::expblocks::chiseled_quartz} to 25
+  set {SB::expblocks::quartz_pillar} to 25
+  set {SB::expblocks::nether_quartz_slab} to 10
+  
+  #Other Blocks
+  set {SB::expblocks::stone_brick} to 1.5
+  #Special Blocks:
+  set {SB::expblocks::enchantment_table} to 250
+  set {SB::expblocks::beacon} to 1000
+  set {SB::expblocks::note_block} to 20
+  set {SB::expblocks::jukeboxes} to 15
+  set {SB::expblocks::anvil} to 60
+  set {SB::expblocks::piston} to 4
+  set {SB::expblocks::hopper} to 4
+  set {SB::expblocks::glowstone_block} to 4
+  set {SB::expblocks::flower_pot} to 20
+  set {SB::expblocks::standing_banner} to 10
+  set {SB::expblocks::carpet} to 1.5
+  set {SB::expblocks::bed} to 3
+  set {SB::expblocks::redstone_wire} to 1
+
+  #Glass:
+  set {SB::expblocks::glass_block} to 20
+  set {SB::expblocks::glass_pane} to 7
+  #terracotta
+  set {SB::expblocks::glazed_terracotta} to 20
+  #Sandstone:
+  set {SB::expblocks::sandstone_block} to 15
+  #Water blocks:
+  set {SB::expblocks::living_coral_block} to 15
 
 #
 # ADDON Configurations
 #
 
 #Ore Generator:
-	#Use this like this example:
-	#The Chance amount can be between 100% and 0.01%, begin with low percentages
-	#and go forward to bigger changes at the bottom. Do not add the % symbol.
-	#To disable this feature, add a hyphen to the oregenerator.sk in the addons folder.
-	#Example for a chance of 0.2% for diamond ores:
-	#add 0.2 to {SB::oregenc::*}
-	#add diamond ore to {SB::oregen::*}
+  #Use this like this example:
+  #The Chance amount can be between 100% and 0.01%, begin with low percentages
+  #and go forward to bigger changes at the bottom. Do not add the % symbol.
+  #To disable this feature, add a hyphen to the oregenerator.sk in the addons folder.
+  #Example for a chance of 0.2% for diamond ores:
+  #add 0.2 to {SB::oregenc::*}
+  #add diamond ore to {SB::oregen::*}
 
-	add 0.2 to {SB::oregenc::*}
-	add diamond ore to {SB::oregen::*}
-	add 0.3 to {SB::oregenc::*}
-	add nether quartz ore to {SB::oregen::*}
-	add 0.4 to {SB::oregenc::*}
-	add redstone ore to {SB::oregen::*}
-	add 0.5 to {SB::oregenc::*}
-	add lapis ore to {SB::oregen::*}
-	add 1 to {SB::oregenc::*}
-	add gold ore to {SB::oregen::*}
-	add 1.5 to {SB::oregenc::*}
-	add emerald ore to {SB::oregen::*}
-	add 1.5 to {SB::oregenc::*}
-	add iron ore to {SB::oregen::*}
-	add 2 to {SB::oregenc::*}
-	add coal ore to {SB::oregen::*}
-	add 5 to {SB::oregenc::*}
-	add granite to {SB::oregen::*}
-	add 5 to {SB::oregenc::*}
-	add andesite to {SB::oregen::*}
-	add 5 to {SB::oregenc::*}
-	add diorite to {SB::oregen::*}
-	add 100 to {SB::oregenc::*}
-	add stone to {SB::oregen::*}
+  add 0.2 to {SB::oregenc::*}
+  add diamond ore to {SB::oregen::*}
+  add 0.4 to {SB::oregenc::*}
+  add glowstone to {SB::oregen::*}
+  add 0.3 to {SB::oregenc::*}
+  add nether quartz ore to {SB::oregen::*}
+  add 0.4 to {SB::oregenc::*}
+  add redstone ore to {SB::oregen::*}
+  add 0.5 to {SB::oregenc::*}
+  add lapis ore to {SB::oregen::*}
+  add 1 to {SB::oregenc::*}
+  add gold ore to {SB::oregen::*}
+  add 1.5 to {SB::oregenc::*}
+  add emerald ore to {SB::oregen::*}
+  add 1.5 to {SB::oregenc::*}
+  add iron ore to {SB::oregen::*}
+  add 2 to {SB::oregenc::*}
+  add coal ore to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add granite to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add andesite to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add diorite to {SB::oregen::*}
+  add 100 to {SB::oregenc::*}
+  add stone to {SB::oregen::*}
 
-	#
-	# > Mutli level ore generator - Set to false to disable
-	#
-	set {SB::config::oregeneratorleveling} to true
-	
-	#
-	# > Increase ore spawning chances by percentage for every level
-	# > Example: 2 increases the chance of 0.2% to 0,204%
-	#
-	set {SB::config::oregenlevelbonus} to 2
+  #
+  # > Mutli level ore generator - Set to false to disable
+  #
+  set {SB::config::oregeneratorleveling} to true
+  
+  #
+  # > Increase ore spawning chances by percentage for every level
+  # > Example: 2 increases the chance of 0.2% to 0,204%
+  #
+  set {SB::config::oregenlevelbonus} to 2
 
-	#
-	# > How many stone blocks have to be produced until a new level is hit
-	#
-	set {SB::config::oregennewlevel} to 1000
-	
-	#
-	# > Increase the difficulty to get the next ore generator level by multiplying it:
-	#
-	set {SB::config::oregenlevelmultiplyer} to 5
-	
-	#
-	# > Set the max. level bonus in percentage
-	# > 20 is a max. bonus of 20% on the chances
-	#
-	set {SB::config::oregenmaxlevelbonus} to 100
+  #
+  # > How many stone blocks have to be produced until a new level is hit
+  #
+  set {SB::config::oregennewlevel} to 1000
+  
+  #
+  # > Increase the difficulty to get the next ore generator level by multiplying it:
+  #
+  set {SB::config::oregenlevelmultiplyer} to 5
+  
+  #
+  # > Set the max. level bonus in percentage
+  # > 20 is a max. bonus of 20% on the chances
+  #
+  set {SB::config::oregenmaxlevelbonus} to 100
 
 # > Biome changer configuration
 
-	#
-	# > Add all biomes which should be available to change, also add prices.
-	# > Set price to 0 to make it free. Players have to pay every time they
-	# > change the biome to prevent spam.
-	# > Example:
-	# > Adds menu item grass for 50 money to the menu which changes the biome to plains,
-	# > add additional language for every language you have.
-	#add "grass" to {SB::config::biome::menuitem::*}
-	#add "plains" to {SB::config::biome::biomename::*}
-	#add 50 to {SB::config::biome::price::*}
-	#add "Flachland" to {SB::config::biome::lang::de::*}
-	
-	add "barrier" to {SB::config::biome::menuitem::*}
-	add "the void" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Die Leere" to {SB::config::biome::lang::de::*}
-	
-	add "grass" to {SB::config::biome::menuitem::*}
-	add "plains" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Flachland" to {SB::config::biome::lang::de::*}
+  #
+  # > Add all biomes which should be available to change, also add prices.
+  # > Set price to 0 to make it free. Players have to pay every time they
+  # > change the biome to prevent spam.
+  # > Example:
+  # > Adds menu item grass for 50 money to the menu which changes the biome to plains,
+  # > add additional language for every language you have.
+  #add "grass" to {SB::config::biome::menuitem::*}
+  #add "plains" to {SB::config::biome::biomename::*}
+  #add 50 to {SB::config::biome::price::*}
+  #add "Flachland" to {SB::config::biome::lang::de::*}
+  
+  add "barrier" to {SB::config::biome::menuitem::*}
+  add "the void" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Die Leere" to {SB::config::biome::lang::de::*}
+  
+  add "grass" to {SB::config::biome::menuitem::*}
+  add "plains" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Flachland" to {SB::config::biome::lang::de::*}
 
-	add "sand" to {SB::config::biome::menuitem::*}
-	add "desert" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Wüste" to {SB::config::biome::lang::de::*}
+  add "sand" to {SB::config::biome::menuitem::*}
+  add "desert" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Wüste" to {SB::config::biome::lang::de::*}
 
-	add "snow block" to {SB::config::biome::menuitem::*}
-	add "ICE_PLAINS" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Schnee" to {SB::config::biome::lang::de::*}
+  add "snow block" to {SB::config::biome::menuitem::*}
+  add "ICE_PLAINS" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Schnee" to {SB::config::biome::lang::de::*}
 
-	add "jungle leaves" to {SB::config::biome::menuitem::*}
-	add "jungle" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Dschungel" to {SB::config::biome::lang::de::*}
+  add "jungle leaves" to {SB::config::biome::menuitem::*}
+  add "jungle" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Dschungel" to {SB::config::biome::lang::de::*}
 
-	add "light blue concrete powder" to {SB::config::biome::menuitem::*}
-	add "warm ocean" to {SB::config::biome::biomename::*}
-	add 500 to {SB::config::biome::price::*}
-	add "Warmer Ozean" to {SB::config::biome::lang::de::*}
+  add "light blue concrete powder" to {SB::config::biome::menuitem::*}
+  add "warm ocean" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Warmer Ozean" to {SB::config::biome::lang::de::*}
 
 #
 # > Functions to start after config loaded, do not change this if you don't know what you're doing.
-	loadislandstoworld()
+#
+  loadislandstoworld()
