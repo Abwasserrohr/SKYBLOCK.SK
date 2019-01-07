@@ -250,6 +250,12 @@ command /island [<text>] [<text=1>] [<text>]:
               set {_data::*} to loop-value-2 split at ","
               set {_titem} to "%{_data::2}%" parsed as item
               set {_tamount} to {_data::1} parsed as integer
+              #
+              # > If the item is a lava bucket, bind it to the island by applying a lore.
+              if {_titem} is a lava bucket:
+                set {_x} to x-coord of {_loc}
+                set {_z} to z-coord of {_loc}
+                set lore of {_titem} to "&r%{SB::lang::islandbound::%{SK::lang::%uuid of player%}%}%||&7%{_x}%_%{_z}%"
               add {_tamount} of {_titem} to {_newchest}'s inventory
             #CHEST end
             set {SB::searchprocess} to false
@@ -381,8 +387,8 @@ command /island [<text>] [<text=1>] [<text>]:
           set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
           set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
           set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
-		  #
-		  # > Check for duplicate entries, if there are any, delete this entry in the list.
+      #
+      # > Check for duplicate entries, if there are any, delete this entry in the list.
           if {_duplicationcheck::%loop-index%} is set:
             delete {SB::islvl::%loop-index%}
           set {_duplicationcheck::%loop-index%} to loop-value
@@ -668,7 +674,7 @@ command /island [<text>] [<text=1>] [<text>]:
     #
     else if arg-1 is "info":
       #
-	  # > Update the temporary location of the island bedrock, the player is on.
+    # > Update the temporary location of the island bedrock, the player is on.
       set {_d} to checkislandaccess(player, location of player)
       #
       # > Set the {_bedrock} variable to the current temporary location of the bedrock.
