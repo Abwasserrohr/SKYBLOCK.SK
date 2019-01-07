@@ -1,0 +1,69 @@
+#
+# ==============
+# selectlanguage.sk
+# ==============
+# selectlanguage.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > This Java class is used in the selectlanguage function.
+import:
+  java.io.File
+  
+# > Function - selectlanguage:
+# > Parameter:
+# > <player>player
+# > Actions:
+# > Opens a language selection menu, this menu searches in the "lang" folder in "SkyBlock"
+# > for langauges and then displays them for the user. If a user clicks on a head,
+# > the changelanguage function is executed.
+function selectlanguage(p:player):
+  set {_uuid} to uuid of {_p}
+  #
+  # > Open the language menu with 9 slots.
+  opengui({_p},9,"&l%{SB::lang::languages::%{SK::lang::%{_uuid}%}%}%")
+  #
+  # > Empty slots are shown as black stained glass.
+  loop 9 times:
+    set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+  #
+  # > Set slot id, for the following loop.
+  set {_slot} to 0
+  #
+  # > Get all files in the languages folder "plugins/Skript/scripts/SkyBlock/lang".
+  set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/lang").listFiles()
+  loop {_files::*}:
+    if loop-value.toString().endsWith(".sk") is true:
+      set {_fname} to loop-value.getName()
+	  #
+	  # > Split the name in half, that way, we have ["langcode"], ["sk"] as a array.
+      set {_l::*} to {_fname} split at "."
+	  #
+	  # > Get language and skin data from language variable.
+      set {_lang} to {SB::lang::language::%{_l::1}%}
+      set {_skin} to {SB::lang::languageskin::%{_l::1}%}
+	  #
+	  # Create a custom head for this language.
+      set {_head} to getcustomhead("%{_lang}%", "%{_skin}%", {_p})
+	  #
+	  # > Define the head in the language menu.
+      setguiitem({_p},{_slot},"player head",1,"","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
+	  #
+	  # > Set the custom head block into the slot
+      set name of {_head} to "&r%{_lang}%"
+      set slot {_slot} of {_p}'s current inventory to {_head}
+      #
+      # > Add 1 to {_slot}, that way, every language has it's unique slot.
+      add 1 to {_slot}
+
+# > Function - changelanguage:
+# > Parameter:
+# > <player>player,<text>lang
+# > Actions:
+# > Changes the language of the player, also checks if the language is loaded as variable.
+# > If successful, the user gets a message in the new language that the change was successful.
+function changelanguage(p:player,lang:text):
+  set {_uuid} to uuid of {_p}
+  if {SB::lang::language::%{_lang}%} is set:
+    set {SK::lang::%{_uuid}%} to {_lang}
+    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::changedlang::%{_lang}%}%" to {_p}
