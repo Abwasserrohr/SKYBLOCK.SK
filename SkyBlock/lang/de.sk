@@ -3,292 +3,294 @@
 # > COMPATIBLE VERSION: x (there is no release yet)
 #
 on script load:
-	set {_lang} to "de"
-	
-	set {SB::lang::language::%{_lang}%} to "Deutsch"
-	set {SB::lang::languageskin::%{_lang}%} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ=="
+  set {_lang} to "de"
+  
+  set {SB::lang::language::%{_lang}%} to "Deutsch"
+  set {SB::lang::languageskin::%{_lang}%} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ=="
 
-	#
-	# > Local variables for color schemes:
-	#
-	set {_p1} to {SB::config::color::primary::1}
-	set {_p2} to {SB::config::color::primary::2}
-	set {_s1} to {SB::config::color::secondary::2}
-	set {_b1} to {SB::config::color::background::1}
+  #
+  # > Local variables for color schemes:
+  #
+  set {_p1} to {SB::config::color::primary::1}
+  set {_p2} to {SB::config::color::primary::2}
+  set {_s1} to {SB::config::color::secondary::2}
+  set {_b1} to {SB::config::color::background::1}
 
-	#
-	# > Command feedback messages
-	#
+  #
+  # > Command feedback messages
+  #
 
-	#
-	# > /island create
-	#
-	set {SB::lang::searchis::%{_lang}%} to "%{_p2}%Freie Inseln werden gesucht."
-	set {SB::lang::foundis::%{_lang}%} to "%{_p1}%Deine neue Insel wurde erstellt."
-	set {SB::lang::islands::%{_lang}%} to "%{_s1}%&lInseln"
-	
-	#
-	# > /island home | /island go
-	#
-	set {SB::lang::tpis::%{_lang}%} to "%{_p1}%Du wurdest zur Insel teleportiert."
-	set {SB::lang::tphome::%{_lang}%} to "%{_p1}%Du wurdest zum Zuhause teleportiert."
-	set {SB::lang::homewarnair::%{_lang}%} to "&cWarnung, dein Zuhause ist in der Luft!"
-	set {SB::lang::deledtedis::%{_lang}%} to "&c&lDeine Insel wurde gelöscht."
-	set {SB::lang::alreadyis::%{_lang}%} to "%{_s1}%Du bist bereits auf einer Insel."
-	set {SB::lang::alreadyotheris::%{_lang}%} to "%{_s1}%<player> ist bereits auf einer Insel."
-	set {SB::lang::waitis::%{_lang}%} to "%{_p2}%&lEinen Moment..."
-	set {SB::lang::cantleave::%{_lang}%} to "%{_s1}%Du kannst diese Insel nicht verlassen."
-	set {SB::lang::notfoundhome::%{_lang}%} to "%{_s1}%Deine Zuhause: <homes>"
-	
-	#
-	# > /island invite | /island join
-	#
-	set {SB::lang::sentrequest::%{_lang}%} to "%{_p2}%Du hat eine Anfrage geschickt."
-	set {SB::lang::gotrequest::%{_lang}%} to "%{_p2}%Du hast eine Inseleinladung von <player> erhalten."
-	set {SB::lang::reqtoleader::%{_lang}%} to "%{_s1}%Die Einladung wurde &nnicht%{_s1}% angenommen."
-	set {SB::lang::clicktojoin::%{_lang}%} to "Klicke Hier, um <player> beizutreten."
-	set {SB::lang::reqtomember::%{_lang}%} to "%{_s1}%Die Einladung ist &labgelaufen%{_s1}%."
-	set {SB::lang::cantinviteself::%{_lang}%} to "&cDu kannst dich nicht selber einladen."
-	set {SB::lang::joinedismember::%{_lang}%} to "%{_p2}%Du bist der Insel von <arg-2> beigetreten."
-	set {SB::lang::joinedisleader::%{_lang}%} to "%{_p2}%<player> ist der Insel beigetreten."
-	set {SB::lang::norequest::%{_lang}%} to "%{_s1}%Keine Einladungen verfügbar."
-	set {SB::lang::requests::%{_lang}%} to "%{_s1}%Einladungen:"
-	set {SB::lang::invitetargeterror::%{_lang}%} to "%{_s1}%Es konnte keine Einladung an <arg-2> gesendet werden."
-	
-	#
-	# > /island leave
-	#
-	set {SB::lang::leftis::%{_lang}%} to "%{_s1}%Du hast die Insel verlassen."
+  #
+  # > /island create
+  #
+  set {SB::lang::searchis::%{_lang}%} to "%{_p2}%Freie Inseln werden gesucht."
+  set {SB::lang::foundis::%{_lang}%} to "%{_p1}%Deine neue Insel wurde erstellt."
+  set {SB::lang::islands::%{_lang}%} to "%{_s1}%&lInseln"
+  
+  #
+  # > /island home | /island go
+  #
+  set {SB::lang::tpis::%{_lang}%} to "%{_p1}%Du wurdest zur Insel teleportiert."
+  set {SB::lang::tphome::%{_lang}%} to "%{_p1}%Du wurdest zum Zuhause teleportiert."
+  set {SB::lang::homewarnair::%{_lang}%} to "&cWarnung, dein Zuhause ist in der Luft!"
+  set {SB::lang::deledtedis::%{_lang}%} to "&c&lDeine Insel wurde gelöscht."
+  set {SB::lang::alreadyis::%{_lang}%} to "%{_s1}%Du bist bereits auf einer Insel."
+  set {SB::lang::alreadyotheris::%{_lang}%} to "%{_s1}%<player> ist bereits auf einer Insel."
+  set {SB::lang::waitis::%{_lang}%} to "%{_p2}%&lEinen Moment..."
+  set {SB::lang::cantleave::%{_lang}%} to "%{_s1}%Du kannst diese Insel nicht verlassen."
+  set {SB::lang::notfoundhome::%{_lang}%} to "%{_s1}%Deine Zuhause: <homes>"
+  
+  #
+  # > /island invite | /island join
+  #
+  set {SB::lang::sentrequest::%{_lang}%} to "%{_p2}%Du hat eine Anfrage geschickt."
+  set {SB::lang::gotrequest::%{_lang}%} to "%{_p2}%Du hast eine Inseleinladung von <player> erhalten."
+  set {SB::lang::reqtoleader::%{_lang}%} to "%{_s1}%Die Einladung wurde &nnicht%{_s1}% angenommen."
+  set {SB::lang::clicktojoin::%{_lang}%} to "Klicke Hier, um <player> beizutreten."
+  set {SB::lang::reqtomember::%{_lang}%} to "%{_s1}%Die Einladung ist &labgelaufen%{_s1}%."
+  set {SB::lang::cantinviteself::%{_lang}%} to "&cDu kannst dich nicht selber einladen."
+  set {SB::lang::joinedismember::%{_lang}%} to "%{_p2}%Du bist der Insel von <arg-2> beigetreten."
+  set {SB::lang::joinedisleader::%{_lang}%} to "%{_p2}%<player> ist der Insel beigetreten."
+  set {SB::lang::norequest::%{_lang}%} to "%{_s1}%Keine Einladungen verfügbar."
+  set {SB::lang::requests::%{_lang}%} to "%{_s1}%Einladungen:"
+  set {SB::lang::invitetargeterror::%{_lang}%} to "%{_s1}%Es konnte keine Einladung an <arg-2> gesendet werden."
+  
+  #
+  # > /island leave
+  #
+  set {SB::lang::leftis::%{_lang}%} to "%{_s1}%Du hast die Insel verlassen."
 
-	#
-	# > /island kick
-	#
-	set {SB::lang::kickmemberleader::%{_lang}%} to "%{_s1}%Du hast <arg-2> von der Insel gekickt."
-	set {SB::lang::kickmember::%{_lang}%} to "%{_s1}%Du wurdest von der Insel von <player> gekickt."
-	
-	#
-	# > /island sethome
-	#
-	set {SB::lang::sethomeok::%{_lang}%} to "Zuhause erfolgreich erstellt."
-	set {SB::lang::ishomecancel::%{_lang}%} to "Das neue Zuhause muss auf deiner Insel sein."
-	set {SB::lang::sethomeoverwritten::%{_lang}%} to "Zuhause erfolgreich überschrieben."
-	set {SB::lang::homedeleted::%{_lang}%} to "Zuhause <home> wurde entfernt."
-	set {SB::lang::cantdeletehome::%{_lang}%} to "<home> kann nicht entfernt werden."
-	set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
+  #
+  # > /island kick
+  #
+  set {SB::lang::kickmemberleader::%{_lang}%} to "%{_s1}%Du hast <arg-2> von der Insel gekickt."
+  set {SB::lang::kickmember::%{_lang}%} to "%{_s1}%Du wurdest von der Insel von <player> gekickt."
+  
+  #
+  # > /island sethome
+  #
+  set {SB::lang::sethomeok::%{_lang}%} to "Zuhause erfolgreich erstellt."
+  set {SB::lang::ishomecancel::%{_lang}%} to "Das neue Zuhause muss auf deiner Insel sein."
+  set {SB::lang::sethomeoverwritten::%{_lang}%} to "Zuhause erfolgreich überschrieben."
+  set {SB::lang::homedeleted::%{_lang}%} to "Zuhause <home> wurde entfernt."
+  set {SB::lang::cantdeletehome::%{_lang}%} to "<home> kann nicht entfernt werden."
+  set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
-	#
-	# > /island warp|setwarp|delwarp
-	#
-	set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
-	set {SB::lang::delwarpok::%{_lang}%} to "Der Warp wurde erfolgreich gelöscht."
-	set {SB::lang::warpnotfound::%{_lang}%} to "Dieser Warp wurde nicht gefunden."
+  #
+  # > /island warp|setwarp|delwarp
+  #
+  set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
+  set {SB::lang::delwarpok::%{_lang}%} to "Der Warp wurde erfolgreich gelöscht."
+  set {SB::lang::warpnotfound::%{_lang}%} to "Dieser Warp wurde nicht gefunden."
 
-	#
-	# > /island info:
-	#
-	set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
-	set {SB::lang::isleader::%{_lang}%} to "Inselleiter:"
-	set {SB::lang::ismember::%{_lang}%} to "Mitglieder:"
-	set {SB::lang::istrusted::%{_lang}%} to "Vertraute:"
-	set {SB::lang::isinfolevel::%{_lang}%} to "Level:"
-	set {SB::lang::iscreated::%{_lang}%} to "Erstellt:"
-	set {SB::lang::islastactive::%{_lang}%} to "Zuletzt aktiv:"
-	set {SB::lang::isupgrades::%{_lang}%} to "Inselverbesserungen:"
-	set {SB::lang::isinfonotfound::%{_lang}%} to "Insel konnte nicht gefunden werden."
+  #
+  # > /island info:
+  #
+  set {SB::lang::isinfo::%{_lang}%} to "Informationen über diese Insel:"
+  set {SB::lang::isleader::%{_lang}%} to "Inselleiter:"
+  set {SB::lang::ismember::%{_lang}%} to "Mitglieder:"
+  set {SB::lang::istrusted::%{_lang}%} to "Vertraute:"
+  set {SB::lang::isinfolevel::%{_lang}%} to "Level:"
+  set {SB::lang::iscreated::%{_lang}%} to "Erstellt:"
+  set {SB::lang::islastactive::%{_lang}%} to "Zuletzt aktiv:"
+  set {SB::lang::isupgrades::%{_lang}%} to "Inselverbesserungen:"
+  set {SB::lang::isinfonotfound::%{_lang}%} to "Insel konnte nicht gefunden werden."
 
-	#
-	# > /island trust:
-	#
-	set {SB::lang::trustplayerlist::%{_lang}%} to "Alle vertrauten Spieler:"
-	set {SB::lang::alreadytrusted::%{_lang}%} to "Diesem Spieler wird schon vertraut."
-	set {SB::lang::trustnowtrusted::%{_lang}%} to "<player> wird nun vertraut."
-	set {SB::lang::notfoundplayer::%{_lang}%} to "Der Spieler wurde nicht gefunden."
-	set {SB::lang::trustremoved::%{_lang}%} to "<player> wird nicht länger vertraut."
+  #
+  # > /island trust:
+  #
+  set {SB::lang::trustplayerlist::%{_lang}%} to "Alle vertrauten Spieler:"
+  set {SB::lang::alreadytrusted::%{_lang}%} to "Diesem Spieler wird schon vertraut."
+  set {SB::lang::trustnowtrusted::%{_lang}%} to "<player> wird nun vertraut."
+  set {SB::lang::notfoundplayer::%{_lang}%} to "Der Spieler wurde nicht gefunden."
+  set {SB::lang::trustremoved::%{_lang}%} to "<player> wird nicht länger vertraut."
 
-	#
-	# > /island help
-	#
-	set {SB::lang::iscreate::%{_lang}%} to "%{_p2}%&lInsel erstellen %{_s1}%- %{_p1}%/is create"
-	set {SB::lang::isdelete::%{_lang}%} to "%{_p2}%&lInsel löschen %{_s1}%- %{_p1}%/is delete"
-	set {SB::lang::isteleport::%{_lang}%} to "%{_p2}%&lZur Insel teleportieren %{_s1}%- %{_p1}%/is home"
-	set {SB::lang::issethome::%{_lang}%} to "%{_p2}%&lInsel Zuhause ändern %{_s1}%- %{_p1}%/is sethome"
-	set {SB::lang::isteleportgo::%{_lang}%} to "%{_p2}%&lZum Grundstein teleportieren %{_s1}%- %{_p1}%/is go"
-	set {SB::lang::islevel::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel Level %{_s1}%- %{_p1}%/is level"
-	set {SB::lang::istop::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTop 10 %{_s1}%- %{_p1}%/is top <Seite>"
-	set {SB::lang::isinvite::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSpieler einladen %{_s1}%- %{_p1}%/is invite <Spieler>"
-	set {SB::lang::iskick::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSpieler rauswerfen %{_s1}%- %{_p1}%/is kick <Spieler>"
-	set {SB::lang::isjoin::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lEinladung annehmen %{_s1}%- %{_p1}%/is join <Spieler>"
-	set {SB::lang::isleave::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel verlassen %{_s1}%- %{_p1}%/is leave"
-	set {SB::lang::isgui::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSkyblock Menü %{_s1}%- %{_p1}%/is"
-	set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
-	set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
-	set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
-	set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
-	set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
-	set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
-	set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
-	set {SB::lang::helpwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTeleportiert zum Warp %{_s1}%- %{_p1}%/is warp <Spieler>"
-	set {SB::lang::helpsetwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSetzt deinen Inselwarp %{_s1}%- %{_p1}%/is setwarp"
-	set {SB::lang::helpdelwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lLöscht deinen Inselwarp %{_s1}%- %{_p1}%/is delwarp"
-	set {SB::lang::helps2::%{_lang}%} to "Seite"
+  #
+  # > /island help
+  #
+  set {SB::lang::iscreate::%{_lang}%} to "%{_p2}%&lInsel erstellen %{_s1}%- %{_p1}%/is create"
+  set {SB::lang::isdelete::%{_lang}%} to "%{_p2}%&lInsel löschen %{_s1}%- %{_p1}%/is delete"
+  set {SB::lang::isteleport::%{_lang}%} to "%{_p2}%&lZur Insel teleportieren %{_s1}%- %{_p1}%/is home"
+  set {SB::lang::issethome::%{_lang}%} to "%{_p2}%&lInsel Zuhause ändern %{_s1}%- %{_p1}%/is sethome"
+  set {SB::lang::isteleportgo::%{_lang}%} to "%{_p2}%&lZum Grundstein teleportieren %{_s1}%- %{_p1}%/is go"
+  set {SB::lang::islevel::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel Level %{_s1}%- %{_p1}%/is level"
+  set {SB::lang::istop::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTop 10 %{_s1}%- %{_p1}%/is top <Seite>"
+  set {SB::lang::isinvite::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSpieler einladen %{_s1}%- %{_p1}%/is invite <Spieler>"
+  set {SB::lang::iskick::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSpieler rauswerfen %{_s1}%- %{_p1}%/is kick <Spieler>"
+  set {SB::lang::isjoin::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lEinladung annehmen %{_s1}%- %{_p1}%/is join <Spieler>"
+  set {SB::lang::isleave::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lInsel verlassen %{_s1}%- %{_p1}%/is leave"
+  set {SB::lang::isgui::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSkyblock Menü %{_s1}%- %{_p1}%/is"
+  set {SB::lang::isspawn::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lZur Lobby %{_s1}%- %{_p1}%/is spawn"
+  set {SB::lang::isore::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lErz Chancen %{_s1}%- %{_p1}%/is ore"
+  set {SB::lang::isgen::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lGenerator Level %{_s1}%- %{_p1}%/is gen"
+  set {SB::lang::trustadd::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lVertraue einem Spieler %{_s1}%- %{_p1}%/is trust add <player>"
+  set {SB::lang::trustremove::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTraue dem Spieler nicht länger %{_s1}%- %{_p1}%/is trust remove <player>"
+  set {SB::lang::trustlist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lListe aller vertrauten Spieler %{_s1}%- %{_p1}%/is trust list"
+  set {SB::lang::flaglist::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lÖffnet das Flag menü %{_s1}%- %{_p1}%/is flags"
+  set {SB::lang::helpwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lTeleportiert zum Warp %{_s1}%- %{_p1}%/is warp <Spieler>"
+  set {SB::lang::helpsetwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lSetzt deinen Inselwarp %{_s1}%- %{_p1}%/is setwarp"
+  set {SB::lang::helpdelwarp::%{_lang}%} to "%{_p1}%&l> %{_p2}%&lLöscht deinen Inselwarp %{_s1}%- %{_p1}%/is delwarp"
+  set {SB::lang::helps2::%{_lang}%} to "Seite"
 
-	#
-	# > /island - Errors
-	#
-	set {SB::lang::notallowed::%{_lang}%} to "&cDer Befehl ist dem Inselbesitzer vorbehalten."
-	set {SB::lang::notleader::%{_lang}%} to " &cDu bist nicht der Inselbesitzer."
-	set {SB::lang::notleaderofthisisland::%{_lang}%} to " &cDu bist nicht der Inselbesitzer dieser Insel."
-	set {SB::lang::noperm::%{_lang}%} to "&c&lDu besitzt keine Berechtigung für diesen Befehl."
-	set {SB::lang::leaderleaveinfo::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
-	set {SB::lang::havetodelete::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
-	set {SB::lang::nois::%{_lang}%} to "&cDu hast keine Insel. Erstelle eine: &4&l/island create"
-	set {SB::lang::playeroff::%{_lang}%} to "%{_s1}%Dieser Spieler ist offline."
-	set {SB::lang::havetoleave::%{_lang}%} to "%{_s1}%Verwende /is leave, um die Insel zu verlassen."
-	set {SB::lang::cooldown::%{_lang}%} to "%{_s1}%Dieser Befehl lädt noch auf."
-	set {SB::lang::plnotfound::%{_lang}%} to "%{_s1}%<player> konnte nicht gefunden werden."
-	set {SB::lang::notanumber::%{_lang}%} to "&cBitte verwende Nummern und keinen Text."
-	set {SB::lang::pagenotfound::%{_lang}%} to "&cDiese Seite exestiert nicht. Es gibt nur <pages> Seiten."
-	set {SB::lang::helpsiteerror::%{_lang}%} to "%{_p1}%/is help <Seite>"
+  #
+  # > /island - Errors
+  #
+  set {SB::lang::notallowed::%{_lang}%} to "&cDer Befehl ist dem Inselbesitzer vorbehalten."
+  set {SB::lang::notleader::%{_lang}%} to " &cDu bist nicht der Inselbesitzer."
+  set {SB::lang::notleaderofthisisland::%{_lang}%} to " &cDu bist nicht der Inselbesitzer dieser Insel."
+  set {SB::lang::noperm::%{_lang}%} to "&c&lDu besitzt keine Berechtigung für diesen Befehl."
+  set {SB::lang::leaderleaveinfo::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
+  set {SB::lang::havetodelete::%{_lang}%} to "%{_s1}%Verwende /is delete, um deine Insel zu löschen."
+  set {SB::lang::nois::%{_lang}%} to "&cDu hast keine Insel. Erstelle eine: &4&l/island create"
+  set {SB::lang::playeroff::%{_lang}%} to "%{_s1}%Dieser Spieler ist offline."
+  set {SB::lang::havetoleave::%{_lang}%} to "%{_s1}%Verwende /is leave, um die Insel zu verlassen."
+  set {SB::lang::cooldown::%{_lang}%} to "%{_s1}%Dieser Befehl lädt noch auf."
+  set {SB::lang::plnotfound::%{_lang}%} to "%{_s1}%<player> konnte nicht gefunden werden."
+  set {SB::lang::notanumber::%{_lang}%} to "&cBitte verwende Nummern und keinen Text."
+  set {SB::lang::pagenotfound::%{_lang}%} to "&cDiese Seite exestiert nicht. Es gibt nur <pages> Seiten."
+  set {SB::lang::helpsiteerror::%{_lang}%} to "%{_p1}%/is help <Seite>"
 
-	#
-	# > /isadmin - command feedback
-	#
-	set {SB::lang::isadmin::deletedxis::%{_lang}%} to "<amount> Inseln wurden gelöscht."
-	set {SB::lang::isadmin::xwouldbedeleted::%{_lang}%} to "<amount> Insel würden gelöscht werden, möchtest du löschen?"
-	set {SB::lang::isadmin::areyousuretodelete::%{_lang}%} to "Bist du sicher, <amount> Insel zu löschen?"
-	set {SB::lang::isadmin::yes::%{_lang}%} to "&6&lYes."
-	set {SB::lang::isadmin::suretodeleteisofp::%{_lang}%} to "Bist du sicher, dass die Insel von <player> gelöscht werden soll?"
-	set {SB::lang::isadmin::kickall::%{_lang}%} to "Jeder wurde von dieser Insel gekickt."
-	set {SB::lang::isadmin::kickallprompt::%{_lang}%} to "Möchtest du alle von <player> Insel kicken?"
-	set {SB::lang::isadmin::islandofdeleted::%{_lang}%} to "Die Insel von <player> wurde gelöscht."
-	set {SB::lang::isadmin::newleaderhastobemember::%{_lang}%} to "Der neue Inselleiter muss Inselmitglied sein."
-	set {SB::lang::isadmin::newleader::%{_lang}%} to "<newleader> ist nun der neue Leiter, <oldleader> ist nun Mitglied der Insel."
-	set {SB::lang::isadmin::changeleader::%{_lang}%} to "Möchtest du den Inselleiter von <oldleader> zu <newleader> wecchseln?"
-	set {SB::lang::isadmin::fcalc::%{_lang}%} to "Das Insellevel wird nun berechnet."
-	set {SB::lang::isadmin::isremovedonrestart::%{_lang}%} to "Die Inseln werden nach einem neustart gelöscht."
+  #
+  # > /isadmin - command feedback
+  #
+  set {SB::lang::isadmin::deletedxis::%{_lang}%} to "<amount> Inseln wurden gelöscht."
+  set {SB::lang::isadmin::xwouldbedeleted::%{_lang}%} to "<amount> Insel würden gelöscht werden, möchtest du löschen?"
+  set {SB::lang::isadmin::areyousuretodelete::%{_lang}%} to "Bist du sicher, <amount> Insel zu löschen?"
+  set {SB::lang::isadmin::yes::%{_lang}%} to "&6&lYes."
+  set {SB::lang::isadmin::suretodeleteisofp::%{_lang}%} to "Bist du sicher, dass die Insel von <player> gelöscht werden soll?"
+  set {SB::lang::isadmin::kickall::%{_lang}%} to "Jeder wurde von dieser Insel gekickt."
+  set {SB::lang::isadmin::kickallprompt::%{_lang}%} to "Möchtest du alle von <player> Insel kicken?"
+  set {SB::lang::isadmin::islandofdeleted::%{_lang}%} to "Die Insel von <player> wurde gelöscht."
+  set {SB::lang::isadmin::newleaderhastobemember::%{_lang}%} to "Der neue Inselleiter muss Inselmitglied sein."
+  set {SB::lang::isadmin::newleader::%{_lang}%} to "<newleader> ist nun der neue Leiter, <oldleader> ist nun Mitglied der Insel."
+  set {SB::lang::isadmin::changeleader::%{_lang}%} to "Möchtest du den Inselleiter von <oldleader> zu <newleader> wecchseln?"
+  set {SB::lang::isadmin::fcalc::%{_lang}%} to "Das Insellevel wird nun berechnet."
+  set {SB::lang::isadmin::isremovedonrestart::%{_lang}%} to "Die Inseln werden nach einem neustart gelöscht."
 
-	#
-	# > Event cancel messages
-	#
-	set {SB::lang::protect::%{_lang}%} to "Dieses Gebiet ist gesichert."
-	set {SB::lang::clearkick::%{_lang}%} to "Der Server startet neu. Warte einen Moment."
-	set {SB::lang::nopvp::%{_lang}%} to "&cPvP ist hier nicht möglich."
-	
-	#
-	# > GUI - menu - Titles
-	#
-	set {SB::lang::guigrassname::%{_lang}%} to "%{_p1}%&lSkyblock"
-	set {SB::lang::guisoonname::%{_lang}%} to "&4&lDemnächst..."
-	set {SB::lang::guigraslore::%{_lang}%} to "&9&lStarte eine Insel"
-	set {SB::lang::guiexpname::%{_lang}%} to "&9&lInsel Level"
-	set {SB::lang::guichallangename::%{_lang}%} to "&a&lTägliche Aufgaben"
-	set {SB::lang::guitopname::%{_lang}%} to "&c&lTop &n10"
-	set {SB::lang::guirewardsname::%{_lang}%} to "&d&lVoting Belohnungen"
-	set {SB::lang::guihubname::%{_lang}%} to "%{_p1}%&lLobby"
-	
-	#
-	# > Chat headers
-	#
-	set {SB::lang::topheader::%{_lang}%} to "&lTop 10 Inseln"
-	set {SB::lang::levelheader::%{_lang}%} to " %{_p2}%Insel Level %{_s1}%&l- %{_p1}%"
-	set {SB::lang::votereward::%{_lang}%} to "&bVote für Belohnungen: "
-	set {SB::lang::rewardwoods::%{_lang}%} to "%{_p1}%Holzkiste"
-	set {SB::lang::rewardenchant::%{_lang}%} to "&5Effektkiste"
-	set {SB::lang::rewardender::%{_lang}%} to "&3Enderkiste"
-	set {SB::lang::rewardunknown::%{_lang}%} to "&4Unbekannte Kiste"
+  #
+  # > Event cancel messages
+  #
+  set {SB::lang::protect::%{_lang}%} to "Dieses Gebiet ist gesichert."
+  set {SB::lang::clearkick::%{_lang}%} to "Der Server startet neu. Warte einen Moment."
+  set {SB::lang::nopvp::%{_lang}%} to "&cPvP ist hier nicht möglich."
+  
+  #
+  # > GUI - menu - Titles
+  #
+  set {SB::lang::guigrassname::%{_lang}%} to "%{_p1}%&lSkyblock"
+  set {SB::lang::guisoonname::%{_lang}%} to "&4&lDemnächst..."
+  set {SB::lang::guigraslore::%{_lang}%} to "&9&lStarte eine Insel"
+  set {SB::lang::guiexpname::%{_lang}%} to "&9&lInsel Level"
+  set {SB::lang::guichallangename::%{_lang}%} to "&a&lTägliche Aufgaben"
+  set {SB::lang::guitopname::%{_lang}%} to "&c&lTop &n10"
+  set {SB::lang::guirewardsname::%{_lang}%} to "&d&lVoting Belohnungen"
+  set {SB::lang::guihubname::%{_lang}%} to "%{_p1}%&lLobby"
+  
+  #
+  # > Chat headers
+  #
+  set {SB::lang::topheader::%{_lang}%} to "&lTop 10 Inseln"
+  set {SB::lang::levelheader::%{_lang}%} to " %{_p2}%Insel Level %{_s1}%&l- %{_p1}%"
+  set {SB::lang::votereward::%{_lang}%} to "&bVote für Belohnungen: "
+  set {SB::lang::rewardwoods::%{_lang}%} to "%{_p1}%Holzkiste"
+  set {SB::lang::rewardenchant::%{_lang}%} to "&5Effektkiste"
+  set {SB::lang::rewardender::%{_lang}%} to "&3Enderkiste"
+  set {SB::lang::rewardunknown::%{_lang}%} to "&4Unbekannte Kiste"
 
-	#
-	# > Other
-	#
-	set {SB::lang::prefix::%{_lang}%} to "%{_s1}%[%{_p1}%&lSkyBlock%{_s1}%] %{_b1}%&l>>&r"
-	set {SB::lang::delismsg::%{_lang}%} to "%{_p2}%Alte Inseln werden gerade gelöscht, bitte warte kurz."
-	set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
-	set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
-	set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Du möchtest deine Insel löschen? %{_p1}%Klicke Hier%{_s1}%"
-	
-	#
-	# > Admintools:
-	set {SB::lang::at::isalreadyset::%{_lang}%} to "%{_s1}%There is already a bedrock or a island set. Kick everyone first and remove the bedrock, then create the new island."
-	set {SB::lang::at::isnowset::%{_lang}%} to "%{_s1}%The island is now set, add a island leader with /isadmin island addmember <new leader>."
+  #
+  # > Other
+  #
+  set {SB::lang::prefix::%{_lang}%} to "%{_s1}%[%{_p1}%&lSkyBlock%{_s1}%] %{_b1}%&l>>&r"
+  set {SB::lang::delismsg::%{_lang}%} to "%{_p2}%Alte Inseln werden gerade gelöscht, bitte warte kurz."
+  set {SB::lang::deletekickmember::%{_lang}%} to "%{_s1}%Die Insel, auf der du Mitglied warst, wurde gelöscht."
+  set {SB::lang::nonether::%{_lang}%} to "%{_s1}%Die Hölle ist nicht zugänglich."
+  set {SB::lang::isdeleteqestion::%{_lang}%} to "%{_s1}%Du möchtest deine Insel löschen? %{_p1}%Klicke Hier%{_s1}%"
+  
+  #
+  # > Admintools:
+  set {SB::lang::at::isalreadyset::%{_lang}%} to "%{_s1}%There is already a bedrock or a island set. Kick everyone first and remove the bedrock, then create the new island."
+  set {SB::lang::at::isnowset::%{_lang}%} to "%{_s1}%The island is now set, add a island leader with /isadmin island addmember <new leader>."
 
-	#
-	# > Flags
-	#
-	
-	#
-	# > Flag titles
-	set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
-	set {SB::lang::flag::buttont::%{_lang}%} to "Knöpfe & Hebel"
-	set {SB::lang::flag::doort::%{_lang}%} to "Türen"
-	set {SB::lang::flag::mob-damaget::%{_lang}%} to "Monster"
-	set {SB::lang::flag::animal-damaget::%{_lang}%} to "Tiere"
-	set {SB::lang::flag::interact-vehiclet::%{_lang}%} to "Vehikel"
-	set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause"
-	set {SB::lang::flag::buildt::%{_lang}%} to "Bauen und abbauen"
-	set {SB::lang::flag::chestt::%{_lang}%} to "Blockinventare"
-	set {SB::lang::flag::entityclickt::%{_lang}%} to "Entities"
-	set {SB::lang::flag::flagst::%{_lang}%} to "&lFlags"
-	set {SB::lang::flag::foreignt::%{_lang}%} to "Flags für Fremde"
-	set {SB::lang::flag::trustedt::%{_lang}%} to "Flags für Vertraute"
-	set {SB::lang::flag::membert::%{_lang}%} to "Flags für Mitglieder"
-	
-	#
-	# > Flag descriptions
-	set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
-	set {SB::lang::flag::mob-spawningd::%{_lang}%} to "%{_s1}%Erlaubt das erscheinen\n%{_s1}%von Monstern auf\n%{_s1}%deiner Insel."
-	set {SB::lang::flag::buttond::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
-	set {SB::lang::flag::doord::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
-	set {SB::lang::flag::mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Monster zu schlagen."
-	set {SB::lang::flag::animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Tiere zu schlagen."
-	set {SB::lang::flag::itemframe-damaged::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%deine Rahmen abzubauen."
-	set {SB::lang::flag::interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%Vehikel zu verwenden."
-	set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%deine Insel zu besuchen."
-	set {SB::lang::flag::buildd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%auf deiner Insel zu bauen\n%{_s1}%und abzubauen."
-	set {SB::lang::flag::chestd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%auf deiner Insel in die\n%{_s1}%Inventare von\n%{_s1}%von Blöcken zu schauen."
-	set {SB::lang::flag::entityclickd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%Entities anzuklicken."
-	set {SB::lang::flag::foreignd::%{_lang}%} to "%{_s1}%Erlaube Fremden diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
-	set {SB::lang::flag::trustedd::%{_lang}%} to "%{_s1}%Erlaube Vertrauten diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
-	set {SB::lang::flag::memberd::%{_lang}%} to "%{_s1}%Erlaube Mitgliedern diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
-	
-	#
-	# > Flag settings
-	set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann geändert werden."
-	set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann nicht geändert werden."
-	set {SB::lang::flag::currentsetting::%{_lang}%} to "%{_s1}%Aktuelle Einstellung: "
-	set {SB::lang::flag::currenttrue::%{_lang}%} to "&2An"
-	set {SB::lang::flag::currentfalse::%{_lang}%} to "&4Aus"
-	set {SB::lang::flag::errorfalse::%{_lang}%} to "Der Besitzer hat diese Funktion abgeschaltet."
-	
-	#
-	# > Ore generator add-on
-	#
-	set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
-	set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
-	set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
-	set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
+  #
+  # > Flags
+  #
+  
+  #
+  # > Flag titles
+  set {SB::lang::flag::explosiont::%{_lang}%} to "Explosionen"
+  set {SB::lang::flag::buttont::%{_lang}%} to "Knöpfe & Hebel"
+  set {SB::lang::flag::doort::%{_lang}%} to "Türen"
+  set {SB::lang::flag::mob-damaget::%{_lang}%} to "Monster"
+  set {SB::lang::flag::animal-damaget::%{_lang}%} to "Tiere"
+  set {SB::lang::flag::interact-vehiclet::%{_lang}%} to "Vehikel"
+  set {SB::lang::flag::publichomet::%{_lang}%} to "Zuhause"
+  set {SB::lang::flag::buildt::%{_lang}%} to "Bauen und abbauen"
+  set {SB::lang::flag::chestt::%{_lang}%} to "Blockinventare"
+  set {SB::lang::flag::entityclickt::%{_lang}%} to "Entities"
+  set {SB::lang::flag::redstonet::%{_lang}%} to "Redstone"
+  set {SB::lang::flag::flagst::%{_lang}%} to "&lFlags"
+  set {SB::lang::flag::foreignt::%{_lang}%} to "Flags für Fremde"
+  set {SB::lang::flag::trustedt::%{_lang}%} to "Flags für Vertraute"
+  set {SB::lang::flag::membert::%{_lang}%} to "Flags für Mitglieder"
+  
+  #
+  # > Flag descriptions
+  set {SB::lang::flag::explosiond::%{_lang}%} to "%{_s1}%Erlaubt zerstörerische\n%{_s1}%Explosionen an deiner\n%{_s1}%Insel."
+  set {SB::lang::flag::mob-spawningd::%{_lang}%} to "%{_s1}%Erlaubt das erscheinen\n%{_s1}%von Monstern auf\n%{_s1}%deiner Insel."
+  set {SB::lang::flag::buttond::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Knöpfe auf deiner Insel\n%{_s1}%zu verwenden."
+  set {SB::lang::flag::doord::%{_lang}%} to "%{_s1}%Erlaubt, die\n%{_s1}%Türen auf deiner Insel\n%{_s1}%zu verwenden."
+  set {SB::lang::flag::mob-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Monster zu schlagen."
+  set {SB::lang::flag::animal-damaged::%{_lang}%} to "%{_s1}%Erlaubt, deine\n%{_s1}%Tiere zu schlagen."
+  set {SB::lang::flag::itemframe-damaged::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%deine Rahmen abzubauen."
+  set {SB::lang::flag::interact-vehicled::%{_lang}%} to "%{_s1}%Erlaubt,\n%{_s1}%Vehikel zu verwenden."
+  set {SB::lang::flag::publichomed::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%deine Insel zu besuchen."
+  set {SB::lang::flag::buildd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%auf deiner Insel zu bauen\n%{_s1}%und abzubauen."
+  set {SB::lang::flag::chestd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%auf deiner Insel in die\n%{_s1}%Inventare von\n%{_s1}%von Blöcken zu schauen."
+  set {SB::lang::flag::entityclickd::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%Entities anzuklicken."
+  set {SB::lang::flag::redstoned::%{_lang}%} to "%{_s1}%Erlaubt diesen Spielern,\n%{_s1}%Redstone Einstellungen\n%{_s1}%zu ändern."
+  set {SB::lang::flag::foreignd::%{_lang}%} to "%{_s1}%Erlaube Fremden diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+  set {SB::lang::flag::trustedd::%{_lang}%} to "%{_s1}%Erlaube Vertrauten diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+  set {SB::lang::flag::memberd::%{_lang}%} to "%{_s1}%Erlaube Mitgliedern diverse\n%{_s1}%Aktionen auf deiner Insel\n%{_s1}%auszuführen, ändere\n%{_s1}%diese Einstellungen hier."
+  
+  #
+  # > Flag settings
+  set {SB::lang::flag::toggleflagstrue::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann geändert werden."
+  set {SB::lang::flag::toggleflagsfalse::%{_lang}%} to "%{_s1}%Diese Einstellung\n%{_s1}%kann nicht geändert werden."
+  set {SB::lang::flag::currentsetting::%{_lang}%} to "%{_s1}%Aktuelle Einstellung: "
+  set {SB::lang::flag::currenttrue::%{_lang}%} to "&2An"
+  set {SB::lang::flag::currentfalse::%{_lang}%} to "&4Aus"
+  set {SB::lang::flag::errorfalse::%{_lang}%} to "Der Besitzer hat diese Funktion abgeschaltet."
+  
+  #
+  # > Ore generator add-on
+  #
+  set {SB::lang::og::name::%{_lang}%} to "Erz Generator: "
+  set {SB::lang::og::currentlvl::%{_lang}%} to "Aktuelles Level: "
+  set {SB::lang::og::progress::%{_lang}%} to "Fortschritt: <c> / <n> Blöcke"
+  set {SB::lang::og::chancesforyou::%{_lang}%} to "Erz Generator Chancen für dich:"
 
-	#
-	# > Biome change add-on
-	set {SB::lang::bc::changing::%{_lang}%} to "Ändere das Biom zu: <biome>"
-	set {SB::lang::bc::done::%{_lang}%} to "Biomänderung abgeschlossen."
-	set {SB::lang::bc::changebiomeheader::%{_lang}%} to "Biom ändern"
-	set {SB::lang::bc::changebiomemenulore::%{_lang}%} to "&rÄndere dein Biom"
-	set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
-	set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
-	set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
+  #
+  # > Biome change add-on
+  set {SB::lang::bc::changing::%{_lang}%} to "Ändere das Biom zu: <biome>"
+  set {SB::lang::bc::done::%{_lang}%} to "Biomänderung abgeschlossen."
+  set {SB::lang::bc::changebiomeheader::%{_lang}%} to "Biom ändern"
+  set {SB::lang::bc::changebiomemenulore::%{_lang}%} to "&rÄndere dein Biom"
+  set {SB::lang::bc::shopprice::%{_lang}%} to "Preis: <price>"
+  set {SB::lang::bc::shopfree::%{_lang}%} to "Kostenlos"
+  set {SB::lang::bc::notenoughmoney::%{_lang}%} to "Du hast nicht genug Geld dafür."
 
-	#
-	# > Island upgrades
-	set {SB::lang::bc::islandsizeshop::%{_lang}%} to "Vergrößert deine Insel\nauf <size>x<size> Blöcke."
-	set {SB::lang::bc::islandsizetitle::%{_lang}%} to "Inselgröße "
-	set {SB::lang::bc::islandhoppertitle::%{_lang}%} to "Trichter "
-	set {SB::lang::bc::islandhometitle::%{_lang}%} to "Zuhause "
-	set {SB::lang::bc::islandhoppershop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Trichter zu setzen."
-	set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
-	set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
-	set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"
-	
-	#
-	# > Island item binding
-	set {SB::lang::islandbound::%{_lang}%} to "Inselgebunden"
-	set {SB::lang::boundtoanotherisland::%{_lang}%} to "Dieser Block ist an eine andere Insel gebunden."
+  #
+  # > Island upgrades
+  set {SB::lang::bc::islandsizeshop::%{_lang}%} to "Vergrößert deine Insel\nauf <size>x<size> Blöcke."
+  set {SB::lang::bc::islandsizetitle::%{_lang}%} to "Inselgröße "
+  set {SB::lang::bc::islandhoppertitle::%{_lang}%} to "Trichter "
+  set {SB::lang::bc::islandhometitle::%{_lang}%} to "Zuhause "
+  set {SB::lang::bc::islandhoppershop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Trichter zu setzen."
+  set {SB::lang::bc::islandhopperlimitinfo::%{_lang}%} to "Du kannst nur <size> Trichter setzen."
+  set {SB::lang::bc::islandhomeshop::%{_lang}%} to "Erlaubt dir insgesamt\n<size> Homes zu setzen."
+  set {SB::lang::bc::islandupgrades::%{_lang}%} to "Insel Erweiterungen"
+  
+  #
+  # > Island item binding
+  set {SB::lang::islandbound::%{_lang}%} to "Inselgebunden"
+  set {SB::lang::boundtoanotherisland::%{_lang}%} to "Dieser Block ist an eine andere Insel gebunden."
