@@ -48,6 +48,9 @@ function calcisland(p:offline player):
     add 1 to {_i}
     add 1 to {_b}
     #
+    # > Setting the chunk of the current loop block to a local variable to load the chunk
+    set {_lb} to chunk at loop-block
+    #
     # > Every 10000 blocks, check for new percentages for the progress bar.
     if {_i} is 10000:
       set {_percent} to ({_b}/{_size})*100
