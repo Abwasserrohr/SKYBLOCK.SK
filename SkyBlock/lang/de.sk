@@ -325,6 +325,7 @@ on script load:
   set {SB::lang::item::gunpowder::%{_lang}%} to "Schwarzpulver"
   set {SB::lang::item::gravel::%{_lang}%} to "Kies"
   set {SB::lang::item::leaves::%{_lang}%} to "Blätter"
+  set {SB::lang::item::oak leaves::%{_lang}%} to "Eichenblätter"
   set {SB::lang::item::stone brick::%{_lang}%} to "Steinziegel"
   set {SB::lang::item::mossy stone brick::%{_lang}%} to "Bemooster Steinziegel"
   set {SB::lang::item::mossy cobblestone::%{_lang}%} to "Bemooster Bruchstein"
