@@ -317,6 +317,48 @@ on script load:
   set {SB::lang::challenge::notrepeatable::%{_lang}%} to "&7Nicht wiederholbar."
 
   #
+  # > Challenge names
+  set {SB::lang::challenge::name::1::1::%{_lang}%} to "Kakteenfarmer"
+  set {SB::lang::challenge::name::1::2::%{_lang}%} to "Kiesverwender"
+  set {SB::lang::challenge::name::1::3::%{_lang}%} to "Moosige Freunde"
+  set {SB::lang::challenge::name::1::4::%{_lang}%} to "Waldfreund"
+  set {SB::lang::challenge::name::1::5::%{_lang}%} to "Lehmige aussichten"
+  set {SB::lang::challenge::name::1::6::%{_lang}%} to "Melonen Magnat"
+  set {SB::lang::challenge::name::1::7::%{_lang}%} to "Kürbisbauer"
+
+  set {SB::lang::challenge::name::2::1::%{_lang}%} to "Holzfäller"
+  set {SB::lang::challenge::name::2::2::%{_lang}%} to "Erdmensch"
+  set {SB::lang::challenge::name::2::3::%{_lang}%} to "Grüße aus der Hölle"
+  set {SB::lang::challenge::name::2::4::%{_lang}%} to "Pilzzüchter"
+  set {SB::lang::challenge::name::2::5::%{_lang}%} to "Krümelige angelegenheit"
+  set {SB::lang::challenge::name::2::6::%{_lang}%} to "Gartenarbeit"
+  set {SB::lang::challenge::name::2::7::%{_lang}%} to "Bäckerei"
+
+  set {SB::lang::challenge::name::3::1::%{_lang}%} to "Luftminenexperte"
+  set {SB::lang::challenge::name::3::2::%{_lang}%} to "Riechendes Geschäft"
+  set {SB::lang::challenge::name::3::3::%{_lang}%} to "Korall"
+  set {SB::lang::challenge::name::3::4::%{_lang}%} to "Fliegendes Gewässer"
+  set {SB::lang::challenge::name::3::5::%{_lang}%} to "Augenexperte"
+  set {SB::lang::challenge::name::3::6::%{_lang}%} to "Erfahrungssammler"
+  set {SB::lang::challenge::name::3::7::%{_lang}%} to "Heiße Sachen"
+
+  set {SB::lang::challenge::name::4::1::%{_lang}%} to "Leuchtende Aussichten"
+  set {SB::lang::challenge::name::4::2::%{_lang}%} to "Aufgesattelt"
+  set {SB::lang::challenge::name::4::3::%{_lang}%} to "Glas? ERDE!"
+  set {SB::lang::challenge::name::4::4::%{_lang}%} to "Seetang Räucherei"
+  set {SB::lang::challenge::name::4::5::%{_lang}%} to "Brauereimeister"
+  set {SB::lang::challenge::name::4::6::%{_lang}%} to "Tränen des Schreckens"
+  set {SB::lang::challenge::name::4::7::%{_lang}%} to "Meister des Transports"
+
+  set {SB::lang::challenge::name::5::1::%{_lang}%} to "Geheime Experimente"
+  set {SB::lang::challenge::name::5::2::%{_lang}%} to "Geklebt, sieht aus wie echt!"
+  set {SB::lang::challenge::name::5::3::%{_lang}%} to "Zzzsssss..."
+  set {SB::lang::challenge::name::5::4::%{_lang}%} to "Kopfig"
+  set {SB::lang::challenge::name::5::5::%{_lang}%} to "Eins mit den Meerestieren"
+  set {SB::lang::challenge::name::5::6::%{_lang}%} to "Dödelmeister"
+  set {SB::lang::challenge::name::5::7::%{_lang}%} to "Ausgestopfte Drachen"
+
+  #
   # > Item and Block translations (for rewards in challenges).
   set {SB::lang::item::xp::%{_lang}%} to "Erfahrung"
   set {SB::lang::item::cactus::%{_lang}%} to "Kaktus"
