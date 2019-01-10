@@ -302,16 +302,19 @@ on script load:
   #
   # > Challennges
   set {SB::lang::challenge::menutitle::%{_lang}%} to "&lHerausforderungen"
+  set {SB::lang::challenge::disabled::%{_lang}%} to "&lHerausforderungen sind nicht verfügbar."
   set {SB::lang::challenge::youneed::%{_lang}%} to "Du benötigst:"
   set {SB::lang::challenge::youstillneed::%{_lang}%} to "Du benötigst noch:"
   set {SB::lang::challenge::youget::%{_lang}%} to "Du erhälst:"
   set {SB::lang::challenge::amountofitem::%{_lang}%} to "&7» <amount> <item>"
-  set {SB::lang::challenge::onlyxtimesaday::%{_lang}%} to "You can repeat this challenge only <amount> times a day."
-  set {SB::lang::challenge::cantrepeated::%{_lang}%} to "This challenge can't be repeated."
+  set {SB::lang::challenge::onlyxtimesaday::%{_lang}%} to "Du kannst diese Herausforderung nur <amount> mal am Tag wiederholen."
+  set {SB::lang::challenge::cantrepeated::%{_lang}%} to "Diese Herausforderung kann nicht wiederholt werden.."
   set {SB::lang::challenge::level::%{_lang}%} to "&rLevel <level>"
   set {SB::lang::challenge::unlocked::%{_lang}%} to "&7Freigeschaltet"
-  set {SB::lang::challenge::xpneeded::%{_lang}%} to "&rXP needed"
-  set {SB::lang::challenge::xpionlywclvl::%{_lang}%} to "&rYou can earn XP||&ronly with level <level>||&rchallenges."
+  set {SB::lang::challenge::xpneeded::%{_lang}%} to "&rErfahrung benötigt"
+  set {SB::lang::challenge::xpionlywclvl::%{_lang}%} to "&rSchließe||&rHerausforderungen||&rab, um dieses Level||&rzu erreichen."
+  set {SB::lang::challenge::repeatable::%{_lang}%} to "&7Wiederholbar [<current>/<maxrepeat>]"
+  set {SB::lang::challenge::notrepeatable::%{_lang}%} to "&7Nicht wiederholbar."
 
   #
   # > Item and Block translations (for rewards in challenges).
