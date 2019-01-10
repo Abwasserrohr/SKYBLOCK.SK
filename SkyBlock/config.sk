@@ -519,10 +519,10 @@ on load:
   # > it gets to climb up the levels. To have everything unlocked at the beginning,
   # > set all theresholds to 0.
   set {SB::config::challenges::thereshold::1} to 0
-  set {SB::config::challenges::thereshold::2} to 700
-  set {SB::config::challenges::thereshold::3} to 900
-  set {SB::config::challenges::thereshold::4} to 1500
-  set {SB::config::challenges::thereshold::5} to 2000
+  set {SB::config::challenges::thereshold::2} to 2000
+  set {SB::config::challenges::thereshold::3} to 5000
+  set {SB::config::challenges::thereshold::4} to 9000
+  set {SB::config::challenges::thereshold::5} to 25000
 
   #
   # > Define the challenges. Example:
