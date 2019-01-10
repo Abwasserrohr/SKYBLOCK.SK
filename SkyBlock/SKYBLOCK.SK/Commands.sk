@@ -804,3 +804,10 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Calls the selectlanguage function, which opens a menu where the player can change the language.
     else if arg-1 is "lang" or "language":
       selectlanguage(player)
+    #
+    # > Argument: "c" or "challenges" or "challenge"
+    # > If a player types in /island c|challenges|challenge, the openchallenges function is called.
+    # > Actions:
+    # > Calls the openchallenges function, which opens the challenges menu.
+    else if arg-1 is "c" or "challenges" or "challenge":
+      openchallenges(player)
