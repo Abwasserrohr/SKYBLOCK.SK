@@ -1,0 +1,354 @@
+#
+# ==============
+# challenges.sk
+# ==============
+# challenges.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Import needed Java classes for the openchallenges function.
+import:
+  java.text.SimpleDateFormat
+  java.util.Date
+
+#
+# > Function: openchallenges
+# > Arguments:
+# > <player>player
+# > Actions:
+# > Opens the challenges menu, which allows the players to solve
+# > challenges through 5 levels.
+function openchallenges(p:player):
+  #
+  # > Start at slot 9 to keep it eye friendly.
+  set {_slot} to 9
+  #
+  # > Start at level 1.
+  set {_challengelvl} to 1
+  #
+  # > Get local varibales we need, like uuid and language.
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  #
+  # > If the challenges are disabled, print error and stop here.
+  if {SB::config::usechallenges} is not true:
+    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::challenge::disabled::%{_lang}%}%" to {_p}
+    stop
+  #
+  # > Get the date and check, if the day is over. If the day is over,
+  # > reset repeat counters.
+  set {_date} to new Date()
+  set {_d} to new SimpleDateFormat("yyyy-MM-dd").format({_date})
+  if {SB::today} is not {_d}:
+    set {SB::today} to {_d}
+    delete {SB::crepeats::*}
+  #
+  # > Open the menu to the player.
+  opengui({_p},54,"%{SB::lang::challenge::menutitle::%{_lang}%}%")
+  #
+  # > To process already finished challenges and statistics, we need the bedrock location
+  # > to load the challange experience from the island center (bedrock).
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  set {_x} to x-coord of {_bedrock}
+  set {_y} to y-coord of {_bedrock}
+  set {_z} to z-coord of {_bedrock}
+  set {_xp} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challengexp}
+  if {_xp} is not set:
+    set {_xp} to 0
+  #
+  # > For debugging purposes
+  set {_xp} to 2000
+  #
+  # > Get the current level.
+  loop 5 times:
+    if {_xp} >= {SB::config::challenges::thereshold::%{_challengelvl}%}:
+      set {_currentlevel} to {_challengelvl}
+    add 1 to {_challengelvl}
+  set {_challengelvl} to 1
+  #
+  # > base64 encoded skin urls for menu design.
+  set {_lvlhead::1} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDJhNmYwZTg0ZGFlZmM4YjIxYWE5OTQxNWIxNmVkNWZkYWE2ZDhkYzBjM2NkNTkxZjQ5Y2E4MzJiNTc1In19fQ=="
+  set {_lvlhead::2} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTZmYWI5OTFkMDgzOTkzY2I4M2U0YmNmNDRhMGI2Y2VmYWM2NDdkNDE4OWVlOWNiODIzZTljYzE1NzFlMzgifX19"
+  set {_lvlhead::3} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QzMTliOTM0M2YxN2EzNTYzNmJjYmMyNmI4MTk2MjVhOTMzM2RlMzczNjExMWYyZTkzMjgyN2M4ZTc0OSJ9fX0="
+  set {_lvlhead::4} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDE5OGQ1NjIxNjE1NjExNDI2NTk3M2MyNThmNTdmYzc5ZDI0NmJiNjVlM2M3N2JiZTgzMTJlZTM1ZGI2In19fQ=="
+  set {_lvlhead::5} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ZiOTFiYjk3NzQ5ZDZhNmVlZDQ0NDlkMjNhZWEyODRkYzRkZTZjMzgxOGVlYTVjN2UxNDlkZGRhNmY3YzkifX19"
+  #
+  # > Get island challenge data for repeats.
+  set {_islandchallengedata} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challenges}
+  set {_islandchallengedata::*} to {_islandchallengedata} split at ","
+  loop {_islandchallengedata::*}:
+    set {_tdata::*} to loop-value split at "="
+    set {_tdata::2} to {_tdata::2} parsed as integer
+    set {_finalchallenges::%{_tdata::1}%} to {_tdata::2}
+  #
+  # > Loop trough all 5 challenge levels.
+  loop 5 times:
+    #
+    # > Every challenge level has 7 challenges, loop through them.
+	# > Also start at every challenge level at challenge level part 1.
+    set {_challangelvlpart} to 1
+    loop 7 times:
+      if {_currentlevel} >= {_challengelvl}:
+        if {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::item} is set:
+          set {_item} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::item}
+        else:
+          set {_item} to glass pane
+        #
+        # > Extract needed items for this challenge:
+        set {_needed} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::needed}
+        set {_needed::*} to {_needed} split at ","
+        #
+        # > Loop trough all needed items and create a lore compatible text:
+        set {_loreneeded} to "%{SB::lang::challenge::youneed::%{_lang}%}%"
+        loop {_needed::*}:
+          set {_tmp::*} to loop-value-3 split at "-"
+          set {_loreneeded} to "%{_loreneeded}%\n"
+          set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+          replace all "<amount>" with "%{_tmp::1}%" in {_m}
+          if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
+            replace all "<item>" with "%{_tmp::2}%" in {_m}
+          else:
+            replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
+          set {_loreneeded} to "%{_loreneeded}%%{_m}%"
+        #
+        # > Extract reward items for this challenge:
+        #
+        # > If the challenge has already been done, display the repeat rewand.
+        if {_finalchallenges::%{_challengelvl}%%{_challangelvlpart}%} is set:
+          set {_done} to true
+          set {_reward} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::repeatreward}
+        #
+        # > The challenge has not been done, display first rewards.
+        else:
+          set {_done} to false
+          set {_reward} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::reward}
+        #
+        # > Language for level.
+        set {_lvltranslation} to {SB::lang::challenge::level::%{_lang}%}
+        replace all "<level>" with "%{_challengelvl}%" in {_lvltranslation}
+        #
+        # > Split the rewards string to get a list of rewards.
+        set {_reward::*} to {_reward} split at ","
+        set {_lorereward} to "\n%{SB::lang::challenge::youget::%{_lang}%}%"
+        #
+        # > Add custom reward text to reward lore.
+        if {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::customreward} is set:
+          if {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::customreward} is not "":
+            set {_lorereward} to "%{_lorereward}%\n%{SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::customreward}%"
+        #
+        # > Loop through the reward list.
+        loop {_reward::*}:
+		  #
+		  # > Each list entry contains a string with <amount>-<itemname>, split it at "-",
+		  # > to display it correctly.
+          set {_tmp::*} to loop-value-3 split at "-"
+          set {_lorereward} to "%{_lorereward}%\n"
+          #
+          # > Get the translation and replace placeholders.
+          set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+          replace all "<amount>" with "%{_tmp::1}%" in {_m}
+          if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
+            replace all "<item>" with "%{_tmp::2}%" in {_m}
+          else:
+            replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
+          set {_lorereward} to "%{_lorereward}%%{_m}%"
+          #
+          # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
+          set {_loreend} to "\n%{SB::config::guispacer}%\n"
+          if {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::repeat} is true:
+            set {_m} to {SB::lang::challenge::repeatable::%{_lang}%}
+            set {_c} to 0
+            set {_c} to {SB::crepeats::%{_uuid}%-%{_challengelvl}%%{_challangelvlpart}%}
+            set {_max} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::repeatsperday}
+            #
+            # > If the server operator set the repeat amount per day to -1, it is endless.
+            if {_max} is -1:
+              set {_max} to "∞"
+            replace all "<current>" with "%{_c}%" in {_m}
+            replace all "<maxrepeat>" with "%{_max}%" in {_m}
+            set {_loreend} to "%{_loreend}%%{_m}%"
+          #
+          # > If repeats are disabled for the challenge:
+          else:
+            set {_loreend} to "%{_loreend}%%{SB::lang::challenge::notrepeatable::%{_lang}%}%"
+			#
+			# > Repeats for this challenge are disabled, if it has been done, set the item to a black glass pane.
+            if {_done} is true:
+              set {_item} to black glass pane
+		
+        setguiitem({_p},{_slot},"%{_item}%",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
+      else:
+        #
+        # > The slot is not available, display a black glass pane instead.
+        set slot {_slot} of {_p}'s current inventory to black glass pane named "%{_lvltranslation}%"
+      #
+	  # > The challenge level part loop ends here, add 1 to the slot and challenge level part.
+      add 1 to {_slot}
+      add 1 to {_challangelvlpart}
+    #
+    # > The challenge level loop ends here, place the level heads.
+    add 1 to {_slot}
+    set {_head} to getcustomhead("blackint%{_challengelvl}%", "%{_lvlhead::%{_challengelvl}%}%", {_p})
+    set name of {_head} to "%{_lvltranslation}%"
+	#
+	# > If the current level of the island has not reached this challenge level, display how much xp is needed or print "unlocked".
+    if {_currentlevel} >= {_challengelvl}:
+      set lore of {_head} to "%{SB::lang::challenge::unlocked::%{_lang}%}%"
+    else:
+      set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||-||&r%{_xp}%/%{SB::config::challenges::thereshold::%{_challengelvl}%}%||-||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
+    set slot {_slot} of {_p}'s current inventory to {_head}
+    add 1 to {_slot}
+    add 1 to {_challengelvl}
+
+#
+# > Function: solvechallenge
+# > Arguments:
+# > <player>player,<text>challenge id (challenge level::challenge level part)
+# > Actions:
+# > This function gets called, if the player tries to solve a challenge trough
+# > the challange menu. If successfull, remove items, add xp and items to player's inventory.
+function solvechallenge(p:player,challenge:text):
+  #
+  # > Set needed local variables.
+  set {_needed} to {SB::config::challenges::c::%{_challenge}%::needed}
+  set {_reward} to {SB::config::challenges::c::%{_challenge}%::reward}
+  set {_repeatreward} to {SB::config::challenges::c::%{_challenge}%::repeatreward}
+  set {_repeat} to {SB::config::challenges::c::%{_challenge}%::repeat}
+  set {_repeatsperday} to {SB::config::challenges::c::%{_challenge}%::repeatsperday}
+  set {_cid} to {_challenge}
+  replace all "::" with "" in {_cid}
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  set {_x} to x-coord of {_bedrock}
+  set {_y} to y-coord of {_bedrock}
+  set {_z} to z-coord of {_bedrock}
+  #
+  # > Split the string to a array. (challenge level=1,challenge id=3=repeats 5 amount == 13=5)
+  # > Get repeat amount: {_finalchallenges::%{_cid}%}
+  set {_islandchallengedata} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challenges}
+  set {_islandchallengedata::*} to {_islandchallengedata} split at ","
+  loop {_islandchallengedata::*}:
+    set {_tdata::*} to loop-value split at "="
+    set {_tdata::2} to {_tdata::2} parsed as integer
+    set {_finalchallenges::%{_tdata::1}%} to {_tdata::2}
+  #
+  # > Check repeatable challenges here.
+  if {_repeat} is true:
+    #
+    # > If it is not allowed to repeat the challenge unlimited, check if there are already repeats for today.
+    if {_repeatsperday} is not -1:
+      if {SB::crepeats::%{_uuid}%-%{_cid}%} is set:
+        #
+        # > If there are more repeats than allowed, print error and stop it.
+        if {SB::crepeats::%{_uuid}%-%{_cid}%} >= {_repeatsperday}:
+          set {_m} to {SB::lang::challenge::onlyxtimesaday::%{_lang}%}
+          replace all "<amount>" with "%{_repeatsperday}%" in {_m}
+          message "%{_prefix}% %{_m}%" to {_p}
+          close {_p}'s inventory
+          stop
+  #
+  # > Check if this challenge has been done already.
+  if {_finalchallenges::%{_cid}%} is set:
+    #
+    # > If it is not allowed to repeat this challenge, print error and stop.
+    if {_repeat} is false:
+      message "%{_prefix}% %{SB::lang::challenge::cantrepeated::%{_lang}%}%" to {_p}
+      close {_p}'s inventory
+      stop
+    #
+    # > If it is allowed to repeat, set the reward to the repeat reward.
+    set {_reward} to {_repeatreward}
+  #
+  # > Extract needed items for this challenge:
+  set {_needed::*} to {_needed} split at ","
+  #
+  # > Loop trough all needed items and create a lore compatible text:
+  loop {_needed::*}:
+    set {_tmp::*} to loop-value split at "-"
+    set {_tmp::1} to {_tmp::1} parsed as number
+    set {_tmp::3} to {_tmp::2}
+    set {_tmp::2} to {_tmp::2} parsed as item
+    if number of {_tmp::2} in {_p}'s inventory < {_tmp::1}:
+      if {_incomplete} is not set:
+        message "%{_prefix}% %{SB::lang::challenge::youstillneed::%{_lang}%}%" to {_p}
+      set {_amount} to number of {_tmp::2} in {_p}'s inventory
+      set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+      #
+      # > Replace the amount of the item, which is already in the inventory and
+      # > the amount, that is needed to complete (solve) this challange.
+      replace all "<amount>" with "%{_tmp::1} - {_amount}%" in {_m}
+      if {SB::lang::item::%{_tmp::3}%::%{_lang}%} is not set:
+        replace all "<item>" with "%{_tmp::3}%" in {_m}
+      else:
+        replace all "<item>" with "%{SB::lang::item::%{_tmp::3}%::%{_lang}%}%" in {_m}
+      #
+      # > Print error to player that there is something missing to complete this challenge.
+      message "%{_prefix}% %{_m}%" to {_p}
+      set {_incomplete} to true
+  #
+  # > If the player does not have everything in the inventory, stop here.
+  if {_incomplete} is true:
+    close {_p}'s inventory
+    stop
+  #
+  # > If the player has everything in his inventory, remove it.
+  loop {_needed::*}:
+    set {_tmp::*} to loop-value split at "-"
+    set {_tmp::1} to {_tmp::1} parsed as number
+    set {_tmp::2} to {_tmp::2} parsed as item
+    remove {_tmp::1} of {_tmp::2} from {_p}'s inventory
+  #
+  # > Split the reward string and parse the rewards to give it to the player.
+  set {_reward::*} to {_reward} split at ","
+  loop {_reward::*}:
+    set {_tmp::*} to loop-value split at "-"
+    set {_tmp::1} to {_tmp::1} parsed as number
+    #
+    # > If the reward is xp, set the xp variable.
+    if {_tmp::2} is "xp":
+      set {_xp} to {_tmp::1}
+    #
+    # > If the reward is not "xp", set it to a item and check inventory.
+    else:
+      set {_tmp::2} to {_tmp::2} parsed as item
+      #
+      # > If there is enough space in the inventory for the item, give it the player.
+      if {_p} has enough space for {_tmp::1} of {_tmp::2}:
+        give {_p} {_tmp::1} of {_tmp::2}
+      #
+      # > If there is not enough space in the inventory of the player, spawn it at the location of the player on the floor.
+      else:
+        spawn {_tmp::1} of {_tmp::2} at {_p}'s location
+  #
+  # > If there is a custom function set for this challenge, execute it with evaluate.
+  if {SB::config::challenges::c::%{_challenge}%::customfunction} is set:
+    if {SB::config::challenges::c::%{_challenge}%::customfunction} is not "":
+      evaluate "%{SB::config::challenges::c::%{_challenge}%::customfunction}%"
+  #
+  # > Add experience to the island of the player.
+  if {_xp} is set:
+    add {_xp} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challengexp}
+  #
+  # > Everything is done, add one to repeats for this challenge.
+  add 1 to {SB::crepeats::%{_uuid}%-%{_cid}%}
+  add 1 to {_finalchallenges::%{_cid}%}
+  #
+  # > Add this challenge to island score string.
+  loop {_finalchallenges::*}:
+    if {_i} is not set:
+      #
+      # > Challenge id=challenge solved amount, eg. 13=5 (challenge level 1, challenge 3 has been solved 5 times)
+      set {_infalc} to "%loop-index%=%loop-value%"
+      set {_i} to 1
+    else:
+      #
+      # > Split every new challenge with a comma. Add challenges to the string like above.
+      set {_infalc} to "%{_infalc}%,%loop-index%=%loop-value%"
+  #
+  # > Save the new challenge string to the island.
+  set {SB::island::%{_x}%_%{_y}%_%{_z}%::challenges} to {_infalc}
+  #
+  # > Open challenges menu again.
+  openchallenges({_p})
