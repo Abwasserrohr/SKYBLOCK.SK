@@ -56,9 +56,6 @@ function openchallenges(p:player):
   if {_xp} is not set:
     set {_xp} to 0
   #
-  # > For debugging purposes
-  set {_xp} to 2000
-  #
   # > Get the current level.
   loop 5 times:
     if {_xp} >= {SB::config::challenges::thereshold::%{_challengelvl}%}:
