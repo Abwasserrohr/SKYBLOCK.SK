@@ -317,6 +317,9 @@ on script load:
   set {SB::lang::challenge::notrepeatable::%{_lang}%} to "&7Nicht wiederholbar."
 
   #
+  # > Short rest for server
+  wait 1 tick
+  #
   # > Challenge names
   set {SB::lang::challenge::name::1::1::%{_lang}%} to "Kakteenfarmer"
   set {SB::lang::challenge::name::1::2::%{_lang}%} to "Kiesverwender"
@@ -330,7 +333,7 @@ on script load:
   set {SB::lang::challenge::name::2::2::%{_lang}%} to "Erdmensch"
   set {SB::lang::challenge::name::2::3::%{_lang}%} to "Grüße aus der Hölle"
   set {SB::lang::challenge::name::2::4::%{_lang}%} to "Pilzzüchter"
-  set {SB::lang::challenge::name::2::5::%{_lang}%} to "Krümelige angelegenheit"
+  set {SB::lang::challenge::name::2::5::%{_lang}%} to "Krümelige Angelegenheit"
   set {SB::lang::challenge::name::2::6::%{_lang}%} to "Gartenarbeit"
   set {SB::lang::challenge::name::2::7::%{_lang}%} to "Bäckerei"
 
