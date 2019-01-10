@@ -84,6 +84,10 @@ function openchallenges(p:player):
     # > Every challenge level has 7 challenges, loop through them.
 	# > Also start at every challenge level at challenge level part 1.
     set {_challangelvlpart} to 1
+    #
+    # > Language for level.
+    set {_lvltranslation} to {SB::lang::challenge::level::%{_lang}%}
+    replace all "<level>" with "%{_challengelvl}%" in {_lvltranslation}
     loop 7 times:
       if {_currentlevel} >= {_challengelvl}:
         if {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::item} is set:
@@ -119,10 +123,6 @@ function openchallenges(p:player):
         else:
           set {_done} to false
           set {_reward} to {SB::config::challenges::c::%{_challengelvl}%::%{_challangelvlpart}%::reward}
-        #
-        # > Language for level.
-        set {_lvltranslation} to {SB::lang::challenge::level::%{_lang}%}
-        replace all "<level>" with "%{_challengelvl}%" in {_lvltranslation}
         #
         # > Split the rewards string to get a list of rewards.
         set {_reward::*} to {_reward} split at ","
@@ -173,7 +173,7 @@ function openchallenges(p:player):
             if {_done} is true:
               set {_item} to black glass pane
 		
-        setguiitem({_p},{_slot},"%{_item}%",1,"%{SB::lang::guiexpname::%{SK::lang::%{_uuid}%}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
+        setguiitem({_p},{_slot},"%{_item}%",1,"&r%{SB::lang::challenge::name::%{_challengelvl}%::%{_challangelvlpart}%::%{_lang}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
       else:
         #
         # > The slot is not available, display a black glass pane instead.
@@ -192,7 +192,7 @@ function openchallenges(p:player):
     if {_currentlevel} >= {_challengelvl}:
       set lore of {_head} to "%{SB::lang::challenge::unlocked::%{_lang}%}%"
     else:
-      set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||-||&r%{_xp}%/%{SB::config::challenges::thereshold::%{_challengelvl}%}%||-||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
+      set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::thereshold::%{_challengelvl}%}%||%{SB::config::guispacer}%||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
     set slot {_slot} of {_p}'s current inventory to {_head}
     add 1 to {_slot}
     add 1 to {_challengelvl}
