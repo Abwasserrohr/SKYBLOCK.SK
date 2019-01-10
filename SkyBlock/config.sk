@@ -536,6 +536,9 @@ on load:
   #
   # > Add a custom function if you want, which is executed on completion of the challenge.
   #set {SB::config::challenges::c::1::1::customfunction} to ""
+  #
+  # > Add a custom reward text to describe your custom function rewards. Set new lines with ||.
+  #set {SB::config::challenges::c::1::1::customreward} to ""
 
   set {SB::config::challenges::c::1::1::needed} to "64-cactus"
   set {SB::config::challenges::c::1::1::reward} to "15-xp,2-sand"
@@ -544,6 +547,7 @@ on load:
   set {SB::config::challenges::c::1::1::repeat} to true
   set {SB::config::challenges::c::1::1::repeatsperday} to 1
   set {SB::config::challenges::c::1::1::customfunction} to ""
+  set {SB::config::challenges::c::1::1::customreward} to ""
 
   set {SB::config::challenges::c::1::2::needed} to "48-cobblestone,16-gunpowder"
   set {SB::config::challenges::c::1::2::reward} to "1-xp,64-gravel"
@@ -551,7 +555,6 @@ on load:
   set {SB::config::challenges::c::1::2::item} to gravel block
   set {SB::config::challenges::c::1::2::repeat} to true
   set {SB::config::challenges::c::1::2::repeatsperday} to 0
-  set {SB::config::challenges::c::1::2::customfunction} to ""
 
   set {SB::config::challenges::c::1::3::needed} to "64-leaves,32-cobblestone,32-stone brick"
   set {SB::config::challenges::c::1::3::reward} to "1-xp,32-mossy cobblestone,32-mossy stone brick"
@@ -778,7 +781,7 @@ on load:
   set {SB::config::challenges::c::5::6::repeat} to true
   set {SB::config::challenges::c::5::6::repeatsperday} to 0
   
-  set {SB::config::challenges::c::5::7::needed} to "5-zombie head,5-creeper head,5-skeleton head,5-player head"
+  set {SB::config::challenges::c::5::7::needed} to "2-zombie head,2-skeleton head,7-creeper head,7-player head"
   set {SB::config::challenges::c::5::7::reward} to "2500-xp,1-dragon head"
   set {SB::config::challenges::c::5::7::repeatreward} to "500-xp,1-dragon head"
   set {SB::config::challenges::c::5::7::item} to dragon head
@@ -787,5 +790,4 @@ on load:
 
 #
 # > Functions to start after config loaded, do not change this if you don't know what you're doing.
-#
   loadislandstoworld()
