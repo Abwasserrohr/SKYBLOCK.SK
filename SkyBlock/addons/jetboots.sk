@@ -1,0 +1,174 @@
+#
+# ==============
+# jetboots.sk v0.0.1
+# ==============
+# Let users craft jetboots, which can be used to fly around. They need fuel to fly.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > actionbar.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/raw/master/SkyBlock/SKYBLOCK.SK/Functions/actionbar.sk
+# ==============
+# How to use it:
+# ==============
+# > This skript doesn't need any setup on server side.
+# > First use: Place jetboots.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Steps for users:
+# > Craft this recipe:
+# >      air      |   air   |      air
+# > diamond block | feather | diamond block
+# > diamond block | feather | diamond block
+# > Wear the shoes and then fly around, you may
+# > have to fill the up with coal while waring them.
+# > Simply click with coal in your hand to fill them up.
+
+#
+# > If you change these options, might be necessary,
+# > JetBoots, which are already in the game are not
+# > going to work anymore, if you change the item_name.
+options:
+  #
+  # > Defines how the item should be named:
+  item_name: "&eJetBoots"
+  #
+  # > Defines, how much the fuel should fill up the boots, every second, 20 fuel gets used.
+  fuelworth: 20
+  #
+  # > Defines the speed of the boots.
+  flyspeed: 0.04
+  #
+  # > Default translation, if no SkyBlock translation is available.
+  fillinfo: "Fill %{@item_name}%&r up with coal while wearing them."
+  emptyinfo: "Your %{@item_name}%&r are empty!"
+  loadedinfo: "Your %{@item_name}%&r have been filled up."
+
+#
+# > Event - on load
+# > Action:
+# > Once this file is loaded by skript, the JetBoots get registered as a crafting recipe.
+# > Also, if there is a old jetboots list left, delete it.
+on load:
+  set {_item} to diamond boots
+  set name of {_item} to {@item_name}
+  set line 1 of lore of {_item} to {@item_name}
+  set line 2 of lore of {_item} to "&r0"
+  register new shaped recipe for {_item} using air, air, air, diamond block, feather, diamond block, diamond block, feather, diamond block
+  delete {SR::jetboots::*}
+
+#
+# > Event - on craft
+# > Action:
+# > If the player has crafted a recipe which contains the defined item name
+# > in the first line of the lore, give the player information on how to fill them.
+on craft:
+  if line 1 of lore of event-item is {@item_name}:
+    message {@fillinfo}
+
+#
+# > Import Java classes from bukkit to use particle effects for the JetBoots in the jetparticle function.
+import:
+  org.bukkit.Particle
+  org.bukkit.Effect
+
+#
+# > Event - on jump
+# > Actions:
+# > Once the player jumped, the JetBoots are activated, the player can now
+# > fly around, as long as they have enough fuel and the boots are in the
+# > Boot slot of the player.
+on jump:
+  if line 1 of lore of player's boots is {@item_name}:
+    if {SR::jetboots::%player%} is true:
+      stop
+    #
+    # > Wait a tick 
+    wait 1 tick
+    #
+    # > Make the player fly at a specified fly speed.
+    set player's flight mode to true
+    set the player's fly speed to {@flyspeed}
+    #
+    # > Set the {SR::jetboots::%player%} to true to prevent multiple while loops.
+    set {SR::jetboots::%player%} to true
+    while line 1 of lore of player's boots is {@item_name}:
+      #
+      # > Before every while loop, wait 1 tick.
+      wait 1 tick
+      #
+      # > Remove fuel from the JetBoots if the player is flying and
+      # > update the actionbar of the player.
+      if player is flying:
+        set {_lore} to line 2 of lore of player's boots
+        replace all "&r" with "" in {_lore}
+        set {_lore} to {_lore} parsed as integer
+        if {_lore} > 500:
+          actionbar(player,"%{_lore}%")
+        #
+        # > Make the actionbar colored red and fat, if it is below 500.
+        else:
+          actionbar(player,"&4&l%{_lore}%")
+        if {_lore} <= 0:
+          #
+          # > If the lore is 0 or lower, print info to the player and stop flying.
+          message {@emptyinfo}
+          message {@fillinfo}
+          set player's flight mode to false
+          set the player's fly speed to 0.08
+          delete {SR::jetboots::%player%}
+          stop
+        #
+        # > Spawn some jet particles using the jetparticle function.
+        jetparticle(player)
+        remove 1 from {_lore}
+        set line 2 of lore of player's boots to "&r%{_lore}%"
+      else:
+        if block below player's location is air:
+          set {_i} to 0
+        add 1 to {_i}
+        if {_i} >= 25:
+          #
+          # > If the player is standing around, prevent while loops after 25 ticks,
+          # > if the player stands on ground and is not in the air.
+          set player's flight mode to false
+          set the player's fly speed to 0.08
+          delete {SR::jetboots::%player%}
+          stop
+    #
+    # > If the while loop ends, disable flying for player,
+    # > this happens, if the player takes the JetBoots off while
+    # > flying in the air.
+    delete {SR::jetboots::%player%}
+    set player's flight mode to false
+    set the player's fly speed to 0.08
+
+#
+# > Function - jetparticle
+# > Parameters - <player>player
+# > Actions:
+# > Spawn particles for JetBoots.
+function jetparticle(p:player):
+  set {_l} to location of {_p}
+  set {_x} to x-coord of {_l}
+  set {_y} to y-coord of {_l}
+  set {_z} to z-coord of {_l}
+  set {_world} to {_p}'s world
+  {_world}.spawnParticle(Particle.EXPLOSION_NORMAL!,{_x},{_y},{_z}, 0.5)
+
+#
+# > Event - on rightclick holding coal
+# > Actions:
+# > If the player is rightclicking while holding coal and the player is wearing JetBoots,
+# > the coal gets removed from the inventory of the player and added as fuel to the JetBoots.
+on rightclick holding coal:
+  if player's boots is set:
+    if line 1 of lore of player's boots is {@item_name}:
+      set {_lore} to line 2 of lore of player's boots
+      replace all "&r" with "" in {_lore}
+      set {_lore} to {_lore} parsed as integer
+      set {_fuel} to number of coal in player's inventory
+      remove {_fuel} of coal from player's inventory
+      set {_fuelbonus} to {_fuel} * {@fuelworth}
+      add {_fuelbonus} to {_lore}
+      set line 2 of lore of player's boots to "&r%{_lore}%"
+      message {@loadedinfo}
