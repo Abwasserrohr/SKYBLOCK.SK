@@ -515,14 +515,14 @@ on load:
   # > Give the server some rest.
   wait 1 tick
   #
-  # > Define the xp thereshold for every challenge level, the higher, the harder
+  # > Define the xp threshold for every challenge level, the higher, the harder
   # > it gets to climb up the levels. To have everything unlocked at the beginning,
-  # > set all theresholds to 0.
-  set {SB::config::challenges::thereshold::1} to 0
-  set {SB::config::challenges::thereshold::2} to 2000
-  set {SB::config::challenges::thereshold::3} to 5000
-  set {SB::config::challenges::thereshold::4} to 9000
-  set {SB::config::challenges::thereshold::5} to 25000
+  # > set all thresholds to 0.
+  set {SB::config::challenges::threshold::1} to 0
+  set {SB::config::challenges::threshold::2} to 2000
+  set {SB::config::challenges::threshold::3} to 5000
+  set {SB::config::challenges::threshold::4} to 9000
+  set {SB::config::challenges::threshold::5} to 25000
 
   #
   # > Define the challenges. Example:
