@@ -139,6 +139,12 @@ on PlayerInteractEvent:
   if {_b} is pressure plate or tripwire:
     stop
   #
+  # > Prevent dirt duplication using coarse dirt.
+  if {_b} is coarse dirt:
+    set {_a} to event.getAction()
+    if {_a} is "RIGHT_CLOCK_BLOCK":
+      cancel event
+  #
   # > Check for the following redstone changes (there is a specific flag for this).
   if {_b} is repeater or comparator or daylight detector:
     set {_player} to event.getPlayer()
