@@ -92,14 +92,14 @@ function deleteisland(p: offline player):
     #
     # > Delete the island warp:
     delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::warp}
-	
-	#
-	# > Delete challenge experience
-	delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::challengexp}
-	
-	#
-	# > Delete challenge stats
-	delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::challenges}
+    
+    #
+    # > Delete challenge experience
+    delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::challengexp}
+    
+    #
+    # > Delete challenge stats
+    delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::challenges}
 
     #
     # > Sets the local variables {_loc1} and {_loc2} to the bedrock location.
