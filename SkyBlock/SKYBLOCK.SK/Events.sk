@@ -142,7 +142,7 @@ on PlayerInteractEvent:
   # > Prevent dirt duplication using coarse dirt.
   if {_b} is coarse dirt:
     set {_a} to event.getAction()
-    if {_a} is "RIGHT_CLOCK_BLOCK":
+    if "%{_a}%" is "RIGHT_CLICK_BLOCK":
       cancel event
   #
   # > Check for the following redstone changes (there is a specific flag for this).
