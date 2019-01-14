@@ -36,6 +36,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
       return {SB::config::defaultlobbyflag::mob-damage}
     else if {_event} is "VehicleDamageEvent":
       return {SB::config::defaultlobbyflag::interact-vehicle}
+    else if {_event} is "jetboots":
+      return {SB::config::defaultlobbyflag::jetboots}
+
 
   #
   # > The getcurrentbedrock function created some global temporary variables we can now check,
@@ -319,6 +322,14 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
     else:
       if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
         return {SB::config::defaultisflag::%{_playertype}%::entityclick}
+  #
+  # > This flag is for JetBoots, it gets triggered if the player wants to fly on other islands.
+  else if {_event} is "jetboots":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::jetboots} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::jetboots}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::jetboots} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::jetboots}
 
 #
 # > Remove all temporary variables on load, which have been created trough the functions above.
