@@ -125,7 +125,13 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 # > Generatres temporary variables which store the current borders of the player,
 # > if the temporary variables are set, it returns them if everything is ok.
 function getcurrentbedrock(p:player, l:location) :: location:
+  if {SB::TEMPLOC::%{_p}%} is not set:
+    set {_new} to true
   if {SB::TEMPLOC::%{_p}%b1} is not set:
+    set {_new} to true
+  if {SB::TEMPLOC::%{_p}%b2} is not set:
+    set {_new} to true
+  if {_new} is true:
     #
     # > Get the current bedrock of the player,
     # > this takes around 0.02 seconds, thats why we use caching here.
