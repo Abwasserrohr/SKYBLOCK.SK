@@ -283,16 +283,16 @@ command /island [<text>] [<text=1>] [<text>]:
             set {_x} to x-coord of {_loc}
             set {_y} to y-coord of {_loc}
             set {_z} to z-coord of {_loc}
+            set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} to {_homeloc}
             set {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} to uuid of player
             set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to 1
             set {SB::island::%{_x}%_%{_y}%_%{_z}%::exp} to 0
             set {SB::island::%{_x}%_%{_y}%_%{_z}%::created} to now
             set {SB::player::%uuid of player%::island::bedrock} to location at {_x}, {_y}, {_z} in "%{SB::config::world}%" parsed as world
             set {SB::islvl::%{_x}%_%{_y}%_%{_z}%} to 0
-            
+
             add 1 to y-coord of {_loc}
             set {_y} to y-coord of {_loc}            
-            set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::home} to {_homeloc}
             stop loop
           wait a ticks
         if {_s} is 6:
