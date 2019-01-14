@@ -376,91 +376,13 @@ command /island [<text>] [<text=1>] [<text>]:
         set {_z} to z-coordinate of {_bedrockloc}
         set {_level} to {SB::island::%{_x}%_%{_y}%_%{_z}%::level}
         actionload(player,"&rLevel: &6&l%{_level}%")
-
+    #
+    # > Argument: "top"
+    # > If a player types in /island with the first argument "top",
+    # > the top list gets shown to the player using the islandtoplist function.
     else if arg-1 is "top":
-      if {SB::islvl::*} is set:
-        loop {SB::islvl::*}:
-          set {_loc::*} to loop-index split at "_"
-          set {_loc::1} to {_loc::1} parsed as number
-          set {_loc::2} to {_loc::2} parsed as number
-          set {_loc::3} to {_loc::3} parsed as number
-          set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
-          set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
-          set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
-      #
-      # > Check for duplicate entries, if there are any, delete this entry in the list.
-          if {_duplicationcheck::%loop-index%} is set:
-            delete {SB::islvl::%loop-index%}
-          set {_duplicationcheck::%loop-index%} to loop-value
-          #
-          # > If there is already a level set for this player, delete the list entry.
-          if {_Level::%{_uuid}%} is set:
-            delete {SB::islvl::%loop-index%}
-          set {_Level::%{_uuid}%} to {_level}
-        loop {_Level::*}:
-          add 1 to {_size}
-          if {_low.to.high.list::%loop-value%} is not set:
-            set {_low.to.high.list::%loop-value%} to loop-index
-          else:
-            set {_n} to 0
-            loop {_size} times:
-              set {_n} to {_n}+1
-              {_low.to.high.list::%loop-value-1%.%{_n}%} is not set
-              set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
-              stop loop
-        wait 1 tick
-        set {_n} to size of {_low.to.high.list::*}
-        loop {_low.to.high.list::*}:
-          set {_high.to.low.list::%{_n}%} to loop-value
-          set {_n} to {_n}-1
-        wait 1 tick
-        set {_page} to 1
-        loop {_high.to.low.list::*}:
-          add 1 to {_result}
-          add 1 to {_r}
-          set {_Top::%{_page}%::%{_r}%} to loop-value
-          if loop-value is player:
-            set {_rank} to {_r}
-          else:
-            loop {_Member::%loop-value%::*}:
-              if loop-value-2 is player:
-                set {_rank} to {_r}
-          if {_result} is 10:
-            set {_result} to 0
-            add 1 to {_page}
-        set {_arg1} to arg-2 parsed as number
-        if {_arg1} is not set:
-          message "%{_prefix}% %{SB::lang::notanumber::%{SK::lang::%uuid of player%}%}%"
-          stop
-        else:
-          if {_top::%{_arg1}%::*} is not set:
-            message "%{_prefix}% %{SB::lang::pagenotfound::%{SK::lang::%uuid of player%}%}%"
-            stop
-        if {_Rank} is not set:
-          set {_rank} to "-/-"
-        message "%{SB::config::spacer}%"
-        send "%{SB::lang::prefix::%{SK::lang::%uuid of player%}%}%&6&l &eTop 10 &6&l(%arg-2%/%{_page}%)"
-        loop {_Top::%arg-2%::*}:
-          set {_member} to ""
-          set {_loc} to {SB::player::%loop-value%::island::bedrock}
-          set {_locx} to x-coord of {_loc}
-          set {_locy} to y-coord of {_loc}
-          set {_locz} to z-coord of {_loc}
-          loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-            set {_tp} to "%loop-value-2%" parsed as offline player
-            if {_member} is "":
-              set {_member} to "%{_tp}%"
-            else:
-              set {_member} to "%{_member}%, %{_tp}%"
-          set {_p} to "%loop-value%" parsed as offline player
-          if player is {_p}:
-            set {_rank} to loop-index
-          send  "&e&l%loop-index%&8 - &6%{_p}%&7&l: &e%{_Level::%loop-value%}% &7||&8 %{_Member}%"
-        set {_size} to size of {SB::islvl::*}
-        send "%{SB::lang::prefix::%{SK::lang::%uuid of player%}%}% &eDu bist auf Platz %{_rank}% von %{_size}% Inseln. todo: translate"
-        message "%{SB::config::spacer}%"
-      else:
-        message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+      islandtoplist(player,arg-2)
+
     else if arg-1 is "level" or "lvl":
       if {SB::player::%uuid of player%::island::bedrock} is not set:
         message "%{_prefix}%  %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
