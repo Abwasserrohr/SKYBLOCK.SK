@@ -313,11 +313,14 @@ function solvechallenge(p:player,challenge:text):
       #
       # > If there is enough space in the inventory for the item, give it the player.
       if {_p} has enough space for {_tmp::1} of {_tmp::2}:
-        give {_p} {_tmp::1} of {_tmp::2}
+        give {_tmp::1} of {_tmp::2} to {_p}
       #
       # > If there is not enough space in the inventory of the player, spawn it at the location of the player on the floor.
       else:
-        spawn {_tmp::1} of {_tmp::2} at {_p}'s location
+        set {_droploc} to {_p}'s location
+        add 0.5 to y-coord of {_droploc}
+        drop {_tmp::1} of {_tmp::2} at {_droploc}
+
   #
   # > If there is a custom function set for this challenge, execute it with evaluate.
   if {SB::config::challenges::c::%{_challenge}%::customfunction} is set:
