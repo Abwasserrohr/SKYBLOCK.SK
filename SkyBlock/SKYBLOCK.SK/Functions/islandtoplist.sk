@@ -59,12 +59,12 @@ function islandtoplist(p:player,pageint:text):
   #
   # > Reverts low to high to high to low list to get a toplist.
   loop {_l2h::*}:
-    set {_h2l.list::%{_n}%} to loop-value
+    set {_h2l::%{_n}%} to loop-value
     set {_n} to {_n}-1
   set {_page} to 1
   #
   # > Go trough the new high to low list and create a toplist.
-  loop {_h2l.list::*}:
+  loop {_h2l::*}:
     add 1 to {_pageentries}
 	#
 	# > 
