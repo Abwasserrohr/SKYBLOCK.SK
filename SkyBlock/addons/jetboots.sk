@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.1
+# jetboots.sk v0.0.2
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -152,7 +152,7 @@ on jump:
         if block below player's location is air:
           set {_i} to 0
         add 1 to {_i}
-        if {_i} >= 25:
+        if {_i} >= 50:
           #
           # > If the player is standing around, prevent while loops after 25 ticks,
           # > if the player stands on ground and is not in the air.
