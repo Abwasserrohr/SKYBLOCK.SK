@@ -58,7 +58,7 @@ function openchallenges(p:player):
   #
   # > Get the current level.
   loop 5 times:
-    if {_xp} >= {SB::config::challenges::thereshold::%{_challengelvl}%}:
+    if {_xp} >= {SB::config::challenges::threshold::%{_challengelvl}%}:
       set {_currentlevel} to {_challengelvl}
     add 1 to {_challengelvl}
   set {_challengelvl} to 1
@@ -172,7 +172,7 @@ function openchallenges(p:player):
 			# > Repeats for this challenge are disabled, if it has been done, set the item to a black glass pane.
             if {_done} is true:
               set {_item} to black glass pane
-		
+
         setguiitem({_p},{_slot},"%{_item}%",1,"&r%{SB::lang::challenge::name::%{_challengelvl}%::%{_challangelvlpart}%::%{_lang}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
       else:
         #
@@ -192,7 +192,7 @@ function openchallenges(p:player):
     if {_currentlevel} >= {_challengelvl}:
       set lore of {_head} to "%{SB::lang::challenge::unlocked::%{_lang}%}%"
     else:
-      set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::thereshold::%{_challengelvl}%}%||%{SB::config::guispacer}%||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
+      set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%{_challengelvl}%}%||%{SB::config::guispacer}%||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
     set slot {_slot} of {_p}'s current inventory to {_head}
     add 1 to {_slot}
     add 1 to {_challengelvl}
