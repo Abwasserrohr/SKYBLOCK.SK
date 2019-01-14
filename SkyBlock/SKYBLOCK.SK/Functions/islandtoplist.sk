@@ -55,6 +55,7 @@ function islandtoplist(p:player,pageint:text):
         if {_l2h::%loop-value-1%.%{_n}%} is not set:
           set {_l2h::%loop-value-1%.%{_n}%} to loop-index
           stop loop
+  set {_n} to size of {_l2h::*}
   #
   # > Reverts low to high to high to low list to get a toplist.
   loop {_l2h::*}:
