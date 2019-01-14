@@ -133,6 +133,17 @@ on jump:
           delete {SR::jetboots::%player%}
           stop
         #
+        # > Check if the player is allowed to fly with the JetBoots at this locaction.
+        set {_allowed} to checkislandaccess(player,location of player,"jetboots")
+        if {_allowed} is false:
+          set player's flight mode to false
+          set the player's fly speed to 0.08
+          delete {SR::jetboots::%player%}
+          set {_lang} to {SK::lang::%uuid of player%}
+          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::flag::errorfalse::%{_lang}%}%"
+          actionbar(player,"&4%{SB::lang::flag::errorfalse::%{_lang}%}%")
+          stop
+        #
         # > Spawn some jet particles using the jetparticle function.
         jetparticle(player)
         remove 1 from {_lore}
