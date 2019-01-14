@@ -39,9 +39,9 @@ options:
   flyspeed: 0.04
   #
   # > Default translation, if no SkyBlock translation is available.
-  fillinfo: "Fill %{@item_name}%&r up with coal while wearing them."
-  emptyinfo: "Your %{@item_name}%&r are empty!"
-  loadedinfo: "Your %{@item_name}%&r have been filled up."
+  fillinfo: "Fill &eJetBoots&r up with coal while wearing them."
+  emptyinfo: "Your &eJetBoots&r are empty!"
+  loadedinfo: "Your &eJetBoots&r have been filled up."
 
 #
 # > Event - on load
@@ -63,7 +63,13 @@ on load:
 # > in the first line of the lore, give the player information on how to fill them.
 on craft:
   if line 1 of lore of event-item is {@item_name}:
-    message {@fillinfo}
+    set {_lang} to {SK::lang::%uuid of player%}
+    #
+    # > Print predefined message, if no translation is available.
+    if {SB::lang::jetboots::fi::%{_lang}%} is not set:
+      message {@fillinfo}
+    else:
+      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%"
 
 #
 # > Import Java classes from bukkit to use particle effects for the JetBoots in the jetparticle function.
@@ -111,8 +117,17 @@ on jump:
         if {_lore} <= 0:
           #
           # > If the lore is 0 or lower, print info to the player and stop flying.
-          message {@emptyinfo}
-          message {@fillinfo}
+          set {_lang} to {SK::lang::%uuid of player%}
+          #
+          # > Print predefined messages, if no translation is available.
+          if {SB::lang::jetboots::ei::%{_lang}%} is not set:
+            message {@emptyinfo}
+          else:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::ei::%{_lang}%}%"
+          if {SB::lang::jetboots::fi::%{_lang}%} is not set:
+            message {@fillinfo}
+          else:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%"
           set player's flight mode to false
           set the player's fly speed to 0.08
           delete {SR::jetboots::%player%}
@@ -171,4 +186,10 @@ on rightclick holding coal:
       set {_fuelbonus} to {_fuel} * {@fuelworth}
       add {_fuelbonus} to {_lore}
       set line 2 of lore of player's boots to "&r%{_lore}%"
-      message {@loadedinfo}
+      set {_lang} to {SK::lang::%uuid of player%}
+      #
+      # > Print predefined message, if no translation is available.
+      if {SB::lang::jetboots::li::%{_lang}%} is not set:
+        message {@loadedinfo}
+      else:
+        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::li::%{_lang}%}%"
