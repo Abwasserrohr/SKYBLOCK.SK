@@ -155,6 +155,13 @@ on script load:
   set {SB::lang::helpsiteerror::%{_lang}%} to "%{_p1}%/is help <Seite>"
 
   #
+  # > /island top
+  #
+  set {SB::lang::istopheader::%{_lang}%} to " &eTop 10 &6&l(<currentpage>/<allpages>)"
+  set {SB::lang::istoplist::%{_lang}%} to "&e&l<rank>&8 - &6<leader>&7&l: &e<points> &7||&8 <members>"
+  set {SB::lang::istoprankinfo::%{_lang}%} to "&eDu bist auf Platz <rank> von <islands> Inseln."
+
+  #
   # > /isadmin - command feedback
   #
   set {SB::lang::isadmin::deletedxis::%{_lang}%} to "<amount> Inseln wurden gelöscht."
