@@ -55,7 +55,6 @@ function islandtoplist(p:player,pageint:text):
         if {_l2h::%loop-value-1%.%{_n}%} is not set:
           set {_l2h::%loop-value-1%.%{_n}%} to loop-index
           stop loop
-  set {_n} to size of {_l2h::*}
   #
   # > Reverts low to high to high to low list to get a toplist.
   loop {_l2h::*}:
@@ -69,7 +68,7 @@ function islandtoplist(p:player,pageint:text):
 	#
 	# > 
     add 1 to {_rank}
-    set {_Top::%{_page}%::%{_rank}%} to loop-value
+    set {_top::%{_page}%::%{_rank}%} to loop-value
 	#
 	# > If the current loop value is the same as the bedrock string of the player, set it to the current rank of the player.
     if loop-value is {_pbedrock}:
@@ -79,11 +78,13 @@ function islandtoplist(p:player,pageint:text):
     if {_pageentries} is 10:
       set {_pageentries} to 0
       add 1 to {_page}
-    #
-    # > If the page is not set in the top list, send a error and stop.
-    if {_top::%{_pageint}%::*} is not set:
-      message "%{_prefix}% %{SB::lang::pagenotfound::%{_lang}%}%" to {_p}
-      stop
+  #
+  # > If the page is not set in the top list, send a error and stop.
+  if {_top::%{_pageint}%::*} is not set:
+    set {_msg} to {SB::lang::pagenotfound::%{_lang}%}
+    replace all "<pages>" with "%{_page}%" in {_msg}
+    message "%{_prefix}% %{_msg}%" to {_p}
+    stop
   message "%{SB::config::spacer}%" to {_p}
   #
   # > Get the translation of the header and replace placeholders, then send it to the player.
@@ -93,7 +94,7 @@ function islandtoplist(p:player,pageint:text):
   message "%{_prefix}% %{_msg}%" to {_p}
   #
   # > Loop through the toplist site, the player has requested.
-  loop {_Top::%{_pageint}%::*}:
+  loop {_top::%{_pageint}%::*}:
     set {_member} to ""
     set {_loc} to "%loop-value%"
 	#
