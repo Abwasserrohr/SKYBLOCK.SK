@@ -134,6 +134,9 @@ on load:
   #
   # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
   set {SB::config::defaultisflag::foreign::redstone} to false
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::jetboots} to false
 
   #
   # > Default Flags for player islands (trusted flags):
@@ -171,6 +174,9 @@ on load:
   #
   # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
   set {SB::config::defaultisflag::trusted::redstone} to true
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::jetboots} to true
 
   #
   # > Default Flags for player islands (foreign flags):
@@ -208,7 +214,9 @@ on load:
   #
   # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
   set {SB::config::defaultisflag::member::redstone} to true
-
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::jetboots} to true
 
   #
   # > Flags for not inhabited islands:
@@ -235,13 +243,15 @@ on load:
   #
   # > Damage on item frames
   set {SB::config::defaultlobbyflag::itemframe-damage} to false
-
   #
   # > Interact with vehicles. True = allowed, false = denied.
   set {SB::config::defaultlobbyflag::interact-vehicle} to false
   #
   # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
   set {SB::config::defaultlobbyflag::redstone} to false
+  #
+  # > Allow players to use jetboots on the lobby. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::jetboots} to false
 
   #
   # > Color Scheme
