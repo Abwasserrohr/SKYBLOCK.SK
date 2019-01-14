@@ -106,12 +106,7 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
     if {_check} is false:
       message "%{_prefix}% %{SB::lang::flag::errorfalse::%{_lang}%}%" to {_p2}
       stop
-    
-    #
-    # > If there is no location set to this arugment, there might be one on the old variable type:
-    if {_loc} is not set:
-      set {_loc} to {SB::player::%{_uuid}%::island::home::%{_arg1}%}
-      set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} to {_loc}
+
     #
     # > If there is nothing, print all available homes.
     if {_loc} is not set:
@@ -129,13 +124,19 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
         set {_loc2} to {_loc}
         subtract 1 from y-coord of {_loc2}
         if "%block at {_loc2}%" is "air":
+          broadcast "%{_loc2}%"
           message "%{_prefix}% %{SB::lang::homewarnair::%{_lang}%}%" to {_p2}
           wait a tick
           make {_p} execute command "/is go"
           stop
-      
       teleport {_p2} to {_loc}
       message "%{_prefix}% %{SB::lang::tphome::%{_lang}%}%" to {_p2}
+      #
+      # > If the home of the player is in lava, give the player resistance for 15 seconds to
+      # > prevent any damage and to recover from the situation.
+      if block at {_loc} is lava:
+        remove resistance from {_p2}
+        apply potion of resistance of tier 5 to {_p2} for 15 seconds
   #
   # > If the player wants to delete a home:
   else if {_action} is "delhome":
