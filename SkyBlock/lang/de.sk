@@ -303,7 +303,7 @@ on script load:
 
   #
   # > JetBoots
-  set {SB::lang::jetboots::fi::%{_lang}%} to "Fülle deine &eJetBoots&r mit Kohle auf, während du diese trägst."
+  set {SB::lang::jetboots::fi::%{_lang}%} to "Fülle deine &eJetBoots&r mit Kohle auf, während du diese trägst. Pass auf, dass du nicht an einer Grenze nach unten fällst. Andere Inselinhaber haben die &eJetBoots&r wahrscheinlich für dich abgeschaltet."
   set {SB::lang::jetboots::ei::%{_lang}%} to "Deine &eJetBoots&r sind leer!"
   set {SB::lang::jetboots::li::%{_lang}%} to "Deine &eJetBoots&r wurden aufgefüllt."
 
