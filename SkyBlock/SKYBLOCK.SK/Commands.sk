@@ -369,21 +369,6 @@ command /island [<text>] [<text=1>] [<text>]:
     # > the top list gets shown to the player using the islandtoplist function.
     else if arg-1 is "top":
       islandtoplist(player,arg-2)
-
-    else if arg-1 is "level" or "lvl":
-      if {SB::player::%uuid of player%::island::bedrock} is not set:
-        message "%{_prefix}%  %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-      else:
-        set {_loc} to {SB::player::%uuid of player%::island::bedrock}
-        set {_locx} to x-coord of {_loc}
-        set {_locy} to y-coord of {_loc}
-        set {_locz} to z-coord of {_loc}
-        set {_level} to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::level}
-        set {_p} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
-        message "%{SB::config::spacer}%"
-        message "%{_p}%%{SB::lang::levelheader::%{SK::lang::%uuid of player%}%}%%{_level}%" to player
-        message "%{_p}% Calculate your level with /is calc -todo: translation" to player
-        message "%{SB::config::spacer}%"
     else if arg-1 is "spawn" or "lobby":
       teleport player to {SB::config::spawn}
     else if arg-1 is "invite":
@@ -573,11 +558,11 @@ command /island [<text>] [<text=1>] [<text>]:
       send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
       send "%{SB::config::spacer}%"
     #
-    # > Argument: "info"
+    # > Argument: "info" or "level" or "lvl"
     # > If a player types in /island info, islandinfo function is called.
     # > Actions:
     # > Calls the islandinfo function with the player and second argument as parameter.
-    else if arg-1 is "info":
+    else if arg-1 is "info" or "level" or "lvl":
       islandinfo(player,arg-2)
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
