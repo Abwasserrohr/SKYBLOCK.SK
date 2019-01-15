@@ -22,7 +22,7 @@ import:
 
 options:
   #
-  # > Set the time, how long the inventories should be kept on the server.
+  # > Set the time how long the inventories should be kept on the server.
   keepinv: 72 hours
   #
   # > The price for a recovery from any death that's not void or lava.
@@ -96,7 +96,10 @@ function openrecoverymenu(p:player):
     else:          
       set {_lore} to "{@r_gui_lore}"
     if {_price} is 0:
-      replace all "<price>" with "{@r_free}" in {_lore}
+      if {SB::lang::recovery::free::%{_lang}%} is set:
+        replace all "<price>" with "%{SB::lang::recovery::free::%{_lang}%}%" in {_lore}
+      else:
+        replace all "<price>" with "{@r_free}" in {_lore}
     else:
       replace all "<price>" with "%{_price}% {@currency_name}" in {_lore}
     replace all "<date>" with "%{_now}%" in {_lore}
@@ -128,8 +131,8 @@ function buyrecoverychest(p:player,invid:text,price:integer):
   #
   # > Only continue, if the player has enough money.
   if {_p}'s balance <= {_price}:
-    if {SB::lang::recovery::notenoughspace::%{_lang}%} is set:
-      message "%{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
+    if {SB::lang::bc::notenoughmoney::%{_lang}%} is set:
+      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
     else:
       message "{@r_prefix} {@r_not_enough_money}" to {_p}
     stop
@@ -147,14 +150,14 @@ function buyrecoverychest(p:player,invid:text,price:integer):
     #
     # > Send success message to player.
     if {SB::lang::recovery::placetoget::%{_lang}%} is set:
-      message "%{SB::lang::recovery::placetoget::%{_lang}%}%" to {_p}
+      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::placetoget::%{_lang}%}%" to {_p}
     else:
       message "{@r_prefix} {@r_place_to_get}" to {_p}
   #
   # > Player has not enough space, send error to player.
   else:
     if {SB::lang::recovery::notenoughspace::%{_lang}%} is set:
-      message "%{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
+      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
     else:
       message "{@r_prefix} {@r_not_enough_space}" to {_p}
 
@@ -235,8 +238,8 @@ on place of chest:
         # > stop and inform that there is more space needed.
         if size of {SR::recovery::inv::%{_invid}%::*} > 27:
           if block above event-location is not air:
-            if {SB::lang::recovery::spaceneeded::%{_lang}%} is set:
-              message "%{SB::lang::recovery::spaceneeded::%{_lang}%}%" to {_p}
+            if {SB::lang::recovery::inventoryspaceneeded::%{_lang}%} is set:
+              message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::inventoryspaceneeded::%{_lang}%}%" to {_p}
             else:
               message "{@r_prefix} {@r_spaceneeded}"
             cancel event
@@ -308,6 +311,6 @@ on death of player:
   #
   # > Send information how to get the recovery in the chat.
   if {SB::lang::recovery::recoveredinfo::%{_lang}%} is set:
-    message "%{SB::lang::recovery::recoveredinfo::%{_lang}%}%" to player
+    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::recoveredinfo::%{_lang}%}%" to player
   else:
     message "{@r_prefix} {@r_recovered_info}" to player
