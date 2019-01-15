@@ -1,0 +1,313 @@
+#
+# ==============
+# recovery.sk v0.0.1
+# ==============
+# Let users recovery their xp and items if they die. They have to use /recovery to get items.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > First use: Place recovery.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Commands: /recovery
+# > To disable, simply put a "-" in front of this file name.
+
+#
+# > Import this Java class, to create random uuids for the inventories.
+import:
+  java.util.UUID
+
+options:
+	#
+	# > Set the time, how long the inventories should be kept on the server.
+	keepinv: 72 hours
+	#
+	# > The price for a recovery from any death that's not void or lava.
+	default_price: 0
+	#
+	# > Price for void death recovery:
+	void_price: 2000
+	#
+	# > Price for lava death recovery:
+	lava_price: 1500
+	#
+	# > Fallback messages, if translation is not available:
+	currency_name: Taler
+	r_header: "&lRecovery"
+	r_prefix: &7[&6Recovery&7]&r
+	r_free: free
+	r_recovered_info: Your inventory has been recovered. Get it back using &6/recovery
+	r_place_to_get: Place this chest to restore your inventory. This recovery chest can still be deleted, use it fast.
+	r_spaceneeded: There shouldn't be a block above the chest. Please give it more room.
+	r_recovery_gui_item_name: &rGet Inventory back
+	r_not_enough_money: &rYou don't have enough money to buy this.
+	r_not_enough_space: &rYou don't have enough space in your inventory.
+	r_gui_lore: &eRestore chest\n&7Place it to get\n&7your inventory back.\n&8---------\n&7Price: <price>\n&8---------\n&7Date: <date>
+
+#
+# > Command - recovery
+# > Actions:
+# > Calls the openrecoverymenu function with the player as parameter.
+command /recovery:
+	trigger:
+		openrecoverymenu(player)
+#
+# > Function - openrecoverymenu
+# > Parameters - <player>player
+# > Actions:
+# > Opens the recovery menu which lists all inventory uuids to buy.
+function openrecoverymenu(p:player):
+	#
+	# > Set local variables which are used frequently.
+	set {_uuid} to uuid of {_p}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	#
+	# > Open the recovery menu.
+	if {SB::lang::recovery::header::%{_lang}%} is set:
+		opengui({_p},54,"%{SB::lang::recovery::header::%{_lang}%}%")
+	else:
+		opengui({_p},54,{@r_header})
+	set {_slot} to 0
+	#
+	# > Loop through all available inventory uuids.
+	loop {SR::recovery::player::%{_uuid}%::*}:
+		set {_invuuid} to loop-value
+		#
+		# > Set the time of the death to {_now}
+		set {_now} to {SR::recovery::time::%{_invuuid}%}
+		#
+		# > Set {_cause} to the cause of the death.
+		set {_cause} to {SR::recovery::cause::%{_invuuid}%}
+		#
+		# > Apply a price depending on the {_cause} variable.
+		if {_cause} is "void":
+			set {_price} to {@void_price}
+		else if {_cause} is "lava":
+			set {_price} to {@lava_price}
+		else:
+			set {_price} to {@default_price}
+		#
+		# > Create the lore and replace the placeholders.
+		if {SB::lang::recovery::guiitemlore::%{_lang}%} is set:
+			set {_lore} to {SB::lang::recovery::guiitemlore::%{_lang}%}
+		else:					
+			set {_lore} to "{@r_gui_lore}"
+		if {_price} is 0:
+			replace all "<price>" with "{@r_free}" in {_lore}
+		else:
+			replace all "<price>" with "%{_price}% {@currency_name}" in {_lore}
+		replace all "<date>" with "%{_now}%" in {_lore}
+		#
+		# > Set the items into the menu.
+		if {SB::lang::recovery::guiitemname::%{_lang}%} is set:
+			setguiitem({_p},{_slot},"chest",1,"%{SB::lang::recovery::guiitemname::%{_lang}%}%",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+		else:
+			setguiitem({_p},{_slot},"chest",1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+		add 1 to {_slot}
+		#
+		# > If there are more than 55 inventory uuids. Stop here.
+		if {_slot} is 55:
+			stop
+
+#
+# > Function - buyrecoverychest
+# > Parameters - <player>player, <text>inventory uuid
+# > Actions:
+# > This function is called through the recovery menu. It buys the player the recovery chest.
+function buyrecoverychest(p:player,invid:text,price:integer):
+	#
+	# > Set local variables which are used frequently.
+	set {_uuid} to uuid of {_p}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_item} to chest
+	set line 1 of lore of {_item} to "&eRecovery"
+	set line 2 of lore of {_item} to "&7%{_invid}%"
+	#
+	# > Only continue, if the player has enough money.
+	if {_p}'s balance <= {_price}:
+		if {SB::lang::recovery::notenoughspace::%{_lang}%} is set:
+			message "%{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
+		else:
+			message "{@r_prefix} {@r_not_enough_money}" to {_p}
+		stop
+	#
+	# > Only continue, if the player has enough space in his inventory.
+	if {_p}'s inventory has enough space for 1 of {_item}:
+		#
+		# > Gie the player the recovery chest. And remove the uuid from his recovery menu
+		# > using deleterecoverychest with step parameter 1.
+		give 1 of {_item} to {_p}
+		deleterecoverychest({_invid},1)
+		#
+		# > Remove money from player's balance.
+		remove {_price} from {_p}'s balance
+		#
+		# > Send success message to player.
+		if {SB::lang::recovery::placetoget::%{_lang}%} is set:
+			message "%{SB::lang::recovery::placetoget::%{_lang}%}%" to {_p}
+		else:
+			message "{@r_prefix} {@r_place_to_get}" to {_p}
+	#
+	# > Player has not enough space, send error to player.
+	else:
+		if {SB::lang::recovery::notenoughspace::%{_lang}%} is set:
+			message "%{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
+		else:
+			message "{@r_prefix} {@r_not_enough_space}" to {_p}
+
+#
+# > Function - deleterecoverychest
+# > Parameters - <text>inventory uuid, <integer>step (1 = remove from player's gui, 2 = remove completly)
+# > Actions:
+# > Deletes the recovery variables out of the system.
+function deleterecoverychest(invid:text,step:integer):
+	set {_uuid} to {SR::recovery::idp::%{_invid}%}
+	if {_step} is 1:
+		loop {SR::recovery::player::%{_uuid}%::*}:
+			if "%loop-value%" is "%{_invid}%":
+				delete {SR::recovery::player::%{_uuid}%::%loop-index%}
+	if {_step} is 2:
+		delete {SR::recovery::inv::%{_invid}%::*}
+		delete {SR::recovery::inv::%{_invid}%}
+		delete {SR::recovery::time::%{_invid}%}
+		delete {SR::recovery::idp::%{_invid}%}
+		delete {SR::recovery::cause::%{_invid}%}
+		delete {SR::recovery::xp::%{_invid}%}
+		loop {SR::recovery::player::%{_uuid}%::*}:
+			if "%loop-value%" is "%{_invid}%":
+				delete {SR::recovery::player::%{_uuid}%::%loop-index%}
+
+#
+# > Event - on load
+# > Triggered on load of this file.
+# > Actions:
+# > Loops through all recovery inventories, if there is one which is
+# > longer there than the timeframe set in the options, delete it using
+# > the deleterecoverychest function.
+on load:
+	loop {SR::recovery::time::*}:
+		set {_time} to loop-value
+		set {_time} to {_time} parsed as time
+		#
+		# > If the compared time between now and the time of the looped inventory uuid is larger than
+		# > specified in the options, delete it.
+		if difference between {_time} and now > {@keepinv}:
+			deleterecoverychest(loop-index,2)
+
+#
+# > Event - on place of chest
+# > Triggered, if the player places a chest.
+# > Actions:
+# > If the chest is a recovery chest, restore the inventory in the chest and
+# > give the player the xp stored in the inventory uuid.
+on place of chest:
+	if player's tool is chest:
+		#
+		# > Only proceed, if this is a recovery chest.
+		if line 1 of lore of player's tool is "&eRecovery":
+			#
+			# > Only place the chest, if the player is allowed to do this action to prevent loss of
+			# > the items if placed somewhere else.
+			set {_allowed} to checkislandaccess(player,location of event-block,"build")
+			if {_allowed} is not false:
+				#
+				# > Get the inventory uuid from the second line of the chest and remove the color format code.
+				set {_invid} to line 2 of lore of player's tool
+				replace all "&7" with "" in {_invid}
+				#
+				# > Start at slot 0 of the chest.
+				set {_slot} to 0
+				#
+				# > Set local variable to the location of the event (where the block gets placed).
+				set {_l} to event-location
+				#
+				# > Set {_chest} to the block at the event location.
+				set {_chest} to block at {_l}
+				#
+				# > set {_chest1} to the block above the event location
+				add 1 to y-coord of {_l}
+				set {_chest1} to block at {_l}
+				#
+				# > If the inventory has more than 27 slots and the block above is not air,
+				# > stop and inform that there is more space needed.
+				if size of {SR::recovery::inv::%{_invid}%::*} > 27:
+					if block above event-location is not air:
+						if {SB::lang::recovery::spaceneeded::%{_lang}%} is set:
+							message "%{SB::lang::recovery::spaceneeded::%{_lang}%}%" to {_p}
+						else:
+							message "{@r_prefix} {@r_spaceneeded}"
+						cancel event
+						stop
+					#
+					# > If everything is fine, set another chest above to restore everything.
+					else:
+						set block at {_l} to chest
+				#
+				# > Give the player the experience back.
+				add {SR::recovery::xp::%{_invid}%} to xp of player
+				#
+				# > Wait 1 tick, needed to wait for the chest being placed.
+				wait 1 tick
+				#
+				# > Loop trough all saved items and set it into the chest.
+				loop {SR::recovery::inv::%{_invid}%::*}:
+					if {_slot} is 28:
+						set {_slot} to 0
+						set {_chest} to {_chest1}
+					set slot {_slot} of {_chest}'s inventory to loop-value
+
+					add 1 to {_slot}
+				#
+				# > Delete the recovery inventory uuid using deleterecoverychest.
+				deleterecoverychest({_invid},2)
+
+#
+# > Event - on death of player
+# > Triggered, if a player dies.
+# > Actions:
+# > Clears all xp and drops of the player and saves everything into
+# > unique variables created to be accessed later.
+on death of player:
+	#
+	# > Set local variables which are used frequently.
+	set {_uuid} to uuid of player
+	set {_lang} to {SK::lang::%{_uuid}%}
+	#
+	# > Create a unique uuid, check that it is actually unique.
+	while {_s} is not set:
+		set {_invuuid} to UUID.randomUUID()
+		if {SR::recovery::time::%{_invuuid}%} is not set:
+			set {_s} to true
+	#
+	# > Assign the inventory uuid to the player.
+	add {_invuuid} to {SR::recovery::player::%{_uuid}%::*}
+	#
+	# > Set the timestamp of the inventory uuid to now.
+	set {SR::recovery::time::%{_invuuid}%} to now
+	#
+	# > Set the uuid, who owns the inventory.
+	set {SR::recovery::idp::%{_invuuid}%} to {_uuid}
+	#
+	# > Set the death cause to the inventory.
+	set {SR::recovery::cause::%{_invuuid}%} to "%damage cause%"
+	#
+	# > Set the xp of the player to the inventory.
+	set {SR::recovery::xp::%{_invuuid}%} to xp of player
+	#
+	# > Loop through all items in the inventory of the player and save them into a list.
+	loop all items in player's inventory:
+		set {_item} to loop-item
+		add loop-item to {SR::recovery::inv::%{_invuuid}%::*}
+	#
+	# > Clear all drops and remove all xp on the floor.
+	clear drops
+	remove all 1 xp from drops
+	#
+	# > Send information how to get the recovery in the chat.
+	if {SB::lang::recovery::recoveredinfo::%{_lang}%} is set:
+		message "%{SB::lang::recovery::recoveredinfo::%{_lang}%}%" to player
+	else:
+		message "{@r_prefix} {@r_recovered_info}" to player
