@@ -2,7 +2,7 @@
 # ==============
 # recovery.sk v0.0.1
 # ==============
-# Let users recovery their xp and items if they die. They have to use /recovery to get items.
+# Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
 # Dependencies
 # ==============
@@ -16,7 +16,7 @@
 # > To disable, simply put a "-" in front of this file name.
 
 #
-# > Import this Java class, to create random uuids for the inventories.
+# > Import this Java class to create random uuids for the inventories.
 import:
   java.util.UUID
 
