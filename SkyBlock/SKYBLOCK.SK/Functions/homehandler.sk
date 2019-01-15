@@ -136,7 +136,7 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
       # > prevent any damage and to recover from the situation.
       if block at {_loc} is lava:
         remove resistance from {_p2}
-        apply potion of resistance of tier 5 to {_p2} for 15 seconds
+        apply potion of fire resistance of tier 5 to {_p2} for 15 seconds
   #
   # > If the player wants to delete a home:
   else if {_action} is "delhome":

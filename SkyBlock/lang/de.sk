@@ -315,6 +315,17 @@ on script load:
   set {SB::lang::jetboots::li::%{_lang}%} to "Deine &eJetBoots&r wurden aufgefüllt."
 
   #
+  # > Recovery menu
+  set {SB::lang::recovery::guiitemlore::%{_lang}%} to "%{_p2}%Wiederherstellung\n%{_s1}%Platziere diese Kiste,\n%{_s1}%um dein Inventar zu erhalten.\n%{SB::config::guispacer}%\n&7Preis: <price>\n%{SB::config::guispacer}%\n&7Datum: <date>"
+  set {SB::lang::recovery::header::%{_lang}%} to "&lWiederherstellung"
+  set {SB::lang::recovery::guiitemname::%{_lang}%} to "&rErhalte dein Inventar zurück"
+  set {SB::lang::recovery::notenoughspace::%{_lang}%} to "%{_p1}%Es sollte kein Block über der Wiederherstellungskiste sein."
+  set {SB::lang::recovery::placetoget::%{_lang}%} to "%{_s1}%Platziere diese Kiste um dein Inventar wiederherzustellen. Diese Wiederherstellung ist zeitlich limitiert und sollte schnellstmöglich durchgeführt werden."
+  set {SB::lang::recovery::inventoryspaceneeded::%{_lang}%} to "Du hast nicht genug Platz in deinem Inventar."
+  set {SB::lang::recovery::recoveredinfo::%{_lang}%} to "%{_s1}%Dein Inventar wurde gesichert, erhalte es mit %{_p1}%/recovery%{_s1}% zurück."
+  set {SB::lang::recovery::free::%{_lang}%} to "%{_p1}%Kostenlos"
+  
+  #
   # > Challennges
   set {SB::lang::challenge::menutitle::%{_lang}%} to "&lHerausforderungen"
   set {SB::lang::challenge::disabled::%{_lang}%} to "&lHerausforderungen sind nicht verfügbar."
