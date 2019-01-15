@@ -361,21 +361,8 @@ command /island [<text>] [<text=1>] [<text>]:
         message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
       else:
         set {SB::calcdown::%uuid of player%} to now
-        set {SB::calcstatus::%player%} to 1
         $ thread
         calcisland(player)
-    else if arg-1 is "calcwait":
-      if {SB::calcstatus::%player%} is set:
-        actionload(player,"start")
-        while {SB::calcstatus::%player%} is set:
-          wait 10 ticks
-        set {_uuid} to uuid of player
-        set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
-        set {_x} to x-coordinate of {_bedrockloc}
-        set {_y} to y-coordinate of {_bedrockloc}
-        set {_z} to z-coordinate of {_bedrockloc}
-        set {_level} to {SB::island::%{_x}%_%{_y}%_%{_z}%::level}
-        actionload(player,"&rLevel: &6&l%{_level}%")
     #
     # > Argument: "top"
     # > If a player types in /island with the first argument "top",
@@ -585,101 +572,19 @@ command /island [<text>] [<text=1>] [<text>]:
         message "%{_prefix}% %{SB::lang::helpdelwarp::%{SK::lang::%uuid of player%}%}%"
       send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
       send "%{SB::config::spacer}%"
-
     #
     # > Argument: "info"
-    # > If a player types in /island info, the the following code is being executed.
+    # > If a player types in /island info, islandinfo function is called.
     # > Actions:
-    # > Starts the "checkislandaccess" function with the player and location of player as parameter, if the return location is is not at y-coordinate -5, go forward.
-    # > Then it takes the location apart in x, y, z coordinates and gets all the variables from the main location of the island, where the
-    # > Bedrock is placed at and displays the data.
-    #
+    # > Calls the islandinfo function with the player and second argument as parameter.
     else if arg-1 is "info":
-      #
-    # > Update the temporary location of the island bedrock, the player is on.
-      set {_d} to checkislandaccess(player, location of player)
-      #
-      # > Set the {_bedrock} variable to the current temporary location of the bedrock.
-      set {_bedrock} to {SB::TEMPLOC::%player%}
-      if y-coordinate of {_bedrock} is -5:
-        #
-        # > Prints the defined spacers and a message that the island could not be found:
-        #
-        message "%{SB::config::spacer}%"
-        message "%{_prefix}% %{SB::lang::isinfonotfound::%{SK::lang::%uuid of player%}%}%"
-        message "%{SB::config::spacer}%"
-      else:
-        set {_loc::1} to x-coord of {_bedrock}
-        set {_loc::2} to y-coord of {_bedrock}
-        set {_loc::3} to z-coord of {_bedrock}
-        
-        set {_uuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader} parsed as offline player
-        set {_realuuid} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::leader}
-        set {_level} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::level}
-        set {_exp} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::exp}
-        set {_created} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::created}
-        set {_lastactive} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::lastactive}
-        set {_hopperlevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::hopperupgrade}
-        set {_sizelevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::sizeupgrade}
-        set {_homelevel} to {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::homeupgrade}
-        #
-        # > If the levels aren't set, set them to 0.
-        if {_hopperlevel} is not set:
-          set {_hopperlevel} to 0
-        if {_sizelevel} is not set:
-          set {_sizelevel} to 0
-        if {_homelevel} is not set:
-          set {_homelevel} to 0
-        
-        #
-        # > Go trough all members and add them as a player to a new array.
-        loop {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::member::*}:
-          add "%loop-value%" parsed as offline player to {_member::*} 
-        #
-        # > Go trough all trusted players and add them as a player to a new array.
-        loop {SB::island::%{_loc::1}%_%{_loc::2}%_%{_loc::3}%::trust::*}:
-          add "%loop-value%" parsed as offline player to {_trusted::*} 
-
-        #
-        # > Prints the defined spacer:
-        message "%{SB::config::spacer}%"
-        #
-        # > Prints the header:
-        message "%{_prefix}% %{SB::lang::isinfo::%{SK::lang::%uuid of player%}%}%"
-        #
-        # > Prints the leader of the island:
-        message "%{_prefix}% %{SB::lang::isleader::%{SK::lang::%uuid of player%}%}% %{_uuid}%"
-        #
-        # > Prints the members, if there is at least one member:
-        if size of {_member::*} is not 0:
-          message "%{_prefix}% %{SB::lang::ismember::%{SK::lang::%uuid of player%}%}% %{_member::*}%"
-        #
-        # > Prints the trusted player, if there is at least one trusted player:
-        if size of {_trusted::*} is not 0:
-          message "%{_prefix}% %{SB::lang::istrusted::%{SK::lang::%uuid of player%}%}% %{_trusted::*}%"
-        #
-        # > Prints the island info:
-        message "%{_prefix}% %{SB::lang::isinfolevel::%{SK::lang::%uuid of player%}%}% %{_level}%"
-        #
-        # > Prints the creation date of the island:
-        message "%{_prefix}% %{SB::lang::iscreated::%{SK::lang::%uuid of player%}%}% %{_created}%"
-        #
-        # > Prints the last active date of the island:
-        message "%{_prefix}% %{SB::lang::islastactive::%{SK::lang::%uuid of player%}%}% %{_lastactive}%"
-        #
-        # > Prints island upgrades
-        message "%{_prefix}% %{SB::lang::isupgrades::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% | %{SB::lang::bc::islandhometitle::%{SK::lang::%uuid of player%}%}%%{_homelevel}% | %{SB::lang::bc::islandhoppertitle::%{SK::lang::%uuid of player%}%}%%{_hopperlevel}% | %{SB::lang::bc::islandsizetitle::%{SK::lang::%uuid of player%}%}%%{_sizelevel}% |"
-        #
-        # > Prints the defined spacer:
-        message "%{SB::config::spacer}%"
+      islandinfo(player,arg-2)
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
     # > If a player types in /island generator, his current generator level is displayed
     # > Actions:
     # > Gets all the broken blocks and calculates the final level the player is currently on and
     # > also display a visual appealing status, how far the next level is away. This is done in a function.
-    #
     else if arg-1 is "generator" OR "gen" OR "oregen" OR "oregenerator":
       generatorinfo(player)
     #
@@ -687,7 +592,6 @@ command /island [<text>] [<text=1>] [<text>]:
     # > If a player types in /island ores, his current chances are displayed
     # > Actions:
     # > Gets all the ore generator chances for the player
-    #
     else if arg-1 is "ores" OR "ore" OR "orechances" OR "chances":
       orechancesinfo(player)
     #
