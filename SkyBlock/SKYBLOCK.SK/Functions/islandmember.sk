@@ -189,7 +189,7 @@ function islandmember(p:player,a:text,target:text="1"):
       # > Check if the executor is the island leader.
       set {_leader} to getleader({_p})
       if {_leader} is {_uuid}:
-      set {_target} to {_target} parsed as offline player
+        set {_target} to {_target} parsed as offline player
         #
         # > If the target is a valid player.
         if {_target} is a player:
