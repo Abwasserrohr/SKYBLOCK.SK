@@ -193,7 +193,7 @@ command /island [<text>] [<text=1>] [<text>]:
         if arg-2 is "2":
           set {_uuid} to uuid of player
           set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
-      set {_bedrockloc} to "%x-coord of {_bedrockloc}%_%y-coord of {_bedrockloc}%_%z-coord of {_bedrockloc}%"
+          set {_bedrockloc} to "%x-coord of {_bedrockloc}%_%y-coord of {_bedrockloc}%_%z-coord of {_bedrockloc}%"
           if difference between {SB::island::%{_bedrockloc}%::created} and now < {SB::config::deletecooldown}:
             message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
           else:
