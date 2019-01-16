@@ -175,8 +175,8 @@ function createisland(p:player,island:text="1"):
         # > Set all configurated items into the created chest.
         loop {SB::schematics::chest::%{_schematic}%::*}:
           set {_item::*} to loop-value-2 split at ","
-          set {_titem} to "%{_data::2}%" parsed as item
-          set {_tamount} to {_data::1} parsed as integer
+          set {_titem} to "%{_item::2}%" parsed as item
+          set {_tamount} to {_item::1} parsed as integer
           #
           # > If the item is a lava bucket, bind it to the island by applying a lore.
           if {_titem} is a lava bucket:
