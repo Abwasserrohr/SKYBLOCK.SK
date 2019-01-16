@@ -130,7 +130,7 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Argument "create"
     # > Actions:
     # > Creates a island for the player or opens the island selection menu, if
-	# > the player has not already choosen a specific island.
+    # > the player has not already choosen a specific island.
     if arg-1 is "create":
       createisland(player,arg-2)
     #
@@ -201,194 +201,44 @@ command /island [<text>] [<text=1>] [<text>]:
     # > the top list gets shown to the player using the islandtoplist function.
     else if arg-1 is "top":
       islandtoplist(player,arg-2)
+    #
+    # > Argument: "spawn" or "lobby"
+    # > Actions:
+    # > Teleports the player to the configured spawn location.
     else if arg-1 is "spawn" or "lobby":
       teleport player to {SB::config::spawn}
+    #
+    # > Argument: "invite"
+    # > Actions:
+    # > The islandmember function gets called to invite the player second argument to the island.
     else if arg-1 is "invite":
-      if {SB::player::%uuid of player%::island::bedrock} is set:
-        set {_leader} to getleader(player)
-        if {_leader} is uuid of player:
-          set {_arg2} to arg-2 parsed as offline player
-          if {_arg2} is online:
-            if {_arg2} is not player:
-              set {_p2} to {_arg2}
-              set {_tuuid} to uuid of {_p2}
-              if {SB::player::%{_tuuid}%::island::bedrock} is set:
-                set {_msg} to {SB::lang::alreadyotheris::%{SK::lang::%uuid of player%}%}
-                replace all "<player>" with "%{_p2}%" in {_msg}
-                message "%{_prefix}% %{_msg}%"
-                stop
-              set {_uuid2} to uuid of {_arg2}
-              set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
-              message "%{_prefix}% %{SB::lang::sentrequest::%{SK::lang::%uuid of player%}%}%"
-              replace all "<player>" in {_b} with "%player%"
-              message "%{_prefix}% %{_b}%" to {_p2}
-              set {_uuidp2} to uuid of {_p2}
-              set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
-              replace all "<player>" with "%player%" in {_msg}
-              #todo  the function could execute the console command by itself, there is no need to do it this way
-              tellrawmsg1({_p2},{_prefix},{_msg},"/is join %player%")
-              set {_cooldown} to {SB::config::invitecooldown}
-              set {_cooldown} to {_cooldown} parsed as number
-              set {Request::%{_arg2}%::%player%} to {_cooldown}
-              while {Request::%{_arg2}%::%player%} > 0:
-                subtract 1 from {Request::%{_arg2}%::%player%}
-                wait a second
-              if {Request::%{_arg2}%::%player%} is 0:
-                delete {Request::%{_arg2}%::%player%}
-                set {_a} to {SB::lang::reqtoleader::%{SK::lang::%uuid of player%}%}
-                set {_uuid2} to uuid of {_arg2}
-                set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
-                message "%{_prefix}% %{_a}%"
-                message "%{_prefix}% %{_b}%" to {_p2}
-            else:
-              set {_a} to {SB::lang::cantinviteself::%{SK::lang::%uuid of player%}%}
-              message "%{_prefix}% %{_a}%"
-          else:
-            set {_a} to {SB::lang::playeroff::%{SK::lang::%uuid of player%}%}
-            message "%{_prefix}% %{_a}%"
-        else:
-          set {_a} to {SB::lang::notleader::%{SK::lang::%uuid of player%}%}
-          message "%{_prefix}% %{_a}%"
-      else:
-        message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+      islandmember(player,"invite",arg-2)
+    #
+    # > Argument: "join"
+    # > Actions:
+    # > The islandmember function gets called to join the island of the second argument.
     else if arg-1 is "join":
-      set {_arg2} to arg-2 parsed as offline player
-      if {_arg2} is "1":
-        loop {Request::%player%::*}:
-          set {_tplayer} to loop-index parsed as offline player
-          set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%uuid of player%}%}
-          replace all "<player>" with "%{_tplayer}%" in {_msg}
-          tellrawmsg1(player,{_prefix},{_msg},"/is join %{_tplayer}%")
-        if size of {Request::%player%::*} is 0:
-          message "%{_prefix}% %{SB::lang::norequest::%{SK::lang::%uuid of player%}%}%" to player
-        stop
-      else if {_arg2} is set:
-        if {Request::%player%::%{_arg2}%} is set:
-          if {SB::player::%uuid of player%::island::bedrock} is set:
-            message "%{_prefix}% %{SB::lang::alreadyis::%{SK::lang::%uuid of player%}%}%"
-            set {_check} to getleader(player)
-            if {_check} is uuid of player:
-              message "%{_prefix}% %{SB::lang::havetodelete::%{SK::lang::%uuid of player%}%}%"
-            else:
-              message "%{_prefix}% %{SB::lang::havetoleave::%{SK::lang::%uuid of player%}%}%"
-          else:
-            #todo - add a function which adds a member to the island with 2 agruments?
-            set {_uuid} to uuid of {_arg2}
-            set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
-            set {_locx} to x-coord of {_loc}
-            set {_locy} to y-coord of {_loc}
-            set {_locz} to z-coord of {_loc}
-            add uuid of player to {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}
-            set {_pluuid} to uuid of {_arg2}
-            set {_joinuuid} to uuid of player
-            set {SB::player::%{_joinuuid}%::island::bedrock} to {SB::player::%{_pluuid}%::island::bedrock}
-            delete {Request::%player%::%{_arg2}%}
-            make player execute command "/is home"
-            set {_a} to {SB::lang::joinedismember::%{SK::lang::%uuid of player%}%}
-            set {_uuid2} to uuid of {_arg2}
-            set {_b} to {SB::lang::joinedisleader::%{SK::lang::%{_uuid2}%}%}
-            replace all "<arg-2>" in {_a} with "%{_arg2}%"
-            replace all "<player>" in {_b} with "%player%"
-            message "%{_prefix}% %{_a}%"
-            set {_p2} to {_arg2}
-            message "%{_prefix}% %{_b}%" to {_p2}
-        else:
-          set {_a} to {SB::lang::norequest::%{SK::lang::%uuid of player%}%}
-          message "%{_prefix}% %{_a}%"
-      else:
-        set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
-        message "%{_prefix}% %{_a}%"
+      islandmember(player,"join",arg-2)
+    #
+    # > Argument: "leave"
+    # > Actions:
+    # > The islandmember function gets called to leave the island.
     else if arg-1 is "leave":
-      if {SB::player::%uuid of player%::island::bedrock} is not set:
-        message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-      else:
-        #
-        # > Doesn't allow the leader to leave the island.
-        set {_leader} to getleader(player)
-        if {_leader} is uuid of player:
-          message "%{_prefix}% %{SB::lang::leaderleaveinfo::%{SK::lang::%uuid of player%}%}%"
-        #
-        # > If the player is not a leader, the player can leave.
-        else:
-          if arg-2 is player:
-            message "%{_prefix}% %{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
-            leaveisland(player, "member")
-          else:
-            message "%{_prefix}% %{SB::lang::leftis::%{SK::lang::%uuid of player%}%}%"
-            leaveisland(player, "owner")
-
+      islandmember(player,"leave",arg-2)
+    #
     # > Argument: "kick"
-    # > If a player types in /island with the first argument "kick" and the second argument with the player name of the
-    # > player who should get kicked, then the following code is investigating if the user has an island, is the owner of his island,
-    # > has a member by that name on his member list and then fire the "leaveisland" function, if the player was found.
+    # > Actions:
+    # > The islandmember function gets called to kick the second argument player.
     else if arg-1 is "kick":
-      if {SB::player::%uuid of player%::island::bedrock} is not set:
-        message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
-      else:
-        #
-        # > Check if the executor is the island leader.
-        set {_leader} to getleader(player)
-        if {_leader} is uuid of player:
-          if arg-2 is set:
-            set {_kickplayer} to arg-2 parsed as offline player
-            set {_uuid} to uuid of {_kickplayer}
-            set {_loc} to {SB::player::%uuid of player%::island::bedrock}
-            set {_locx} to x-coord of {_loc}
-            set {_locy} to y-coord of {_loc}
-            set {_locz} to z-coord of {_loc}
-            loop {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::*}:
-              if loop-value is uuid of {_kickplayer}:
-                delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::member::%loop-index%}
-                set {_a} to {SB::lang::kickmemberleader::%{SK::lang::%uuid of player%}%}
-                set {_b} to {SB::lang::kickmember::%{SK::lang::%{_uuid}%}%}
-                set {_p2} to arg-2 parsed as offline player
-                replace all "<arg-2>" in {_a} with arg-2
-                replace all "<player>" in {_b} with "%player%"
-                message "%{_prefix}% %{_a}%"
-                leaveisland({_p2}, "member")
-                stop
-            set {_a} to {SB::lang::plnotfound::%{SK::lang::%uuid of player%}%}
-            replace all "<player>" with arg-2 in {_a}
-            message "%{_prefix}% %{_a}%"
-          else:
-            set {_a} to {SB::lang::invitetargeterror::%{SK::lang::%uuid of player%}%}
-            message "%{_prefix}% %{_a}%"
-        else:
-          actionload(player,{SB::lang::noperm::%{SK::lang::%uuid of player%}%})
+      islandmember(player,"kick",arg-2)
+    #
+    # > Argument: "help"
+    # > If a player types in /island help, islandhelp function is called.
+    # > Actions:
+    # > Calls the islandhelp function with the player and second argument as parameter.
+    # > This sends the help to the chat of the player.
     else if arg-1 is "help":
-      set {_site} to arg-2 parsed as integer
-      if {_site} is more than 5:
-        message "%{_prefix}% %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%"""
-        stop
-      send "%{SB::config::spacer}%"
-      if arg-2 is "1":
-        message "%{_prefix}% %{SB::lang::iscreate::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isdelete::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isteleport::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::issethome::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isteleportgo::%{SK::lang::%uuid of player%}%}%"
-      else if arg-2 is "2":
-        message "%{_prefix}% %{SB::lang::islevel::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::istop::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isinvite::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::iskick::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isjoin::%{SK::lang::%uuid of player%}%}%"
-      else if arg-2 is "3":
-        message "%{_prefix}% %{SB::lang::isleave::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isgui::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isspawn::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isore::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::isgen::%{SK::lang::%uuid of player%}%}%"
-      else if arg-2 is "4":
-        message "%{_prefix}% %{SB::lang::trustadd::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::trustremove::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::trustlist::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::helpwarp::%{SK::lang::%uuid of player%}%}%"
-        message "%{_prefix}% %{SB::lang::helpsetwarp::%{SK::lang::%uuid of player%}%}%"
-      else if arg-2 is "5":
-        message "%{_prefix}% %{SB::lang::helpdelwarp::%{SK::lang::%uuid of player%}%}%"
-      send "%{_prefix}% &7%{SB::lang::helps2::%{SK::lang::%uuid of player%}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{SK::lang::%uuid of player%}%}%" to player
-      send "%{SB::config::spacer}%"
+      islandhelp(player,arg-2)
     #
     # > Argument: "info" ("level" or "lvl")
     # > If a player types in /island info, islandinfo function is called.
