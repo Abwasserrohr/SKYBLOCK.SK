@@ -36,7 +36,7 @@ function islandinfo(p2:player,p:text="1"):
       stop
   else:
     set {_uuid} to uuid of {_p}
-    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock
+    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
   #
   # > Get all needed variables into shorter local variables.
   set {_bedrockloc} to "%x-coord of {_bedrock}%_%y-coord of {_bedrock}%_%z-coord of {_bedrock}%"
