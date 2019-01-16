@@ -1,0 +1,102 @@
+#
+# ==============
+# islandinfo.sk
+# ==============
+# islandinfo.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function - islandinfo
+# > Parameters - <player>player, <text>searched player
+# > Actions:
+# > Sends island info to the first player parameter. If the second parameter is empty or "1",
+# > the island on which the first player is standing is used as information. If the second player
+# > is defined, the information is about the other island.
+function islandinfo(p2:player,p:text="1"):
+  #
+  # > Set local variables to frequently used variables.
+  set {_p} to {_p} parsed as offline player
+  set {_p2uuid} to uuid of {_p2}
+  set {_lang} to {SK::lang::%{_p2uuid}%}
+  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  #
+  # > If the player parameter is not valid, take the island the player is currently on.
+  if {_p} is "1":
+    set {_d} to checkislandaccess({_p2}, location of {_p2})
+    #
+    # > Set the {_bedrock} variable to the current temporary location of the bedrock.
+    set {_bedrock} to {SB::TEMPLOC::%{_p2}%}
+    if y-coordinate of {_bedrock} is -5:
+      #
+      # > Prints the defined spacers and a message that the island could not be found:
+      #
+      message "%{SB::config::spacer}%" to {_p2}
+      message "%{_prefix}% %{SB::lang::isinfonotfound::%{_lang}%}%" to {_p2}
+      message "%{SB::config::spacer}%" to {_p2}
+      stop
+  else:
+    set {_uuid} to uuid of {_p}
+    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  #
+  # > Get all needed variables into shorter local variables.
+  set {_bedrockloc} to "%x-coord of {_bedrock}%_%y-coord of {_bedrock}%_%z-coord of {_bedrock}%"
+  set {_uuid} to {SB::island::%{_bedrockloc}%::leader} parsed as offline player
+  set {_realuuid} to {SB::island::%{_bedrockloc}%::leader}
+  set {_level} to {SB::island::%{_bedrockloc}%::level}
+  set {_exp} to {SB::island::%{_bedrockloc}%::exp}
+  set {_created} to {SB::island::%{_bedrockloc}%::created}
+  set {_lastactive} to {SB::island::%{_bedrockloc}%::lastactive}
+  set {_hopperlevel} to {SB::island::%{_bedrockloc}%::hopperupgrade}
+  set {_sizelevel} to {SB::island::%{_bedrockloc}%::sizeupgrade}
+  set {_homelevel} to {SB::island::%{_bedrockloc}%::homeupgrade}
+  #
+  # > If the levels aren't set, set them to 0.
+  if {_hopperlevel} is not set:
+    set {_hopperlevel} to 0
+  if {_sizelevel} is not set:
+    set {_sizelevel} to 0
+  if {_homelevel} is not set:
+    set {_homelevel} to 0
+  
+  #
+  # > Go trough all members and add them as a player to a new array.
+  loop {SB::island::%{_bedrockloc}%::member::*}:
+    add "%loop-value%" parsed as offline player to {_member::*} 
+  #
+  # > Go trough all trusted players and add them as a player to a new array.
+  loop {SB::island::%{_bedrockloc}%::trust::*}:
+    add "%loop-value%" parsed as offline player to {_trusted::*} 
+
+  #
+  # > Prints the defined spacer:
+  message "%{SB::config::spacer}%" to {_p2}
+  #
+  # > Prints the header:
+  message "%{_prefix}% %{SB::lang::isinfo::%{_lang}%}%" to {_p2}
+  #
+  # > Prints the leader of the island:
+  message "%{_prefix}% %{SB::lang::isleader::%{_lang}%}% %{_uuid}%" to {_p2}
+  #
+  # > Prints the members, if there is at least one member:
+  if size of {_member::*} is not 0:
+    message "%{_prefix}% %{SB::lang::ismember::%{_lang}%}% %{_member::*}%" to {_p2}
+  #
+  # > Prints the trusted player, if there is at least one trusted player:
+  if size of {_trusted::*} is not 0:
+    message "%{_prefix}% %{SB::lang::istrusted::%{_lang}%}% %{_trusted::*}%" to {_p2}
+  #
+  # > Prints the island info:
+  message "%{_prefix}% %{SB::lang::isinfolevel::%{_lang}%}% %{_level}%" to {_p2}
+  #
+  # > Prints the creation date of the island:
+  message "%{_prefix}% %{SB::lang::iscreated::%{_lang}%}% %{_created}%" to {_p2}
+  #
+  # > Prints the last active date of the island:
+  message "%{_prefix}% %{SB::lang::islastactive::%{_lang}%}% %{_lastactive}%" to {_p2}
+  #
+  # > Prints island upgrades
+  message "%{_prefix}% %{SB::lang::isupgrades::%{_lang}%}%" to {_p2}
+  message "%{_prefix}% | %{SB::lang::bc::islandhometitle::%{_lang}%}%%{_homelevel}% | %{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_hopperlevel}% | %{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_sizelevel}% |" to {_p2}
+  #
+  # > Prints the defined spacer:
+  message "%{SB::config::spacer}%" to {_p2}

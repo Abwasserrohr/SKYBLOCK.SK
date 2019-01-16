@@ -1,0 +1,229 @@
+#
+# ==============
+# createisland.sk
+# ==============
+# createisland.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - createisland:
+# > Arguments:
+# > <player>player, <text>island file name
+# > Actions:
+# > The createisland function creates a new island, if the island parameter
+# > is set, if not, open a island menu which displays all available islands.
+function createisland(p:player,island:text="1"):
+  #
+  # > Set local variables which are used frequently.
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  if {SB::player::%{_uuid}%::island::bedrock} is set:
+    message "%{_prefix}% %{SB::lang::alreadyis::%{_lang}%}%" to {_p}
+    stop
+  #
+  # > If we're already searching for a island for this player, print information and stop.
+  if {SB::searchis::%{_p}%} is set:
+    message "%{_prefix}% %{SB::lang::waitis::%{_lang}%}%" to {_p}
+    stop
+  #
+  # > Only continue, if the player parameter is online.
+  if {_p} is online:
+    #
+    # > If {_island} is "1", there is no island input, display island menu for player.
+    if {_island} is "1":
+      opengui({_p},9,"%{SB::lang::islands::%{_lang}%}%")
+      set {_slot} to 0
+      # 
+      # > Go trough all available schematics or structures, which where set in the config.sk and display it in the islands gui.
+      loop {SB::schematics::schematic::*}:
+        set {_item} to grass named "%{SB::schematics::name::%{_lang}%::%loop-index%}%"
+        setguiitem({_p},{_slot},"grass",1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
+        add 1 to {_slot}
+      stop
+    else:
+      #
+      # > If schematics are configured to be used.
+      # > Currently not supported.
+      if {SB::config::isstorage} is "Schematic":
+        if file "plugins/WorldEdit/schematics/%{_island}%" exists:
+          #
+          # > Check, if the schematic is actually in the configuration.
+          set {_ok} to false
+          loop {SB::schematics::schematic::*}:
+            if loop-value is {_island}:
+              set {_ok} to true
+          #
+          # > If the schematic is not within the configuration, send error and stop.
+          if {_ok} is "false":
+            message "%{_prefix}% Error: Island not found." to {_p}
+            stop
+        #
+        # > If the Schematic file doesn't exist, send error and stop.
+        else:
+          message "%{_prefix}% Error: Schematic not found." to {_p}
+          stop
+      #
+      # > If structure files are used, check is done later while creating the island.
+      else:
+        set {_ok} to true
+  #
+  # > Start a loading bar using the actionload function.
+  actionload({_p},"start")
+  #
+  # > Set this variable to true to prevent the player from creating multiple islands at once.
+  set {SB::searchis::%{_p}%} to true
+  #
+  # > If there is already a search process running, let the user wait until it is no longer running.
+  while {SB::searchprocess} is true:
+    wait 10 ticks
+  #
+  # > While doing the waiting, the player may got somehow an island, be sure that there is not already an island again.
+  if {SB::player::%{_uuid}%::island::bedrock} is set:
+    message "%{_prefix}% %{SB::lang::alreadyis::%{_lang}%}%" to {_p}
+    stop
+  #
+  # > Get the center of the world.
+  set {_loc} to location at 0.5, {SB::config::height}, 0.5 in "%{SB::config::world}%" parsed as world
+  #
+  # > Search for a empty world with a while loop.
+  set {SB::searchprocess} to true
+  set {_search} to true
+  set {_sb} to 1
+  set {_loop} to 1
+  #
+  # > The search process is explained in "SkyBlock/SKYBLOCK.SK/Functions/searchbedrock.sk"
+  while {_search} is true:
+    loop {_loop} times:
+	  #
+	  # > Search every new loop for a empty locaction, where no bedrock has been set yet.
+      if {_sb} is 1 or 5:
+        add ({SB::config::distance}*2) to z-coord of {_loc}
+      if {_sb} is 2:
+        add  ({SB::config::distance}*2) to x-coord of {_loc}
+      if {_sb} is 3:
+        subtract  ({SB::config::distance}*2) from z-coord of {_loc}
+      if {_sb} is 4:
+        subtract  ({SB::config::distance}*2) from x-coord of {_loc}
+      #
+      # > If the block at the current location is not a bedrock, this is a empty place
+      # > where a island could be created.
+      if block at {_loc} is not bedrock:
+        #
+        # > Print to the player that we found a new island.
+        message "%{_prefix}% %{SB::lang::foundis::%{_lang}%}%" to {_p}
+        add 1 to y-coord of {_loc}
+        set {_schematic} to {_island}
+        set {_backloc} to {_p}'s location
+        subtract 1 from y-coord of {_loc}
+        #
+        # > Set barrier below the location and teleport the player there.
+        set block at {_loc} to barrier
+        add 1 to y-coord of {_loc}
+        teleport {_p} to {_loc}
+        wait 5 ticks
+        #
+        # > Prepare location for strucure file format.
+        set {_loccx} to "%x-coord of {_loc}%"
+        set {_loccy} to "%y-coord of {_loc}%"
+        set {_loccz} to "%z-coord of {_loc}%"
+        replace all ".5" with "" in {_loccx}
+        set {_loccx} to {_loccx} parsed as integer
+        replace all ".5" with "" in {_loccy}
+        set {_loccy} to {_loccy} parsed as integer
+        replace all ".5" with "" in {_loccz}
+        set {_loccz} to {_loccz} parsed as integer
+        if {_loccx} < 0:
+          set {_loccx} to {_loccx}-1
+        if {_loccz} < 0:
+          set {_loccz} to {_loccz}-1
+        set {_chestloc} to {_loc}
+        set {_homeloc} to {_loc}
+        #
+        # > If structure files are defined as format, set a structure_block to load the file.
+        if {SB::config::isstorage} is "Structure":
+          execute console command "/setblock %{_loccx}% %{_loccy}% %{_loccz}% minecraft:structure_block[mode=load]{name:""%{_schematic}%"",posX:-16,posY:-1,posZ:-16,rotation:""NONE"",mirror:""NONE"",mode:""LOAD""} destroy"
+          wait 5 ticks
+          subtract 1 from y-coord of {_loc}
+          #
+          # > Execute the structure block.
+          execute console command "/setblock %{_loccx}% %{_loccy}-1% %{_loccz}% minecraft:redstone_block"
+          wait 5 ticks
+        else if {SB::config::isstorage} is "Schematic":
+          #
+          # Schematics are currently not supported. 1.13 still has some issues.
+          broadcast "Currently, no Schematic support."
+          stop
+        #
+        # > Get the new home location out of the configuration.
+        set {_temphomeloc::*} to {SB::schematics::loc::%{_schematic}%::home} split at ","
+        loop {_temphomeloc::*}:
+          set {_temphomeloc::%loop-index%} to {_temphomeloc::%loop-index%} parsed as integer
+        set x-coordinate of {_homeloc} to x-coordinate of {_homeloc} + {_temphomeloc::1}
+        set y-coordinate of {_homeloc} to y-coordinate of {_homeloc} + {_temphomeloc::2}
+        set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
+        #
+        # > Get the new chest location out of the configuration.
+        set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
+        loop {_tc::*}:
+          set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
+        set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
+        set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
+        set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
+        set block at {_chestloc} to chest
+        set {_newchest} to block at {_chestloc}
+        #
+        # > Set all configurated items into the created chest.
+        loop {SB::schematics::chest::%{_schematic}%::*}:
+          set {_item::*} to loop-value-2 split at ","
+          set {_titem} to "%{_item::2}%" parsed as item
+          set {_tamount} to {_item::1} parsed as integer
+          #
+          # > If the item is a lava bucket, bind it to the island by applying a lore.
+          if {_titem} is a lava bucket:
+            set {_x} to x-coord of {_loc}
+            set {_z} to z-coord of {_loc}
+            set lore of {_titem} to "&r%{SB::lang::islandbound::%{_lang}%}%||&7%{_x}%_%{_z}%"
+          add {_tamount} of {_titem} to {_newchest}'s inventory
+        #
+        # > We're done with searching and creating, stop the search process to allow others to also create a island.
+        set {SB::searchprocess} to false
+        #
+        # > If the location where a bedrock should be (island center) is not a bedrock,
+        # > the player gets teleported back and a message with the /island create command.
+        # > This error happens only if the setup is faulty.
+        if block at {_loc} is not bedrock:
+          teleport {_p} to {_backloc}
+          message "%{_prefix}% /is create" to {_p}
+          stop
+        #
+        # > Delete the {_search} variable to prevent the while loop from repeating.
+        delete {_search}
+        #
+        # > Send success message to the player.
+        actionload({_p},{SB::lang::foundis::%{_lang}%})
+        #
+        # > Teleport the player to the new island.
+        teleport {_p} to {_homeloc}
+        #
+        # > Now, set new variables for the player and the island.
+        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
+        set {SB::island::%{_bedrockloc}%::home::home} to {_homeloc}
+        set {SB::island::%{_bedrockloc}%::leader} to {_uuid}
+        set {SB::island::%{_bedrockloc}%::level} to 0
+        set {SB::island::%{_bedrockloc}%::created} to now
+        set {SB::player::%{_uuid}%::island::bedrock} to {_loc}
+        set {SB::islvl::%{_bedrockloc}%} to 0
+        #
+        # > The player now has his island, remove this variable, which prevented the player
+        # > to create multiple islands at once.
+        delete {SB::searchis::%{_p}%}
+        stop loop
+      #
+      # > If no island has been found, wait 1 tick and then go forward.
+      wait a tick
+    if {_sb} is 6:
+      set {_sb} to 2
+    else:
+      add 1 to {_sb}
+    if {_sb} is 3 or 5:
+      add 1 to {_loop}
