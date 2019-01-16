@@ -120,9 +120,18 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
 command /island [<text>] [<text=1>] [<text>]:
   aliases: /is, /sb, /skyblock
   trigger:
+    #
+    # > Set some frequently used variables.
     set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+    #
+    # > If the player has no argument set, open the skyblock menu.
     if arg-1 is not set:
       skyblockgui(player)
+    #
+    # > Argument "reload"
+    # > Actions:
+    # > If the player has the admin permission, make the player execute the
+    # > skript reload command for the SkyBlock folder.
     if arg-1 is "reload":
       if player has permission "%{SB::config::buildpermission}%":
         make player execute "/sk reload SkyBlock/"
@@ -158,7 +167,10 @@ command /island [<text>] [<text=1>] [<text>]:
       #
       # > If the player has not set a third argument, just try to teleport.
       homehandler(player,arg-1,arg-2,player)
-
+    #
+    # > Argument: "go"
+    # > Actions:
+    # > Teleports the player to the bedrock of the island.
     else if arg-1 is "go":
       if {SB::player::%uuid of player%::island::bedrock} is not set:
         message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
@@ -167,20 +179,22 @@ command /island [<text>] [<text=1>] [<text>]:
         add 1 to y-coordinate of {_loc}
         teleport player to {_loc}
         message "%{_prefix}% %{SB::lang::tpis::%{SK::lang::%uuid of player%}%}%"
-
+    #
+    # > Argument: "delete" or "remove"
+    # > Actions:
+    # > Deletes the island of the player. Also asks, if the player really wants to delete the island.
     else if arg-1 are "delete" or "remove":
+    #
+    # > Only call deleteisland function, if player has an island and confirmed the deletation
+    # > of the island.
       if {SB::player::%uuid of player%::island::bedrock} is not set:
         message "%{_prefix}% %{SB::lang::cantleave::%{SK::lang::%uuid of player%}%}%"
       else:
-        #If the 2. argument is 2, then delete, else, create a tellraw which executes this command with the 2. argument.
         if arg-2 is "2":
-          #todo - ask, if the player really want to delete the island
           set {_uuid} to uuid of player
-          set {_bedrockloc} to {SB::player::%{_uuid}%::island::bedrock}
-          set {_x} to x-coordinate of {_bedrockloc}
-          set {_y} to y-coordinate of {_bedrockloc}
-          set {_z} to z-coordinate of {_bedrockloc}
-          if difference between {SB::island::%{_x}%_%{_y}%_%{_z}%::created} and now < {SB::config::deletecooldown}:
+          set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
+      set {_bedrockloc} to "%x-coord of {_bedrockloc}%_%y-coord of {_bedrockloc}%_%z-coord of {_bedrockloc}%"
+          if difference between {SB::island::%{_bedrockloc}%::created} and now < {SB::config::deletecooldown}:
             message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
           else:
             deleteisland(player)
@@ -188,7 +202,8 @@ command /island [<text>] [<text=1>] [<text>]:
           tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%}%},"/is delete 2")
 
     else if arg-1 is "calc":
-      #If there is more time between the las calculation and now than the set cooldown time in config.sk:
+      #
+      # > Only call the calcisland function if the last calculation is some time ago (loger than cooldown time).
       if difference between {SB::calcdown::%uuid of player%} and now < {SB::config::calccooldown}:
         message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
       else:
