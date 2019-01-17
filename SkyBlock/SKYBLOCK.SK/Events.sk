@@ -239,10 +239,14 @@ on rightclick on entity:
   if {_allowed} is false:
     cancel event
 
-#Disable 1.13 phantoms:
-#todo check from config if enabled or disabled:
-on spawn of a phantom: 
-  cancel event
+#
+# > Event - on spawn of a phantom
+# > Triggered, if a phantom spawns
+# > Actions:
+# > Chacks if phantoms are disabled, if they are, cancel this event.
+on spawn of a phantom:
+  if {SB::config::phantomspawn} is true:
+    cancel event
 
 #
 # > For now, we want to not allow people to change the world into the nether,
@@ -301,15 +305,16 @@ on damage:
       if {_allowed} is false:
         cancel event
         actionload(attacker, {_a})
-
+#
+# > Event: on ignition
+# > Actions:
+# > Triggered if something catches fire, if fire spreading is disabled in config.sk, cancel event.
 on ignition:
-  #todo add in config to ask:
-  #players allowed to set fire, true, false
-  #should fire spread, true, false
   if player is set:
     stop
-  cancel event
-
+  if {SB::config::firespread} is true:
+    cancel event
+#
 # > Event: on explode
 # > Actions:
 # > Triggered on an explosion, checks for the nearest player and then check if the explosion is allowed.

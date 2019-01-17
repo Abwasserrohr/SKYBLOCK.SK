@@ -81,6 +81,13 @@ on load:
   # Enable pvp: true = yes, false = no:
   set {SB::config::pvp} to false
 
+  #
+  # > Prevent fire from spreading  [true = prevent|false = do not prevent]
+  set {SB::config::firespread} to true
+
+  #
+  # > Prevent phantoms from spawning [true = prevent|false = do not prevent]
+  set {SB::config::phantomspawn} to true
 
   # Prevent hunger reset on death: true = yes, false = no:
   set {SB::config::preventhungerreset} to true
