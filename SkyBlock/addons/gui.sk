@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.2
+# GUI.SK v0.0.3
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -162,7 +162,17 @@ on InventoryClickEvent:
     if size of {SK::GUI::items::%{_player}%::*} is not 0:
       cancel event
       set {_slot} to event.getRawSlot()
-      evaluate "%{SK::GUI::items::%{_player}%::%{_slot}%}%"
+      #
+      # > If guis should do something special on shiftclick, they can add another function with ||, which gets executed on shift click.
+      set {_exec::*} to {SK::GUI::items::%{_player}%::%{_slot}%} split at "||"
+      #
+      # > If the shift click function isn't defined, use default.
+      if {_exec::2} is not set:
+        set {_exec::2} to {_exec::1}
+      if event.isShiftClick() is true:
+        evaluate "%{_exec::2}%"
+      else:
+        evaluate "%{_exec::1}%"
       if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
         wait 1 tick
         close {_player}'s inventory
