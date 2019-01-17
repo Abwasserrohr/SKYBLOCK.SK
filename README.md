@@ -24,10 +24,7 @@ If you're running SKYBLOCK.SK, feel free to create a issue to get your server di
   - [Discord](https://discord.gg/FRuK5BC)
 
 ### Roadmap
-- Use more functions to simplify code for server operators
-- Add customizable options into the config to make it easier to change
-- Allow the creation of addons
-  - Test the skript and use feedback for addons
+- Add new addons which improve the game
 - Add multible languages to the project
 - Create a documentation for server operators
   - Also include all variables which can be used by the server operator
