@@ -82,6 +82,10 @@ on load:
   set {SB::config::pvp} to false
 
   #
+  # > Prevent fire from spreading  [true = prevent|false = do not prevent]
+  set {SB::config::firespread} to true
+
+  #
   # > Prevent phantoms from spawning [true = prevent|false = do not prevent]
   set {SB::config::phantomspawn} to true
 
