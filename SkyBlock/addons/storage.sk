@@ -1,0 +1,622 @@
+#
+# ==============
+# storage.sk v0.0.1
+# ==============
+# Let players create efficient storage units without the need to building big hopper storage systems.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# ==============
+# How to use it:
+# ==============
+# > First use: Put this skript into your "plugins/Skript/scripts/" Folder, subfolders are possible too.
+# ==============
+# > Edit options as you want, the options are explained using comments to help.
+# ==============
+# > Players can craft storage units using a recipe out of 8 diamonds and one chest
+# > in the middle of the crafting table and then place it to use:
+# > diamond | diamond | diamond
+# > diamond |  chest  | diamond
+# > diamond | diamond | diamond
+# ==============
+
+options:
+  #
+  # > Define how the storage item should be named.
+  itemidentfier: &eStorage
+  #
+  # > Define the storage block. It is suggested to only use any shulker box,
+  # > because this add-on doesn't handle double chest behaviour.
+  item: white shulker box
+  #
+  # > Define, how many times in ticks the storage menus should be updated, the more often
+  # > they get updated, the more fluent it looks. But at cost of performance.
+  updatemenu: 4
+  #
+  # > Kick player out of the storage menu after a specific amount of idling in there
+  # > to prevent used resources from checking for updates.
+  kickafteridle: 200
+  #
+  # > Define the sign format to give players the option to create a sign above the
+  # > storage unit, which displays the item type and amount of stored items. Should be unique.
+  signtext: [Storage]
+  #
+  # > Hook into hoppers. This may take many resources, disable this if you experience too much
+  # > lag by the InventoryMoveItemEvent event, disable Hook into hoppers to reduce the lag.
+  # > Please communicate with your players that you're going to disable the hopper hook, since
+  # > players are going to be mad if you don't tell them. You should thell them that this is
+  # > done because it creates lag.
+  hopperhook: true
+  #
+  # > Prevent hoppers below storage units. This is useful since hoppers below storage units will try
+  # > to pull out the storage clay out of the storage unit. This generates lag even if there are no
+  # > items transported. It is suggested to turn this feature off but you can enable it to allow some
+  # > fancy storage systems.
+  preventhopperbelow: true
+  #
+  # > Fallback translations, if there is no translation available, use this:
+  prefix: &7[&6Storage&7]
+  menutitle: Storage unit
+  hopperbelowdisabled: Hopper transfer out of storage units is disabled.
+  onlybreakempty: You can only break empty storage units.
+  notenoughinvspace: Not enough space in your inventory.
+  storeintitle: Store
+  storeinmenu: &7Store everything of this\n&7item in the storage unit.
+  getoutmenu: &7Get <max> out of||&7the storage unit.||&7--------||&7Supply: <supply>
+
+#
+# > Event - on load
+# > Action:
+# > After loading this skript, the recipe to create storage units is registered.
+on load:
+  set {_item} to {@item}
+  set line 1 of lore of {_item} to "{@itemidentfier}"
+  register new shaped recipe for {_item} using diamond, diamond, diamond, diamond, chest, diamond, diamond, diamond, diamond
+
+#
+# > Event - on place of option (item)
+# > Triggered if the player places the predefined storage item.
+# > Actions:
+# > If the player is allowed to build at the island, create a storage unit.
+on place of {@item}:
+  #
+  # > Sets the lore to the item identifier, this is visible to the players.
+  if line 1 of lore of player's tool is "{@itemidentfier}":
+    #
+    # Check, if the player is allowed to place the storage unit.
+    set {_allowed} to checkislandaccess(player,location of event-block,"build")
+    if {_allowed} is true:
+      #
+      # > If the block below the new storage unit is a hopper, check if it is allowed
+      # > to have a hopper below. If not, cancel event and send message to player.
+      if block below event-location is hopper:
+        if {@preventhopperbelow} is true:
+          cancel event
+          set {_uuid} to uuid of {_p}
+          set {_lang} to {SK::lang::%{_uuid}%}
+          if {SB::lang::storage::hopperbelowdisabled::%{_lang}%} is set:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::hopperbelowdisabled::%{_lang}%}%"
+          else:
+            message "{@prefix} {@hopperbelowdisabled}"
+          stop
+      #
+      # > The player is allowed, place clay in the slot 26 of the chest and set
+      # > the lore of the clay to line 1: 0, line 2: "STORAGE". Line 1 is the amount of items.
+      # > If a item is stored, it is always on slot 0.
+      set {_loc} to event-location
+      set {_inv} to block at {_loc}'s inventory
+      set slot 26 of {_inv} to 1 of clay
+      set line 1 of lore of slot 26 of {_inv} to "0"
+      set line 2 of lore of slot 26 of {_inv} to "STORAGE"
+#
+# > Event - on break of option (item)
+# > Triggered if the player breaks a storage unit.
+# > Actions:
+# > If the player is allowed to build at the island and the broken storage unit is empty,
+# > remove and drop it.
+on break of {@item}:
+  #
+  # > Only check if this is a valid storage unit.
+  if slot 26 of event-block's inventory is clay:
+    if line 2 of lore of slot 26 of event-block's inventory is "STORAGE":
+      #
+      # > Check, if the player is allowed to build.
+      set {_allowed} to checkislandaccess(player,location of event-block,"build")
+      if {_allowed} is true:
+        #
+        # > Check, if the storage unit is empty to remove it.
+        set {_itemdata} to slot 26 of event-block's inventory
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        #
+        # > If the storage unit is not empty (because line 1 of the clay has not been parsed as integer 1),
+        # > send a error and cancel the event.
+        if {_savedamount} is not 0:
+          set {_uuid} to uuid of {_p}
+          set {_lang} to {SK::lang::%{_uuid}%}
+          if {SB::lang::storage::onlybreakempty::%{_lang}%} is set:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::onlybreakempty::%{_lang}%}%"
+          else:
+            message "{@prefix} {@onlybreakempty}"
+          cancel event
+        #
+        # > If the first line of the lore (of the clay ball) is 0, remove the storage unit and drop itt.
+        else:
+          clear event-block's inventory
+          set event-block to air
+          set {_item} to {@item}
+          set line 1 of lore of {_item} to "{@itemidentfier}"
+          drop 1 of {_item} at event-location
+#
+# > Event - on place of hopper
+# > Triggered if the player places a hopper.
+# > Actions:
+# > If the player places a hopper below a storage unit and it should be
+# > prevented to place hoppers below storage units, the event is canceled
+# > and the player gets a message that this is disabled.
+on place of hopper:
+  if block above event-location is {@item}:
+    set {_inv} to block at block above event-location's inventory
+    set {_itemdata} to slot 26 of {_inv}
+    if line 2 of lore of {_itemdata} is "STORAGE":
+      if {@preventhopperbelow} is true:
+        cancel event
+        set {_uuid} to uuid of {_p}
+        set {_lang} to {SK::lang::%{_uuid}%}
+        if {SB::lang::storage::hopperbelowdisabled::%{_lang}%} is set:
+          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::hopperbelowdisabled::%{_lang}%}%"
+        else:
+          message "{@prefix} {@hopperbelowdisabled}"
+#
+# > Import the Java class to detectt the inventory move event. This is used very often and
+# > causes lag. Server operators who experience lags should avoid this type of events or reduce
+# > the allowed amount of hoppers.
+import:
+  org.bukkit.event.inventory.InventoryMoveItemEvent
+#
+# > Event - on InventoryMoveItemEvent
+# > Triggered if a item is moved in any inventory on the server.
+# > Actions:
+# > Counts up or down, depending if the storage unit gets an item or a hopper takes
+# > one out of it. If the option {@hopperhook} is set to false, all inventory interactions
+# > with hoppers are disabled.
+on InventoryMoveItemEvent:
+  #
+  # > If the server operator disabled hoppers for the storage units, cancel the events.
+  if {@hopperhook} is false:
+    if slot 26 of event.getDestination() is clay:
+      if line 2 of lore of slot 26 of event.getDestination() is "STORAGE":
+        cancel event
+    stop
+  #
+  # > If the storage unit is the destination of the item.
+  if slot 26 of event.getDestination() is clay:
+    set {_inv} to event.getDestination()
+    set {_itemdata} to slot 26 of {_inv}
+    #
+    # > If this chest is a valid storage unit.
+    if line 2 of lore of {_itemdata} is "STORAGE":
+      set {_item} to slot 0 of {_inv}
+      set {_itemdata} to slot 26 of {_inv}
+      set {_eitem} to event.getItem()
+      #
+      # > If the storage unit is empty, the {_item} is air.
+      if {_item} is air:
+        set line 1 of lore of slot 26 of {_inv} to "1"
+        set {_loc} to event.getDestination().getHolder().getLocation()
+        storagesignupdater({_loc},{_item},1)
+      #
+      # > If the {_item} is the same as the event item (the one, which is added through the hopper),
+      # > add it to the storage unit.
+      else if {_item} is {_eitem}:
+        #
+        # > Set {_amount} to the amount of storage unit items in the inventory of
+        # > the storage unit.
+        set {_amount} to number of {_item} in {_inv}
+        #
+        # > There is always one of the item left to keep NBT data. Since one has been
+        # > added by the event, remove one now.
+        remove 1 of {_item} from {_inv}
+        #
+        # > Gett the current storage amount.
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        #
+        # > Add the new amount to the storage amount.
+        add {_amount} to {_savedamount}
+        #
+        # > Save the storage amount back to the item lore.
+        set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+        #
+        # > Get the location of the chest to update the storage sign.
+        set {_loc} to event.getDestination().getHolder().getLocation()
+        storagesignupdater({_loc},{_item},{_savedamount})
+        #
+        # > Set the new item lore to the storage unit.
+        set slot 26 of {_inv} to 1 of {_itemdata}
+      #
+      # > If the hopper tries to move a item into the storage unit which
+      # > doesn't match with the storage item, cancel the event.
+      else:
+        cancel event
+  else:
+    #
+    # > If the storage unit is the source of the item.
+    if slot 26 of event.getSource() is clay:
+      set {_inv} to event.getSource()
+      #
+      # > If the storage unit is empty, cancel and stop.
+      if line 1 of lore of slot 26 of {_inv} is "0":
+        cancel event
+        stop
+      #
+      # > If the storage unit is valid.
+      if line 2 of lore of slot 26 of {_inv} is "STORAGE":
+        #
+        # > If the hopper tries to get the clay which holds storage unit data, cancel and stop.
+        set {_eitem} to event.getItem()
+        if {_eitem} is clay:
+          if line 2 of lore of {_eitem} is "STORAGE":
+            cancel event
+            stop
+        #
+        # > Set the clay item which holds the storage unit data as local variable.
+        set {_itemdata} to slot 26 of {_inv}
+        #
+        # > Get the current amount of items in the storage amount,
+        # > parse it as integer and check if it is equal or less than 0.
+        # > If it is equal or less than 0, cancel and stop.
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        if {_savedamount} <= 0:
+          cancel event
+          stop
+        #
+        # > If it is not equal or less than 0, remove 1 from the storage unit amount.
+        else:
+          remove 1 from {_savedamount}
+          set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+          set {_loc} to {_inv}.getHolder().getLocation()
+          #
+          # > Update the storage sign.
+          storagesignupdater({_loc},{_item},{_savedamount})
+          set slot 26 of {_inv} to 1 of {_itemdata}
+          #
+          # > Clone the current item in slot 0 of the storage unit.
+          set {_item} to 1 of slot 0 of {_inv}
+          set {_item} to {_item}.clone()
+          #
+          # > Wait one tick until the hopper has pulled the item out of the
+          # > storage unit.
+          wait 1 tick
+          #
+          # > After one tick, the hopper has pulled the item out, add one to
+          # > the storage unit to save NBT data and item data.
+          if {_savedamount} > 0:
+            add 1 of {_item} to {_inv}
+          #
+          # > If the saved storage unit amount is 0, set the slot 0 to air.
+          else if {_savedamount} is 0:
+            set slot 0 of {_inv} to air
+#
+# > Event - on inventory open
+# > Triggered once a player opens a inventory
+# > Actions:
+# > If the player opened a valid storage unit, call the openstoragemenu function and cancel the event.
+on inventory open:
+  if block at event-inventory.getHolder().getLocation() is {@item}:
+    if slot 26 of event-inventory is clay:
+      if line 2 of lore of slot 26 of event-inventory is "STORAGE":
+        set {_loc} to block at event-inventory.getHolder().getLocation()
+        openstoragemenu(player,event-inventory,{_loc})
+        cancel event
+#
+# > Function - storagesignupdater
+# > Parameter: <location>location of the storage unit,<item>storage unit item, <integer>current amount of items stored
+# > Actions:
+# > Updates the storage sign, if the player created one above the storage unit.
+# > The storage sign is optional, this function only does something if there is a correctly formatted sign.
+function storagesignupdater(loc:location,item:item,amount:integer):
+  if block above {_loc} is sign:
+    if line 1 of block above {_loc} is "{@signtext}":
+      set line 1 of block above {_loc} to "&l{@signtext}"
+    if line 1 of block above {_loc} is "&l{@signtext}":
+      if {_amount} is 0:
+        set {_item} to "---"
+      set line 2 of block above {_loc} to "%{_item}%"
+      set line 3 of block above {_loc} to "&l%{_amount}%"
+#
+# > Function - openstoragemenu
+# > Parameter: <player>the player to who the menu should open,<inventory>storage unit inventory, <location>location of the storage unit
+# > Actions:
+# > Opens the storage unit menu, which allows players to set up their storage unit, get items out and put it in.
+function openstoragemenu(p:player,inv:inventory,loc:location):
+  #
+  # > Get the stored item data
+  set {_item} to slot 0 of {_inv}
+  #
+  # > Get the storage unit data (amount of item)
+  set {_itemdata} to slot 26 of {_inv}
+  #
+  # > Get the current amount of items stored in the storage unit:
+  set {_savedamount} to line 1 of lore of {_itemdata}
+  set {_savedamount} to {_savedamount} parsed as integer
+  #
+  # > Set idle counter to 0, the server operator can configure, how long players
+  # > are allowed to idle in the storage unit menus.
+  set {_idle} to 0
+  #
+  # > Open hopper menu to the player.
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  if {SB::lang::storage::menutitle::%{_lang}%} is set:
+    opengui({_p},5,"%{SB::lang::storage::menutitle::%{_lang}%}%","HOPPER")
+  else:
+    opengui({_p},5,"{@menutitle}","HOPPER")
+  #
+  # > If the storage unit is empty, open the "fill it" menu.
+  if {_savedamount} is 0:
+    set {_cinv} to {_p}'s current inventory
+    #
+    # > Wait until the player places something in the newly created inventory
+    # > by using while.
+    while {_cinv} is {_p}'s current inventory:
+      #
+      # > Update the storage unit menu only as often as predefined.
+      wait {@updatemenu} tick
+      #
+      # > Since the storage unit can also be updated using hoppers or by other players,
+      # > check everytime, if the storage unit has been filled with something.
+      set {_itemdata} to slot 26 of {_inv}
+      set {_savedamount} to line 1 of lore of {_itemdata}
+      set {_savedamount} to {_savedamount} parsed as integer
+      #
+      # > If the storage unit is still empty, check for items.
+      if {_savedamount} is 0:
+        #
+        # > Loop through all items in the "fill it" menu.
+        loop all items in {_p}'s current inventory:
+          #
+          # > This only happens, if there is a item in the "fill it" menu.
+          #
+          # > Get the item, which is in the "fill it" menu.
+          set {_item} to loop-item
+          #
+          # > Set the {_item} into the storage unit on slot 0.
+          set slot 0 of {_inv} to 1 of {_item}
+          #
+          # > Add the amount of items in the "fill it" to the storage unit.
+          set {_itemdata} to slot 26 of {_inv}
+          set {_savedamount} to line 1 of lore of {_itemdata}
+          set {_savedamount} to {_savedamount} parsed as integer
+          set line 1 of lore of {_itemdata} to "%number of {_item} in {_cinv}%"
+          #
+          # > Update the storage unit sign.
+          set {_amount} to line 1 of lore of {_itemdata} parsed as integer
+          set {_signitem} to 1 of {_item}
+          storagesignupdater({_loc},{_signitem},{_amount})
+          #
+          # > Save the new item metadata for the storage unit clay, which holds the amount of the items in
+          # > its lore.
+          set slot 26 of {_inv} to 1 of {_itemdata}
+          #
+          # > Reopen the storage unit menu, which should now show the item with options and stop.
+          openstoragemenu({_p},{_inv},{_loc})
+          stop
+        #
+        # > If there where no items, add one to idle until timeout closes and stops this.
+        add 1 to {_idle}
+        if {_idle} > {@kickafteridle}:
+          close {_p}'s inventory
+          stop
+      #
+      # > If the storage unit is no longer empty, open the menu with the new item and stop.
+      else:
+        openstoragemenu({_p},{_inv},{_loc})
+        stop
+  #
+  # > The storage unit has something in it to show.
+  else:
+    #
+    # > Get the maximum stack size of the current item stored.
+    set {_max} to {_item}.getMaxStackSize()
+    #
+    # > Check, if the amount of items in this storage unit is smaller than the maximum amount,
+    # > if it is smaller, set the maximum amount to the amount of items in this storage unit.
+    if {_savedamount} <= {_max}:
+      set {_max} to {_savedamount}
+    #
+    # > Create menu which allows the player to get items out of the storage unit using the getstorageitem function and
+    # > store more items directly using the storestorageitem function.
+    set {_uuid} to uuid of {_p}
+    set {_lang} to {SK::lang::%{_uuid}%}
+    setguiitem({_p},1,"chest",1,"","","getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)||getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%,true)",false)
+    if {SB::lang::storage::storeinmenu::%{_lang}%} is set:
+      setguiitem({_p},3,"chest",1,"&r%{SB::lang::storage::storeintitle::%{_lang}%}%","%{SB::lang::storage::storeinmenu::%{_lang}%}%","storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
+    else:
+      setguiitem({_p},3,"chest",1,"&r{@storeintitle}","{@storeinmenu}","storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
+    #
+    # > Clone the storage unit item to place it in the menu.
+    set {_item} to {_item}.clone()
+    #
+    # > The lore of the item, which displays the current supply of items.
+    # > Also displays the maximum stack amount which the player gets per click.
+    if {SB::lang::storage::getoutmenu::%{_lang}%} is set:
+      set {_lore} to {SB::lang::storage::getoutmenu::%{_lang}%}
+    else:
+      set {_lore} to "{@getoutmenu}"
+    replace all "<max>" with "%{_max}%" in {_lore}
+    replace all "<supply>" with "%{_savedamount}%" in {_lore}
+    set lore of {_item} to {_lore}
+    #
+    # > Set the cloned item with the new lore to the newly opened inventory of the player.
+    set slot 1 of {_p}'s current inventory to {_item}
+    #
+    # > Set the current inventory to {_cinv} to check, if the player closed his inventory in the while loop.
+    set {_cinv} to {_p}'s current inventory
+    #
+    # > Set {_startcheck} to the amount of items which are currently stored, if
+    # > the amount changes, a update is triggered within the while loop.
+    set {_startcheck} to line 1 of lore of slot 26 of {_inv}
+    #
+    # > Do this while loop as long as the player keeps this inventory open.
+    # > If the player closes or changes the inventory, it is no longer the 
+    # > same as {_cinv} and is not going to be updated trough the while loop anymore.
+    while {_cinv} is {_p}'s current inventory:
+      #
+      # > Loop only every predefined ticks.
+      wait {@updatemenu} tick
+      #
+      # > Count the idle time to prevent endless looping for a player.
+      add 1 to {_idle}
+      if {_idle} > {@kickafteridle}:
+        close {_p}'s inventory
+        stop
+      #
+      # > If the supply of the storage unit changed, update the inventory of the player.
+      if {_startcheck} is not line 1 of lore of slot 26 of {_inv}:
+        set {_startcheck} to line 1 of lore of slot 26 of {_inv}
+        set {_startcheck} to {_startcheck} parsed as integer
+        set {_max} to {_item}.getMaxStackSize()
+        if {_startcheck} <= {_max}:
+          set {_max} to {_startcheck}
+        if {SB::lang::storage::getoutmenu::%{_lang}%} is set:
+          set {_lore} to {SB::lang::storage::getoutmenu::%{_lang}%}
+        else:
+          set {_lore} to "{@getoutmenu}"
+        replace all "<max>" with "%{_max}%" in {_lore}
+        replace all "<supply>" with "%{_startcheck}%" in {_lore}
+        set {_item} to slot 1 of {_p}'s current inventory
+        set lore of {_item} to {_lore}
+        set slot 1 of {_p}'s current inventory to {_item}
+#
+# > Function - getstorageitem
+# > Parameter: <player>the player who wants items out of the storage unit,<number>x-coordinate of the storage unit,<number>y-coordinate of the storage unit,<number>z-coordinate of the storage unit,<boolean>get multiple stacks at once[true=yes]
+# > Actions:
+# > Gives the player parameter items out of the storage unit.
+function getstorageitem(p:player,x:number,y:number,z:number,mass:boolean=false):
+  #
+  # > Create a new location to get the storage unit.
+  set {_loc} to location at {_x}, {_y}, {_z} in "%{_p}'s world%" parsed as world
+  #
+  # > Check if this is a valid storage unit.
+  if block at {_loc} is {@item}:
+    #
+    # > Sets the inventory of the storage unit as local variable.
+    set {_inv} to block at {_loc}'s inventory
+    #
+    # > Set the storage unit clay item which contains the item amount of the storage unit.
+    set {_itemdata} to slot 26 of {_inv}
+    if line 2 of lore of {_itemdata} is "STORAGE":
+      #
+      # > As long as we aren't done with giving the player items, repeat this while loop.
+      set {_done} to false
+      while {_done} is false:
+        #
+        # > Get the item, which the player should get out of slot 0 of the storage unit.
+        set {_item} to slot 0 of {_inv}
+        #
+        # > Get the currently stored amount of items in the storage unit out of the storage unit clay item on slot 26.
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        #
+        # > Get the maximum stack size of the item, this is needed to give the player the right amount out.
+        set {_max} to {_item}.getMaxStackSize()
+        #
+        # > If the maximum stack size is higher than the current item amount, set the maximum size to the item amount.
+        if {_savedamount} <= {_max}:
+          set {_max} to {_savedamount}
+        #
+        # > Remove the item amount from the storage unit.
+        remove {_max} from {_savedamount}
+        #
+        # > If {_max} is 0, there is nothing to get.
+        if {_max} is 0:
+          #
+          # > Since there is nothing to get, we're done here, reopen the menu.
+          set {_done} to true
+          openstoragemenu({_p},{_inv},{_loc})
+          stop
+        #
+        # > If the player has not enough space in his inventory, tell the player about that.
+        if {_p}'s inventory hasn't enough space for {_max} of {_item}:
+          #
+          # > In any case, we're done, do not proceed with the while loop.
+          set {_done} to true
+          #
+          # > If the player took the items out in big amounts using the mass parameter true, do
+          # > not inform about not enough space in inventory and stop.
+          if {_mass} is true:
+            openstoragemenu({_p},{_inv},{_loc})
+            stop
+          set {_uuid} to uuid of {_p}
+          set {_lang} to {SK::lang::%{_uuid}%}
+          if {SB::lang::storage::notenoughinvspace::%{_lang}%} is set:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::notenoughinvspace::%{_lang}%}%" to {_p}
+          else:
+            message "{@prefix} {@notenoughinvspace}" to {_p}
+
+          stop
+        #
+        # > The player has enough space, save the new amount to the storage unit item and
+        # > give the player the items.
+        set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+        storagesignupdater({_loc},{_item},{_savedamount})
+        set slot 26 of {_inv} to 1 of {_itemdata}
+        if {_savedamount} is 0:
+          remove 1 of {_item} from {_inv}
+        give {_max} of {_item} to {_p}
+        #
+        # > If the player doesn't get multiple stacks because of mass = true,
+        # > the process is done. We can stop the while loop and reopen the menu
+        # > to update the stats.
+        if {_mass} is false:
+          openstoragemenu({_p},{_inv},{_loc})
+          set {_done} to true
+#
+# > Function - storestorageitem
+# > Parameter: <player>the player who wants items out of the storage unit,<number>x-coordinate of the storage unit,<number>y-coordinate of the storage unit,<number>z-coordinate of the storage unit,<boolean>get multiple stacks at once[true=yes]
+# > Actions:
+# > Gives the player parameter items out of the storage unit.
+function storestorageitem(p:player,x:number,y:number,z:number):
+  #
+  # > Create a new location to get the storage unit.
+  set {_loc} to location at {_x}, {_y}, {_z} in "%{_p}'s world%" parsed as world
+  #
+  # > Only proceed if the storage unit is valid.
+  if block at {_loc} is {@item}:
+    #
+    # > Set the storage unit inventory as local variable.
+    set {_inv} to block at {_loc}'s inventory
+    #
+    # > Set the storage unit clay, which stores the item amount, which is stored in the storage unit.
+    set {_itemdata} to slot 26 of {_inv}
+    if line 2 of lore of {_itemdata} is "STORAGE":
+      #
+      # > Get the current amount, which is stored in the storage unit and parse it as integer.
+      set {_savedamount} to line 1 of lore of {_itemdata}
+      set {_savedamount} to {_savedamount} parsed as integer
+      #
+      # > Get the item, which is currently stored in the storage unit
+      set {_item} to slot 0 of {_inv}
+      #
+      # > Set {_amount} to the amount of items the player has in his inventory.
+      # > These items have to be the same as in slot 0 of the storage unit.
+      set {_amount} to number of {_item} in {_p}'s inventory
+      #
+      # > Add the amount the player wants to add to the storage unit amount and save it to the storage unit clay amount item.
+      add {_amount} to {_savedamount}
+      set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+      #
+      # > Update the storage sign
+      storagesignupdater({_loc},{_item},{_savedamount})
+      set slot 26 of {_inv} to 1 of {_itemdata}
+      #
+      # > Remove the items of the inventory of the player.
+      remove {_amount} of {_item} from {_p}'s inventory
+      #
+      # > Reopen the storage unit menu to update the menu.
+      openstoragemenu({_p},{_inv},{_loc})
