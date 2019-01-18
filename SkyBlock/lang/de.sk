@@ -315,6 +315,16 @@ on script load:
   set {SB::lang::jetboots::li::%{_lang}%} to "Deine &eJetBoots&r wurden aufgefüllt."
 
   #
+  # > Storage unit
+  set {SB::lang::storage::menutitle::%{_lang}%} to "Lagersystem"
+  set {SB::lang::storage::hopperbelowdisabled::%{_lang}%} to "Trichtertransport aus Lagersystemen ist deaktiviert."
+  set {SB::lang::storage::onlybreakempty::%{_lang}%} to "Du kannst nur leere Lagersysteme abbauen."
+  set {SB::lang::storage::notenoughinvspace::%{_lang}%} to "Du hast nicht genug Platz im Inventar."
+  set {SB::lang::storage::storeintitle::%{_lang}%} to "Einlagern"
+  set {SB::lang::storage::storeinmenu::%{_lang}%} to "&7Lagere alles von diesem\n&7Item im Lagersystem ein."
+  set {SB::lang::storage::getoutmenu::%{_lang}%} to "&7Erhalte <max> aus diesem||&7Lagersystem.||%{SB::config::guispacer}%||&7Vorrat: <supply>"  
+  
+  #
   # > Recovery menu
   set {SB::lang::recovery::guiitemlore::%{_lang}%} to "%{_p2}%Wiederherstellung\n%{_s1}%Platziere diese Kiste,\n%{_s1}%um dein Inventar zu erhalten.\n%{SB::config::guispacer}%\n&7Preis: <price>\n%{SB::config::guispacer}%\n&7Datum: <date>"
   set {SB::lang::recovery::header::%{_lang}%} to "&lWiederherstellung"
