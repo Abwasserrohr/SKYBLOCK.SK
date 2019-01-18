@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.1
+# storage.sk v0.0.2
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -221,7 +221,7 @@ on InventoryMoveItemEvent:
         # > added by the event, remove one now.
         remove 1 of {_item} from {_inv}
         #
-        # > Gett the current storage amount.
+        # > Get the current storage amount.
         set {_savedamount} to line 1 of lore of {_itemdata}
         set {_savedamount} to {_savedamount} parsed as integer
         #
@@ -311,7 +311,9 @@ on inventory open:
     if slot 26 of event-inventory is clay:
       if line 2 of lore of slot 26 of event-inventory is "STORAGE":
         set {_loc} to block at event-inventory.getHolder().getLocation()
-        openstoragemenu(player,event-inventory,{_loc})
+        set {_allowed} to checkislandaccess(player,{_loc},"PlayerInteractEvent",block at {_loc})
+        if {_allowed} is true:
+          openstoragemenu(player,event-inventory,{_loc})
         cancel event
 #
 # > Function - storagesignupdater
