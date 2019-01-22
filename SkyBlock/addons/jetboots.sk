@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.2
+# jetboots.sk v0.0.3
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -135,6 +135,14 @@ on jump:
         #
         # > Check if the player is allowed to fly with the JetBoots at this locaction.
         set {_allowed} to checkislandaccess(player,location of player,"jetboots")
+		#
+		# > If the player isn't allowed to fly, maybe only because the payer is above or below the
+		# > own island, check if the player is on/below y-coordinate 0 or on/above y-coord 255.
+        if {_allowed} is false:
+          if y-coord of {_p} <= 0:
+            set {_allowed} to true
+          if y-coord of {_p} >= 255:
+            set {_allowed} to true
         if {_allowed} is false:
           set player's flight mode to false
           set the player's fly speed to 0.08
