@@ -41,6 +41,7 @@ function islandinfo(p2:player,p:text="1"):
   # > Get all needed variables into shorter local variables.
   set {_bedrockloc} to "%x-coord of {_bedrock}%_%y-coord of {_bedrock}%_%z-coord of {_bedrock}%"
   set {_uuid} to {SB::island::%{_bedrockloc}%::leader} parsed as offline player
+  set {_biome} to biome at {_bedrock}
   set {_realuuid} to {SB::island::%{_bedrockloc}%::leader}
   set {_level} to {SB::island::%{_bedrockloc}%::level}
   set {_exp} to {SB::island::%{_bedrockloc}%::exp}
@@ -85,8 +86,11 @@ function islandinfo(p2:player,p:text="1"):
   if size of {_trusted::*} is not 0:
     message "%{_prefix}% %{SB::lang::istrusted::%{_lang}%}% %{_trusted::*}%" to {_p2}
   #
-  # > Prints the island info:
+  # > Prints the island level:
   message "%{_prefix}% %{SB::lang::isinfolevel::%{_lang}%}% %{_level}%" to {_p2}
+  #
+  # > Prints the biome:
+  message "%{_prefix}% %{SB::lang::isinfobiome::%{_lang}%}% %{_biome}%" to {_p2}
   #
   # > Prints the creation date of the island:
   message "%{_prefix}% %{SB::lang::iscreated::%{_lang}%}% %{_created}%" to {_p2}
