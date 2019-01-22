@@ -1,0 +1,583 @@
+#
+# ==============
+# lootbox.sk v0.0.1
+# ==============
+# Create custom lootboxes with three different tiers and animations.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# ==============
+# How to use it:
+# ==============
+# > First use: Place lootbox.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Commands: /givelootbox <tier> <player> [<amount>]
+# > Commands: /openloot
+# > To disable, simply put a "-" in front of this file name.
+
+#
+# > These options only apply to this file.
+options:
+  #
+  # > Set in which direction the lootbox slots should move.
+  # > Set either ltr (left to right) or rtl (right to left)
+  direction: rtl
+  #
+  # > Set how many particles should be spawned around the player for
+  # > some effects.
+  openparticles: 500
+  #
+  # > Set how many of the selected items should be falling from the sky,
+  # > these items can't be picked up by players or hoppers.
+  openitems: 20
+  #
+  # > Set the particles which should be spawned once the player got something,
+  # > has to be valid, you can get a list here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+  initialparticle: Particle.EXPLOSION_NORMAL!
+  #
+  # > Set the particles which should be spawned once the airdropped items are disappearing,
+  # > has to be valid, you can get a list here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+  itemdisapperparticle: Particle.EXPLOSION_NORMAL!
+  #
+  # > Sound that should play if the player got an item:
+  gotsound: ui.toast.challenge_complete
+  #
+  # > Play this sound every time the slot is moving to give it some extra good feel to it.
+  movesound: ui.toast.in
+  #
+  # > Play this sound once a player gets into the lootbox opening menu.
+  openlootboxsound: block.chest.open
+  #
+  # > Set the lootbox item, which should be used to display and give to the player.
+  lootboxitem: chest
+  #
+  # > Fallback options. These are used if there are no SKYBLOCK.SK translations available.
+  primarycolor: &6
+  secondarycolor: &7
+  prefix: &7[&fLoot&6&lBox&7]&r
+  lootbox: &fLoot&6&lBox
+  clicktoopen: &7Click &6here\n&7to open it.
+  gotalootbox: &7You got a LootBox!
+  gotalootboxvar: &7You got a LootBox! Open it with /openloot
+  reward: &7You got
+  crateguititleselect: &o» Loot&lBox&7
+  crateguititle: &o» Loot&lBox&7
+  tierdefiner: █
+  tier1guiitem: &fLoot&6&lBox
+  tier2guiitem: &fLoot&6&lBox
+  tier3guiitem: &fLoot&6&lBox
+  tierguiitemlore: &7&lTier: <tier>\n&8&m&l-------\n&7You got &6<amount>&7 to use.
+  tier: &7&lTier: <tier>
+  theplayergotlootbox: You gave <player> <amount> LootBox.
+
+#
+# > Event - on load
+# > Actions:
+# > load the configuration variables and delete old variables.
+on load:
+  #
+  # > Delete previous configurations to set them new.
+  loop 3 times:
+    add 1 to {_i}
+    delete {SB::crates::%{_i}%::loot::*}
+    delete {SB::crates::%{_i}%::chance::*}
+  #
+  # > Configuration
+  #
+  # > Set a item, you can set anything you like and also with a specific amount.
+  add 1 of dirt to {SB::crates::1::loot::*}
+  #
+  # > Set the probability of this item here. Feel free to add as many items as you like.
+  add 15 to {SB::crates::1::chance::*}
+  
+  add 1 of diamond to {SB::crates::1::loot::*}
+  add 3 to {SB::crates::1::chance::*}
+  
+  add 1 of emerald to {SB::crates::1::loot::*}
+  add 5 to {SB::crates::1::chance::*}
+
+  add 1 of iron pickaxe to {SB::crates::1::loot::*}
+  add 5 to {SB::crates::1::chance::*}
+  
+  add 64 of cobblestone to {SB::crates::1::loot::*}
+  add 10 to {SB::crates::1::chance::*}
+  
+  add 1 of iron axe to {SB::crates::1::loot::*}
+  add 10 to {SB::crates::1::chance::*}
+  
+  add 5 of clay block to {SB::crates::1::loot::*}
+  add 10 to {SB::crates::1::chance::*}
+
+  add 1 of red bed to {SB::crates::1::loot::*}
+  add 3 to {SB::crates::1::chance::*}
+
+  add 32 of oak log to {SB::crates::1::loot::*}
+  add 15 to {SB::crates::1::chance::*}
+
+  add 1 of glass block to {SB::crates::1::loot::*}
+  add 5 to {SB::crates::1::chance::*}
+  
+  add 1 of stone block to {SB::crates::2::loot::*}
+  add 100 to {SB::crates::2::chance::*}
+  
+  add 1 of stone block to {SB::crates::3::loot::*}
+  add 100 to {SB::crates::3::chance::*}
+  
+
+#
+# > Command /givelootbox
+# > Arguments: <integer>tier, <player>player, [<integer>]amount, [<boolean>]force as variable [true=yes]
+# > Gives the player either a lootbox into his inventory or into a variable, which can be unlocked using /openloot
+command /givelootbox <integer> <player> [<integer>] [<boolean>]:
+  permission: is.admin
+  trigger:
+    #
+    # > Only give a lootbox, if the executor is a console or has the permission "is.admin".
+    if executor is console:
+      set {_allow} to true
+    if executor has permission "is.admin":
+      set {_allow} to true
+    if {_allow} is true:
+      #
+      # > Set the item to the predefined item option, which should appear for players as item.
+      set {_item} to {@lootboxitem}
+      #
+      # > Assign a name and the lore to the new item.
+      set name of {_item} to "{@lootbox}"
+      set line 1 of lore of {_item} to "{@lootbox}"
+      #
+      # > Set the arguments to local variables, which make more sense than just arguments.
+      set {_int} to arg-1
+      set {_p} to arg-2
+      set {_uuid} to uuid of {_p}
+      #
+      # > If a amount has been set, use it or use 1 as default amount.
+      if arg-3 is set:
+        set {_amount} to arg-3
+      else:
+        set {_amount} to 1
+      #
+      # > Set the tier of the item to the lore.
+      set {_line3} to "{@tier}&0|%{_int}%"
+      set {_tier} to ""
+      set {_li} to 1
+      loop 3 times:
+        if {_int} >= {_li}:
+          set {_tier} to "%{_tier}%{@primarycolor}{@tierdefiner}{@secondarycolor}"
+        else:
+          set {_tier} to "%{_tier}%{@secondarycolor}{@tierdefiner}{@secondarycolor}"
+        add 1 to {_li}
+      #
+      # > Set a spacer for the gui. If there is no predefined spacer, use a default one.
+      if {SB::config::guispacer} is set:
+        set line 2 of lore of {_item} to {SB::config::guispacer}
+      else:
+        set line 2 of lore of {_item} to "&8--------"
+      #
+      # > Replace the right tier in with the translation text placeholder.
+      replace all "<tier>" with "%{_tier}%" in {_line3}
+      set line 3 of lore of {_item} to {_line3}
+      #
+      # > If {_givevar} is not changed to false, the player gets the lootbox as a variable and
+      # > not as an item. 
+      set {_givevar} to true
+      #
+      # > If arg-1 is not true, check if the inventory has space for the lootbox, if it is true, skip this
+      # > check and give the lootbox as a variable to the player.
+      if arg-4 is not true:
+        #
+        # > If there is enough space, give the player the lootbox into the inventory.
+        # > If not, give it to the player through a variable.
+        if {_p}'s inventory has enough space for {_amount} of {_item}:
+          #
+          # > Give the player the lootbox into his inventory.
+          give {_amount} of {_item} to {_p}
+          #
+          # > Tell the player that he got the lootbox.
+          message "{@prefix} {@gotalootbox}" to {_p}
+          #
+          # > Set {_givevar} to false to prevent any extra lootboxes through variables.
+          set {_givevar} to false
+      if {_givevar} is true:
+        #
+        # > If the lootbox variable is not set, set it.
+        if {SR::crates::%{_uuid}%} is not set:
+          set {SR::crates::%{_uuid}%} to "0||0||0"
+        #
+        # > Split the lootbox variable string into a list to loop through.
+        # > The string is splitted at each "||" in the string.
+        set {_crates::*} to {SR::crates::%{_uuid}%} split at "||"
+        loop {_crates::*}:
+          #
+          # > If the current loop index (either 1,2 or 3) is the tier that should be given,
+          # > parse the variable and add the amount to the variable and then save it back to the
+          # > string variable to keep the variable amount lower.
+          if loop-index is "%{_int}%":
+            set {_crates::%loop-index%} to {_crates::%loop-index%} parsed as integer
+            add {_amount} to {_crates::%loop-index%}
+        set {SR::crates::%{_uuid}%} to "%{_crates::1}%||%{_crates::2}%||%{_crates::3}%"
+        #
+        # > Send the player a message that the lootbox arrived and how to get it, since it
+        # > has been given as a variable.
+        message "{@prefix} {@gotalootboxvar}" to {_p}
+
+      #
+      # > Inform the user who gave the executor, who gave the player the lootbox that
+      # > the player got it.
+      set {_msg} to "{@theplayergotlootbox}"
+      replace all "<player>" with "%{_p}%" in {_msg}
+      replace all "<amount>" with "%{_amount}%" in {_msg}
+      message "{@prefix} %{_msg}%" to executor
+
+#
+# > Event - on rightclick holding the lootbox item (defined in options)
+# > Actions:
+# > Opens the lootbox to the player where the content can be unlocked.
+on rightclick holding {@lootboxitem}:
+  if line 1 of lore of player's tool is "{@lootbox}":
+    cancel event
+    set {_tier::*} to line 3 of lore of player's tool split at "&0|"
+    set {_tier::2} to {_tier::2} parsed as integer
+    openlootbox(player,{_tier::2})
+
+#
+# > Command - /openloot
+# > Actions:
+# > This command opens the lootbox menu which displays all available lootbox tiers.  
+command /openloot:
+  trigger:
+    openlootboxmenu(player)
+
+#
+# > function - openlootboxmenu
+# > Parameter: <player>player
+# > Actions:
+# > Opens the lootbox menu which gives the player the option to open the lootboxes
+# > which have been given to the player using the variable.
+function openlootboxmenu(p:player):
+  #
+  # > Opens a hopper menu to the player with the defined gui title for lootbox selection.
+  opengui({_p},5,"{@crateguititleselect}","HOPPER")
+  #
+  # > The uuid only works if we set it first as a local variable.
+  set {_uuid} to uuid of {_p}
+  #
+  # > Check, if the player already has lootboxes, if yes, get it and parse them as integer.
+  if {SR::crates::%{_uuid}%} is set:
+    set {_crates::*} to {SR::crates::%{_uuid}%} split at "||"
+    loop {_crates::*}:
+      set {_crates::%loop-index%} to loop-value parsed as integer
+  #
+  # > If the player doesn't have lootboxes, set all of them to 0.
+  else:
+    set {_crates::1} to 0
+    set {_crates::2} to 0
+    set {_crates::3} to 0
+  #
+  # > Start at slot 0.
+  set {_slot} to 0
+  #
+  # > Loop through the menu and set the menu to the available lootboxes.
+  loop {_crates::*}:
+    set {_lore} to "{@tierguiitemlore}"
+    set {_tier} to ""
+    set {_int} to loop-index parsed as integer
+    set {_li} to 1
+    loop 3 times:
+      if {_int} >= {_li}:
+        set {_tier} to "%{_tier}%{@primarycolor}{@tierdefiner}{@secondarycolor}"
+      else:
+        set {_tier} to "%{_tier}%{@secondarycolor}{@tierdefiner}{@secondarycolor}"
+      add 1 to {_li}
+    #
+    # > Replace the placeholders out of the translation string.
+    replace all "<tier>" with "%{_tier}%" in {_lore}
+    replace all "<amount>" with "%{_crates::%loop-index%}%" in {_lore}
+    
+    #
+    # > If the player has enough lootboxes, assign a different function to call if the player clicks on it.
+    if {_crates::%loop-index%} > 0:
+      setguiitem({_p},{_slot},"{@lootboxitem}",1,"{@tier1guiitem}",{_lore},"openlootbox(""%{_p}%"" parsed as player,%loop-index%)",true)
+    else:
+      setguiitem({_p},{_slot},"{@lootboxitem}",1,"{@tier1guiitem}",{_lore},"actionbar(""%{_p}%"" parsed as player,""You don't have a loot box."")",true)
+    #
+    # > Once the loop is over, add 2 to the slot to make a good looking menu.
+    add 2 to {_slot}
+
+#
+# > function - openlootbox
+# > Parameter: <player>player, <integer>tier of the lootbox
+# > Opens a menu which allows the player to open the lootbox, here, the player could also go out of the
+# > menu and not open it.
+function openlootbox(p:player,tier:integer):
+  #
+  # > Open a menu with the predefined option name for the guititle of the openlootbox.
+  opengui({_p},27,"{@crateguititle}")
+  #
+  # > Send sound of opening a chest.
+  playsound({_p},location of {_p},"{@openlootboxsound}","master",1,1)
+  #
+  # > Create a fancy menu, which contains blacck glass panes.
+  set {_i} to 0
+  loop 27 times:
+    set slot {_i} of {_p}'s current inventory to black glass pane named " "
+    add 1 to {_i}
+  #
+  # > Set the menu item for the lootbox into it, which starts the lootbox opening, if clicked.
+  setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+
+#
+# > function - startlootbox
+# > Parameter: <player>player, <integer>tier of the lootbox
+# > Starts the lootbox opening and determines the reward by luck
+function startlootbox(p:player,tier:integer):
+  #
+  # > Get the lootbox item.
+  set {_item} to {@lootboxitem}
+  #
+  # > Set a integer to 0, needed for the lootbox opening menu.
+  set {_i} to 0
+  #
+  # > Set slot 13 of the inventory (the center) to the predefined lootboxitem. To do only a emptry actionbar messsage.
+  setguiitem({_p},13,"{@lootboxitem}",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",false)
+  #
+  # > If the player holds a lootbox in his hand, remove one of it out of the inventory of the player.
+  if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
+    set {_tool} to {_p}'s tool
+    remove 1 of {_tool} from {_p}'s inventory
+  #
+  # > If the player doesn't hold one of these, remove one out of the variables.
+  else:
+    set {_uuid} to uuid of {_p}
+    #
+    # > If there is no lootbox set as variable, set it to 0 for each lootbox tier.
+    if {SR::crates::%{_uuid}%} is not set:
+      set {SR::crates::%{_uuid}%} to "0||0||0"
+    #
+    # > Seperate the lootbox string into a list to parse it as integer and get the stored amounts.
+    set {_crates::*} to {SR::crates::%{_uuid}%} split at "||"
+    loop {_crates::*}:
+      if loop-index is "%{_tier}%":
+        set {_crates::%loop-index%} to {_crates::%loop-index%} parsed as integer
+        #
+        # > Remove one from the current tier of the stored lootboxes.
+        remove 1 from {_crates::%loop-index%}
+    #
+    # > Save the new lootbox string, which contains all saved lootboxes of this player.
+    set {SR::crates::%{_uuid}%} to "%{_crates::1}%||%{_crates::2}%||%{_crates::3}%"
+  #
+  # > Give the player 0.25 Seconds rest after the click to make it more natural.
+  wait 5 ticks
+  #
+  # > Loop through the inventory and update it with black glass panes which all close the inventory if clicked,
+  # > this prevents any duplication gliches, which might happen, if the player can spam-click while the inventory
+  # > is moving below.
+  loop 27 times:
+    setguiitem({_p},{_i},"black glass pane",1," "," ","message ""clicked on slot %{_i}+1%"" to ""%{_p}%"" parsed as player",true)
+    add 1 to {_i}
+  #
+  # > Set the marker, which marks the point where the item has to get to give it to the player.
+  set slot 4 of {_p}'s current inventory to yellow glass pane named " "
+  set slot 22 of {_p}'s current inventory to yellow glass pane named " "
+  #
+  # > Set slot 13 of the player to air, since there is now a while loop coming, which
+  # > starts a random item selection process.
+  set slot 13 of {_p}'s current inventory to air
+  set {_cinv} to {_p}'s current inventory
+  #
+  # > Get all the loots and chances of the current selected tier.
+  set {_loot::*} to {SB::crates::%{_tier}%::loot::*}
+  set {_chance::*} to {SB::crates::%{_tier}%::chance::*}
+  #
+  # > If the lootbox slots should start with some specific ids, they can be specified here,
+  # > 1 means that the lootbox starts with the first entry of the conigured item.
+  # > There can be defined up to 9 items, each of which has to be split using ||.
+  # > Example: set {_lootslots} to "1||1||1||1||1||1||1||1||1"
+  set {_lootslots} to "1"
+  #
+  # > Set some local variables, which are needed in the while loop.
+  set {_world} to {_p}'s world
+  set {_loc} to {_p}'s location
+  set {_loops} to 0
+  set {_wait} to 1 tick
+  #
+  # > Do the while loop as long as we aren't done.
+  set {_done} to false
+  while {_done} is false:
+    #
+    # > The while loop would repeat the process below instantly, it would be fast but not
+    # > as good feeling as making it slower and slower until it stops somewhere.
+    wait {_wait}
+    #
+    # > Play a predefined sound for the moving inventory each time it is going to move.
+    playsound({_p},location of {_p},"{@movesound}","master",1,1)
+    #
+    # > Add one to the {_loops} variable, which defines how many times the while loop already
+    # > looped through.
+    add 1 to {_loops}
+    #
+    # > Once the loop looped 15 times, slow it down if the random generated integer is 1, which is a 50% chance to happen each loop.
+    if {_loops} >= 15:
+      set {_r} to random integer between 1 and 2
+      if {_r} is 1:
+        add 1 tick to {_wait}
+    #
+    # > We need some luck and a item. Loop through the chances until we had some luck with any item.
+    # > If we had luck, stop the loop and the while loop by setting {_luck} to true and stopping the loop.
+    while {_luck} is false:
+      loop {_loot::*}:
+        chance of {_chance::%loop-index%}%:
+          #add loop-value to {_luckitems::*}
+          set {_lootslots} to "%loop-index%||%{_lootslots}%"
+          set {_luck} to true
+          stop loop
+    #
+    # > If the player goes offline, give the player a new lootbox and stop.
+    if {_p} is offline:
+      execute console command "/givelootbox %{_tier}% %{_p}% 1 true"
+      stop
+    #
+    # > Set the luck back to false.
+    set {_luck} to false
+    #
+    # > Create a list out of the luck item string.
+    set {_luckitems::*} to {_lootslots} split at "||"
+    #
+    # > If the direction the items should move is left to right, start at slot 9.
+    if "{@direction}" is "ltr":
+      set {_slot} to 9
+      #
+      # > Delete the last entry of the list.
+      delete {_luckitems::10}
+    #
+    # > If the direction the items should move is not left to right, start at slot 17.
+    else:
+      set {_slot} to 17
+      #
+      # > Delete the last entry of the list.
+      delete {_luckitems::10}
+    #
+    # > Set {_start} to true to have a starting point in the loop.
+    set {_start} to true
+    loop {_luckitems::*}:
+      #
+      # > If the {_start} is the loop, this is the first time we're looping the luckitems.
+      if {_start} is true:
+        #
+        # > Set the {_lootslots} to the loop value and set {_start} to false to use the code at else for
+        # > the next loops.
+        set {_lootslots} to loop-value
+        set {_start} to false
+      else:
+        #
+        # > Add the loop value to the list as a string. The loop value is a item loot id out of the lists defined
+        # > at the on load event.
+        set {_lootslots} to "%{_lootslots}%||%loop-value%"
+      #
+      # > Set the {_item} to the defined item out of the configured on load event.
+      set {_item} to {SB::crates::%{_tier}%::loot::%loop-value%}
+      #
+      # > Set the item into the lootbox opening menu.
+      set slot {_slot} of {_p}'s current inventory to {_item}
+      #
+      # > If the lootbox opening should be from left to right, add 1 to the slot, if not, remove 1 from the slot
+      # > to have it right to left.
+      if "{@direction}" is "ltr":
+        add 1 to {_slot}
+      else:
+        remove 1 from {_slot}
+    #
+    # > As this while loop is going to be slower and slower because of the {_wait} timespan is increasing each time by a chance of around 50%,
+    # > stop it, if it takes longer than 10 ticks per loop (0.5 seconds).
+    if {_wait} is 10 ticks:
+      #
+      # > Call the createreward function, which gives the reward to the player.
+      cratereward({_p},{SB::crates::%{_tier}%::loot::%{_luckitems::5}%})
+      #
+      # > Set {_done} to true to prevent any while loops and stop.
+      set {_done} to true
+      stop
+#
+# > Import Java classes for createreward effects, sounds and glich prevention of items.
+import:
+  org.bukkit.Particle
+  org.bukkit.Effect
+  org.bukkit.event.entity.ItemSpawnEvent
+  org.bukkit.Sound
+  org.bukkit.event.inventory.InventoryPickupItemEvent
+#
+# > function - startlootbox
+# > Parameter: <player>player, <item>reward the player should get
+# > Gives the player the item with some animations and sounds to make it something special.
+function cratereward(p:player,reward:item):
+  #
+  # > Wait a second to give the player some rest from the visuals.
+  wait 1 second
+  #
+  # > Play a sound that sounds rewarding.
+  playsound({_p},location of {_p},"{@gotsound}","master",1,1)
+  #
+  # > Close the inventory of the lootbox opening.
+  close {_p}'s inventory
+  #
+  # > If the player has enough space in his inventory, give the player the reward.
+  if {_p}'s inventory has enough space for {_reward}:
+    give {_reward} to {_p}
+  #
+  # > If not, drop the item on the floor at the location of the player.
+  else:
+    drop {_reward} at {_p}'s location
+  #
+  # > Tell the player what he got the reward.
+  message "{@prefix} {@reward} %{_reward}%" to {_p}
+  #
+  # > Set local variables for visual effects.
+  set {_world} to {_p}'s world
+  set {_l} to location of {_p}
+  set {_x} to x-coord of {_l}
+  set {_y} to y-coord of {_l}
+  set {_z} to z-coord of {_l}
+  #
+  # > Create a item rain of the item the player has won..
+  loop {@openitems} times:
+    add 2 to y-coord of {_l}
+    #
+    # > Drop a item which can't be picked up for a very long time
+    set {_item} to {_world}.dropItem({_l}, {_reward})
+    {_item}.setPickupDelay(2147483647)
+    #
+    # > Set the metadata value "crate" of the item to 1, to prevent
+    # > hoppers sucking the item in.
+    set metadata value "crate" of {_item} to 1
+    #
+    # > Add the item to a list to remove it below.
+    add {_item} to {_it::*}
+  #
+  # > Play some fancy particles.
+  loop {@openparticles} times:
+    {_world}.spawnParticle({@initialparticle},{_x},{_y},{_z}, 1)
+  #
+  # > Wait and then remove the raining items and also play a particle at every removed item.
+  wait 4 seconds
+  loop {_it::*}:
+    set {_x} to x-coord of loop-value
+    set {_y} to y-coord of loop-value
+    set {_z} to z-coord of loop-value
+    {_world}.spawnParticle({@itemdisapperparticle},{_x},{_y},{_z}, 0.5)
+    loop-value.remove()
+#
+# > Event - InventoryPickupItemEvent
+# > Actions:
+# > If something is picked up, this event is triggered. To prevent any pickup of
+# > the raining items, this is called. If the item has the metadata value "crate" set to 1, cancel it.
+on InventoryPickupItemEvent:
+  if metadata value "crate" of event.getItem() is 1:
+    cancel event
+#
+# > Function - playsound
+# > Parameter: <player>player, <location>location of the sound, <text>sound name,<text>source sound, eg. master, <integer>volume, <integer>pitch
+# > Plays the sound using a vanilla command. Create a seperate function for that in a file that can be reused on other projects later.
+function playsound(p:player,l:location,sound:text,source:text,volume:number,pitch:number):
+  execute console command "/playsound minecraft:%{_sound}% %{_source}% %{_p}% %x-coord of {_l}% %y-coord of {_l}% %z-coord of {_l}% %{_volume}% %{_pitch}%"
