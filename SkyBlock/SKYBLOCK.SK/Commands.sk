@@ -319,3 +319,10 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Calls the openchallenges function, which opens the challenges menu.
     else if arg-1 is "c" or "challenges" or "challenge":
       openchallenges(player)
+    #
+    # > Argument: "loot" or "loots" or "lootbox" or "crate" or "crates"
+    # > If a player types in /island loot|loots|lootbox|crate|crates, the openlootboxmenu function is called.
+    # > Actions:
+    # > Calls the openlootboxmenu function, which opens the lootbox menu.
+    else if arg-1 is "loot" or "loots" or "lootbox" or "crate" or "crates":
+      openlootboxmenu(player)
