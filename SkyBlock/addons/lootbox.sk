@@ -53,6 +53,12 @@ options:
   # > Set the lootbox item, which should be used to display and give to the player.
   lootboxitem: chest
   #
+  # > Set the primary color which stands out in the menu for the marker tool while the lootbox menu is open.
+  primparymenuitem: yellow glass pane
+  #
+  # > Set the secondary color which is in the background of the lootbox menu.
+  secondarymenuitem: black glass pane
+  #
   # > Fallback options. These are used if there are no SKYBLOCK.SK translations available.
   primarycolor: &6
   secondarycolor: &7
@@ -87,44 +93,62 @@ on load:
   # > Configuration
   #
   # > Set a item, you can set anything you like and also with a specific amount.
-  add 1 of dirt to {SB::crates::1::loot::*}
+  #add 1 of dirt to {SB::crates::1::loot::*}
   #
   # > Set the probability of this item here. Feel free to add as many items as you like.
+  #add 15 to {SB::crates::1::chance::*}
+ 
+  #
+  # > Tier 1 lootboxes
+  add 1 of dirt to {SB::crates::1::loot::*}
   add 15 to {SB::crates::1::chance::*}
-  
   add 1 of diamond to {SB::crates::1::loot::*}
   add 3 to {SB::crates::1::chance::*}
-  
   add 1 of emerald to {SB::crates::1::loot::*}
   add 5 to {SB::crates::1::chance::*}
-
   add 1 of iron pickaxe to {SB::crates::1::loot::*}
   add 5 to {SB::crates::1::chance::*}
-  
   add 64 of cobblestone to {SB::crates::1::loot::*}
   add 10 to {SB::crates::1::chance::*}
-  
   add 1 of iron axe to {SB::crates::1::loot::*}
   add 10 to {SB::crates::1::chance::*}
-  
   add 5 of clay block to {SB::crates::1::loot::*}
   add 10 to {SB::crates::1::chance::*}
-
   add 1 of red bed to {SB::crates::1::loot::*}
   add 3 to {SB::crates::1::chance::*}
-
   add 32 of oak log to {SB::crates::1::loot::*}
   add 15 to {SB::crates::1::chance::*}
-
   add 1 of glass block to {SB::crates::1::loot::*}
   add 5 to {SB::crates::1::chance::*}
   
-  add 1 of stone block to {SB::crates::2::loot::*}
-  add 100 to {SB::crates::2::chance::*}
+  #
+  # > Tier 2 lootboxes
+  add 1 of dirt to {SB::crates::2::loot::*}
+  add 30 to {SB::crates::2::chance::*}
+  add 1 of dirt to {SB::crates::2::loot::*}
+  add 5 to {SB::crates::2::chance::*}
+  add 1 of diamond to {SB::crates::2::loot::*}
+  add 10 to {SB::crates::2::chance::*}
+  add 5 of emerald to {SB::crates::2::loot::*}
+  add 20 to {SB::crates::2::chance::*}
+  add 1 of sand to {SB::crates::2::loot::*}
+  add 30 to {SB::crates::2::chance::*}
   
-  add 1 of stone block to {SB::crates::3::loot::*}
-  add 100 to {SB::crates::3::chance::*}
-  
+  #
+  # > Tier 3 lootboxes
+  add 5 of sand to {SB::crates::3::loot::*}
+  add 30 to {SB::crates::3::chance::*}
+  add 5 of dirt to {SB::crates::3::loot::*}
+  add 30 to {SB::crates::3::chance::*}
+  add 1 of diamond to {SB::crates::3::loot::*}
+  add 30 to {SB::crates::3::chance::*}
+  add 1 of wolf spawn egg to {SB::crates::3::loot::*}
+  add 3 to {SB::crates::3::chance::*}
+  add 1 of cow spawn egg to {SB::crates::3::loot::*}
+  add 3 to {SB::crates::3::chance::*}
+  add 1 of pig spawn egg to {SB::crates::3::loot::*}
+  add 3 to {SB::crates::3::chance::*}
+
 
 #
 # > Command /givelootbox
@@ -334,7 +358,7 @@ function openlootbox(p:player,tier:integer):
   # > Create a fancy menu, which contains blacck glass panes.
   set {_i} to 0
   loop 27 times:
-    set slot {_i} of {_p}'s current inventory to black glass pane named " "
+    set slot {_i} of {_p}'s current inventory to {@secondarymenuitem} named " "
     add 1 to {_i}
   #
   # > Set the menu item for the lootbox into it, which starts the lootbox opening, if clicked.
@@ -388,16 +412,16 @@ function startlootbox(p:player,tier:integer):
   # > Give the player 0.25 Seconds rest after the click to make it more natural.
   wait 5 ticks
   #
-  # > Loop through the inventory and update it with black glass panes which all close the inventory if clicked,
+  # > Loop through the inventory and update it with {@secondarymenuitem}s which all close the inventory if clicked,
   # > this prevents any duplication gliches, which might happen, if the player can spam-click while the inventory
   # > is moving below.
   loop 27 times:
-    setguiitem({_p},{_i},"black glass pane",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",true)
+    setguiitem({_p},{_i},"{@secondarymenuitem}",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",true)
     add 1 to {_i}
   #
   # > Set the marker, which marks the point where the item has to get to give it to the player.
-  set slot 4 of {_p}'s current inventory to yellow glass pane named " "
-  set slot 22 of {_p}'s current inventory to yellow glass pane named " "
+  set slot 4 of {_p}'s current inventory to {@primparymenuitem} named " "
+  set slot 22 of {_p}'s current inventory to {@primparymenuitem} named " "
   #
   # > Set slot 13 of the player to air, since there is now a while loop coming, which
   # > starts a random item selection process.
