@@ -152,6 +152,7 @@ command /givelootbox <integer> <player> [<integer>] [<boolean>]:
       set {_int} to arg-1
       set {_p} to arg-2
       set {_uuid} to uuid of {_p}
+      set {_lang} to {SK::lang::%{_uuid}%}
       #
       # > If a amount has been set, use it or use 1 as default amount.
       if arg-3 is set:
@@ -196,7 +197,10 @@ command /givelootbox <integer> <player> [<integer>] [<boolean>]:
           give {_amount} of {_item} to {_p}
           #
           # > Tell the player that he got the lootbox.
-          message "{@prefix} {@gotalootbox}" to {_p}
+          if {SB::lang::lootbox::gotalootbox::%{_lang}%} is set:
+            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::lootbox::gotalootbox::%{_lang}%}%" to {_p}
+          else:
+            message "{@prefix} {@gotalootbox}" to {_p}
           #
           # > Set {_givevar} to false to prevent any extra lootboxes through variables.
           set {_givevar} to false
@@ -221,16 +225,21 @@ command /givelootbox <integer> <player> [<integer>] [<boolean>]:
         #
         # > Send the player a message that the lootbox arrived and how to get it, since it
         # > has been given as a variable.
-        message "{@prefix} {@gotalootboxvar}" to {_p}
+        if {SB::lang::lootbox::gotalootboxvar::%{_lang}%} is set:
+          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::lootbox::gotalootboxvar::%{_lang}%}%" to {_p}
+        else:
+          message "{@prefix} {@gotalootboxvar}" to {_p}
 
       #
       # > Inform the user who gave the executor, who gave the player the lootbox that
       # > the player got it.
-      set {_msg} to "{@theplayergotlootbox}"
+      if {SB::lang::lootbox::theplayergotlootbox::%{_lang}%} is set:
+        set {_msg} to {SB::lang::lootbox::theplayergotlootbox::%{_lang}%}
+      else:
+        set {_msg} to "{@theplayergotlootbox}"
       replace all "<player>" with "%{_p}%" in {_msg}
       replace all "<amount>" with "%{_amount}%" in {_msg}
       message "{@prefix} %{_msg}%" to executor
-
 #
 # > Event - on rightclick holding the lootbox item (defined in options)
 # > Actions:
@@ -241,7 +250,6 @@ on rightclick holding {@lootboxitem}:
     set {_tier::*} to line 3 of lore of player's tool split at "&0|"
     set {_tier::2} to {_tier::2} parsed as integer
     openlootbox(player,{_tier::2})
-
 #
 # > Command - /openloot
 # > Actions:
@@ -249,7 +257,6 @@ on rightclick holding {@lootboxitem}:
 command /openloot:
   trigger:
     openlootboxmenu(player)
-
 #
 # > function - openlootboxmenu
 # > Parameter: <player>player
@@ -263,6 +270,7 @@ function openlootboxmenu(p:player):
   #
   # > The uuid only works if we set it first as a local variable.
   set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
   #
   # > Check, if the player already has lootboxes, if yes, get it and parse them as integer.
   if {SR::crates::%{_uuid}%} is set:
@@ -278,10 +286,15 @@ function openlootboxmenu(p:player):
   #
   # > Start at slot 0.
   set {_slot} to 0
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
   #
   # > Loop through the menu and set the menu to the available lootboxes.
   loop {_crates::*}:
-    set {_lore} to "{@tierguiitemlore}"
+    if {SB::lang::lootbox::tierguiitemlore::%{_lang}%} is set:
+      set {_lore} to {SB::lang::lootbox::tierguiitemlore::%{_lang}%}
+    else:
+      set {_lore} to "{@tierguiitemlore}"
     set {_tier} to ""
     set {_int} to loop-index parsed as integer
     set {_li} to 1
@@ -305,7 +318,6 @@ function openlootboxmenu(p:player):
     #
     # > Once the loop is over, add 2 to the slot to make a good looking menu.
     add 2 to {_slot}
-
 #
 # > function - openlootbox
 # > Parameter: <player>player, <integer>tier of the lootbox
@@ -326,8 +338,12 @@ function openlootbox(p:player,tier:integer):
     add 1 to {_i}
   #
   # > Set the menu item for the lootbox into it, which starts the lootbox opening, if clicked.
-  setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
-
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  if {SB::lang::lootbox::clicktoopen::%{_lang}%} is set:
+    setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}",{SB::lang::lootbox::clicktoopen::%{_lang}%},"startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+  else:
+    setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
 #
 # > function - startlootbox
 # > Parameter: <player>player, <integer>tier of the lootbox
@@ -351,6 +367,7 @@ function startlootbox(p:player,tier:integer):
   # > If the player doesn't hold one of these, remove one out of the variables.
   else:
     set {_uuid} to uuid of {_p}
+    set {_lang} to {SK::lang::%{_uuid}%}
     #
     # > If there is no lootbox set as variable, set it to 0 for each lootbox tier.
     if {SR::crates::%{_uuid}%} is not set:
@@ -375,7 +392,7 @@ function startlootbox(p:player,tier:integer):
   # > this prevents any duplication gliches, which might happen, if the player can spam-click while the inventory
   # > is moving below.
   loop 27 times:
-    setguiitem({_p},{_i},"black glass pane",1," "," ","message ""clicked on slot %{_i}+1%"" to ""%{_p}%"" parsed as player",true)
+    setguiitem({_p},{_i},"black glass pane",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",true)
     add 1 to {_i}
   #
   # > Set the marker, which marks the point where the item has to get to give it to the player.
@@ -521,6 +538,8 @@ function cratereward(p:player,reward:item):
   #
   # > Close the inventory of the lootbox opening.
   close {_p}'s inventory
+  set {_uuid} to uuid of {_p}
+  set {_lang} to {SK::lang::%{_uuid}%}
   #
   # > If the player has enough space in his inventory, give the player the reward.
   if {_p}'s inventory has enough space for {_reward}:
@@ -531,7 +550,13 @@ function cratereward(p:player,reward:item):
     drop {_reward} at {_p}'s location
   #
   # > Tell the player what he got the reward.
-  message "{@prefix} {@reward} %{_reward}%" to {_p}
+  if {SB::lang::lootbox::reward::%{_lang}%} is set:
+    set {_rinfo} to "%1 of {_reward}%"
+    if {SB::lang::item::%{_rinfo}%::%{_lang}%} is set:
+      set {_reward} to {SB::lang::item::%{_rinfo}%::%{_lang}%}
+    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::lootbox::reward::%{_lang}%}% %{_reward}%" to {_p}
+  else:
+    message "{@prefix} {@reward} %{_reward}%" to {_p}
   #
   # > Set local variables for visual effects.
   set {_world} to {_p}'s world
