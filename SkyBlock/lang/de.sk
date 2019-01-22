@@ -336,6 +336,14 @@ on script load:
   set {SB::lang::recovery::free::%{_lang}%} to "%{_p1}%Kostenlos"
   
   #
+  # > Lootbox
+  set {SB::lang::lootbox::reward::%{_lang}%} to "%{_s1}%Belohnung: %{_p1}%"
+  set {SB::lang::lootbox::gotalootbox::%{_lang}%} to "%{_s1}%Du hast eine Lootbox erhalten."
+  set {SB::lang::lootbox::gotalootboxvar::%{_lang}%} to "%{_s1}%Du hast eine Lootbox erhalten. Öffne sie mit /island loot"
+  set {SB::lang::lootbox::tierguiitemlore::%{_lang}%} to "%{_s1}%&lGüteklasse: <tier>\n%{SB::config::guispacer}%\n%{_s1}%Du kannst noch\n%{_p1}%<amount> %{_s1}%öffnen."
+  set {SB::lang::lootbox::clicktoopen::%{_lang}%} to "%{_s1}%Klicke %{_p1}%hier%{_s1}%,\n%{_s1}%um zu öffnen."
+  
+  #
   # > Challennges
   set {SB::lang::challenge::menutitle::%{_lang}%} to "&lHerausforderungen"
   set {SB::lang::challenge::disabled::%{_lang}%} to "&lHerausforderungen sind nicht verfügbar."
