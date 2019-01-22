@@ -95,6 +95,7 @@ on script load:
   set {SB::lang::ismember::%{_lang}%} to "Mitglieder:"
   set {SB::lang::istrusted::%{_lang}%} to "Vertraute:"
   set {SB::lang::isinfolevel::%{_lang}%} to "Level:"
+  set {SB::lang::isinfobiome::%{_lang}%} to "Biom:"
   set {SB::lang::iscreated::%{_lang}%} to "Erstellt:"
   set {SB::lang::islastactive::%{_lang}%} to "Zuletzt aktiv:"
   set {SB::lang::isupgrades::%{_lang}%} to "Inselverbesserungen:"
@@ -337,7 +338,7 @@ on script load:
   
   #
   # > Lootbox
-  set {SB::lang::lootbox::reward::%{_lang}%} to "%{_s1}%Belohnung: %{_p1}%"
+  set {SB::lang::lootbox::reward::%{_lang}%} to "%{_s1}%Belohnung:%{_p1}%"
   set {SB::lang::lootbox::gotalootbox::%{_lang}%} to "%{_s1}%Du hast eine Lootbox erhalten."
   set {SB::lang::lootbox::gotalootboxvar::%{_lang}%} to "%{_s1}%Du hast eine Lootbox erhalten. Öffne sie mit /island loot"
   set {SB::lang::lootbox::tierguiitemlore::%{_lang}%} to "%{_s1}%&lGüteklasse: <tier>\n%{SB::config::guispacer}%\n%{_s1}%Du kannst noch\n%{_p1}%<amount> %{_s1}%öffnen."
