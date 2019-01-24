@@ -1,0 +1,40 @@
+#
+# ==============
+# syncobsidian.sk
+# ==============
+# syncobsidian.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - syncobsidian:
+# > Paremeter: <block>block that should be synced
+# > Actions:
+# > Syncs all the obsidian blocks of a nether portal to the other world,
+# > either the normal world or the nether world.
+function syncobsidian(b:block):
+  #
+  # > Get the opposite world, if the block is in world, take the nether_world as example.
+  if {_b}'s world is "%{SB::config::netherworld}%":
+    set {_target} to {SB::config::world}
+  else if {_b}'s world is "%{SB::config::world}%":
+    set {_target} to {SB::config::netherworld}
+  #
+  # > Create a valid location in the other world at the exact same location.
+  set {_x} to x-coord of {_b}
+  set {_y} to y-coord of {_b}
+  set {_z} to z-coord of {_b}
+  set {_loc} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
+  #
+  # > If the block at the location is not obsidian, set it and loop through near blocks
+  # > to search for more obsidian blocks.
+  if "%block at {_loc}%" is not "%{_b}%":
+    set the block at {_loc} to {_b}
+    loop blocks in radius 1 around {_b}:
+      if loop-block is obsidian:
+        syncobsidian(loop-block)
+    loop blocks in radius 5 around {_b}:
+      if loop-block is nether portal:
+        set {_x} to x-coord of loop-block
+        set {_y} to y-coord of loop-block
+        set {_z} to z-coord of loop-block
+        set {_nloc} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
+        set the block at {_nloc} to nether portal
