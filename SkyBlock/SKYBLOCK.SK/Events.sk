@@ -339,7 +339,8 @@ on script load:
     wait 0.5 seconds
     set {_loc1} to loop-value
     set {_loc2} to {deleteisland.2::%loop-index%}
-
+    #
+    # > Loop through the whole island and remove every block and clear all block inventories.
     loop blocks within {_loc1} to {_loc2}:
       if loop-block is chest or trapped chest:
         clear loop-block's inventory
@@ -349,6 +350,20 @@ on script load:
       if {_i} is 500:
         wait 1 tick
         delete {_i}
+    #
+    # > If the nether is enabled for building islands, also delete the island in the nether.
+    if {SB::config::nether} is true:
+      set {_loc1} to location at x-coord of {_loc1}, y-coord of {_loc1}, z-coord of {_loc1} in "%{SB::config::netherworld}%" parsed as world
+      set {_loc2} to location at x-coord of {_loc2}, y-coord of {_loc2}, z-coord of {_loc2} in "%{SB::config::netherworld}%" parsed as world
+      loop blocks within {_loc1} to {_loc2}:
+        if loop-block is chest or trapped chest:
+          clear loop-block's inventory
+        if loop-block is not air:
+          set loop-block to air
+          add 1 to {_i}
+        if {_i} is 500:
+          wait 1 tick
+          delete {_i}
     delete {deleteisland.1::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
