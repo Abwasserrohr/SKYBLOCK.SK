@@ -7,7 +7,8 @@ on load:
 #
 
   # Set the World name of the Server:
-  set {SB::config::world} to "ASkyBlock"
+  set {SB::config::world} to "world"
+  set {SB::config::netherworld} to "world_nether"
 
   # Island storage type (Use either Schematic or Structure):
   set {SB::config::isstorage} to "Structure"
@@ -17,6 +18,9 @@ on load:
   set {SB::config::spawn}'s pitch to 0
   set {SB::config::spawn}'s yaw to -95
 
+  # If you want to see debug messages, set this to true.
+  set {SB::config::debug} to true
+  
   # How much distance should be between islands (100 means 200x200 islands)
   set {SB::config::distance} to 100
 
