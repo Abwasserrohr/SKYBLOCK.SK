@@ -225,7 +225,20 @@ on break:
     if event-block is obsidian:
       cancel event
       binditem(event-location, player,obsidian)
-
+      #
+	  # > If the obsidian block is also on the opposite site, it is in most cases a nether portal,
+	  # > break the obsidian on the other side (nether|world) too.
+      if {SB::config::nether} is true:
+        if player's world is "%{SB::config::netherworld}%":
+          set {_target} to {SB::config::world}
+        else if player's world is "%{SB::config::world}%":
+          set {_target} to {SB::config::netherworld}
+        set {_x} to x-coord of event-block
+        set {_y} to y-coord of event-block
+        set {_z} to z-coord of event-block
+        set {_loc} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
+        if block at {_loc} is obsidian:
+          set the block at {_loc} to air
 #
 # > Event - rightclick on a entity
 # > Triggered, if the player rightclicks on an entity
@@ -247,23 +260,6 @@ on rightclick on entity:
 on spawn of a phantom:
   if {SB::config::phantomspawn} is true:
     cancel event
-
-#
-# > For now, we want to not allow people to change the world into the nether,
-# > the nether can be turned on in the config.sk but this is very unbalanced.
-on world change:
-  set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
-  if player has permission "%{SB::config::buildpermission}%":
-    if event-world is "%{SB::config::world}%":
-      make player execute command "/is spawn"
-    stop
-  if "%event-world%" contains "nether":
-    if {SB::config::portalenter} is "false":
-      make player execute command "/is home"
-      actionload(player, {SB::lang::nonether::%{SK::lang::%uuid of player%}%})
-  #If player changes the world and is in the Island world, teleport the player back to the home to make sure player is not falling to death
-  if event-world is "%{SB::config::world}%":
-    make player execute command "/is home"
 
 #On player death, save the hunger bar to reset it after the respawn, this makes food worth more
 on death of player:
@@ -414,10 +410,67 @@ on join:
     set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
   wait 5 seconds
   delete {SB::invincible::%player%} 
-  
+#
+# > Event - connect
+# > Triggered if a player connects
+# > Actions:
+# > Force the language "de" and kick the player if the island deletation process is ongoing.
 on connect:
   set {SK::lang::%uuid of player%} to "de"
   set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
   if {SB::ISDELPROCESS} is set:
     if player doesn't have permission "%{SB::config::buildpermission}%":
       kick player due to "%{_prefix}% %{SB::lang::delismsg::%{SK::lang::%uuid of player%}%}%"
+#
+# > Event - teleport
+# > Triggered on a teleportation
+# > Actions:
+# > If the teleported entity is a player and the teleport cause is a nether portal, check
+# > through settings if this is allowed or not.
+on teleport:
+  if event-entity is a player:
+    if "%teleport cause%" is "nether portal":
+      #
+      # > If no special non-vanilla effect should happen, stop this skript here.
+      if {SB::config::nether} is false:
+        if {SB::config::portalenter} is true:
+          stop
+        #
+        # > Cancel the event because portal entering is disallowed by configuration.
+        cancel event
+        stop
+      #
+      # > Cancel the event if the nether is enabled
+      cancel event
+      set {_p} to event-entity
+      #
+      # > Check the location of the opposite world (nether|world) for a portal.
+      set {_l} to location of {_p}
+      set {_x} to x-coord of {_l}
+      set {_y} to y-coord of {_l}
+      set {_z} to z-coord of {_l}
+      if {_p}'s world is "%{SB::config::netherworld}%":
+        set {_target} to "%{SB::config::world}%"
+      else if {_p}'s world is "%{SB::config::world}%":
+        set {_target} to "%{SB::config::netherworld}%"
+      set {_newloc} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
+      #
+      # > Loop around the player and call the syncobsidian function to copy
+      # > the portal over to the other world.
+      loop blocks in radius 5 around {_p}:
+        if loop-block is obsidian:
+          syncobsidian(loop-block)
+          stop loop
+      #
+      # > Teleport the player to the other world (nether|world).
+      teleport {_p} to {_newloc}
+      #
+      # > If the player has an island and the island block of the player has no
+      # > bedrock in the nether yet, it is going to be set.
+      if {SB::player::%uuid of player%::island::bedrock} is set:
+        set {_x} to x-coord of {SB::player::%uuid of player%::island::bedrock}
+        set {_y} to y-coord of {SB::player::%uuid of player%::island::bedrock}
+        set {_z} to z-coord of {SB::player::%uuid of player%::island::bedrock}
+        set {_netherbedrock} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
+        if block at {_netherbedrock} is not bedrock:
+          set block at {_netherbedrock} to bedrock
