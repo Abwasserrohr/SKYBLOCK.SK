@@ -74,6 +74,9 @@ on load:
 
   # Are players allowed to enter portals? true = yes, false = no:
   set {SB::config::portalenter} to false
+  
+  # Toggle the nether, if enabled (true), the players can create nether islands too.
+  set {SB::config::nether} to true
 
   # Only allow elytra in own skyblock island? true = yes, false = everywhere
   set {SB::config::elytra} to true
