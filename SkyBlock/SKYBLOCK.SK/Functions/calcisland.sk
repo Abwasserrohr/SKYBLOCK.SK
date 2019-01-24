@@ -63,7 +63,6 @@ function calcisland(p:offline player):
       add 1 to {_i}
       #
       # > Setting the chunk of the current loop block to a local variable to load the chunk
-      #set {_lb} to chunk at loop-block
       #
       # > Every 10000 blocks, check for new percentages for the progress bar.
       if {_i} is 10000:
@@ -118,7 +117,6 @@ function calcisland(p:offline player):
   #
   # > Set level to a list of all island levels.
   set {SB::islvl::%{_x}%_%{_y}%_%{_z}%} to {_level}
-
   #
   # > Updates the hopper count to the new counted amount of hoppers:
   set {_tmp} to hoppercounter({_p},"update",{_hopper})
