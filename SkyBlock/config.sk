@@ -76,10 +76,10 @@ on load:
   # Permission to build everywhere:
   set {SB::config::buildpermission} to "is.admin"
 
-  # Are players allowed to enter portals? true = yes, false = no:
-  set {SB::config::portalenter} to false
+  # Toggle the portal function, if the portal is disabled, players can't use it. [true=enabled|false=disabled]
+  set {SB::config::portalenter} to true
   
-  # Toggle the nether, if enabled (true), the players can create nether islands too.
+  # Toggle the nether, if enabled [true], players can use a nether portal to use the space there too.
   set {SB::config::nether} to true
 
   # Only allow elytra in own skyblock island? true = yes, false = everywhere
