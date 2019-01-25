@@ -42,6 +42,15 @@ function calcisland(p:offline player):
   set {_h} to 256
   set {_size} to {_l}*{_b}*{_h}
   #
+  # > Set the experience per block into a list and convert it to a usable format for us.
+  set {_bxp::*} to yaml list "blocks" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
+  loop {_bxp::*}:
+    set {_lv} to "%loop-value%"
+    replace all "{" with "" in {_lv}
+    replace all "}" with "" in {_lv}
+    set {_lv::*} to {_lv} split at "="
+    set {_blockexp::%{_lv::1}%} to {_lv::2} parsed as number
+  #
   # > If the nether is enabled, double the island size, since we have the normal island and the nether island.
   if {SB::config::nether} is true:
     set {_size} to {_size}*2
@@ -83,13 +92,13 @@ function calcisland(p:offline player):
       #
       # > Count blocks that aren't air and check them.
       if loop-block.isEmpty() is false:
-        set {_tb} to loop-block.getType()
+        set {_tb} to "%loop-block.getType()%"
         if loop-block is a hopper:
           add 1 to {_hopper}
-        if {SB::expblocks::%{_tb}%} is set:
+        if {_blockexp::%{_tb}%} is set:
           #
           # > Add the experience of the block to the local experience variable {_exp}
-          add {SB::expblocks::%{_tb}%} to {_exp}
+          add {_blockexp::%{_tb}%} to {_exp}
           #
           # > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
           # > and increase the difficulty to reach the next level.
@@ -101,7 +110,6 @@ function calcisland(p:offline player):
           # > If debug is set, tell everyone that the current material has no value for calculation.
           if {SB::config::debug} is true:
             broadcast "[Debug] %{_tb}% has no value for /island calc"
-          add {SB::expblocks::other} to {_exp}
           #
           # > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
           # > and increase the difficulty to reach the next level.
