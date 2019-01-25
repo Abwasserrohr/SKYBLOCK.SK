@@ -31,15 +31,18 @@ function loadislandstoworld():
     set {_check} to loop-value.toString().endsWith(".nbt")
     if {_check} is true:
       #
-      # > Prints to console that it tries to copy import the files.
-      send "[SkyBlock] > Try to import %{_fname}% into your world..." to console
-      #
       # > Get the name of the loop file.
       set {_fname} to loop-value.getName()
       #
+      # > Try to generate a new folder for the structures.
+      try new File("%{SB::config::world}%/generated/minecraft/structures/").mkdirs()
+      #
       # > Look if there is already a file with that name
-      set {_checkfile} to new File("%{SB::config::world}%/generated/minecraft/structures/%{_fname}%")
-      if {_checkfile}.isFile() is true:
+      set {_checkfile} to try new File("%{SB::config::world}%/generated/minecraft/structures/%{_fname}%")
+      #
+      # > Prints to console that it tries to copy import the files.
+      send "[SkyBlock] > Try to import %{_fname}% into your world..." to console
+      if try {_checkfile}.isFile() is true:
         #
         # > Print that there is already a file with this name
         send "[SkyBlock] > %{_fname}% is already set." to console
