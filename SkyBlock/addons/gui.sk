@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.3
+# GUI.SK v0.0.4
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -9,6 +9,7 @@
 # > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
 # > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > SKQuery - https://www.spigotmc.org/resources/unofficial-skquery-fork-1-6-1-12.36631/
 # ==============
 # How to use it:
 # ==============
@@ -19,33 +20,45 @@
 # > set {_slots} to 9
 # > set {_name} to "&lExample menu"
 # > set {_type} to "HOPPER"
-# > opengui({_player},{_slots},{_name},{_type})
+# > open new gui menu named {_name} to player as hopper inventory
 # ==============
 # This example opens a GUI for the player with the name "Example name" as a hopper, you can also use other types:
-# ANVIL, BEACON, BREWING, CHEST, CRAFTING, CREATIVE, DISPENSER, DROPPER, ENCHANTING, ENDER_CHEST, FURNACE, HOPPER, MERCHANT, PLAYER, SHULKER_BOX, WORKBENCH
+# chest inventory, dispenser inventory, dropper inventory, furnace inventory, workbench inventory, crafting table inventory, 
+# enchanting table inventory, brewing stand inventory, player inventory, creative inventory, merchant inventory, 
+# ender chest inventory, anvil inventory, beacon inventory, hopper inventory, shulker box inventory
 # ==============
 # 2. Step: Add items to the GUI for the player:
 # > set {_player} to player
 # > set {_slot} to 1
-# > set {_item} to "diamond ore"
+# > set {_item} to diamond ore
 # > set {_amount} to 1
 # > set {_name} to "&r&6&lFREE DIAMONDS!!!1"
 # > set {_lore} to "&r&fFREEEEEE! Click here!"
 # > set {_execute} to "execute console command ""give %{_player}% diamond_ore 1"""
-# > set {_close} to true
-# > setguiitem({_player},{_slot},{_item},{_amount},{_name},{_lore},{_execute},{_close})
+# > set gui menu item in slot {_slot} of {_player} to {_item} named {_name} with lore {_lore} to execute {_execute} then close
+
 # ==============
 # This example sets 1 of diamond ore into slot 1 to the GUI, which is named "FREE DIAMOONDS!!!1" and has a lore like you can see above.
 # If a player clicks on this item, the text in {_execute} is going to be executed, also if {_close} is true, the inventory is closed on click.
 # You're done. Feel free to use it everywhere you like, be creative.
 # ==============
-# > Example, simply uncomment to test it out, ingame command: /test
+# > Example, create a new skript and test it, if you want.
 #command /test:
 #  trigger:
-#    opengui(player,9,"&6FREE STUFF","HOPPER")
-#    setguiitem(player,0,"diamond ore",1,"&r&6&lFREE DIAMONDS!!!1","&r&fFREEEEEE! Click here!","execute console command ""give %player% diamond_ore 1""",true)
+#    open new gui menu named "&6FREE STUFF" to player as workbench inventory
+#    set {_item} to 1 of glowing glowstone
+#    set gui menu item in slot 0 of player to diamond ore named "&r&6&lFREE DIAMONDS!!!1" with lore "&r&fFREEEEEE! Click here!" to execute "execute console command ""give %player% diamond_ore 1""" then close
+#    set gui menu item in slot 1 of player to {_item} named "test" with lore "test" to execute "broadcast ""test"""
+#    set gui menu item in slot 2 of player to {_item} named "test" with lore "test" and do nothing
+#    set gui menu item in slot 3 of player to {_item} named "test" to execute "broadcast ""test""" then close
+#    set gui menu item in slot 4 of player to {_item} named "test" to execute "broadcast ""test"""
+#    set gui menu item in slot 5 of player to {_item} named "test" and do nothing
+#    set gui menu item in slot 6 of player to {_item} to execute "broadcast ""test""" then close
+#    set gui menu item in slot 7 of player to {_item} to execute "broadcast ""test"""
+#    set gui menu item in slot 8 of player to {_item} and do nothing
 
-#Import all necessary java classes:
+#
+# > Import all necessary Java classes:
 import:
   java.util.ArrayList
   org.bukkit.Bukkit
@@ -55,9 +68,134 @@ import:
   org.bukkit.inventory.ItemStack
   org.bukkit.inventory.meta.ItemMeta
   org.bukkit.event.inventory.InventoryType
-#  org.bukkit.event.inventory.InventoryMoveItemEvent
-#on InventoryMoveItemEvent:
-#  broadcast "test"
+#
+# Custom effect: Sets a gui item
+# Patterns:
+# > set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text% then close
+# > set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text%
+# > set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% and do nothing
+# > set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text% then close
+# > set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text%
+# > set gui menu item in slot %integer% of %player% to %item% named %text% and do nothing
+# > set gui menu item in slot %integer% of %player% to %item% to execute %text% then close
+# > set gui menu item in slot %integer% of %player% to %item% to execute %text%
+# > set gui menu item in slot %integer% of %player% to %item% and do nothing
+# Actions:
+# > Sets the item to the gui menu of the player and defined a action which should happen if the
+# > player clicks on it.
+effect:
+  patterns:
+    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text% then close
+    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text%
+    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% and do nothing
+    set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text% then close
+    set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text%
+    set gui menu item in slot %integer% of %player% to %item% named %text% and do nothing
+    set gui menu item in slot %integer% of %player% to %item% to execute %text% then close
+    set gui menu item in slot %integer% of %player% to %item% to execute %text%
+    set gui menu item in slot %integer% of %player% to %item% and do nothing
+  trigger:
+    #
+    # > If the pattern is 1, 4 or 7, it has "then close" on the pattern.
+    # > Set the {_close} variable to true to close the inventory on click.
+    if the matched pattern is 1 or 4 or 7:
+      set {_close} to true
+    #
+    # > Depending on which pattern has been used, set the local variables differently,
+    # > since the expressions aren't always defined, depending on the pattern above.
+    if the matched pattern is 1 or 2 or 3:
+      set {_slot} to expr-1
+      set {_player} to expr-2
+      set {_ItemStack} to expr-3
+      set {_name} to expr-4
+      set {_lore} to expr-5
+      if the matched pattern is 1 or 2:
+        set {_exec} to expr-6
+      else:
+        set {_exec} to " "
+    if the matched pattern is 4 or 5 or 6:
+      set {_slot} to expr-1
+      set {_player} to expr-2
+      set {_ItemStack} to expr-3
+      set {_name} to expr-4
+      if the matched pattern is 4 or 5:
+        set {_exec} to expr-5
+      else:
+        set {_exec} to " "
+    if the matched pattern is 7 or 8 or 9:
+      set {_slot} to expr-1
+      set {_player} to expr-2
+      set {_ItemStack} to expr-3
+      if the matched pattern is 7 or 8:
+        set {_exec} to expr-4
+      else:
+        set {_exec} to " "
+    #
+    # > If a name is set, name the item after the name.
+    if {_name} is set:
+      set {_ItemStack} to {_ItemStack} named {_name}
+    #
+    # > If a lore variable is set, split it into an array and set it to the item lore
+    # > of the item.
+    if {_lore} is set:
+      set {_ItemMeta} to {_ItemStack}.getItemMeta()
+      set {_itemlore} to new ArrayList()
+      set {_lore::*} to {_lore} split at "\n"
+      loop {_lore::*}:
+        {_itemlore}.add(coloured "&r%loop-value%")
+      {_ItemMeta}.setLore({_itemlore})
+      {_ItemStack}.setItemMeta({_ItemMeta})
+    #
+    # > Set the item into the defined slot.
+    set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_ItemStack}
+    #
+    # > This variable is later used to execute the given code.
+    set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+    #
+    # > If {_close} is true, set a variable to check later if the inventory
+    # > should be closed on click.
+    if {_close} is true:
+      set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+#
+# Custom effect: Opens a GUI
+# Pattern:
+# > open new gui menu named %text% to %player% with %integer% slots
+# > open new gui menu named %text% to %player% as %inventory type%
+# > -----
+# > valid inventory types: chest inventory, dispenser inventory, dropper inventory, 
+# > furnace inventory, workbench inventory, crafting table inventory, enchanting table inventory, 
+# > brewing stand inventory, player inventory, creative inventory, merchant inventory, 
+# > ender chest inventory, anvil inventory, beacon inventory, hopper inventory, shulker box inventory
+# Actions:
+# > Deletes set items from any old GUI by the defined player and opens the specified inventory,
+# > set the {SK::GUI::inv::%{_player}%} variable to the new inventory
+effect:
+  patterns:
+    open new gui menu named %text% to %player% with %integer% slots
+    open new gui menu named %text% to %player% as %inventory type%
+  trigger:
+    #
+    # > Set expressions to local variables to make it easier to read.
+    set {_name} to expr-1
+    set {_player} to expr-2
+    delete {SK::GUI::items::%{_player}%::*}
+    #
+    # > If the player defined a inventory type, we have the pattern 2.
+    if the matched pattern is 2:
+      set {_type} to expr-3
+      set {_inventory} to Bukkit.createInventory({_player}, {_type}, {_name})
+    #
+	# If the matched pattern is not 2, we have a normal chest inventory with slots.
+    else:
+      set {_slots} to expr-3
+      set {_inventory} to Bukkit.createInventory({_player}, {_slots}, {_name})
+    #
+    # > Open the inventory to the player
+    {_player}.openInventory({_inventory})
+    #
+    # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
+    set {SK::GUI::inv::%{_player}%} to {_inventory}
+
 # Function: opengui - Opens a GUI
 # Arguments:
 # > <player>player, <integer>size, <text>name,[<text>inventory type]
