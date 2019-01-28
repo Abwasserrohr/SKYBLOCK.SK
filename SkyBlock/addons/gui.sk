@@ -85,15 +85,15 @@ import:
 # > player clicks on it.
 effect:
   patterns:
-    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text% then close
-    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% to execute %text%
-    set gui menu item in slot %integer% of %player% to %item% named %text% with lore %text% and do nothing
-    set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text% then close
-    set gui menu item in slot %integer% of %player% to %item% named %text% to execute %text%
-    set gui menu item in slot %integer% of %player% to %item% named %text% and do nothing
-    set gui menu item in slot %integer% of %player% to %item% to execute %text% then close
-    set gui menu item in slot %integer% of %player% to %item% to execute %text%
-    set gui menu item in slot %integer% of %player% to %item% and do nothing
+    set gui menu item in slot %int% of %player% to %item% named %text% with lore %text% to execute %text% then close
+    set gui menu item in slot %int% of %player% to %item% named %text% with lore %text% to execute %text%
+    set gui menu item in slot %int% of %player% to %item% named %text% with lore %text% and do nothing
+    set gui menu item in slot %int% of %player% to %item% named %text% to execute %text% then close
+    set gui menu item in slot %int% of %player% to %item% named %text% to execute %text%
+    set gui menu item in slot %int% of %player% to %item% named %text% and do nothing
+    set gui menu item in slot %int% of %player% to %item% to execute %text% then close
+    set gui menu item in slot %int% of %player% to %item% to execute %text%
+    set gui menu item in slot %int% of %player% to %item% and do nothing
   trigger:
     #
     # > If the pattern is 1, 4 or 7, it has "then close" on the pattern.
@@ -105,6 +105,7 @@ effect:
     # > since the expressions aren't always defined, depending on the pattern above.
     if the matched pattern is 1 or 2 or 3:
       set {_slot} to expr-1
+      broadcast "%expr-1%"
       set {_player} to expr-2
       set {_ItemStack} to expr-3
       set {_name} to expr-4
@@ -130,6 +131,7 @@ effect:
         set {_exec} to expr-4
       else:
         set {_exec} to " "
+    broadcast "slot: %{_slot}% - %the matched pattern%"
     #
     # > If a name is set, name the item after the name.
     if {_name} is set:
@@ -171,7 +173,7 @@ effect:
 # > set the {SK::GUI::inv::%{_player}%} variable to the new inventory
 effect:
   patterns:
-    open new gui menu named %text% to %player% with %integer% slots
+    open new gui menu named %text% to %player% with %int% slots
     open new gui menu named %text% to %player% as %inventory type%
   trigger:
     #
