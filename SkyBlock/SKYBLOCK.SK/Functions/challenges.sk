@@ -176,8 +176,7 @@ function openchallenges(p:player):
 			# > Repeats for this challenge are disabled, if it has been done, make it glowing
             if {_done} is true:
               set {_item} to glowing {_item}
-
-        setguiitem({_p},{_slot},"%{_item}%",1,"&r%{SB::lang::challenge::name::%{_challengelvl}%::%{_challangelvlpart}%::%{_lang}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
+        set gui menu item in slot {_slot} of {_p} to {_item} named "&r%{SB::lang::challenge::name::%{_challengelvl}%::%{_challangelvlpart}%::%{_lang}%}%" with lore "&r%{_loreneeded}%%{_lorereward}%%{_loreend}%" to execute "solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")"
       else:
         #
         # > The slot is not available, display a black glass pane instead.
