@@ -164,14 +164,18 @@ function openchallenges(p:player):
             replace all "<current>" with "%{_c}%" in {_m}
             replace all "<maxrepeat>" with "%{_max}%" in {_m}
             set {_loreend} to "%{_loreend}%%{_m}%"
+            #
+            # > If the maximum amount is reached, make it a glowing item.
+            if {_c} is {_max}:
+              set {_item} to glowing {_item}
           #
           # > If repeats are disabled for the challenge:
           else:
             set {_loreend} to "%{_loreend}%%{SB::lang::challenge::notrepeatable::%{_lang}%}%"
 			#
-			# > Repeats for this challenge are disabled, if it has been done, set the item to a black glass pane.
+			# > Repeats for this challenge are disabled, if it has been done, make it glowing
             if {_done} is true:
-              set {_item} to black glass pane
+              set {_item} to glowing {_item}
 
         setguiitem({_p},{_slot},"%{_item}%",1,"&r%{SB::lang::challenge::name::%{_challengelvl}%::%{_challangelvlpart}%::%{_lang}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")",false)
       else:
