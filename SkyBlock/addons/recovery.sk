@@ -250,7 +250,7 @@ on place of chest:
             set block at {_l} to chest
         #
         # > Give the player the experience back.
-        add {SR::recovery::xp::%{_invid}%} to xp of player
+        #add {SR::recovery::xp::%{_invid}%} to xp of player
         #
         # > Wait 1 tick, needed to wait for the chest being placed.
         wait 1 tick
@@ -298,7 +298,7 @@ on death of player:
   set {SR::recovery::cause::%{_invuuid}%} to "%damage cause%"
   #
   # > Set the xp of the player to the inventory.
-  set {SR::recovery::xp::%{_invuuid}%} to xp of player
+  #set {SR::recovery::xp::%{_invuuid}%} to xp of player
   #
   # > Loop through all items in the inventory of the player and save them into a list.
   loop all items in player's inventory:
@@ -307,7 +307,7 @@ on death of player:
   #
   # > Clear all drops and remove all xp on the floor.
   clear drops
-  remove all 1 xp from drops
+  #remove all 1 xp from drops
   #
   # > Send information how to get the recovery in the chat.
   if {SB::lang::recovery::recoveredinfo::%{_lang}%} is set:
