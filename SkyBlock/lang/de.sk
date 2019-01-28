@@ -1,4 +1,4 @@
-´#
+#
 # > SKYBLOCK.SK LANGUAGE: DE - German
 # > COMPATIBLE VERSION: x (there is no release yet)
 #
@@ -214,6 +214,8 @@ on script load:
   set {SB::lang::maingui::guitoplore::%{_lang}%} to "%{_s1}%Zeigt dir die aktuelle Top 10\n%{_s1}%der besten Inseln an."
   set {SB::lang::maingui::guirewardslore::%{_lang}%} to "%{_s1}%Hole dir wertvolle Belohnungen\n%{_s1}%für deine Insel ab."
   set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
+  set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
+  set {SB::lang::maingui::guiflaglore::%{_lang}%} to "%{_s1}%Ändere die Flags deiner Insel."
   
   #
   # > Chat headers
