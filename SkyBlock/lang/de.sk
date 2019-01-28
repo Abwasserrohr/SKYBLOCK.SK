@@ -81,6 +81,12 @@ on script load:
   set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
   #
+  # > /island reload
+  #
+  set {SB::lang::reloadstarted::%{_lang}%} to "%{_s1}%Lade SKYBLOCK.SK neu..."
+  set {SB::lang::reloadsuccess::%{_lang}%} to "%{_s1}%SKYBLOCK.SK wurde erfolgreich neugeladen."
+
+  #
   # > /island warp|setwarp|delwarp
   #
   set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
