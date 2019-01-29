@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.1
+# recovery.sk v0.0.2
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -106,9 +106,9 @@ function openrecoverymenu(p:player):
     #
     # > Set the items into the menu.
     if {SB::lang::recovery::guiitemname::%{_lang}%} is set:
-      setguiitem({_p},{_slot},"chest",1,"%{SB::lang::recovery::guiitemname::%{_lang}%}%",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      setguiitem({_p},{_slot},north facing chest,1,"%{SB::lang::recovery::guiitemname::%{_lang}%}%",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
     else:
-      setguiitem({_p},{_slot},"chest",1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      setguiitem({_p},{_slot},north facing chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
     add 1 to {_slot}
     #
     # > If there are more than 55 inventory uuids. Stop here.
@@ -125,7 +125,7 @@ function buyrecoverychest(p:player,invid:text,price:integer):
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
   set {_lang} to {SK::lang::%{_uuid}%}
-  set {_item} to chest
+  set {_item} to north facing chest
   set line 1 of lore of {_item} to "&eRecovery"
   set line 2 of lore of {_item} to "&7%{_invid}%"
   #
@@ -206,8 +206,8 @@ on load:
 # > Actions:
 # > If the chest is a recovery chest, restore the inventory in the chest and
 # > give the player the xp stored in the inventory uuid.
-on place of chest:
-  if player's tool is chest:
+on place of any chest:
+  if player's tool is any chest:
     #
     # > Only proceed, if this is a recovery chest.
     if line 1 of lore of player's tool is "&eRecovery":
@@ -247,7 +247,7 @@ on place of chest:
           #
           # > If everything is fine, set another chest above to restore everything.
           else:
-            set block at {_l} to chest
+            set block at {_l} to north facing chest
         #
         # > Give the player the experience back.
         #add {SR::recovery::xp::%{_invid}%} to xp of player
