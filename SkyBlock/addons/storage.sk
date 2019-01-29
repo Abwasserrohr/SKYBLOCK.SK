@@ -72,7 +72,7 @@ options:
 # > Event - on load
 # > Action:
 # > After loading this skript, the recipe to create storage units is registered.
-on skript load:
+on load:
   set {_item} to {@item}
   set line 1 of lore of {_item} to "{@itemidentfier}"
   register new shaped recipe for {_item} using diamond, diamond, diamond, diamond, chest, diamond, diamond, diamond, diamond
