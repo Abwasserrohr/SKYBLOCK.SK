@@ -23,10 +23,10 @@ function openflagmenu(p:player,type:text):
   # > If there is no type set, open a menu where the player can select, on which type of
   # > player the flags should apply. The player can select between foreign, trusted and island member.
   if {_type} is "":
-    opengui({_p},5,"%{SB::lang::flag::flagst::%{_lang}%}%","HOPPER")
-    setguiitem({_p},0,"farmland",1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},2,"grass path",1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},4,"grass",1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    opengui({_p},5,"%{SB::lang::flag::flagst::%{_lang}%}%",hopper inventory)
+    setguiitem({_p},0,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},2,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},4,grass,1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
     stop
 
   #
@@ -76,9 +76,9 @@ function openflagmenu(p:player,type:text):
       # > Set either green glass panes or red glass panes for true and false and then set the item.
       # > The items have translation text as variable and also execute the "toggleflag" function onn click.
       if {_boolean} is true:
-        setguiitem({_p},{_i},"green glass pane",1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        setguiitem({_p},{_i},green glass pane,1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
       if {_boolean} is false:
-        setguiitem({_p},{_i},"red glass pane",1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
       #
       # > Add 1 to {_i} to place the items in the slots in the right order.
       add 1 to {_i}
