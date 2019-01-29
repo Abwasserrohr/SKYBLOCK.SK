@@ -20,8 +20,8 @@ import:
 # > challenges through 5 levels.
 function openchallenges(p:player):
   #
-  # > Start at slot 9 to keep it eye friendly.
-  set {_slot} to 9
+  # > Start at slot 0.
+  set {_slot} to 0
   #
   # > Start at level 1.
   set {_challengelvl} to 1
@@ -201,7 +201,9 @@ function openchallenges(p:player):
     set slot {_slot} of {_p}'s current inventory to {_head}
     add 1 to {_slot}
     add 1 to {_challengelvl}
-
+    #
+    # > This item allows the user to go into the previous menu.
+    setguiitem({_p},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
 #
 # > Function: solvechallenge
 # > Arguments:
