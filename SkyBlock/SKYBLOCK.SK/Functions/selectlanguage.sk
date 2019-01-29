@@ -46,12 +46,8 @@ function selectlanguage(p:player):
 	  # Create a custom head for this language.
       set {_head} to getcustomhead("%{_lang}%", "%{_skin}%", {_p})
 	  #
-	  # > Define the head in the language menu.
-      setguiitem({_p},{_slot},"player head",1,"","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
-	  #
-	  # > Set the custom head block into the slot
-      set name of {_head} to "&r%{_lang}%"
-      set slot {_slot} of {_p}'s current inventory to {_head}
+	  # > Set the head into the language menu.
+      setguiitem({_p},{_slot},{_head},1,"&r%{_lang}%","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
       #
       # > Add 1 to {_slot}, that way, every language has it's unique slot.
       add 1 to {_slot}
