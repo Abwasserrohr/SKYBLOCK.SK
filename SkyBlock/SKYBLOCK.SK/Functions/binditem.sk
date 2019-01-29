@@ -13,11 +13,11 @@ import:
 #
 # > Function: binditem
 # > Arguments:
-# > <location>event location, <player>player
+# > <location>event location, <player>player, <boolean>should the same block given as drop as broken? [true=yes|false=no]
 # > Actions:
 # > If the island of the player is lower than the configured level, the dirt|grass|farmland
 # > is going to be island bound and can only be used on exactly this island.
-function binditem(el:location,p:player,block1:item):
+function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
   #
   # > Get the block at the location as a new item.
   set {_block} to "%block at {_el}%" parsed as item
@@ -55,7 +55,10 @@ function binditem(el:location,p:player,block1:item):
   # > If the island is over the specified level, the item doesn't have a lore.
   # > If the block is not a lava bucket, drop it.
   if {_block} is not lava bucket:
-    drop 1 of {_block} at {_el}
+    if {_givesameblock} is true:
+      drop 1 of {_block1} at {_el}
+    else:
+      drop 1 of {_block} at {_el}
   #
   # > If the {_block} is a lava bucket, try to give it to the player, if
   # > the inventory is full, drop it. Also remove one bucket from player's

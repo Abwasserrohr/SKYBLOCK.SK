@@ -250,7 +250,7 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
       else:
         if {SB::config::defaultisflag::%{_playertype}%::door} is set:
           return {SB::config::defaultisflag::%{_playertype}%::door}
-    if {_block} is chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
+    if {_block} is any chest or trapped chest or dropper or dispenser or shulker box or brewing stand or hopper or anvil or enchantment table or furnace:
       if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest} is set:
         return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::chest}
       else:

@@ -81,6 +81,12 @@ on script load:
   set {SB::lang::sethomelmitreached::%{_lang}%} to "Du hast das Limit für noch mehr Zuhase erreicht."
 
   #
+  # > /island reload
+  #
+  set {SB::lang::reloadstarted::%{_lang}%} to "%{_s1}%Lade SKYBLOCK.SK neu..."
+  set {SB::lang::reloadsuccess::%{_lang}%} to "%{_s1}%SKYBLOCK.SK wurde erfolgreich neugeladen."
+
+  #
   # > /island warp|setwarp|delwarp
   #
   set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
@@ -192,12 +198,26 @@ on script load:
   set {SB::lang::guigrassname::%{_lang}%} to "%{_p1}%&lSkyblock"
   set {SB::lang::guisoonname::%{_lang}%} to "&4&lDemnächst..."
   set {SB::lang::guigraslore::%{_lang}%} to "&9&lStarte eine Insel"
-  set {SB::lang::guiexpname::%{_lang}%} to "&9&lInsel Level"
+  set {SB::lang::guiexpname::%{_lang}%} to "&9&lInselinformationen"
   set {SB::lang::guichallangename::%{_lang}%} to "&a&lTägliche Aufgaben"
   set {SB::lang::guitopname::%{_lang}%} to "&c&lTop &n10"
-  set {SB::lang::guirewardsname::%{_lang}%} to "&d&lVoting Belohnungen"
+  set {SB::lang::guirewardsname::%{_lang}%} to "&d&lLootboxen"
   set {SB::lang::guihubname::%{_lang}%} to "%{_p1}%&lLobby"
-  
+  set {SB::lang::guibacktopreviousmenu::%{_lang}%} to "Zurück"
+  #
+  # > GUI - menu - lore
+  #
+  set {SB::lang::maingui::guigrasslore::%{_lang}%} to "%{_s1}%Teleportiere dich\n%{_s1}%zu deiner Insel."
+  set {SB::lang::maingui::guigrasscreatelore::%{_lang}%} to "%{_s1}%Erstelle eine neue\n%{_s1}%Insel für dich."
+  set {SB::lang::maingui::guiislandinfo::%{_lang}%} to "%{_s1}%Zeige Informationen\n%{_s1}%über deine Insel an."
+  set {SB::lang::maingui::guichallangelore::%{_lang}%} to "%{_s1}%Öffne das das Herausforderungs-\n%{_s1}%menü, um Herausforderungen zu sehen."
+  set {SB::lang::maingui::guitoplore::%{_lang}%} to "%{_s1}%Zeigt dir die aktuelle Top 10\n%{_s1}%der besten Inseln an."
+  set {SB::lang::maingui::guirewardslore::%{_lang}%} to "%{_s1}%Hole dir wertvolle Belohnungen\n%{_s1}%für deine Insel ab."
+  set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
+  set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
+  set {SB::lang::maingui::guiflaglore::%{_lang}%} to "%{_s1}%Ändere die Flags deiner Insel."
+  set {SB::lang::guibacktopreviousmenulore::%{_lang}%} to "%{_s1}%Bringt dich zurück\n%{_s1}%zum übergeordneten Menü."
+
   #
   # > Chat headers
   #

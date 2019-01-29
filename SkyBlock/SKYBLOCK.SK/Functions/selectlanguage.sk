@@ -21,14 +21,14 @@ function selectlanguage(p:player):
   set {_uuid} to uuid of {_p}
   #
   # > Open the language menu with 9 slots.
-  opengui({_p},9,"&l%{SB::lang::languages::%{SK::lang::%{_uuid}%}%}%")
+  opengui({_p},27,"&l%{SB::lang::languages::%{SK::lang::%{_uuid}%}%}%")
   #
   # > Empty slots are shown as black stained glass.
-  loop 9 times:
+  loop 27 times:
     set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
   #
   # > Set slot id, for the following loop.
-  set {_slot} to 0
+  set {_slot} to 10
   #
   # > Get all files in the languages folder "plugins/Skript/scripts/SkyBlock/lang".
   set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/lang").listFiles()
@@ -46,15 +46,12 @@ function selectlanguage(p:player):
 	  # Create a custom head for this language.
       set {_head} to getcustomhead("%{_lang}%", "%{_skin}%", {_p})
 	  #
-	  # > Define the head in the language menu.
-      setguiitem({_p},{_slot},"player head",1,"","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
-	  #
-	  # > Set the custom head block into the slot
-      set name of {_head} to "&r%{_lang}%"
-      set slot {_slot} of {_p}'s current inventory to {_head}
+	  # > Set the head into the language menu.
+      setguiitem({_p},{_slot},{_head},1,"&r%{_lang}%","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
       #
       # > Add 1 to {_slot}, that way, every language has it's unique slot.
       add 1 to {_slot}
+  setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
 
 # > Function - changelanguage:
 # > Parameter:

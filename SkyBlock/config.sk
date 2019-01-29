@@ -283,6 +283,10 @@ on load:
   #
   # > If a spacer is needed in the item gui, this is used as a spacer:
   set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
+  
+  #
+  # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
+  set {SB::config::backguiitem} to redstone dust
 
   #
   # > Schematics/Structure Files:
@@ -297,7 +301,7 @@ on load:
   add "Die Standard Insel" to {SB::schematics::lore::de::*}
   #
   # > Set a price, if the Island should cost something, if it should be free, set it to 0:
-  add "0" to {SB::schematics::price::*}
+  add 0 to {SB::schematics::price::*}
   #
   # > Set chest content for this schematic and also the relative location for the chest
   set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
@@ -441,32 +445,32 @@ on load:
   #add 50 to {SB::config::biome::price::*}
   #add "Flachland" to {SB::config::biome::lang::de::*}
   
-  add "barrier" to {SB::config::biome::menuitem::*}
+  add barrier to {SB::config::biome::menuitem::*}
   add "the void" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Die Leere" to {SB::config::biome::lang::de::*}
   
-  add "grass" to {SB::config::biome::menuitem::*}
+  add grass to {SB::config::biome::menuitem::*}
   add "plains" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Flachland" to {SB::config::biome::lang::de::*}
 
-  add "sand" to {SB::config::biome::menuitem::*}
+  add sand to {SB::config::biome::menuitem::*}
   add "desert" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Wüste" to {SB::config::biome::lang::de::*}
 
-  add "snow block" to {SB::config::biome::menuitem::*}
+  add snow block to {SB::config::biome::menuitem::*}
   add "ICE_PLAINS" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Schnee" to {SB::config::biome::lang::de::*}
 
-  add "jungle leaves" to {SB::config::biome::menuitem::*}
+  add jungle leaves to {SB::config::biome::menuitem::*}
   add "jungle" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Dschungel" to {SB::config::biome::lang::de::*}
 
-  add "light blue concrete powder" to {SB::config::biome::menuitem::*}
+  add light blue concrete powder to {SB::config::biome::menuitem::*}
   add "warm ocean" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Warmer Ozean" to {SB::config::biome::lang::de::*}

@@ -134,7 +134,10 @@ command /island [<text>] [<text=1>] [<text>]:
     # > skript reload command for the SkyBlock folder.
     if arg-1 is "reload":
       if player has permission "%{SB::config::buildpermission}%":
-        make player execute "/sk reload SkyBlock/"
+        message "%{_prefix}% %{SB::lang::reloadstarted::%{SK::lang::%uuid of player%}%}%"
+        reloadskyblocksk(1)
+        message "%{_prefix}% %{SB::lang::reloadsuccess::%{SK::lang::%uuid of player%}%}%"
+		
     #
     # > Argument "create"
     # > Actions:
