@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.4
+# GUI.SK v0.0.5
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -47,6 +47,9 @@
 #  trigger:
 #    open new gui menu named "&6FREE STUFF" to player as workbench inventory
 #    set {_item} to 1 of glowing glowstone
+#    # > In some cases, custom syntax isn't working, in these cases, use these functions:
+#    opengui(player,9,"&6FREE STUFF",workbench inventory)
+#    setguiitem(player,9,{_item},1,"test","test","broadcast ""test""",false)
 #    set gui menu item in slot 0 of player to diamond ore named "&r&6&lFREE DIAMONDS!!!1" with lore "&r&fFREEEEEE! Click here!" to execute "execute console command ""give %player% diamond_ore 1""" then close
 #    set gui menu item in slot 1 of player to {_item} named "test" with lore "test" to execute "broadcast ""test"""
 #    set gui menu item in slot 2 of player to {_item} named "test" with lore "test" and do nothing
@@ -56,6 +59,7 @@
 #    set gui menu item in slot 6 of player to {_item} to execute "broadcast ""test""" then close
 #    set gui menu item in slot 7 of player to {_item} to execute "broadcast ""test"""
 #    set gui menu item in slot 8 of player to {_item} and do nothing
+
 
 #
 # > Import all necessary Java classes:
@@ -198,65 +202,27 @@ effect:
 
 # Function: opengui - Opens a GUI
 # Arguments:
-# > <player>player, <integer>size, <text>name,[<text>inventory type]
-# > valid inventory types: ANVIL, BEACON, BREWING, CHEST, CRAFTING, CREATIVE, DISPENSER, DROPPER, ENCHANTING, ENDER_CHEST, FURNACE, HOPPER, MERCHANT, PLAYER, SHULKER_BOX, WORKBENCH
-# > view also here: #https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/inventory/InventoryType.html
+# > <player>player, <integer>size, <text>name,[<inventory type>inventory type]
+# > valid inventory types: 
+# > chest inventory, dispenser inventory, dropper inventory, furnace inventory, workbench inventory, crafting table inventory, 
+# > enchanting table inventory, brewing stand inventory, player inventory, creative inventory, merchant inventory, 
+# > ender chest inventory, anvil inventory, beacon inventory, hopper inventory, shulker box inventory
 # Actions:
 # > Deletes set items from any old GUI by the defined player and opens the specified inventory,
 # > set the {SK::GUI::inv::%{_player}%} variable to inventory and then return
-function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolean:
+function opengui(player:player,size:integer,name:text,invtype:inventory type=chest inventory) :: boolean:
   delete {SK::GUI::items::%{_player}%::*}
-  # > If {_type} is CHEST (default)
-  if {_type} is "CHEST":
-    set {_invtype} to InventoryType.CHEST!
-  # > If it is not a chest, check the input and set the InventoryType:
-  # > This is done like this to avoid errors:
+  # > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
+  if {_type} is chest inventory:
+    set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
   else:
-    if {_type} is "ANVIL":
-      set {_invtype} to InventoryType.ANVIL!
-    else if {_type} is "BEACON":
-      set {_invtype} to InventoryType.BEACON!
-    else if {_type} is "BREWING":
-      set {_invtype} to InventoryType.BREWING!
-    else if {_type} is "CHEST":
-      set {_invtype} to InventoryType.CHEST!
-    else if {_type} is "CRAFTING":
-      set {_invtype} to InventoryType.CRAFTING!
-    else if {_type} is "CREATIVE":
-      set {_invtype} to InventoryType.CREATIVE!
-    else if {_type} is "DISPENSER":
-      set {_invtype} to InventoryType.DISPENSER!
-    else if {_type} is "ENCHANTING":
-      set {_invtype} to InventoryType.ENCHANTING!
-    else if {_type} is "ENDER_CHEST":
-      set {_invtype} to InventoryType.ENDER_CHEST!
-    else if {_type} is "HOPPER":
-      set {_invtype} to InventoryType.HOPPER!
-    else if {_type} is "MERCHANT":
-      set {_invtype} to InventoryType.MERCHANT!
-    else if {_type} is "PLAYER":
-      set {_invtype} to InventoryType.PLAYER!
-    else if {_type} is "SHULKER_BOX":
-      set {_invtype} to InventoryType.SHULKER_BOX!
-    else if {_type} is "WORKBENCH":
-      set {_invtype} to InventoryType.WORKBENCH!
-    # > If {_invtype} has been found and set go forward:
-  if {_invtype} is set:
-    # > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
-    if {_type} is "CHEST":
-      set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
-    else:
-      set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
-    # > Open the inventory to the player
-    {_player}.openInventory({_inventory})
-    # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
-    set {SK::GUI::inv::%{_player}%} to {_inventory}
-    # > Everything went fine, return true.
-    return true
-  # > If not, print an error to the player who wanted to open the gui menu and stop the skript
-  else:
-    message "&5&lInvalid InventoryType: %{_type}%" to {_player}
-    stop
+    set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
+  # > Open the inventory to the player
+  {_player}.openInventory({_inventory})
+  # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
+  set {SK::GUI::inv::%{_player}%} to {_inventory}
+  # > Everything went fine, return true.
+  return true
 
 # Function: setguiitem - Sets a item in a GUI
 # Arguments:
@@ -270,8 +236,8 @@ function opengui(player:player,size:integer,name:text,type:text=CHEST) :: boolea
 # > which is required on a click event, if something should happen.
 # > If {_close} is set to true, the variable {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is set to true,
 # > this allows the inventory to be closed on a click on the specified item.
-function setguiitem(player:player,slot:integer,item:text,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
-  set {_ItemStack} to {_item} parsed as item
+function setguiitem(player:player,slot:integer,item:item,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
+  set {_ItemStack} to {_item}
   set {_ItemStack} to {_ItemStack} named {_name}
   set {_ItemMeta} to {_ItemStack}.getItemMeta()
   set {_itemlore} to new ArrayList()
