@@ -31,15 +31,38 @@ function createisland(p:player,island:text="1"):
     #
     # > If {_island} is "1", there is no island input, display island menu for player.
     if {_island} is "1":
-      opengui({_p},9,"%{SB::lang::islands::%{_lang}%}%")
-      set {_slot} to 0
+      opengui({_p},27,"%{SB::lang::islands::%{_lang}%}%")
+      #
+      # > Empty slots are displayed with black stained glass panes for better look.
+      loop 27 times:
+        set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+      #
+      # > Start with the list in the menu at this slot.
+      set {_slot} to 10
       # 
       # > Go trough all available schematics or structures, which where set in the config.sk and display it in the islands gui.
       loop {SB::schematics::schematic::*}:
-        setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
+        set {_price} to {SB::schematics::price::%loop-index%}
+        if {_price} is not 0:
+          set {_formatprice} to {SB::lang::bc::shopprice::%{_lang}%}
+          replace all "<price>" with "%{_price}%" in {_formatprice}
+        else:
+          set {_formatprice} to {SB::lang::bc::shopfree::%{_lang}%}	  
+        setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","%{SB::lang::clicktocreateisland::%{_lang}%}%\n%{SB::config::guispacer}%\n%{_formatprice}%","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
         add 1 to {_slot}
+      #
+      # > This item allows the user to go into the previous menu.
+      setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
       stop
     else:
+      #
+      # > Check for prices and if the player has the needed money to create:
+      set {_price} to {SB::schematics::price::%{_island}%}
+      #
+      # > If the balance of the player is smaller than the price:
+      if {_p}'s balance < {_price}:
+        message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%"
+        stop
       #
       # > If schematics are configured to be used.
       # > Currently not supported.
