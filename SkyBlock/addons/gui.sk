@@ -213,7 +213,7 @@ effect:
 function opengui(player:player,size:integer,name:text,invtype:inventory type=chest inventory) :: boolean:
   delete {SK::GUI::items::%{_player}%::*}
   # > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
-  if {_type} is chest inventory:
+  if {_invtype} is chest inventory:
     set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
   else:
     set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
