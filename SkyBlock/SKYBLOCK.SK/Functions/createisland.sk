@@ -36,8 +36,7 @@ function createisland(p:player,island:text="1"):
       # 
       # > Go trough all available schematics or structures, which where set in the config.sk and display it in the islands gui.
       loop {SB::schematics::schematic::*}:
-        set {_item} to grass named "%{SB::schematics::name::%{_lang}%::%loop-index%}%"
-        setguiitem({_p},{_slot},"grass",1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
+        setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
         add 1 to {_slot}
       stop
     else:
@@ -169,7 +168,7 @@ function createisland(p:player,island:text="1"):
         set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
         set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
         set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
-        set block at {_chestloc} to chest
+        set block at {_chestloc} to north facing chest
         set {_newchest} to block at {_chestloc}
         #
         # > Set all configurated items into the created chest.
