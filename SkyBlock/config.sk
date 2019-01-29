@@ -445,32 +445,32 @@ on load:
   #add 50 to {SB::config::biome::price::*}
   #add "Flachland" to {SB::config::biome::lang::de::*}
   
-  add "barrier" to {SB::config::biome::menuitem::*}
+  add barrier to {SB::config::biome::menuitem::*}
   add "the void" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Die Leere" to {SB::config::biome::lang::de::*}
   
-  add "grass" to {SB::config::biome::menuitem::*}
+  add grass to {SB::config::biome::menuitem::*}
   add "plains" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Flachland" to {SB::config::biome::lang::de::*}
 
-  add "sand" to {SB::config::biome::menuitem::*}
+  add sand to {SB::config::biome::menuitem::*}
   add "desert" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Wüste" to {SB::config::biome::lang::de::*}
 
-  add "snow block" to {SB::config::biome::menuitem::*}
+  add snow block to {SB::config::biome::menuitem::*}
   add "ICE_PLAINS" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Schnee" to {SB::config::biome::lang::de::*}
 
-  add "jungle leaves" to {SB::config::biome::menuitem::*}
+  add jungle leaves to {SB::config::biome::menuitem::*}
   add "jungle" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Dschungel" to {SB::config::biome::lang::de::*}
 
-  add "light blue concrete powder" to {SB::config::biome::menuitem::*}
+  add light blue concrete powder to {SB::config::biome::menuitem::*}
   add "warm ocean" to {SB::config::biome::biomename::*}
   add 500 to {SB::config::biome::price::*}
   add "Warmer Ozean" to {SB::config::biome::lang::de::*}
