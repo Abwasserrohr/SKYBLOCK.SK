@@ -32,6 +32,8 @@ function openflagmenu(p:player,type:text):
     setguiitem({_p},11,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
     setguiitem({_p},13,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
     setguiitem({_p},15,grass,1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    #
+    # > This item allows the user to go into the previous menu.
     setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
     stop
 
