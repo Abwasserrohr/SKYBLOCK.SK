@@ -49,8 +49,8 @@ function skyblockgui(p: player):
   setguiitem({_p},14,ender chest,1,"%{SB::lang::guirewardsname::%{_lang}%}%","%{SB::lang::maingui::guirewardslore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is openloot""",true)
   setguiitem({_p},15,end portal frame,1,"%{SB::lang::guihubname::%{_lang}%}%","%{SB::lang::maingui::guihublore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
   setguiitem({_p},16,jungle leaves,1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%","&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
-  setguiitem({_p},17,{_customgui},1,"&r&6&l%{SB::lang::languages::%{_lang}%}%","&r%{SB::lang::maingui::guilanglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
-  setguiitem({_p},18,lever,1,"&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%","&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+  setguiitem({_p},19,{_customgui},1,"&r&6&l%{SB::lang::languages::%{_lang}%}%","&r%{SB::lang::maingui::guilanglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
+  setguiitem({_p},20,lever,1,"&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%","&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
 #
 # > Function - biomemenu:
 # > Arguments:
@@ -71,8 +71,12 @@ function biomemenu(p: player):
     set {_size} to size of {SB::config::biome::menuitem::*}
     set {_slots} to 9
     loop 5 times:
-      if {_size} is bigger than {_slots}:
+      if {_size} is bigger than {_slots}-3:
         add 9 to {_slots}
+    #
+    # > Give the gui some more room by adding two rows, if possible.
+    if {_slots} is not 54 or 45:
+      add 18 to {_slots}
     #
     # > Open a menu to the defined player, with the calculated slots and the translated menu header
     opengui({_p},{_slots},"&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%")
@@ -82,10 +86,9 @@ function biomemenu(p: player):
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
     #
     # > Render all the biomes into the menu, they can be changed in the config.sk
+    set {_slot} to 10
     loop {SB::config::biome::menuitem::*}:
       set {_item} to {SB::config::biome::menuitem::%loop-index%}
-      set {_slot} to loop-index parsed as integer
-      remove 1 from {_slot}
       set {_price} to {SB::config::biome::price::%loop-index%}
       set {_title} to {SB::config::biome::lang::%{SK::lang::%{_uuid}%}%::%loop-index%}
       set {_biome} to {SB::config::biome::biomename::%loop-index%}
@@ -98,6 +101,15 @@ function biomemenu(p: player):
       else:
         set {_pricelore} to {SB::lang::bc::shopfree::%{SK::lang::%{_uuid}%}%}
       setguiitem({_p},{_slot},{_item},1,"&r%{_title}%","&r%{_pricelore}%","buybiomechange(""%{_p}%"" parsed as player,""%{_biome}%"",%{_price}%,""%{_title}%"")",true)
+      add 1 to {_slot}
+      add 1 to {_loopamount}
+      if {_loopamount} is 7:
+        set {_loopamount} to 0
+        add 3 to {_slot}
+    #
+    # > Add back item to allow the player to go back to the previous menu.
+    set {_slots} to {_slots} - 1
+    setguiitem({_p},{_slots},{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
   #
   # > If the player is not the owner, tell the player that this is for the island owner only
   else:
