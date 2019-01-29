@@ -301,7 +301,7 @@ on load:
   add "Die Standard Insel" to {SB::schematics::lore::de::*}
   #
   # > Set a price, if the Island should cost something, if it should be free, set it to 0:
-  add "0" to {SB::schematics::price::*}
+  add 0 to {SB::schematics::price::*}
   #
   # > Set chest content for this schematic and also the relative location for the chest
   set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
