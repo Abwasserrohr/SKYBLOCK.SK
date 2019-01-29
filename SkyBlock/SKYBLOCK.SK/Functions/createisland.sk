@@ -47,7 +47,7 @@ function createisland(p:player,island:text="1"):
           set {_formatprice} to {SB::lang::bc::shopprice::%{_lang}%}
           replace all "<price>" with "%{_price}%" in {_formatprice}
         else:
-          set {_formatprice} to {SB::lang::bc::shopfree::%{_lang}%}	  
+          set {_formatprice} to {SB::lang::bc::shopfree::%{_lang}%}
         setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","%{SB::lang::clicktocreateisland::%{_lang}%}%\n%{SB::config::guispacer}%\n%{_formatprice}%","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
         add 1 to {_slot}
       #
@@ -61,7 +61,7 @@ function createisland(p:player,island:text="1"):
       #
       # > If the balance of the player is smaller than the price:
       if {_p}'s balance < {_price}:
-        message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%"
+        message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
         stop
       #
       # > If schematics are configured to be used.
