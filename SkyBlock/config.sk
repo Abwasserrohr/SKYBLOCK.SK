@@ -283,6 +283,10 @@ on load:
   #
   # > If a spacer is needed in the item gui, this is used as a spacer:
   set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
+  
+  #
+  # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
+  set {SB::config::backguiitem} to redstone dust
 
   #
   # > Schematics/Structure Files:
