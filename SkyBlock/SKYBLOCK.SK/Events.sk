@@ -222,6 +222,11 @@ on break:
     if event-block is dirt or grass or farmland or grass path:
       cancel event
       binditem(event-location, player,dirt)
+    #
+    # > Prevent dirt duplication through podzol revert.
+    if event-block is podzol block:
+      cancel event
+      binditem(event-location, player,podzol block,true)
     if event-block is obsidian:
       cancel event
       binditem(event-location, player,obsidian)
