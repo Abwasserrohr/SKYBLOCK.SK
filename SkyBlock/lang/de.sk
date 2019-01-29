@@ -203,7 +203,7 @@ on script load:
   set {SB::lang::guitopname::%{_lang}%} to "&c&lTop &n10"
   set {SB::lang::guirewardsname::%{_lang}%} to "&d&lLootboxen"
   set {SB::lang::guihubname::%{_lang}%} to "%{_p1}%&lLobby"
-
+  set {SB::lang::guibacktopreviousmenu::%{_lang}%} to "Zurück"
   #
   # > GUI - menu - lore
   #
@@ -216,7 +216,8 @@ on script load:
   set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
   set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
   set {SB::lang::maingui::guiflaglore::%{_lang}%} to "%{_s1}%Ändere die Flags deiner Insel."
-  
+  set {SB::lang::guibacktopreviousmenulore::%{_lang}%} to "%{_s1}%Bringt dich zurück\n%{_s1}%zum übergeordneten Menü."
+
   #
   # > Chat headers
   #
