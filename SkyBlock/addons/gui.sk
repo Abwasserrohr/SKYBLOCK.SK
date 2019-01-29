@@ -226,7 +226,7 @@ function opengui(player:player,size:integer,name:text,invtype:inventory type=che
 
 # Function: setguiitem - Sets a item in a GUI
 # Arguments:
-# > <player>player, <integer>slot, <text>item,<integer>amount,<text>name,<text>lore,[<text>skript code to execute on click (like functions)],[<boolean>inventory close on click (true = yes)]
+# > <player>player, <integer>slot, <item>item,<integer>amount,<text>name,<text>lore,[<text>skript code to execute on click (like functions)],[<boolean>inventory close on click (true = yes)]
 # > Valid item: try it out, the function trys to parse everything it knows
 # Actions:
 # > Parses the item, creates a ItemStack, takes the ItemMeta out of it, creates a new Itemlore as a ArrayList,
