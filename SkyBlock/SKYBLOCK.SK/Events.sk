@@ -156,7 +156,7 @@ on PlayerInteractEvent:
   #
   # > Only prevent these types of interactions and let others trough,
   # > this gets called very often, should be very efficient.
-  if {_b} is soil or lever or button or door or trapdoor or fence gate or chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or flower pot or hopper or dropper or dispenser:
+  if {_b} is soil or lever or button or door or trapdoor or fence gate or any chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or flower pot or hopper or dropper or dispenser:
     set {_player} to event.getPlayer()
     if {_player} is a player:
       set {_l} to event.getClickedBlock().getLocation()
@@ -342,7 +342,7 @@ on script load:
     #
     # > Loop through the whole island and remove every block and clear all block inventories.
     loop blocks within {_loc1} to {_loc2}:
-      if loop-block is chest or trapped chest:
+      if loop-block is any chest or trapped chest:
         clear loop-block's inventory
       if loop-block is not air:
         set loop-block to air
@@ -356,7 +356,7 @@ on script load:
       set {_loc1} to location at x-coord of {_loc1}, y-coord of {_loc1}, z-coord of {_loc1} in "%{SB::config::netherworld}%" parsed as world
       set {_loc2} to location at x-coord of {_loc2}, y-coord of {_loc2}, z-coord of {_loc2} in "%{SB::config::netherworld}%" parsed as world
       loop blocks within {_loc1} to {_loc2}:
-        if loop-block is chest or trapped chest:
+        if loop-block is any chest or trapped chest:
           clear loop-block's inventory
         if loop-block is not air:
           set loop-block to air
