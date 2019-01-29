@@ -23,10 +23,16 @@ function openflagmenu(p:player,type:text):
   # > If there is no type set, open a menu where the player can select, on which type of
   # > player the flags should apply. The player can select between foreign, trusted and island member.
   if {_type} is "":
-    opengui({_p},5,"%{SB::lang::flag::flagst::%{_lang}%}%",hopper inventory)
-    setguiitem({_p},0,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},2,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},4,grass,1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    opengui({_p},27,"%{SB::lang::flag::flagst::%{_lang}%}%",chest inventory)
+    #
+    # > Empty slots are shown as black stained glass.
+    loop 27 times:
+      set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+
+    setguiitem({_p},11,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},13,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},15,grass,1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
     stop
 
   #
@@ -45,18 +51,19 @@ function openflagmenu(p:player,type:text):
   # > Check, if the player who executed the command is also the leader of the island.
   if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
     #
-    # > Set slots to how many slots we need in the menu.
-    set {_slots} to 0
-    loop 5 times:
-      if size of {SB::config::defaultisflag::%{_type}%::*} > {_slots}:
-        add 9 to {_slots}
-    
+    # > Set the slots to a default size of 54.
+    set {_slots} to 54
     #
     # > Open the flags menu.
     opengui({_p},{_slots},"&l%{SB::lang::flag::%{_type}%t::%{_lang}%}%")
     #
-    # > Set {_i} to 0, to order the items in the menu right.
-    set {_i} to 0
+    # > Empty slots are shown as black stained glass.
+    loop {_slots} times:
+      set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+
+    #
+    # > Set {_i} to 10, to order the items in the menu right.
+    set {_i} to 10
     loop {SB::config::defaultisflag::%{_type}%::*}:
 
       #
@@ -81,8 +88,16 @@ function openflagmenu(p:player,type:text):
         setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
       #
       # > Add 1 to {_i} to place the items in the slots in the right order.
-      add 1 to {_i}
-
+	  # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
+      add 1 to {_loopamount}
+      if {_loopamount} is 7:
+        set {_loopamount} to 0
+        add 3 to {_i}
+      else:
+        add 1 to {_i}
+    #
+    # > Set the back item to let the player go back to the previous menu.
+    setguiitem({_p},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
   else:
     message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
 
