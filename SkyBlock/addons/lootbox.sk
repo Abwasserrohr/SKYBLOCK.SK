@@ -1,6 +1,6 @@
 #
 # ==============
-# lootbox.sk v0.0.1
+# lootbox.sk v0.0.2
 # ==============
 # Create custom lootboxes with three different tiers and animations.
 # ==============
@@ -51,7 +51,7 @@ options:
   openlootboxsound: block.chest.open
   #
   # > Set the lootbox item, which should be used to display and give to the player.
-  lootboxitem: chest
+  lootboxitem: north facing chest
   #
   # > Set the primary color which stands out in the menu for the marker tool while the lootbox menu is open.
   primparymenuitem: yellow glass pane
@@ -290,7 +290,7 @@ command /openloot:
 function openlootboxmenu(p:player):
   #
   # > Opens a hopper menu to the player with the defined gui title for lootbox selection.
-  opengui({_p},5,"{@crateguititleselect}","HOPPER")
+  opengui({_p},5,"{@crateguititleselect}",hopper inventory)
   #
   # > The uuid only works if we set it first as a local variable.
   set {_uuid} to uuid of {_p}
@@ -336,9 +336,9 @@ function openlootboxmenu(p:player):
     #
     # > If the player has enough lootboxes, assign a different function to call if the player clicks on it.
     if {_crates::%loop-index%} > 0:
-      setguiitem({_p},{_slot},"{@lootboxitem}",1,"{@tier1guiitem}",{_lore},"openlootbox(""%{_p}%"" parsed as player,%loop-index%)",true)
+      setguiitem({_p},{_slot},{@lootboxitem},1,"{@tier1guiitem}",{_lore},"openlootbox(""%{_p}%"" parsed as player,%loop-index%)",true)
     else:
-      setguiitem({_p},{_slot},"{@lootboxitem}",1,"{@tier1guiitem}",{_lore},"actionbar(""%{_p}%"" parsed as player,""You don't have a loot box."")",true)
+      setguiitem({_p},{_slot},{@lootboxitem},1,"{@tier1guiitem}",{_lore},"actionbar(""%{_p}%"" parsed as player,""You don't have a loot box."")",true)
     #
     # > Once the loop is over, add 2 to the slot to make a good looking menu.
     add 2 to {_slot}
@@ -365,9 +365,9 @@ function openlootbox(p:player,tier:integer):
   set {_uuid} to uuid of {_p}
   set {_lang} to {SK::lang::%{_uuid}%}
   if {SB::lang::lootbox::clicktoopen::%{_lang}%} is set:
-    setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}",{SB::lang::lootbox::clicktoopen::%{_lang}%},"startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+    setguiitem({_p},13,{@lootboxitem},1,"{@lootbox}",{SB::lang::lootbox::clicktoopen::%{_lang}%},"startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
   else:
-    setguiitem({_p},13,"{@lootboxitem}",1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+    setguiitem({_p},13,{@lootboxitem},1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
 #
 # > function - startlootbox
 # > Parameter: <player>player, <integer>tier of the lootbox
@@ -381,7 +381,7 @@ function startlootbox(p:player,tier:integer):
   set {_i} to 0
   #
   # > Set slot 13 of the inventory (the center) to the predefined lootboxitem. To do only a emptry actionbar messsage.
-  setguiitem({_p},13,"{@lootboxitem}",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",false)
+  setguiitem({_p},13,{@lootboxitem},1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",false)
   #
   # > If the player holds a lootbox in his hand, remove one of it out of the inventory of the player.
   if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
@@ -416,7 +416,7 @@ function startlootbox(p:player,tier:integer):
   # > this prevents any duplication gliches, which might happen, if the player can spam-click while the inventory
   # > is moving below.
   loop 27 times:
-    setguiitem({_p},{_i},"{@secondarymenuitem}",1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",true)
+    setguiitem({_p},{_i},{@secondarymenuitem},1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",true)
     add 1 to {_i}
   #
   # > Set the marker, which marks the point where the item has to get to give it to the player.
