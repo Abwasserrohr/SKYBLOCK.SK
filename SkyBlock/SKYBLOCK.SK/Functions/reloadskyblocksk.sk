@@ -1,8 +1,8 @@
 #
 # ==============
-# reloadskyblocksk.sk
+# startreloadorder.sk
 # ==============
-# reloadskyblocksk.sk is part of the SKYBLOCK.SK functions.
+# startreloadorder.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
 #
@@ -19,8 +19,4 @@ on skript load:
 # > Actions:
 # > Reloads the files of SKYBLOCK.SK in the right order.
 function reloadskyblocksk(i:integer):
-  make console execute "/sk reload SkyBlock/config"
-  make console execute "/sk reload SkyBlock/SKYBLOCK.SK/"
-  make console execute "/sk reload SkyBlock/lang/"
-  make console execute "/sk reload SkyBlock/config/"
-  make console execute "/sk reload SkyBlock/addons/"
+  make console execute "/sk reload SkyBlock/"
