@@ -236,12 +236,13 @@ function opengui(player:player,size:integer,name:text,invtype:inventory type=che
 # > which is required on a click event, if something should happen.
 # > If {_close} is set to true, the variable {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is set to true,
 # > this allows the inventory to be closed on a click on the specified item.
-function setguiitem(player:player,slot:integer,item:item,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
+function setguiitem(player:player,slot:number,item:item,amount:integer,name:text,lore:text,exec:text="",close:boolean=false):
   set {_ItemStack} to {_item}
   set {_ItemStack} to {_ItemStack} named {_name}
   set {_ItemMeta} to {_ItemStack}.getItemMeta()
   set {_itemlore} to new ArrayList()
   set {_lore::*} to {_lore} split at "\n"
+  set {_slot} to {_slot} parsed as integer
   loop {_lore::*}:
     {_itemlore}.add(coloured "&r%loop-value%")
   {_ItemMeta}.setLore({_itemlore})
