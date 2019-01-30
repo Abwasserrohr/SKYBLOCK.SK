@@ -19,4 +19,5 @@ on skript load:
 # > Actions:
 # > Reloads the files of SKYBLOCK.SK in the right order.
 function reloadskyblocksk(i:integer):
+  make console execute "/sk reload SkyBlock/config/"
   make console execute "/sk reload SkyBlock/"
