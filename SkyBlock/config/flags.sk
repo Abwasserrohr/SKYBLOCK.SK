@@ -1,0 +1,170 @@
+#
+# ==============
+# flags.sk
+# ==============
+# flags.sk is part of the SKYBLOCK.SK configuration.
+# ==============
+on load:
+  # 
+  # > Default Flags
+  # > Change the default flags for islands:
+
+  #
+  # > Changeable Flags
+  # > Allow your players to toggle the flags for their island. True = allowed, false = denied.
+  set {SB::config::toggleflags} to true
+
+  #
+  # > Default Flags for player islands (foreign flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::button} to false
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::door} to false
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::foreign::mob-damage} to false
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::foreign::animal-damage} to false
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::interact-vehicle} to false
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::publichome} to false
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::build} to false
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::chest} to false
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::entityclick} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::redstone} to false
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::foreign::jetboots} to false
+
+  #
+  # > Default Flags for player islands (trusted flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::button} to true
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::trusted::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::trusted::animal-damage} to true
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::interact-vehicle} to true
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::publichome} to true
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::build} to false
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::chest} to false
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::entityclick} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::redstone} to true
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::trusted::jetboots} to true
+
+  #
+  # > Default Flags for player islands (foreign flags):
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::explosion} to false
+  #
+  # > Let users use buttons. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::button} to true
+  #
+  # > Let users use the doors. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultisflag::member::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultisflag::member::animal-damage} to true
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::interact-vehicle} to true
+  #
+  # > Allow others to visit the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::publichome} to true
+  #
+  # > Allow others to build on the island. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::build} to true
+  #
+  # > Allow others to access to chests. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::chest} to true
+  #
+  # > Allow others to click on the entitiy. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::entityclick} to true
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::redstone} to true
+  #
+  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+  set {SB::config::defaultisflag::member::jetboots} to true
+
+  #
+  # > Flags for not inhabited islands:
+  # > Islands like the lobby island or currently not used islands
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::explosion} to false
+  #
+  # > Explosions. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::mob-spawning} to false
+  #
+  # > Let players use buttons. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::button} to true
+  #
+  # > Let players use the doors. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::door} to true
+  #
+  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+  # > Damage on mobs
+  set {SB::config::defaultlobbyflag::mob-damage} to true
+  #
+  # > Damage on animals
+  set {SB::config::defaultlobbyflag::animal-damage} to false
+  #
+  # > Damage on item frames
+  set {SB::config::defaultlobbyflag::itemframe-damage} to false
+  #
+  # > Interact with vehicles. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::interact-vehicle} to false
+  #
+  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::redstone} to false
+  #
+  # > Allow players to use jetboots on the lobby. True = allowed, false = denied.
+  set {SB::config::defaultlobbyflag::jetboots} to false

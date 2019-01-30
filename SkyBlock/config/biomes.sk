@@ -1,0 +1,55 @@
+#
+# ==============
+# biomes.sk
+# ==============
+# biomes.sk is part of the SKYBLOCK.SK configuration.
+# ==============
+on load:
+  delete {SB::config::biome::menuitem::*}
+  delete {SB::config::biome::biomename::*}
+  delete {SB::config::biome::price::*}
+  loop {SB::config::biome::lang::*}:
+    delete {SB::config::biome::lang::%loop-index%::*}
+  delete {SB::config::biome::lang::*}
+  # > Biome changer configuration
+  #
+  # > Add all biomes which should be available to change, also add prices.
+  # > Set price to 0 to make it free. Players have to pay every time they
+  # > change the biome to prevent spam.
+  # > Example:
+  # > Adds menu item grass for 50 money to the menu which changes the biome to plains,
+  # > add additional language for every language you have.
+  #add "grass" to {SB::config::biome::menuitem::*}
+  #add "plains" to {SB::config::biome::biomename::*}
+  #add 50 to {SB::config::biome::price::*}
+  #add "Flachland" to {SB::config::biome::lang::de::*}
+  
+  add barrier to {SB::config::biome::menuitem::*}
+  add "the void" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Die Leere" to {SB::config::biome::lang::de::*}
+  
+  add grass to {SB::config::biome::menuitem::*}
+  add "plains" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Flachland" to {SB::config::biome::lang::de::*}
+
+  add sand to {SB::config::biome::menuitem::*}
+  add "desert" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Wüste" to {SB::config::biome::lang::de::*}
+
+  add snow block to {SB::config::biome::menuitem::*}
+  add "ICE_PLAINS" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Schnee" to {SB::config::biome::lang::de::*}
+
+  add jungle leaves to {SB::config::biome::menuitem::*}
+  add "jungle" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Dschungel" to {SB::config::biome::lang::de::*}
+
+  add light blue concrete powder to {SB::config::biome::menuitem::*}
+  add "warm ocean" to {SB::config::biome::biomename::*}
+  add 500 to {SB::config::biome::price::*}
+  add "Warmer Ozean" to {SB::config::biome::lang::de::*}

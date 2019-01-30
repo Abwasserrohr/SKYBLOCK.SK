@@ -1,0 +1,149 @@
+on load:
+  loadconfig()
+#
+# SKYBLOCK.SK CONFIGURATION
+# > Configurate most of the skript parts here easily
+# > You can also edit the skripts itself like you want
+# > Find more configurations in the "SkyBlock/config/" folder.
+
+  #
+  # > Set the World name of the Server:
+  set {SB::config::world} to "world"
+  set {SB::config::netherworld} to "world_nether"
+
+  #
+  # > Island storage type (Use either Schematic or Structure):
+  set {SB::config::isstorage} to "Structure"
+
+  #
+  # > Set where the players should spawn, change x, y, z to your desired location:
+  set {SB::config::spawn} to location at 20.0, 87.0, 81.5 in "%{SB::config::world}%" parsed as world
+  set {SB::config::spawn}'s pitch to 0
+  set {SB::config::spawn}'s yaw to -95
+
+  #
+  # > If you want to see debug messages, set this to true.
+  set {SB::config::debug} to true
+
+  #
+  # > How much distance should be between islands (100 means 200x200 islands)
+  set {SB::config::distance} to 100
+
+  #
+  # > Default size of the island, set it to the distance like above to make it as big as the distance is.
+  # > Do not change the value once you have islands, since it messes up existing islands.
+  # > Set it to the same amount as the distance to disable this feature.
+  set {SB::config::defaultsize} to 25
+
+  #
+  # > Set a island level until which dirt, grass and farmland blocks should be bound to the
+  # > island to prevent island creation abuse.
+  set {SB::config::binduntillevel} to 100
+
+  #
+  # > The default amount of hoppers, the player is allowed to place until
+  # > the placement of hoppers is canceled.
+  set {SB::config::starthopper} to 50
+
+  #
+  # > The maximum amount of hoppers, the player is allowed to place once the
+  # > hopper upgrade is upgraded to the level 5. 
+  set {SB::config::maxhopper} to 400
+
+  #
+  # > The default amount of homes the island has to use.
+  set {SB::config::starthomes} to 1
+
+  #
+  # > The maximum amount of homes, once the island hits home upgrade level 5.
+  set {SB::config::maxhomes} to 6
+
+  #
+  # > If the default island size is smaller than the distance between players, you can enable island upgrades,
+  # > these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
+  set {SB::config::islandupgrades} to true
+
+  #
+  # > You can disable the challenges with setting this setting to false.
+  set {SB::config::usechallenges} to true
+
+  #
+  # > On which height should islands be created
+  set {SB::config::height} to 100.5
+
+  #
+  # > Set the protection border between islands, 0 = no border:
+  # > With a border of 0, 
+  set {SB::config::protect} to 0
+
+  #
+  # > Cooldown, how long to wait until the invite is no longer valid:
+  set {SB::config::invitecooldown} to 30
+
+  #
+  # > Delete Cooldown - The user has to wait at least this time to delete a newly created island:
+  set {SB::config::deletecooldown} to 30 minutes
+
+  #
+  # > Permission to build everywhere:
+  set {SB::config::buildpermission} to "is.admin"
+
+  #
+  # > Toggle the portal function, if the portal is disabled, players can't use it. [true=enabled|false=disabled]
+  set {SB::config::portalenter} to true
+
+  #
+  # > Toggle the nether, if enabled [true], players can use a nether portal to use the space there too.
+  set {SB::config::nether} to true
+
+  #
+  # > Only allow elytra in own skyblock island? true = yes, false = everywhere
+  set {SB::config::elytra} to true
+
+  #
+  # > PvP between players. [true = allowed|false = disabled]
+  set {SB::config::pvp} to false
+
+  #
+  # > Prevent fire from spreading  [true = prevent|false = do not prevent]
+  set {SB::config::firespread} to true
+
+  #
+  # > Prevent phantoms from spawning [true = prevent|false = do not prevent]
+  set {SB::config::phantomspawn} to true
+
+  #
+  # > Prevent hunger reset on death: true = yes, false = no:
+  set {SB::config::preventhungerreset} to true
+
+  #
+  # > Set a cooldown for /is calc level calculation
+  set {SB::config::calccooldown} to 30 minutes
+
+  #
+  # > Color Scheme
+  # > Change this to match the colors with your corporate identity
+  set {SB::config::color::primary::1} to "&6"
+  set {SB::config::color::primary::2} to "&e"
+  set {SB::config::color::secondary::2} to "&7"
+  set {SB::config::color::background::1} to "&8"
+
+  #
+  # > If a spacer is needed in the chat, this is used as a spacer:
+  set {SB::config::spacer} to "%{SB::config::color::secondary::2}%&l&m---------------------------------------------"
+
+  #
+  # > If a spacer is needed in the item gui, this is used as a spacer:
+  set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
+  
+  #
+  # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
+  set {SB::config::backguiitem} to redstone dust
+
+  # > EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
+  set {SB::config::explevel} to 100
+
+
+  #
+  # > Functions to start after config loaded, do not change this if you don't know what you're doing.
+  loadislandstoworld()
