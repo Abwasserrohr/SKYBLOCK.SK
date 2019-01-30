@@ -1,0 +1,47 @@
+#
+# ==============
+# upgrades.sk
+# ==============
+# upgrades.sk is part of the SKYBLOCK.SK configuration.
+# ==============
+function loadupgrades(i:integer):
+  #
+  # > Island upgrade prices:
+  #
+  # > Island size upgrades:
+  # > Island size 1:
+  set {SB::config::sizeupgrade1} to 10000
+  # > Island size 2:
+  set {SB::config::sizeupgrade2} to 25000
+  # > Island size 3:
+  set {SB::config::sizeupgrade3} to 35000
+  # > Island size 4:
+  set {SB::config::sizeupgrade4} to 45000
+  # > Island size 5:
+  set {SB::config::sizeupgrade5} to 55000
+  
+  #
+  # > Island home upgrades:
+  # > Island home 1:
+  set {SB::config::homeupgrade1} to 1000
+  # > Island home 2:
+  set {SB::config::homeupgrade2} to 2000
+  # > Island home 3:
+  set {SB::config::homeupgrade3} to 3000
+  # > Island home 4:
+  set {SB::config::homeupgrade4} to 4000
+  # > Island home 5:
+  set {SB::config::homeupgrade5} to 5000
+  
+  #
+  # > Island hopper upgrades:
+  # > Island hopper 1:
+  set {SB::config::hopperupgrade1} to 4000
+  # > Island hopper 2:
+  set {SB::config::hopperupgrade2} to 6000
+  # > Island hopper 3:
+  set {SB::config::hopperupgrade3} to 12000
+  # > Island hopper 4:
+  set {SB::config::hopperupgrade4} to 14000
+  # > Island hopper 5:
+  set {SB::config::hopperupgrade5} to 20000
