@@ -10,15 +10,15 @@ function loadupgrades(i:integer):
   #
   # > Island size upgrades:
   # > Island size 1:
-  set {SB::config::sizeupgrade1} to 10000
+  set {SB::config::sizeupgrade1} to 1500
   # > Island size 2:
-  set {SB::config::sizeupgrade2} to 25000
+  set {SB::config::sizeupgrade2} to 3000
   # > Island size 3:
-  set {SB::config::sizeupgrade3} to 35000
+  set {SB::config::sizeupgrade3} to 3500
   # > Island size 4:
-  set {SB::config::sizeupgrade4} to 45000
+  set {SB::config::sizeupgrade4} to 4000
   # > Island size 5:
-  set {SB::config::sizeupgrade5} to 55000
+  set {SB::config::sizeupgrade5} to 4500
   
   #
   # > Island home upgrades:
