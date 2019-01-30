@@ -4,7 +4,13 @@
 # ==============
 # biomes.sk is part of the SKYBLOCK.SK configuration.
 # ==============
-function loadbiomes(i:integer):
+on load:
+  delete {SB::config::biome::menuitem::*}
+  delete {SB::config::biome::biomename::*}
+  delete {SB::config::biome::price::*}
+  loop {SB::config::biome::lang::*}:
+    delete {SB::config::biome::lang::%loop-index%::*}
+  delete {SB::config::biome::lang::*}
   # > Biome changer configuration
   #
   # > Add all biomes which should be available to change, also add prices.
