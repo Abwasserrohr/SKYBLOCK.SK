@@ -4,7 +4,7 @@
 # ==============
 # flags.sk is part of the SKYBLOCK.SK configuration.
 # ==============
-function loadflags(i:integer):
+on load:
   # 
   # > Default Flags
   # > Change the default flags for islands:
