@@ -1,0 +1,36 @@
+#
+# ==============
+# upgrades.yml
+# ==============
+# upgrades.yml is part of the SKYBLOCK.SK configuration.
+# ==============
+#
+# > Island size upgrade prices:
+# > Players can upgrade the island size 
+# > for the defined price.
+islandsizes:
+- sizeupgrade1: 1500
+- sizeupgrade2: 3000
+- sizeupgrade3: 3500
+- sizeupgrade4: 4000
+- sizeupgrade5: 4500
+#
+# > Island home upgrades prices:
+# > Players can upgrade the island home
+# > amount for the defined price.
+islandhomes:
+- homeupgrade1: 1500
+- homeupgrade2: 2000
+- homeupgrade3: 3000
+- homeupgrade4: 4000
+- homeupgrade5: 5000
+#
+# > Island hopper upgrades prices:
+# > Players can upgrade the island hopper 
+# > amount for the defined price.
+islandhoppers:
+- hopperupgrade1: 4000
+- hopperupgrade2: 6000
+- hopperupgrade3: 12000
+- hopperupgrade4: 14000
+- hopperupgrade5: 20000
