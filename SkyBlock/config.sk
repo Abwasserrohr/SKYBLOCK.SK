@@ -33,7 +33,7 @@ on load:
   # > Default size of the island, set it to the distance like above to make it as big as the distance is.
   # > Do not change the value once you have islands, since it messes up existing islands.
   # > Set it to the same amount as the distance to disable this feature.
-  set {SB::config::defaultsize} to 95
+  set {SB::config::defaultsize} to 25
 
   #
   # > Set a island level until which dirt, grass and farmland blocks should be bound to the
