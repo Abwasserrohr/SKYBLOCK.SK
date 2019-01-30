@@ -10,10 +10,10 @@ function loadchallenges(i:integer):
   # > it gets to climb up the levels. To have everything unlocked at the beginning,
   # > set all thresholds to 0.
   set {SB::config::challenges::threshold::1} to 0
-  set {SB::config::challenges::threshold::2} to 2000
-  set {SB::config::challenges::threshold::3} to 5000
-  set {SB::config::challenges::threshold::4} to 9000
-  set {SB::config::challenges::threshold::5} to 25000
+  set {SB::config::challenges::threshold::2} to 250
+  set {SB::config::challenges::threshold::3} to 500
+  set {SB::config::challenges::threshold::4} to 2500
+  set {SB::config::challenges::threshold::5} to 5000
 
   #
   # > Define the challenges. Example:
