@@ -11,3 +11,20 @@
 # > This deletes variables to prevent old variables from being in the system
 function loadconfig():
   delete {SB::calcdown::*}
+  #
+  # > Load configuration for "SkyBlock/config/upgrades.yml".
+  # > Loops through all lists that are added to this local list.
+  add "islandsizes", "islandhomes", "islandhoppers" to {_load::*}
+  loop {_load::*}:
+    #
+    # > Get all upgrades for this yaml list and loop through it and set it as variable.
+    set {_isupgrades::*} to yaml list "%loop-value%" from "plugins/Skript/scripts/SkyBlock/config/upgrades.yml"
+    loop {_isupgrades::*}:
+      set {_loopvalue} to "%loop-value-2%"
+      replace all "{" with "" in {_loopvalue}
+      replace all "}" with "" in {_loopvalue}
+      set {_loopvalue::*} to {_loopvalue} split at "="
+      set {_loopvalue::2} to {_loopvalue::2} parsed as number
+      #
+      # > Save the extracted list values as variable.
+      set {SB::config::%{_loopvalue::1}%} to {_loopvalue::2}
