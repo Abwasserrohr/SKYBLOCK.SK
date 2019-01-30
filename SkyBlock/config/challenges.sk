@@ -4,7 +4,7 @@
 # ==============
 # challenges.sk is part of the SKYBLOCK.SK configuration.
 # ==============
-function loadchallenges(i:integer):
+on load:
   #
   # > Define the xp threshold for every challenge level, the higher, the harder
   # > it gets to climb up the levels. To have everything unlocked at the beginning,
