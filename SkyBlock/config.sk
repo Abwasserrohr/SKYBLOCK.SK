@@ -2,31 +2,37 @@ on load:
   loadconfig()
 #
 # SKYBLOCK.SK CONFIGURATION
-# Configurate most of the skript parts here easily
-# You can also edit the skripts itself like you want
-#
+# > Configurate most of the skript parts here easily
+# > You can also edit the skripts itself like you want
+# > Find more configurations in the "SkyBlock/config/" folder.
 
-  # Set the World name of the Server:
+  #
+  # > Set the World name of the Server:
   set {SB::config::world} to "world"
   set {SB::config::netherworld} to "world_nether"
 
-  # Island storage type (Use either Schematic or Structure):
+  #
+  # > Island storage type (Use either Schematic or Structure):
   set {SB::config::isstorage} to "Structure"
 
-  # Set where the players should spawn, change x, y, z to your desired location:
+  #
+  # > Set where the players should spawn, change x, y, z to your desired location:
   set {SB::config::spawn} to location at 20.0, 87.0, 81.5 in "%{SB::config::world}%" parsed as world
   set {SB::config::spawn}'s pitch to 0
   set {SB::config::spawn}'s yaw to -95
 
-  # If you want to see debug messages, set this to true.
+  #
+  # > If you want to see debug messages, set this to true.
   set {SB::config::debug} to true
-  
-  # How much distance should be between islands (100 means 200x200 islands)
+
+  #
+  # > How much distance should be between islands (100 means 200x200 islands)
   set {SB::config::distance} to 100
 
-  # Default size of the island, set it to the distance like above to make it as big as the distance is.
+  #
+  # > Default size of the island, set it to the distance like above to make it as big as the distance is.
   # > Do not change the value once you have islands, since it messes up existing islands.
-  # Set it to the same amount as the distance to disable this feature.
+  # > Set it to the same amount as the distance to disable this feature.
   set {SB::config::defaultsize} to 95
 
   #
@@ -52,40 +58,50 @@ on load:
   # > The maximum amount of homes, once the island hits home upgrade level 5.
   set {SB::config::maxhomes} to 6
 
-  # If the default island size is smaller than the distance between players, you can enable island upgrades,
-  # these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
+  #
+  # > If the default island size is smaller than the distance between players, you can enable island upgrades,
+  # > these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
   set {SB::config::islandupgrades} to true
 
   #
   # > You can disable the challenges with setting this setting to false.
   set {SB::config::usechallenges} to true
 
-  # On which height should islands be created
+  #
+  # > On which height should islands be created
   set {SB::config::height} to 100.5
 
-  # Set the protection border between islands, 0 = no border:
-  # With a border of 0, 
+  #
+  # > Set the protection border between islands, 0 = no border:
+  # > With a border of 0, 
   set {SB::config::protect} to 0
 
-  # Cooldown, how long to wait until the invite is no longer valid:
+  #
+  # > Cooldown, how long to wait until the invite is no longer valid:
   set {SB::config::invitecooldown} to 30
 
-  # Delete Cooldown - The user has to wait at least this time to delete a newly created island:
+  #
+  # > Delete Cooldown - The user has to wait at least this time to delete a newly created island:
   set {SB::config::deletecooldown} to 30 minutes
 
-  # Permission to build everywhere:
+  #
+  # > Permission to build everywhere:
   set {SB::config::buildpermission} to "is.admin"
 
-  # Toggle the portal function, if the portal is disabled, players can't use it. [true=enabled|false=disabled]
+  #
+  # > Toggle the portal function, if the portal is disabled, players can't use it. [true=enabled|false=disabled]
   set {SB::config::portalenter} to true
-  
-  # Toggle the nether, if enabled [true], players can use a nether portal to use the space there too.
+
+  #
+  # > Toggle the nether, if enabled [true], players can use a nether portal to use the space there too.
   set {SB::config::nether} to true
 
-  # Only allow elytra in own skyblock island? true = yes, false = everywhere
+  #
+  # > Only allow elytra in own skyblock island? true = yes, false = everywhere
   set {SB::config::elytra} to true
 
-  # Enable pvp: true = yes, false = no:
+  #
+  # > PvP between players. [true = allowed|false = disabled]
   set {SB::config::pvp} to false
 
   #
@@ -96,181 +112,17 @@ on load:
   # > Prevent phantoms from spawning [true = prevent|false = do not prevent]
   set {SB::config::phantomspawn} to true
 
-  # Prevent hunger reset on death: true = yes, false = no:
+  #
+  # > Prevent hunger reset on death: true = yes, false = no:
   set {SB::config::preventhungerreset} to true
 
-
-  #Set a cooldown for /is calc level calculation
+  #
+  # > Set a cooldown for /is calc level calculation
   set {SB::config::calccooldown} to 30 minutes
-
-  # 
-  # > Default Flags
-  # > Change the default flags for islands:
-
-  #
-  # > Changeable Flags
-  # > Allow your players to toggle the flags for their island. True = allowed, false = denied.
-  set {SB::config::toggleflags} to true
-
-  #
-  # > Default Flags for player islands (foreign flags):
-  #
-  # > Explosions. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::explosion} to false
-  #
-  # > Let users use buttons. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::button} to false
-  #
-  # > Let users use the doors. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::door} to false
-  #
-  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-  # > Damage on mobs
-  set {SB::config::defaultisflag::foreign::mob-damage} to false
-  #
-  # > Damage on animals
-  set {SB::config::defaultisflag::foreign::animal-damage} to false
-  #
-  # > Interact with vehicles. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::interact-vehicle} to false
-  #
-  # > Allow others to visit the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::publichome} to false
-  #
-  # > Allow others to build on the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::build} to false
-  #
-  # > Allow others to access to chests. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::chest} to false
-  #
-  # > Allow others to click on the entitiy. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::entityclick} to false
-  #
-  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::redstone} to false
-  #
-  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
-  set {SB::config::defaultisflag::foreign::jetboots} to false
-
-  #
-  # > Default Flags for player islands (trusted flags):
-  #
-  # > Explosions. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::explosion} to false
-  #
-  # > Let users use buttons. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::button} to true
-  #
-  # > Let users use the doors. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::door} to true
-  #
-  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-  # > Damage on mobs
-  set {SB::config::defaultisflag::trusted::mob-damage} to true
-  #
-  # > Damage on animals
-  set {SB::config::defaultisflag::trusted::animal-damage} to true
-  #
-  # > Interact with vehicles. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::interact-vehicle} to true
-  #
-  # > Allow others to visit the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::publichome} to true
-  #
-  # > Allow others to build on the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::build} to false
-  #
-  # > Allow others to access to chests. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::chest} to false
-  #
-  # > Allow others to click on the entitiy. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::entityclick} to false
-  #
-  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::redstone} to true
-  #
-  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
-  set {SB::config::defaultisflag::trusted::jetboots} to true
-
-  #
-  # > Default Flags for player islands (foreign flags):
-  #
-  # > Explosions. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::explosion} to false
-  #
-  # > Let users use buttons. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::button} to true
-  #
-  # > Let users use the doors. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::door} to true
-  #
-  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-  # > Damage on mobs
-  set {SB::config::defaultisflag::member::mob-damage} to true
-  #
-  # > Damage on animals
-  set {SB::config::defaultisflag::member::animal-damage} to true
-  #
-  # > Interact with vehicles. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::interact-vehicle} to true
-  #
-  # > Allow others to visit the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::publichome} to true
-  #
-  # > Allow others to build on the island. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::build} to true
-  #
-  # > Allow others to access to chests. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::chest} to true
-  #
-  # > Allow others to click on the entitiy. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::entityclick} to true
-  #
-  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::redstone} to true
-  #
-  # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
-  set {SB::config::defaultisflag::member::jetboots} to true
-
-  #
-  # > Flags for not inhabited islands:
-  # > Islands like the lobby island or currently not used islands
-  #
-  # > Explosions. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::explosion} to false
-  #
-  # > Explosions. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::mob-spawning} to false
-  #
-  # > Let players use buttons. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::button} to true
-  #
-  # > Let players use the doors. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::door} to true
-  #
-  # > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
-  # > Damage on mobs
-  set {SB::config::defaultlobbyflag::mob-damage} to true
-  #
-  # > Damage on animals
-  set {SB::config::defaultlobbyflag::animal-damage} to false
-  #
-  # > Damage on item frames
-  set {SB::config::defaultlobbyflag::itemframe-damage} to false
-  #
-  # > Interact with vehicles. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::interact-vehicle} to false
-  #
-  # > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::redstone} to false
-  #
-  # > Allow players to use jetboots on the lobby. True = allowed, false = denied.
-  set {SB::config::defaultlobbyflag::jetboots} to false
 
   #
   # > Color Scheme
   # > Change this to match the colors with your corporate identity
-  #
   set {SB::config::color::primary::1} to "&6"
   set {SB::config::color::primary::2} to "&e"
   set {SB::config::color::secondary::2} to "&7"
@@ -288,475 +140,19 @@ on load:
   # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
   set {SB::config::backguiitem} to redstone dust
 
-  #
-  # > Schematics/Structure Files:
-  # > Add the name of the file here, it should be in the islands folder of this skript, structures have to be 32x32x32 big:
-  set {_schematicname} to "default"
-  add {_schematicname} to {SB::schematics::schematic::*}
-  #
-  # > Add the name that should be visible to the player, add a name for every language:
-  add "&rStandard" to {SB::schematics::name::de::*}
-  #
-  # > Add the lore and also for every language you want to have:
-  add "Die Standard Insel" to {SB::schematics::lore::de::*}
-  #
-  # > Set a price, if the Island should cost something, if it should be free, set it to 0:
-  add 0 to {SB::schematics::price::*}
-  #
-  # > Set chest content for this schematic and also the relative location for the chest
-  set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
-  #
-  # > Set the teleport location for this shematic in relation:
-  set {SB::schematics::loc::%{_schematicname}%::home} to "-1,5,-1"
-
-  #
-  # > Set the chest for this island:
-  add "5,grass" to {SB::schematics::chest::%{_schematicname}%::*}
-  add "20,stone" to {SB::schematics::chest::%{_schematicname}%::*}
-  add "1,lava bucket" to {SB::schematics::chest::%{_schematicname}%::*}
-  add "2,ice block" to {SB::schematics::chest::%{_schematicname}%::*}
-  add "50,bone meal" to {SB::schematics::chest::%{_schematicname}%::*}
-
-  #
-  # > Island upgrade prices (economy plugin required):
-  
-  #
-  # > Island size upgrades:
-  # > Island size 1:
-  set {SB::config::sizeupgrade1} to 10000
-  # > Island size 2:
-  set {SB::config::sizeupgrade2} to 25000
-  # > Island size 3:
-  set {SB::config::sizeupgrade3} to 35000
-  # > Island size 4:
-  set {SB::config::sizeupgrade4} to 45000
-  # > Island size 5:
-  set {SB::config::sizeupgrade5} to 55000
-  
-  #
-  # > Island home upgrades:
-  # > Island home 1:
-  set {SB::config::homeupgrade1} to 1000
-  # > Island home 2:
-  set {SB::config::homeupgrade2} to 2000
-  # > Island home 3:
-  set {SB::config::homeupgrade3} to 3000
-  # > Island home 4:
-  set {SB::config::homeupgrade4} to 4000
-  # > Island home 5:
-  set {SB::config::homeupgrade5} to 5000
-  
-  #
-  # > Island hopper upgrades:
-  # > Island hopper 1:
-  set {SB::config::hopperupgrade1} to 4000
-  # > Island hopper 2:
-  set {SB::config::hopperupgrade2} to 6000
-  # > Island hopper 3:
-  set {SB::config::hopperupgrade3} to 12000
-  # > Island hopper 4:
-  set {SB::config::hopperupgrade4} to 14000
-  # > Island hopper 5:
-  set {SB::config::hopperupgrade5} to 20000
-
-  #EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
+  # > EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
   set {SB::config::explevel} to 100
-  #
-  # > Configure the experience for each block in "SkyBlock/config/blocks.yml".
 
-#
-# ADDON Configurations
-#
-
-#Ore Generator:
-  #Use this like this example:
-  #The Chance amount can be between 100% and 0.01%, begin with low percentages
-  #and go forward to bigger changes at the bottom. Do not add the % symbol.
-  #To disable this feature, add a hyphen to the oregenerator.sk in the addons folder.
-  #Example for a chance of 0.2% for diamond ores:
-  #add 0.2 to {SB::oregenc::*}
-  #add diamond ore to {SB::oregen::*}
-
-  add 0.2 to {SB::oregenc::*}
-  add diamond ore to {SB::oregen::*}
-  add 0.4 to {SB::oregenc::*}
-  add glowstone to {SB::oregen::*}
-  add 0.3 to {SB::oregenc::*}
-  add nether quartz ore to {SB::oregen::*}
-  add 0.4 to {SB::oregenc::*}
-  add redstone ore to {SB::oregen::*}
-  add 0.5 to {SB::oregenc::*}
-  add lapis ore to {SB::oregen::*}
-  add 1 to {SB::oregenc::*}
-  add gold ore to {SB::oregen::*}
-  add 1.5 to {SB::oregenc::*}
-  add emerald ore to {SB::oregen::*}
-  add 1.5 to {SB::oregenc::*}
-  add iron ore to {SB::oregen::*}
-  add 2 to {SB::oregenc::*}
-  add coal ore to {SB::oregen::*}
-  add 5 to {SB::oregenc::*}
-  add granite to {SB::oregen::*}
-  add 5 to {SB::oregenc::*}
-  add andesite to {SB::oregen::*}
-  add 5 to {SB::oregenc::*}
-  add diorite to {SB::oregen::*}
-  add 100 to {SB::oregenc::*}
-  add stone to {SB::oregen::*}
 
   #
-  # > Mutli level ore generator - Set to false to disable
-  #
-  set {SB::config::oregeneratorleveling} to true
-  
-  #
-  # > Increase ore spawning chances by percentage for every level
-  # > Example: 2 increases the chance of 0.2% to 0,204%
-  #
-  set {SB::config::oregenlevelbonus} to 2
-
-  #
-  # > How many stone blocks have to be produced until a new level is hit
-  #
-  set {SB::config::oregennewlevel} to 1000
-  
-  #
-  # > Increase the difficulty to get the next ore generator level by multiplying it:
-  #
-  set {SB::config::oregenlevelmultiplyer} to 5
-  
-  #
-  # > Set the max. level bonus in percentage
-  # > 20 is a max. bonus of 20% on the chances
-  #
-  set {SB::config::oregenmaxlevelbonus} to 100
-
-# > Biome changer configuration
-
-  #
-  # > Add all biomes which should be available to change, also add prices.
-  # > Set price to 0 to make it free. Players have to pay every time they
-  # > change the biome to prevent spam.
-  # > Example:
-  # > Adds menu item grass for 50 money to the menu which changes the biome to plains,
-  # > add additional language for every language you have.
-  #add "grass" to {SB::config::biome::menuitem::*}
-  #add "plains" to {SB::config::biome::biomename::*}
-  #add 50 to {SB::config::biome::price::*}
-  #add "Flachland" to {SB::config::biome::lang::de::*}
-  
-  add barrier to {SB::config::biome::menuitem::*}
-  add "the void" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Die Leere" to {SB::config::biome::lang::de::*}
-  
-  add grass to {SB::config::biome::menuitem::*}
-  add "plains" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Flachland" to {SB::config::biome::lang::de::*}
-
-  add sand to {SB::config::biome::menuitem::*}
-  add "desert" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Wüste" to {SB::config::biome::lang::de::*}
-
-  add snow block to {SB::config::biome::menuitem::*}
-  add "ICE_PLAINS" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Schnee" to {SB::config::biome::lang::de::*}
-
-  add jungle leaves to {SB::config::biome::menuitem::*}
-  add "jungle" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Dschungel" to {SB::config::biome::lang::de::*}
-
-  add light blue concrete powder to {SB::config::biome::menuitem::*}
-  add "warm ocean" to {SB::config::biome::biomename::*}
-  add 500 to {SB::config::biome::price::*}
-  add "Warmer Ozean" to {SB::config::biome::lang::de::*}
-
+  # > Functions to start after config loaded, do not change this if you don't know what you're doing.
+  loadupgrades(1)
+  loadislands(1)
+  loadoregenerator(1)
+  loadbiomes(1)
   #
   # > Give the server some rest.
   wait 1 tick
-  #
-  # > Define the xp threshold for every challenge level, the higher, the harder
-  # > it gets to climb up the levels. To have everything unlocked at the beginning,
-  # > set all thresholds to 0.
-  set {SB::config::challenges::threshold::1} to 0
-  set {SB::config::challenges::threshold::2} to 2000
-  set {SB::config::challenges::threshold::3} to 5000
-  set {SB::config::challenges::threshold::4} to 9000
-  set {SB::config::challenges::threshold::5} to 25000
-
-  #
-  # > Define the challenges. Example:
-  # > The needed items as string. Format: amount-item name.
-  # > Multiple needed items can be split with a comma.
-  #set {SB::config::challenges::c::1::1::needed} to "64-cactus"
-  # > Rewards work the same as needed items. xp is needed to unlock new challenge levels.
-  #set {SB::config::challenges::c::1::1::reward} to "15-xp,2-sand"
-  #set {SB::config::challenges::c::1::1::repeatreward} to "1-xp,1-sand"
-  # > Set the item which should appear in the challenges menu.
-  #set {SB::config::challenges::c::1::1::item} to sand block
-  # > Set this to true, if the challenge should be repeatable, if it shouldn't, set it to false.
-  #set {SB::config::challenges::c::1::1::repeat} to true
-  # > Set how many times the challenge should be repeatable. -1 of unlimited. 0 complete once a day, 1 repeat every day and so on.
-  #set {SB::config::challenges::c::1::1::repeatsperday} to 1
-  #
-  # > Add a custom function if you want, which is executed on completion of the challenge.
-  #set {SB::config::challenges::c::1::1::customfunction} to ""
-  #
-  # > Add a custom reward text to describe your custom function rewards. Set new lines with ||.
-  #set {SB::config::challenges::c::1::1::customreward} to ""
-
-  set {SB::config::challenges::c::1::1::needed} to "64-cactus"
-  set {SB::config::challenges::c::1::1::reward} to "15-xp,2-sand"
-  set {SB::config::challenges::c::1::1::repeatreward} to "1-xp,1-sand"
-  set {SB::config::challenges::c::1::1::item} to sand block
-  set {SB::config::challenges::c::1::1::repeat} to true
-  set {SB::config::challenges::c::1::1::repeatsperday} to 20
-  set {SB::config::challenges::c::1::1::customfunction} to ""
-  set {SB::config::challenges::c::1::1::customreward} to ""
-
-  set {SB::config::challenges::c::1::2::needed} to "48-cobblestone,16-gunpowder"
-  set {SB::config::challenges::c::1::2::reward} to "1-xp,64-gravel"
-  set {SB::config::challenges::c::1::2::repeatreward} to "1-xp,32-gravel,32-soul sand"
-  set {SB::config::challenges::c::1::2::item} to gravel block
-  set {SB::config::challenges::c::1::2::repeat} to true
-  set {SB::config::challenges::c::1::2::repeatsperday} to 5
-
-  set {SB::config::challenges::c::1::3::needed} to "64-oak leaves,32-cobblestone,32-stone brick"
-  set {SB::config::challenges::c::1::3::reward} to "1-xp,32-mossy cobblestone,32-mossy stone brick"
-  set {SB::config::challenges::c::1::3::repeatreward} to "1-xp,32-mossy cobblestone,32-mossy stone brick"
-  set {SB::config::challenges::c::1::3::item} to mossy stone brick
-  set {SB::config::challenges::c::1::3::repeat} to true
-  set {SB::config::challenges::c::1::3::repeatsperday} to 5
-  set {SB::config::challenges::c::1::3::customfunction} to ""
-
-  set {SB::config::challenges::c::1::4::needed} to "6-apple"
-  set {SB::config::challenges::c::1::4::reward} to "6-xp,2-oak sapling,2-spruce sapling,2-birch sapling,2-jungle sapling,2-acacia sapling,4-dark oak sapling"
-  set {SB::config::challenges::c::1::4::repeatreward} to "3-xp,1-oak sapling,1-spruce sapling,1-birch sapling,1-jungle sapling,1-acacia sapling,2-dark oak sapling"
-  set {SB::config::challenges::c::1::4::item} to apple
-  set {SB::config::challenges::c::1::4::repeat} to true
-  set {SB::config::challenges::c::1::4::repeatsperday} to 5
-
-  set {SB::config::challenges::c::1::5::needed} to "64-sugar cane"
-  set {SB::config::challenges::c::1::5::reward} to "10-xp,20-clay block"
-  set {SB::config::challenges::c::1::5::repeatreward} to "1-xp,1-clay block"
-  set {SB::config::challenges::c::1::5::item} to clay block
-  set {SB::config::challenges::c::1::5::repeat} to true
-  set {SB::config::challenges::c::1::5::repeatsperday} to 5
-
-  set {SB::config::challenges::c::1::6::needed} to "128-melon slice"
-  set {SB::config::challenges::c::1::6::reward} to "15-xp,3-sand"
-  set {SB::config::challenges::c::1::6::repeatreward} to "1-xp,1-sand"
-  set {SB::config::challenges::c::1::6::item} to melon slice
-  set {SB::config::challenges::c::1::6::repeat} to true
-  set {SB::config::challenges::c::1::6::repeatsperday} to 5
-
-  set {SB::config::challenges::c::1::7::needed} to "64-pumpkin"
-  set {SB::config::challenges::c::1::7::reward} to "20-xp,3-red sand"
-  set {SB::config::challenges::c::1::7::repeatreward} to "1-xp,1-red sand"
-  set {SB::config::challenges::c::1::7::item} to pumpkin
-  set {SB::config::challenges::c::1::7::repeat} to true
-  set {SB::config::challenges::c::1::7::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::1::needed} to "16-oak log,16-spruce log,16-birch log,16-jungle log,16-acacia log,16-dark oak log"
-  set {SB::config::challenges::c::2::1::reward} to "20-xp,16-redstone dust,5-iron ore,1-wolf spawner egg"
-  set {SB::config::challenges::c::2::1::repeatreward} to "1-xp,3-redstone dust,1-iron ore,1-nether wart"
-  set {SB::config::challenges::c::2::1::item} to oak log
-  set {SB::config::challenges::c::2::1::repeat} to true
-  set {SB::config::challenges::c::2::1::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::2::needed} to "3-diamond,2-iron bar"
-  set {SB::config::challenges::c::2::2::reward} to "150-xp,3-dirt"
-  set {SB::config::challenges::c::2::2::repeatreward} to "10-xp,1-dirt"
-  set {SB::config::challenges::c::2::2::item} to dirt
-  set {SB::config::challenges::c::2::2::repeat} to true
-  set {SB::config::challenges::c::2::2::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::3::needed} to "64-nether wart"
-  set {SB::config::challenges::c::2::3::reward} to "45-xp,8-soul sand,16-netherrack"
-  set {SB::config::challenges::c::2::3::repeatreward} to "3-xp,1-soul sand,1-magma block,8-netherrack"
-  set {SB::config::challenges::c::2::3::item} to netherrack
-  set {SB::config::challenges::c::2::3::repeat} to true
-  set {SB::config::challenges::c::2::3::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::4::needed} to "64-red mushroom,64-brown mushroom"
-  set {SB::config::challenges::c::2::4::reward} to "40-xp,1-mycelium"
-  set {SB::config::challenges::c::2::4::repeatreward} to "15-xp,1-mycelium"
-  set {SB::config::challenges::c::2::4::item} to mycelium
-  set {SB::config::challenges::c::2::4::repeat} to true
-  set {SB::config::challenges::c::2::4::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::5::needed} to "128-cookie,1-milk bucket"
-  set {SB::config::challenges::c::2::5::reward} to "25-xp,64-jungle log,1-bucket"
-  set {SB::config::challenges::c::2::5::repeatreward} to "3-xp,32-jungle log,1-bucket"
-  set {SB::config::challenges::c::2::5::item} to cookie
-  set {SB::config::challenges::c::2::5::repeat} to true
-  set {SB::config::challenges::c::2::5::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::6::needed} to "64-wheat seeds,64-pumpkin seeds,64-melon seeds,64-beetroot seeds"
-  set {SB::config::challenges::c::2::6::reward} to "70-xp,4-peony,4-rose bush,4-lilac,4-sunflower,4-brown mushroom,4-red mushroom"
-  set {SB::config::challenges::c::2::6::repeatreward} to "3-xp,1-peony,1-rose bush,1-lilac,1-sunflower,1-brown mushroom,1-red mushroom"
-  set {SB::config::challenges::c::2::6::item} to peony
-  set {SB::config::challenges::c::2::6::repeat} to true
-  set {SB::config::challenges::c::2::6::repeatsperday} to 5
-
-  set {SB::config::challenges::c::2::7::needed} to "12-pumpkin pie,2-cake,16-bread,32-cookie"
-  set {SB::config::challenges::c::2::7::reward} to "10-xp,2-gold ore,2-iron ore"
-  set {SB::config::challenges::c::2::7::repeatreward} to "2-xp,1-iron ore"
-  set {SB::config::challenges::c::2::7::item} to pumpkin pie
-  set {SB::config::challenges::c::2::7::repeat} to true
-  set {SB::config::challenges::c::2::7::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::1::needed} to "128-cobblestone"
-  set {SB::config::challenges::c::3::1::reward} to "20-xp,2-iron ore"
-  set {SB::config::challenges::c::3::1::repeatreward} to "1-xp,1-iron ore"
-  set {SB::config::challenges::c::3::1::item} to cobblestone
-  set {SB::config::challenges::c::3::1::repeat} to true
-  set {SB::config::challenges::c::3::1::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::2::needed} to "64-raw fish"
-  set {SB::config::challenges::c::3::2::reward} to "150-xp,4-sea pickle,4-kelp,2-nautilus shell,4-tube coral fan,4-brain coral fan,4-bubble coral fan,4-fire coral fan,4-horn coral fan"
-  set {SB::config::challenges::c::3::2::repeatreward} to "10-xp,2-sea pickle,2-kelp,1-nautilus shell,4-tube coral fan,4-brain coral fan,4-bubble coral fan,4-fire coral fan,4-horn coral fan"
-  set {SB::config::challenges::c::3::2::item} to raw cod
-  set {SB::config::challenges::c::3::2::repeat} to true
-  set {SB::config::challenges::c::3::2::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::3::needed} to "9-tube coral,9-brain coral,9-bubble coral,9-fire coral,9-horn coral"
-  set {SB::config::challenges::c::3::3::reward} to "150-xp,2-tube coral block,2-brain coral block,2-bubble coral block,2-fire coral block,2-horn coral block"
-  set {SB::config::challenges::c::3::3::repeatreward} to "10-xp,1-tube coral block,1-brain coral block,1-bubble coral block,1-fire coral blck,1-horn coral block"
-  set {SB::config::challenges::c::3::3::item} to living pink coral block
-  set {SB::config::challenges::c::3::3::repeat} to true
-  set {SB::config::challenges::c::3::3::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::4::needed} to "64-tube coral block,64-brain coral block,64-bubble coral block,64-fire coral block,64-horn coral block"
-  set {SB::config::challenges::c::3::4::reward} to "150-xp,1-heart of the sea"
-  set {SB::config::challenges::c::3::4::repeatreward} to "10-xp,1-heart of the sea"
-  set {SB::config::challenges::c::3::4::item} to heart of the sea
-  set {SB::config::challenges::c::3::4::repeat} to true
-  set {SB::config::challenges::c::3::4::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::5::needed} to "128-ender pearl"
-  set {SB::config::challenges::c::3::5::reward} to "75-xp,2-shulker shell"
-  set {SB::config::challenges::c::3::5::repeatreward} to "10-xp,1-shulker shell"
-  set {SB::config::challenges::c::3::5::item} to ender pearl
-  set {SB::config::challenges::c::3::5::repeat} to true
-  set {SB::config::challenges::c::3::5::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::6::needed} to "16-emerald"
-  set {SB::config::challenges::c::3::6::reward} to "35-xp,64-bottle o' enchanting"
-  set {SB::config::challenges::c::3::6::repeatreward} to "5-xp,32-bottle o' enchanting"
-  set {SB::config::challenges::c::3::6::item} to bottle o' enchanting
-  set {SB::config::challenges::c::3::6::repeat} to true
-  set {SB::config::challenges::c::3::6::repeatsperday} to 5
-
-  set {SB::config::challenges::c::3::7::needed} to "32-diamond"
-  set {SB::config::challenges::c::3::7::reward} to "250-xp,1-lava bucket"
-  set {SB::config::challenges::c::3::7::repeatreward} to "150-xp,1-lava bucket"
-  set {SB::config::challenges::c::3::7::item} to lava bucket
-  set {SB::config::challenges::c::3::7::repeat} to true
-  set {SB::config::challenges::c::3::7::repeatsperday} to 5
-
-  set {SB::config::challenges::c::4::1::needed} to "64-gold ingot"
-  set {SB::config::challenges::c::4::1::reward} to "150-xp,2-blaze rod"
-  set {SB::config::challenges::c::4::1::repeatreward} to "25-xp,1-blaze rod"
-  set {SB::config::challenges::c::4::1::item} to blaze rod
-  set {SB::config::challenges::c::4::1::repeat} to true
-  set {SB::config::challenges::c::4::1::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::4::2::needed} to "1-saddle,64-hay bale,32-apple,64-carrot item"
-  set {SB::config::challenges::c::4::2::reward} to "25-xp,1-horse spawn egg,1-iron horse armor,1-leash,1-nametag"
-  set {SB::config::challenges::c::4::2::repeatreward} to "15-xp,1-horse spawn egg,1-leash,1-nametag"
-  set {SB::config::challenges::c::4::2::item} to saddle
-  set {SB::config::challenges::c::4::2::repeat} to true
-  set {SB::config::challenges::c::4::2::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::4::3::needed} to "128-glass"
-  set {SB::config::challenges::c::4::3::reward} to "300-xp,7-dirt"
-  set {SB::config::challenges::c::4::3::repeatreward} to "150-xp,5-dirt"
-  set {SB::config::challenges::c::4::3::item} to dirt
-  set {SB::config::challenges::c::4::3::repeat} to true
-  set {SB::config::challenges::c::4::3::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::4::4::needed} to "128-dried kelp"
-  set {SB::config::challenges::c::4::4::reward} to "30-xp,5-ink sac"
-  set {SB::config::challenges::c::4::4::repeatreward} to "5-xp,3-ink sac"
-  set {SB::config::challenges::c::4::4::item} to ink sac
-  set {SB::config::challenges::c::4::4::repeat} to true
-  set {SB::config::challenges::c::4::4::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::4::5::needed} to "4-awkward potion,64-ender pearl"
-  set {SB::config::challenges::c::4::5::reward} to "75-xp,2-chorus flower,18-end stone"
-  set {SB::config::challenges::c::4::5::repeatreward} to "10-xp,1-chorus flower,9-end stone"
-  set {SB::config::challenges::c::4::5::item} to chorus flower
-  set {SB::config::challenges::c::4::5::repeat} to true
-  set {SB::config::challenges::c::4::5::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::4::6::needed} to "4-gold sword,64-arrow,1-bow,1-water bucket"
-  set {SB::config::challenges::c::4::6::reward} to "75-xp,1-ghast tear,1-bucket"
-  set {SB::config::challenges::c::4::6::repeatreward} to "10-xp,1-ghast tear,1-bucket"
-  set {SB::config::challenges::c::4::6::item} to ghast tear
-  set {SB::config::challenges::c::4::6::repeat} to true
-  set {SB::config::challenges::c::4::6::repeatsperday} to 5
-
-  set {SB::config::challenges::c::4::7::needed} to "1728-rail,192-powered rail,64-detector rail,64-activator rail"
-  set {SB::config::challenges::c::4::7::reward} to "400-xp,1-elytra"
-  set {SB::config::challenges::c::4::7::repeatreward} to "200-xp,1-elytra"
-  set {SB::config::challenges::c::4::7::item} to elytra
-  set {SB::config::challenges::c::4::7::repeat} to true
-  set {SB::config::challenges::c::4::7::repeatsperday} to 5    
-
-  set {SB::config::challenges::c::5::1::needed} to "1728-rotten flesh"
-  set {SB::config::challenges::c::5::1::reward} to "150-xp,1-zombie head,3-diamond ore"
-  set {SB::config::challenges::c::5::1::repeatreward} to "50-xp,1-zombie head"
-  set {SB::config::challenges::c::5::1::item} to zombie head
-  set {SB::config::challenges::c::5::1::repeat} to true
-  set {SB::config::challenges::c::5::1::repeatsperday} to 5
-
-  set {SB::config::challenges::c::5::2::needed} to "1728-bone"
-  set {SB::config::challenges::c::5::2::reward} to "150-xp,1-skeleton head,3-diamond ore"
-  set {SB::config::challenges::c::5::2::repeatreward} to "50-xp,1-skeleton head"
-  set {SB::config::challenges::c::5::2::item} to skeleton head
-  set {SB::config::challenges::c::5::2::repeat} to true
-  set {SB::config::challenges::c::5::2::repeatsperday} to 5
-
-  set {SB::config::challenges::c::5::3::needed} to "1728-gunpowder"
-  set {SB::config::challenges::c::5::3::reward} to "150-xp,1-creeper head,3-diamond ore"
-  set {SB::config::challenges::c::5::3::repeatreward} to "50-xp,1-creeper head"
-  set {SB::config::challenges::c::5::3::item} to creeper head
-  set {SB::config::challenges::c::5::3::repeat} to true
-  set {SB::config::challenges::c::5::3::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::5::4::needed} to "576-leather,576-bone,576-rotten flesh,576-gunpowder"
-  set {SB::config::challenges::c::5::4::reward} to "150-xp,1-player head,3-diamond ore"
-  set {SB::config::challenges::c::5::4::repeatreward} to "50-xp,1-player head"
-  set {SB::config::challenges::c::5::4::item} to player head
-  set {SB::config::challenges::c::5::4::repeat} to true
-  set {SB::config::challenges::c::5::4::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::5::5::needed} to "64-tube coral block,64-brain coral block,64-bubble coral block,64-fire coral block,64-horn coral block"
-  set {SB::config::challenges::c::5::5::reward} to "150-xp,2-dolphin spawn egg,2-turtle egg,4-nametag"
-  set {SB::config::challenges::c::5::5::repeatreward} to "10-xp,1-dolphin spawn egg,1-turtle egg,2-nametag"
-  set {SB::config::challenges::c::5::5::item} to turtle egg
-  set {SB::config::challenges::c::5::5::repeat} to true
-  set {SB::config::challenges::c::5::5::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::5::6::needed} to "128-iron block,64-emerald block,32-diamond block"
-  set {SB::config::challenges::c::5::6::reward} to "700-xp,1-villager spawn egg,1-nametag"
-  set {SB::config::challenges::c::5::6::repeatreward} to "400-xp,1-villager spawn egg,1-nametag"
-  set {SB::config::challenges::c::5::6::item} to villager spawn egg
-  set {SB::config::challenges::c::5::6::repeat} to true
-  set {SB::config::challenges::c::5::6::repeatsperday} to 5
-  
-  set {SB::config::challenges::c::5::7::needed} to "2-zombie head,2-skeleton head,7-creeper head,7-player head"
-  set {SB::config::challenges::c::5::7::reward} to "2500-xp,1-dragon head"
-  set {SB::config::challenges::c::5::7::repeatreward} to "500-xp,1-dragon head"
-  set {SB::config::challenges::c::5::7::item} to dragon head
-  set {SB::config::challenges::c::5::7::repeat} to true
-  set {SB::config::challenges::c::5::7::repeatsperday} to 5
-
-#
-# > Functions to start after config loaded, do not change this if you don't know what you're doing.
+  loadchallenges(1)
+  loadflags(1)
   loadislandstoworld()
