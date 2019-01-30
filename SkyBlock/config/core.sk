@@ -146,13 +146,4 @@ on load:
 
   #
   # > Functions to start after config loaded, do not change this if you don't know what you're doing.
-  loadupgrades(1)
-  loadislands(1)
-  loadoregenerator(1)
-  loadbiomes(1)
-  #
-  # > Give the server some rest.
-  wait 1 tick
-  loadchallenges(1)
-  loadflags(1)
   loadislandstoworld()
