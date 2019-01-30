@@ -1,6 +1,6 @@
 #
 # ==============
-# elevator.sk v0.0.2
+# elevator.sk v0.0.3
 # ==============
 # Let users build elevators using signs
 # ==============
@@ -60,7 +60,7 @@ on rightclick on sign:
       # > the loop hits the right lift to stop the loop.
       loop 255 times:
         remove 1 from y-coordinate of {_clift}
-        if line 2 of block at {_clift} is {@sign_up}:
+        if line 1 of block at {_clift} is {@sign_lift}:
           #
           # > {_liftdest} is the coordinate of the destination lift sign we want to go.
           set {_liftdest} to {_clift}
@@ -74,7 +74,7 @@ on rightclick on sign:
       # > the loop hits the right lift to stop the loop.
       loop 255 times:
         add 1 to y-coordinate of {_clift}
-        if line 2 of block at {_clift} is {@sign_down}:
+        if line 1 of block at {_clift} is {@sign_lift}:
           #
           # > {_liftdest} is the coordinate of the destination lift sign we want to go.
           set {_liftdest} to {_clift}
