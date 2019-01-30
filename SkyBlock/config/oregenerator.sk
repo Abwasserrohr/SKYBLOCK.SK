@@ -4,7 +4,9 @@
 # ==============
 # oregenerator.sk is part of the SKYBLOCK.SK configuration.
 # ==============
-function loadoregenerator(i:integer):
+on load:
+  delete {SB::oregenc::*}
+  delete {SB::oregen::*}
   # > Ore Generator:
   # > Use this like this example:
   # > The Chance amount can be between 100% and 0.01%, begin with low percentages
