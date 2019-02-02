@@ -190,7 +190,7 @@ function openchallenges(p:player):
     #
     # > The challenge level loop ends here, place the level heads.
     add 1 to {_slot}
-    set {_head} to getcustomhead("blackint%{_challengelvl}%", "%{_lvlhead::%{_challengelvl}%}%", {_p})
+    set {_head} to getcustomhead("blackint%{_challengelvl}%", "%{_lvlhead::%{_challengelvl}%}%")
     set name of {_head} to "%{_lvltranslation}%"
 	#
 	# > If the current level of the island has not reached this challenge level, display how much xp is needed or print "unlocked".
