@@ -1,4 +1,6 @@
 
+#
+# > Import Java classes and nms Java classes for robots.
 import: 
   org.bukkit.Bukkit
 
@@ -6,12 +8,11 @@ option nms:
   get: 
     set {_nms version} to Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
     return "net.minecraft.server.%{_nms version}%"
-    
+
 option bukkitv:
   get:
     return Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
 
-    
 import:
   org.bukkit.craftbukkit.{@bukkitv}.inventory.CraftItemStack
   {@nms}.MojangsonParser
@@ -28,8 +29,8 @@ import:
   org.bukkit.Color
   org.bukkit.event.player.PlayerInteractEntityEvent
 
-
-  
+#
+# > Configure this skript as you want in the options.
 options:
   #
   # > Define the item which should be given to the player. This item
@@ -50,6 +51,10 @@ options:
   # > because it breaks existing robots.
   robotname: &e&lRobo
   #
+  # > Set the maximum size of the robot names which can be defined from players
+  # > using /robotname <text>.
+  maxnamesize: 20
+  #
   # > Lore indefinifer, this defines how the robot item should be identified as a robot item.
   # > Do not change this later because this breaks existing robot blocks.
   robotitemlore: &e&lRobo
@@ -60,7 +65,6 @@ options:
   #
   # > Define the particles which should appear if the robot appeared at the right place.
   # > Use the bukkit particle class for this setting: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-
   arriveparticles: EXPLOSION_NORMAL
   #
   # > Define the sound which should play once a robot is summoned.
@@ -104,10 +108,12 @@ options:
   breakrobotlore: &7Click here to\n&7change the robot back\n&7to an item.
   revertedrobottoitem: Your robot has been reverted to an item.
   notenoughinvspace: You don't have enough space in your inventory.
-
+  maxnamesizemsg: The name is too lang, use maximum <max> letters.
   
-
-  
+#
+# > Configure the skript as you want below, the variables are used
+# > within the skript. If you want to change messages, change the
+# > languages of the SKYBLOCK.SK language file.
 on load:
   if {SB::config::backguiitem} is not set:
     set {SB::config::backguiitem} to redstone block
@@ -737,6 +743,7 @@ function changerobotskdesign(player:player,design:number):
 
 command /robotname [<text>]:
   trigger:
+    set {_name::*} to arg-1 split at ""
     if player's target is armor stand:
       set {_value} to getnbtvalue(helmet of player's target,"robot")
       if {_value} is "robotsk":
@@ -745,6 +752,18 @@ command /robotname [<text>]:
         # > Set frequently used data into local variables.
         set {_uuid} to uuid of player
         set {_lang} to {SK::lang::%{_uuid}%}
+        #
+        # > Check for the limit to prevent too long names.
+        set {_name::*} to arg-1 split at ""
+        set {_size} to (size of {_name::*}) - 1
+        if {_size} > {@maxnamesize}:
+          if {SB::robot::maxnamesizemsg::%{SK::lang::%{_uuid}%}%} is not set:
+            set {_msg} to "{@prefix} {@maxnamesizemsg}"
+          else:
+            set {_msg} to "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::maxnamesizemsg::%{_lang}%}%"
+          replace all "<max>" with "{@maxnamesize}" in {_msg}
+          message "%{_msg}%"
+          stop
         if player's uuid is {_owneruuid}:
           set {_robot} to player's target
           set {_name} to coloured arg-1
