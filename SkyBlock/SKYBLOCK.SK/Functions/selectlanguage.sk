@@ -44,7 +44,7 @@ function selectlanguage(p:player):
       set {_skin} to {SB::lang::languageskin::%{_l::1}%}
 	  #
 	  # Create a custom head for this language.
-      set {_head} to getcustomhead("%{_lang}%", "%{_skin}%", {_p})
+      set {_head} to getcustomhead("%{_lang}%", "%{_skin}%","ce87a23b-3d55-437f-b0b0-4b3509db2a34")
 	  #
 	  # > Set the head into the language menu.
       setguiitem({_p},{_slot},{_head},1,"&r%{_lang}%","","changelanguage(""%{_p}%"" parsed as player,""%{_l::1}%"")",true)
