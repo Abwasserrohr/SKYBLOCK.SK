@@ -367,7 +367,82 @@ on script load:
   set {SB::lang::lootbox::clicktoopen::%{_lang}%} to "%{_s1}%Klicke %{_p1}%hier%{_s1}%,\n%{_s1}%um zu öffnen."
   
   #
-  # > Challennges
+  # > Robots
+  #
+  # > Robot jobs
+  set {SB::robot::job::name::%{_lang}%::1} to "Minenarbeiter"
+  set {SB::robot::job::lore::%{_lang}%::1} to "Baut die Blöcke davor ab."
+  set {SB::robot::job::name::%{_lang}%::2} to "Holzfäller"
+  set {SB::robot::job::lore::%{_lang}%::2} to "Fällt die Bäume davor."
+  #
+  # > Robot designs
+  set {SB::robot::design::name::%{_lang}%::1} to "Schaf"
+  set {SB::robot::design::lore::%{_lang}%::1} to "Roboter im Schaf Stil."
+  set {SB::robot::design::name::%{_lang}%::2} to "Golem"
+  set {SB::robot::design::lore::%{_lang}%::2} to "Roboter im Schaf Stil."
+  set {SB::robot::design::name::%{_lang}%::3} to "Schwein"
+  set {SB::robot::design::lore::%{_lang}%::3} to "Roboter im Schwein Stil."
+  set {SB::robot::design::name::%{_lang}%::4} to "Schleim"
+  set {SB::robot::design::lore::%{_lang}%::4} to "Roboter im Schleim Stil."
+  set {SB::robot::design::name::%{_lang}%::5} to "Kuh"
+  set {SB::robot::design::lore::%{_lang}%::5} to "Roboter im Kuh Stil."
+  set {SB::robot::design::name::%{_lang}%::6} to "Huhn"
+  set {SB::robot::design::lore::%{_lang}%::6} to "Roboter im Huhn Stil."
+  set {SB::robot::design::name::%{_lang}%::7} to "Creeper"
+  set {SB::robot::design::lore::%{_lang}%::7} to "Roboter im Creeper Stil."
+  set {SB::robot::design::name::%{_lang}%::8} to "Dorfbewohner"
+  set {SB::robot::design::lore::%{_lang}%::8} to "Roboter im Dorfbewohner Stil."
+  set {SB::robot::design::name::%{_lang}%::9} to "Enderman"
+  set {SB::robot::design::lore::%{_lang}%::9} to "Roboter im Enderman Stil."
+  set {SB::robot::design::name::%{_lang}%::10} to "Lavaschleim"
+  set {SB::robot::design::lore::%{_lang}%::10} to "Roboter im Lavaschleim Stil."
+  set {SB::robot::design::name::%{_lang}%::11} to "Kaktus"
+  set {SB::robot::design::lore::%{_lang}%::11} to "Roboter im Kaktus Stil."
+  set {SB::robot::design::name::%{_lang}%::12} to "Kokusnuss"
+  set {SB::robot::design::lore::%{_lang}%::12} to "Roboter im Kokusnuss Stil."
+  set {SB::robot::design::name::%{_lang}%::13} to "Kuchen"
+  set {SB::robot::design::lore::%{_lang}%::13} to "Roboter im Kuchen Stil."
+  set {SB::robot::design::name::%{_lang}%::14} to "Ozelot"
+  set {SB::robot::design::lore::%{_lang}%::14} to "Roboter im Ozelot Stil."
+  set {SB::robot::design::name::%{_lang}%::15} to "Zombie"
+  set {SB::robot::design::lore::%{_lang}%::15} to "Roboter im Zombie Stil."
+  set {SB::robot::design::name::%{_lang}%::16} to "Steve"
+  set {SB::robot::design::lore::%{_lang}%::16} to "Roboter im Steve Stil."
+  set {SB::robot::design::name::%{_lang}%::17} to "Wither"
+  set {SB::robot::design::lore::%{_lang}%::17} to "Roboter im Wither Stil."
+  set {SB::robot::design::name::%{_lang}%::18} to "Wither Skelett"
+  set {SB::robot::design::lore::%{_lang}%::18} to "Roboter im Wither Skelett Stil."
+  set {SB::robot::design::name::%{_lang}%::19} to "Melone"
+  set {SB::robot::design::lore::%{_lang}%::19} to "Roboter im Melonen Stil."
+  set {SB::robot::design::name::%{_lang}%::20} to "Kürbis"
+  set {SB::robot::design::lore::%{_lang}%::20} to "Roboter im Kürbis Stil."
+  set {SB::robot::design::name::%{_lang}%::21} to "Lohe"
+  set {SB::robot::design::lore::%{_lang}%::21} to "Roboter im Lohen Stil."
+  
+  #
+  # > Give the server some rest
+  wait 1 tick
+  
+  #
+  # > Robot menu
+  set {SB::robot::on::%{_lang}%} to "&r&7[&e&lAN&r&7]"
+  set {SB::robot::robotoff::%{_lang}%} to "&r&7[&e&lAUS&r&7]"
+  set {SB::robot::currentdesign::%{_lang}%} to "&rAktuelles Design"
+  set {SB::robot::currentjob::%{_lang}%} to "Aktueller Beruf"
+  set {SB::robot::robotstatuson::%{_lang}%} to "&rRoboter &r&7[&e&lAN&r&7]"
+  set {SB::robot::robotstatusoff::%{_lang}%} to "&rRoboter &r&7[&e&lAUS&r&7]"
+  set {SB::robot::clicktotogglesstatus::%{_lang}%} to "Klicke, um den\nRoboter zwischen\nan und aus umzustellen."
+  set {SB::robot::stats::%{_lang}%} to "&rStatistik"
+  set {SB::robot::blocksbroken::%{_lang}%} to "&rBlöcke abgebaut: <blocks>"
+  set {SB::robot::robotjobguiname::%{_lang}%} to "&lRoboter Berufe"
+  set {SB::robot::robotdesignguiname::%{_lang}%} to "&lRoboter Designs"
+  set {SB::robot::robotguiname::%{_lang}%} to "Roboter Menü"
+  set {SB::robot::prefix::%{_lang}%} to "&7[&6Roboter&7]"
+  set {SB::robot::renamedrobot::%{_lang}%} to "Der Roboter wurde umbenannt."
+  set {SB::robot::onlyrobotownererror::%{_lang}%} to "Nur der Besitzer des Roboters kann diesen umbenennen."
+
+  #
+  # > Challenges
   set {SB::lang::challenge::menutitle::%{_lang}%} to "&lHerausforderungen"
   set {SB::lang::challenge::disabled::%{_lang}%} to "&lHerausforderungen sind nicht verfügbar."
   set {SB::lang::challenge::youneed::%{_lang}%} to "Du benötigst:"
