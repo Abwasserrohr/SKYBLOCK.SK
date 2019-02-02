@@ -39,7 +39,7 @@ function skyblockgui(p: player):
   #set gui menu item in slot 14 of {_p} to ender chest named "%{SB::lang::guirewardsname::%{_lang}%}%" with lore "%{SB::lang::maingui::guirewardslore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/openloot""" then close
   #set gui menu item in slot 15 of {_p} to end portal frame named "%{SB::lang::guihubname::%{_lang}%}%" with lore "%{SB::lang::maingui::guihublore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is spawn""" then close
   #set gui menu item in slot 16 of {_p} to jungle leaves named "&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%" with lore "&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%" to execute "biomemenu(""%{_p}%"" parsed as player)" then close
-  set {_customgui} to getcustomhead({SB::lang::language::%{_lang}%},{SB::lang::languageskin::%{_lang}%},{_p})
+  set {_customgui} to getcustomhead({SB::lang::language::%{_lang}%},{SB::lang::languageskin::%{_lang}%})
   #set gui menu item in slot 19 of {_p} to {_customgui} named "&r&6&l%{SB::lang::languages::%{_lang}%}%" with lore "&r%{SB::lang::maingui::guilanglore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is lang""" then close
   #set gui menu item in slot 20 of {_p} to lever named "&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%" with lore "&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is flags""" then close
   setguiitem({_p},11,experience bottle,1,"%{SB::lang::guiexpname::%{_lang}%}%","%{SB::lang::maingui::guiislandinfo::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
