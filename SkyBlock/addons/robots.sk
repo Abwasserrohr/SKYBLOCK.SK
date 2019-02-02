@@ -95,6 +95,10 @@ options:
   robotjobguiname: &lRobot Jobs
   robotdesignguiname: &lRobot Designs
   robotguiname: &lRobot Menu
+  prefix: &7[&6Robots&7] 
+  renamedrobot: The robot has been renamed.
+  onlyrobotownererror: Only the owner of the robot can rename it.
+
 
 on load:
   if {SB::config::backguiitem} is not set:
@@ -111,8 +115,9 @@ on load:
   # > The job can be changed for every language in the languages file
   # > of SKYBLOCK.SK. This is also possible with the lore below.
   # > These settings are for the English fallback setting.
-  set {SB::robot::job::name::en::1} to "Miner"
-  set {SB::robot::job::lore::en::1} to "Mines the blocks in front of it."
+  # > Please change names and lores in the language files.
+  #set {SB::robot::job::name::en::1} to "Miner"
+  #set {SB::robot::job::lore::en::1} to "Mines the blocks in front of it."
   #
   # > The tool the robot should have if it is doing this job.
   set {SB::robot::job::tool::1} to 1 of diamond pickaxe
@@ -127,8 +132,8 @@ on load:
   # > speed of the robot.
   set {SB::robot::job::movespeed::1} to 0.15
 
-  set {SB::robot::job::name::en::2} to "Treecutter"
-  set {SB::robot::job::lore::en::2} to "The treecutter cuts trees in front of it."
+  #set {SB::robot::job::name::en::2} to "Treecutter"
+  #set {SB::robot::job::lore::en::2} to "The treecutter cuts trees in front of it."
   set {SB::robot::job::tool::2} to 1 of diamond axe
   set {SB::robot::job::ticks::2} to 1
   set {SB::robot::job::movespeed::2} to 0.15
@@ -142,10 +147,10 @@ on load:
   # > The design can be named for every language in the languages file
   # > of SKYBLOCK.SK. This is also possible with the lore below.
   # > These settings are for the English fallback setting.
-  set {SB::robot::design::name::en::1} to "Default"
+  #set {SB::robot::design::name::en::1} to "Sheep"
   #
   # > This lore is displayed in the design selection menu.
-  set {SB::robot::design::lore::en::1} to "The default robot."
+  #set {SB::robot::design::lore::en::1} to "The sheep robot."
   #
   # > Define here the armor the robot should wear. Use the items which are defined
   # > in the material class of bukkit: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
@@ -162,8 +167,8 @@ on load:
   set {SB::robot::design::color::1} to true
   set {SB::robot::design::rgb::1} to Color.fromRGB(255, 255, 255)
 
-  set {SB::robot::design::name::en::2} to "Golem"
-  set {SB::robot::design::lore::en::2} to "The Golem robot."
+  #set {SB::robot::design::name::en::2} to "Golem"
+  #set {SB::robot::design::lore::en::2} to "The Golem robot."
   set {SB::robot::design::leggings::2} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::2} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::2} to Material.LEATHER_CHESTPLATE!
@@ -171,8 +176,8 @@ on load:
   set {SB::robot::design::color::2} to true
   set {SB::robot::design::rgb::2} to Color.fromRGB(255, 255, 255)
   
-  set {SB::robot::design::name::en::3} to "Pig"
-  set {SB::robot::design::lore::en::3} to "The Pig robot."
+  #set {SB::robot::design::name::en::3} to "Pig"
+  #set {SB::robot::design::lore::en::3} to "The Pig robot."
   set {SB::robot::design::leggings::3} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::3} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::3} to Material.LEATHER_CHESTPLATE!
@@ -180,8 +185,8 @@ on load:
   set {SB::robot::design::color::3} to true
   set {SB::robot::design::rgb::3} to Color.fromRGB(252, 165, 255)
   
-  set {SB::robot::design::name::en::4} to "Slime"
-  set {SB::robot::design::lore::en::4} to "The Slime robot."
+  #set {SB::robot::design::name::en::4} to "Slime"
+  #set {SB::robot::design::lore::en::4} to "The Slime robot."
   set {SB::robot::design::leggings::4} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::4} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::4} to Material.LEATHER_CHESTPLATE!
@@ -189,8 +194,8 @@ on load:
   set {SB::robot::design::color::4} to true
   set {SB::robot::design::rgb::4} to Color.fromRGB(0, 180, 0)
   
-  set {SB::robot::design::name::en::5} to "Cow"
-  set {SB::robot::design::lore::en::5} to "The Cow robot."
+  #set {SB::robot::design::name::en::5} to "Cow"
+  #set {SB::robot::design::lore::en::5} to "The Cow robot."
   set {SB::robot::design::leggings::5} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::5} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::5} to Material.LEATHER_CHESTPLATE!
@@ -198,8 +203,8 @@ on load:
   set {SB::robot::design::color::5} to true
   set {SB::robot::design::rgb::5} to Color.fromRGB(100, 50, 0)
   
-  set {SB::robot::design::name::en::6} to "Chicken"
-  set {SB::robot::design::lore::en::6} to "The Chicken robot."
+  #set {SB::robot::design::name::en::6} to "Chicken"
+  #set {SB::robot::design::lore::en::6} to "The Chicken robot."
   set {SB::robot::design::leggings::6} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::6} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::6} to Material.LEATHER_CHESTPLATE!
@@ -207,8 +212,8 @@ on load:
   set {SB::robot::design::color::6} to true
   set {SB::robot::design::rgb::6} to Color.fromRGB(255, 255, 255)
   
-  set {SB::robot::design::name::en::7} to "Creeper"
-  set {SB::robot::design::lore::en::7} to "The Creeper robot."
+  #set {SB::robot::design::name::en::7} to "Creeper"
+  #set {SB::robot::design::lore::en::7} to "The Creeper robot."
   set {SB::robot::design::leggings::7} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::7} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::7} to Material.LEATHER_CHESTPLATE!
@@ -216,8 +221,8 @@ on load:
   set {SB::robot::design::color::7} to true
   set {SB::robot::design::rgb::7} to Color.fromRGB(0, 180, 0)
   
-  set {SB::robot::design::name::en::8} to "Villager"
-  set {SB::robot::design::lore::en::8} to "The Villager robot."
+  #set {SB::robot::design::name::en::8} to "Villager"
+  #set {SB::robot::design::lore::en::8} to "The Villager robot."
   set {SB::robot::design::leggings::8} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::8} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::8} to Material.LEATHER_CHESTPLATE!
@@ -225,8 +230,8 @@ on load:
   set {SB::robot::design::color::8} to true
   set {SB::robot::design::rgb::8} to Color.fromRGB(145, 83, 20)
   
-  set {SB::robot::design::name::en::9} to "Enderman"
-  set {SB::robot::design::lore::en::9} to "The Enderman robot."
+  #set {SB::robot::design::name::en::9} to "Enderman"
+  #set {SB::robot::design::lore::en::9} to "The Enderman robot."
   set {SB::robot::design::leggings::9} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::9} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::9} to Material.LEATHER_CHESTPLATE!
@@ -234,8 +239,8 @@ on load:
   set {SB::robot::design::color::9} to true
   set {SB::robot::design::rgb::9} to Color.fromRGB(25, 0, 51)
 
-  set {SB::robot::design::name::en::10} to "LavaSlime"
-  set {SB::robot::design::lore::en::10} to "The LavaSlime robot."
+  #set {SB::robot::design::name::en::10} to "LavaSlime"
+  #set {SB::robot::design::lore::en::10} to "The LavaSlime robot."
   set {SB::robot::design::leggings::10} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::10} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::10} to Material.LEATHER_CHESTPLATE!
@@ -243,8 +248,8 @@ on load:
   set {SB::robot::design::color::10} to true
   set {SB::robot::design::rgb::10} to Color.fromRGB(51, 0, 0)
   
-  set {SB::robot::design::name::en::11} to "Cactus"
-  set {SB::robot::design::lore::en::11} to "The Cactus robot."
+  #set {SB::robot::design::name::en::11} to "Cactus"
+  #set {SB::robot::design::lore::en::11} to "The Cactus robot."
   set {SB::robot::design::leggings::11} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::11} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::11} to Material.LEATHER_CHESTPLATE!
@@ -252,8 +257,8 @@ on load:
   set {SB::robot::design::color::11} to true
   set {SB::robot::design::rgb::11} to Color.fromRGB(76, 153, 0)
   
-  set {SB::robot::design::name::en::12} to "Coconut"
-  set {SB::robot::design::lore::en::12} to "The Coconut robot."
+  #set {SB::robot::design::name::en::12} to "Coconut"
+  #set {SB::robot::design::lore::en::12} to "The Coconut robot."
   set {SB::robot::design::leggings::12} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::12} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::12} to Material.LEATHER_CHESTPLATE!
@@ -261,8 +266,8 @@ on load:
   set {SB::robot::design::color::12} to true
   set {SB::robot::design::rgb::12} to Color.fromRGB(100, 50, 0)
   
-  set {SB::robot::design::name::en::13} to "Cake"
-  set {SB::robot::design::lore::en::13} to "The Cake robot."
+  #set {SB::robot::design::name::en::13} to "Cake"
+  #set {SB::robot::design::lore::en::13} to "The Cake robot."
   set {SB::robot::design::leggings::13} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::13} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::13} to Material.LEATHER_CHESTPLATE!
@@ -270,8 +275,8 @@ on load:
   set {SB::robot::design::color::13} to true
   set {SB::robot::design::rgb::13} to Color.fromRGB(100, 50, 0)
   
-  set {SB::robot::design::name::en::14} to "Ocelot"
-  set {SB::robot::design::lore::en::14} to "The Ocelot robot."
+  #set {SB::robot::design::name::en::14} to "Ocelot"
+  #set {SB::robot::design::lore::en::14} to "The Ocelot robot."
   set {SB::robot::design::leggings::14} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::14} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::14} to Material.LEATHER_CHESTPLATE!
@@ -279,8 +284,8 @@ on load:
   set {SB::robot::design::color::14} to true
   set {SB::robot::design::rgb::14} to Color.fromRGB(255, 128, 0)
   
-  set {SB::robot::design::name::en::15} to "Zombie"
-  set {SB::robot::design::lore::en::15} to "The Zombie robot."
+  #set {SB::robot::design::name::en::15} to "Zombie"
+  #set {SB::robot::design::lore::en::15} to "The Zombie robot."
   set {SB::robot::design::leggings::15} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::15} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::15} to Material.LEATHER_CHESTPLATE!
@@ -288,8 +293,8 @@ on load:
   set {SB::robot::design::color::15} to true
   set {SB::robot::design::rgb::15} to Color.fromRGB(76, 153, 0)
   
-  set {SB::robot::design::name::en::16} to "Steve"
-  set {SB::robot::design::lore::en::16} to "The Steve robot."
+  #set {SB::robot::design::name::en::16} to "Steve"
+  #set {SB::robot::design::lore::en::16} to "The Steve robot."
   set {SB::robot::design::leggings::16} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::16} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::16} to Material.LEATHER_CHESTPLATE!
@@ -297,8 +302,8 @@ on load:
   set {SB::robot::design::color::16} to true
   set {SB::robot::design::rgb::16} to Color.fromRGB(145, 83, 20)
   
-  set {SB::robot::design::name::en::17} to "Wither"
-  set {SB::robot::design::lore::en::17} to "The Wither robot."
+  #set {SB::robot::design::name::en::17} to "Wither"
+  #set {SB::robot::design::lore::en::17} to "The Wither robot."
   set {SB::robot::design::leggings::17} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::17} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::17} to Material.LEATHER_CHESTPLATE!
@@ -306,8 +311,8 @@ on load:
   set {SB::robot::design::color::17} to true
   set {SB::robot::design::rgb::17} to Color.fromRGB(0, 0, 0)
   
-  set {SB::robot::design::name::en::18} to "Wither skeleton"
-  set {SB::robot::design::lore::en::18} to "The Wither skeleton robot."
+  #set {SB::robot::design::name::en::18} to "Wither skeleton"
+  #set {SB::robot::design::lore::en::18} to "The Wither skeleton robot."
   set {SB::robot::design::leggings::18} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::18} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::18} to Material.LEATHER_CHESTPLATE!
@@ -315,8 +320,8 @@ on load:
   set {SB::robot::design::color::18} to true
   set {SB::robot::design::rgb::18} to Color.fromRGB(0, 0, 0)
   
-  set {SB::robot::design::name::en::19} to "Melon"
-  set {SB::robot::design::lore::en::19} to "The Melon robot."
+  #set {SB::robot::design::name::en::19} to "Melon"
+  #set {SB::robot::design::lore::en::19} to "The Melon robot."
   set {SB::robot::design::leggings::19} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::19} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::19} to Material.LEATHER_CHESTPLATE!
@@ -324,8 +329,8 @@ on load:
   set {SB::robot::design::color::19} to true
   set {SB::robot::design::rgb::19} to Color.fromRGB(76, 153, 0)
   
-  set {SB::robot::design::name::en::20} to "Pumpkin"
-  set {SB::robot::design::lore::en::20} to "The Pumpkin robot."
+  #set {SB::robot::design::name::en::20} to "Pumpkin"
+  #set {SB::robot::design::lore::en::20} to "The Pumpkin robot."
   set {SB::robot::design::leggings::20} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::20} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::20} to Material.LEATHER_CHESTPLATE!
@@ -333,8 +338,8 @@ on load:
   set {SB::robot::design::color::20} to true
   set {SB::robot::design::rgb::20} to Color.fromRGB(255, 128, 0)
 
-  set {SB::robot::design::name::en::21} to "Blaze"
-  set {SB::robot::design::lore::en::21} to "The Blaze robot."
+  #set {SB::robot::design::name::en::21} to "Blaze"
+  #set {SB::robot::design::lore::en::21} to "The Blaze robot."
   set {SB::robot::design::leggings::21} to Material.LEATHER_LEGGINGS!
   set {SB::robot::design::boots::21} to Material.LEATHER_BOOTS!
   set {SB::robot::design::chestplate::21} to Material.LEATHER_CHESTPLATE!
@@ -484,36 +489,63 @@ function openrobotskmenuback(player:player):
   openrobotskmenu({_robot},{_player})
 
 function openrobotskmenu(robot:entity,player:player):
-  opengui({_player},27,"{@robotguiname}")
+  #
+  # > Set frequently used data into local variables.
+  set {_uuid} to uuid of {_player}
+  set {_lang} to {SK::lang::%{_uuid}%}
+  
+  if {SB::robot::robotguiname::%{_lang}%} is not set:
+    opengui({_player},27,"{@robotguiname}")
+  else:
+    opengui({_player},27,"%{SB::robot::robotguiname::%{_lang}%}%")
   #
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
   set metadata "currentrobot" of {_player} to {_robot}
   set {TMP::currentrobot::%{_player}%} to {_robot}
-  if metadata value "robo" of {_robot} is 1:
-    setguiitem({_player},13,emerald block,1,"{@robotstatuson}","{@clicktotogglesstatus}","changerobotstate(false,""%{_player}%"" parsed as player)",true)
+  if {SB::robot::robotstatuson::%{_lang}%} is not set:
+    set {_robotstatuson} to "{@robotstatuson}"
+    set {_robotstatusoff} to "{@robotstatusoff}"
+    set {_clicktotogglesstatus} to "{@clicktotogglesstatus}"
   else:
-    setguiitem({_player},13,redstone block,1,"{@robotstatusoff}","{@clicktotogglesstatus}","changerobotstate(true,""%{_player}%"" parsed as player)",true)
+    set {_robotstatuson} to {SB::robot::robotstatuson::%{_lang}%}
+    set {_robotstatusoff} to {SB::robot::robotstatusoff::%{_lang}%}
+    set {_clicktotogglesstatus} to {SB::robot::clicktotogglesstatus::%{_lang}%}
+  if metadata value "robo" of {_robot} is 1:
+    setguiitem({_player},13,emerald block,1,"%{_robotstatuson}%","%{_clicktotogglesstatus}%","changerobotstate(false,""%{_player}%"" parsed as player)",true)
+  else:
+    setguiitem({_player},13,redstone block,1,"%{_robotstatusoff}%","%{_clicktotogglesstatus}%","changerobotstate(true,""%{_player}%"" parsed as player)",true)
   
   set {_job} to getnbtvalue(helmet of {_robot},"currentjob")
   set {_design} to getnbtvalue(helmet of {_robot},"robotdesign")
-
-  set {_jobname} to {SB::robot::job::name::en::%{_job}%}
-  set {_joblore} to {SB::robot::job::lore::en::%{_job}%}
-  set {_designname} to {SB::robot::design::name::en::%{_design}%}
+  if {SB::robot::currentjob::%{_lang}%} is not set:
+    set {_currentjoblang} to "{@currentjob}"
+    set {_currentdesignlang} to "{@currentdesign}"
+  else:
+    set {_currentjoblang} to {SB::robot::currentjob::%{_lang}%}
+    set {_currentdesignlang} to {SB::robot::currentdesign::%{_lang}%}
+  set {_jobname} to {SB::robot::job::name::%{_lang}%::%{_job}%}
+  set {_joblore} to {SB::robot::job::lore::%{_lang}%::%{_job}%}
+  set {_designname} to {SB::robot::design::name::%{_lang}%::%{_design}%}
   set {_jobtool} to {SB::robot::job::tool::%{_job}%}
-  setguiitem({_player},11,{_jobtool},1,"{@currentjob}","%{_jobname}%\n-----\n%{_joblore}%","openrobotskjobmenu(""%{_player}%"" parsed as player)",true)
+  setguiitem({_player},11,{_jobtool},1,"%{_currentjoblang}%","%{_jobname}%","openrobotskjobmenu(""%{_player}%"" parsed as player)",true)
 
-  setguiitem({_player},21,helmet of {_robot},1,"{@currentdesign}","%{_designname}%","openrobotskdesignmenu(""%{_player}%"" parsed as player)",false)
+  setguiitem({_player},21,helmet of {_robot},1,"%{_currentdesignlang}%","%{_designname}%","openrobotskdesignmenu(""%{_player}%"" parsed as player)",false)
+
 
   
   set {_cinv} to current inventory of {_player}
   while {_cinv} is current inventory of {_player}:
     set {_blocks} to getnbtvalue(helmet of {_robot},"blocks")
-    set {_blocksbroken} to "{@blocksbroken}"
+    if {SB::robot::currentdesign::%{_lang}%} is not set:
+      set {_blocksbroken} to "{@blocksbroken}"
+      set {_stats} to "{@stats}"
+    else:
+      set {_blocksbroken} to {SB::robot::blocksbroken::%{_lang}%}
+      set {_stats} to {SB::robot::stats::%{_lang}%}
     replace all "<blocks>" with "%{_blocks}%" in {_blocksbroken}
-    setguiitem({_player},15,book,1,"{@stats}","%{_blocksbroken}%"," ",true)
+    setguiitem({_player},15,book,1,"%{_stats}%","%{_blocksbroken}%"," ",true)
     wait 5 ticks
 
 function openrobotskdesignmenu(player:player):
@@ -522,7 +554,10 @@ function openrobotskdesignmenu(player:player):
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
   set {_robot} to {TMP::currentrobot::%{_player}%}
-  opengui({_player},45,"{@robotdesignguiname}")
+  if {SB::robot::robotdesignguiname::%{_lang}%} is not set:
+    opengui({_player},45,"{@robotdesignguiname}")
+  else:
+    opengui({_player},45,"%{SB::robot::robotdesignguiname::%{_lang}%}%")
   #
   # > Fill the Inventory with empty glass panes.
   loop 45 times:
@@ -538,7 +573,7 @@ function openrobotskdesignmenu(player:player):
     if {_slotskip} is 8:
       add 2 to {_start}
       set {_slotskip} to 1
-    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::design::name::en::%loop-index%}%","%{SB::robot::design::lore::en::%loop-index%}%","changerobotskdesign(""%{_player}%"" parsed as player,%{_design}%)",false)
+    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::design::name::%{_lang}%::%loop-index%}%","%{SB::robot::design::lore::%{_lang}%::%loop-index%}%","changerobotskdesign(""%{_player}%"" parsed as player,%{_design}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.
@@ -550,7 +585,10 @@ function openrobotskjobmenu(player:player):
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
   set {_robot} to {TMP::currentrobot::%{_player}%}
-  opengui({_player},27,"{@robotjobguiname}")
+  if {SB::robot::robotjobguiname::%{_lang}%} is not set:
+    opengui({_player},27,"{@robotjobguiname}")
+  else:
+    opengui({_player},27,"%{SB::robot::robotjobguiname::%{_lang}%}%")
   #
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
@@ -566,7 +604,7 @@ function openrobotskjobmenu(player:player):
     if {_slotskip} is 8:
       add 2 to {_start}
       set {_slotskip} to 1
-    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::job::name::en::%loop-index%}%","%{SB::robot::job::lore::en::%loop-index%}%","changerobotskjob(""%{_player}%"" parsed as player,%{_job}%)",false)
+    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::job::name::%{_lang}%::%loop-index%}%","%{SB::robot::job::lore::%{_lang}%::%loop-index%}%","changerobotskjob(""%{_player}%"" parsed as player,%{_job}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.
@@ -634,28 +672,57 @@ command /robotname [<text>]:
       set {_value} to getnbtvalue(helmet of player's target,"robot")
       if {_value} is "robotsk":
         set {_owneruuid} to getnbtvalue(helmet of player's target,"owner")
+        #
+        # > Set frequently used data into local variables.
+        set {_uuid} to uuid of player
+        set {_lang} to {SK::lang::%{_uuid}%}
         if player's uuid is {_owneruuid}:
           set {_robot} to player's target
           set {_name} to coloured arg-1
           if metadata value "robo" of {_robot} is 1:
-            {_robot}.setCustomName("%{_name}% {@roboton}")
+            if {SB::robot::on::%{SK::lang::%{_uuid}%}%} is not set:
+              set {_roboon} to "{@roboton}"
+            else:
+              set {_roboon} to {SB::robot::on::%{_lang}%}
+            {_robot}.setCustomName("%{_name}% %{_roboon}%")
           else:
-            {_robot}.setCustomName("%{_name}% {@robotoff}")
+            if {SB::robot::robotoff::%{_lang}%} is not set:
+              set {_robooff} to "{@robotoff}"
+            else:
+              set {_robooff} to "%{SB::robot::robotoff::%{_lang}%}%"
+            {_robot}.setCustomName("%{_name}% %{_robooff}%")
           set helmet of player's target to setnbtvalue(helmet of player's target,"robotname","%{_name}%")
+          if {SB::robot::renamedrobot::%{SK::lang::%{_uuid}%}%} is not set:
+            message "{@prefix} {@renamedrobot}"
+          else:
+            message "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::renamedrobot::%{_lang}%}%"
         else:
-          message "Nur der Besitzer kann das."
+          if {SB::robot::onlyrobotownererror::%{SK::lang::%{_uuid}%}%} is not set:
+            message "{@prefix} {@onlyrobotownererror}"
+          else:
+            message "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::onlyrobotownererror::%{_lang}%}%"
 
     
 function changerobotstate(state:boolean,player:player):
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  set {_uuid} to uuid of {_player}
+  set {_lang} to {SK::lang::%{_uuid}%}
   set {_name} to getnbtvalue(helm of {_robot},"robotname")
   if {_state} is true:
-    {_robot}.setCustomName("%{_name}% {@roboton}")
+    if {SB::robot::on::%{SK::lang::%{_uuid}%}%} is not set:
+      set {_roboon} to "{@roboton}"
+    else:
+      set {_roboon} to {SB::robot::on::%{_lang}%}
+    {_robot}.setCustomName("%{_name}% %{_roboon}%")
     add {_robot} to {TMP::activerobo::*}
     set metadata "robo" of {_robot} to 1
     roboanimation({_robot},1)
   else:
-    {_robot}.setCustomName("%{_name}% {@robotoff}")
+    if {SB::robot::robotoff::%{SK::lang::%{_uuid}%}%} is not set:
+      set {_robooff} to "{@robotoff}"
+    else:
+      set {_robooff} to {SB::robot::robotoff::%{_lang}%}
+    {_robot}.setCustomName("%{_name}% %{_robooff}%")
     loop {TMP::activerobo::*}:
       if loop-value is {_robot}:
         delete {TMP::activerobo::%loop-index%}
@@ -702,7 +769,12 @@ function roboanimation(robo:entity,move:number):
             set {_chest} to block below {_robo}
             set {_amount} to amount of {@fuelitem} in {_chest}'s inventory
             if {_amount} is 0:
-              {_robo}.setCustomName("{@robotname} {@robotoff}")
+              set {_uuid} to getnbtvalue({_item},"owner")
+              if {SB::robot::robotoff::%{SK::lang::%{_uuid}%}%} is not set:
+                set {_robooff} to "{@robotoff}"
+              else:
+                set {_robooff} to {SB::robot::robotoff::%{_lang}%}
+              {_robo}.setCustomName("{@robotname} %{_robooff}%")
               set metadata "robo" of {_robo} to 2
               stop
             add 1 to {_breaks}
@@ -756,7 +828,16 @@ on chunk unload:
   loop {TMP::activerobo::*}:
     if loop-value's chunk is event-chunk:
       set {_name} to getnbtvalue(helm of loop-value,"robotname")
-      loop-value.setCustomName("%{_name}% {@robotoff}")
+      set {_uuid} to getnbtvalue(helm of loop-value,"owner")
+      broadcast "%{_uuid}%"
+      set {_lang} to {SK::lang::%{_uuid}%}
+      broadcast "%{_lang}%"
+      set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
+      if {_robotoff} is not set:
+        set {_robooff} to "{@robotoff}"
+      else:
+        set {_robooff} to {_robotoff}
+      loop-value.setCustomName("%{_name}% %{_robooff}%")
       set metadata "robo" of loop-value to 2
 
       delete {TMP::activerobo::%loop-index%}
@@ -765,7 +846,14 @@ on unload:
   delete {TMP::currentrobot::*}
   loop {TMP::activerobo::*}:
     set {_name} to getnbtvalue(helm of loop-value,"robotname")
-    loop-value.setCustomName("%{_name}% {@robotoff}")
+    set {_uuid} to getnbtvalue(helm of loop-value,"owner")
+    set {_lang} to {SK::lang::%{_uuid}%}
+    set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
+    if {_robotoff} is not set:
+      set {_robooff} to "{@robotoff}"
+    else:
+      set {_robooff} to {_robotoff}
+    loop-value.setCustomName("%{_name}% %{_robooff}%")
     set metadata "robo" of loop-value to 2
     delete {TMP::activerobo::%loop-index%}
 
