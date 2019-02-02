@@ -98,12 +98,15 @@ options:
   prefix: &7[&6Robots&7] 
   renamedrobot: The robot has been renamed.
   onlyrobotownererror: Only the owner of the robot can rename it.
+  renametitle: &rRename
+  renamelore: &7Rename this robot\n&7with /robotname <name>.
 
 
 on load:
   if {SB::config::backguiitem} is not set:
     set {SB::config::backguiitem} to redstone block
-  
+  if {SB::config::color::secondary::1} is not set:
+    set {SB::config::color::secondary::1} to "&7"
   #
   # > Jobs:
   # > Configure the jobs as you want, you could also add more
@@ -390,6 +393,7 @@ on place of {@robotitem}:
   set {_value} to getnbtvalue(player's tool,"robot")
   if {_value} is "robotsk":
     set {_item} to player's tool
+    set {_lang} to {SK::lang::%uuid of player%}
     cancel event
     remove 1 of {_item} from player's inventory
     set {_blocks} to getnbtvalue({_item},"blocks")
@@ -480,10 +484,20 @@ on place of {@robotitem}:
       {_world}.spawnParticle(Particle.{@arriveparticles}!,{_x},{_y},{_z}, 0.9)
     set block at {_loc} to air
     if {@instantstart} is true:
-      {_robo}.setCustomName("%{_name}% {@roboton}")
+      set {_roboton} to {SB::robot::on::%{_lang}%}
+      if {_roboton} is not set:
+        set {_roboton} to "{@roboton}"
+      else:
+        set {_roboton} to {_roboton}
+      {_robo}.setCustomName("%{_name}% %{_roboton}%")
       roboanimation({_robo},1)
     else:
-      {_robo}.setCustomName("%{_name}% {@robotoff}")
+      set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
+      if {_robotoff} is not set:
+        set {_robooff} to "{@robotoff}"
+      else:
+        set {_robooff} to {_robotoff}
+      {_robo}.setCustomName("%{_name}% %{_robotoff}%")
 function openrobotskmenuback(player:player):
   set {_robot} to {TMP::currentrobot::%{_player}%}
   openrobotskmenu({_robot},{_player})
@@ -495,12 +509,12 @@ function openrobotskmenu(robot:entity,player:player):
   set {_lang} to {SK::lang::%{_uuid}%}
   
   if {SB::robot::robotguiname::%{_lang}%} is not set:
-    opengui({_player},27,"{@robotguiname}")
+    opengui({_player},36,"{@robotguiname}")
   else:
-    opengui({_player},27,"%{SB::robot::robotguiname::%{_lang}%}%")
+    opengui({_player},36,"%{SB::robot::robotguiname::%{_lang}%}%")
   #
   # > Fill the Inventory with empty glass panes.
-  loop 27 times:
+  loop 36 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
   set metadata "currentrobot" of {_player} to {_robot}
   set {TMP::currentrobot::%{_player}%} to {_robot}
@@ -522,16 +536,22 @@ function openrobotskmenu(robot:entity,player:player):
   if {SB::robot::currentjob::%{_lang}%} is not set:
     set {_currentjoblang} to "{@currentjob}"
     set {_currentdesignlang} to "{@currentdesign}"
+    set {_renamelangtitle} to "{@renametitle}"
+    set {_renamelanglore} to "{@renamelore}"
   else:
     set {_currentjoblang} to {SB::robot::currentjob::%{_lang}%}
     set {_currentdesignlang} to {SB::robot::currentdesign::%{_lang}%}
+    set {_renamelangtitle} to {SB::robot::renametitle::%{_lang}%}
+    set {_renamelanglore} to {SB::robot::renamelore::%{_lang}%}
   set {_jobname} to {SB::robot::job::name::%{_lang}%::%{_job}%}
   set {_joblore} to {SB::robot::job::lore::%{_lang}%::%{_job}%}
   set {_designname} to {SB::robot::design::name::%{_lang}%::%{_design}%}
   set {_jobtool} to {SB::robot::job::tool::%{_job}%}
-  setguiitem({_player},11,{_jobtool},1,"%{_currentjoblang}%","%{_jobname}%","openrobotskjobmenu(""%{_player}%"" parsed as player)",true)
+  set {_s1} to {SB::config::color::secondary::1}
+  setguiitem({_player},11,{_jobtool},1,"%{_currentjoblang}%","%{_s1}%%{_jobname}%","openrobotskjobmenu(""%{_player}%"" parsed as player)",true)
 
-  setguiitem({_player},21,helmet of {_robot},1,"%{_currentdesignlang}%","%{_designname}%","openrobotskdesignmenu(""%{_player}%"" parsed as player)",false)
+  setguiitem({_player},21,helmet of {_robot},1,"%{_currentdesignlang}%","%{_s1}%%{_designname}%","openrobotskdesignmenu(""%{_player}%"" parsed as player)",false)
+  setguiitem({_player},23,nametag,1,"%{_renamelangtitle}%","%{_renamelanglore}%"," ",true)
 
 
   
@@ -829,9 +849,7 @@ on chunk unload:
     if loop-value's chunk is event-chunk:
       set {_name} to getnbtvalue(helm of loop-value,"robotname")
       set {_uuid} to getnbtvalue(helm of loop-value,"owner")
-      broadcast "%{_uuid}%"
       set {_lang} to {SK::lang::%{_uuid}%}
-      broadcast "%{_lang}%"
       set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
       if {_robotoff} is not set:
         set {_robooff} to "{@robotoff}"
