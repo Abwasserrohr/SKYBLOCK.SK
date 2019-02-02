@@ -438,6 +438,9 @@ on script load:
   set {SB::robot::onlyrobotownererror::%{_lang}%} to "Nur der Besitzer des Roboters kann diesen umbenennen."
   set {SB::robot::renametitle::%{_lang}%} to "&rUmbenennen"
   set {SB::robot::renamelore::%{_lang}%} to "%{_s1}%Benenne diesen Roboter\n%{_s1}%mit /robotname <name> um."
+  set {SB::robot::breakrobot::%{_lang}%} to "&rRoboter abbauen"
+  set {SB::robot::breakrobotlore::%{_lang}%} to "%{_s1}%Klicke hier, um\n%{_s1}%den Roboter zurück in\n%{_s1}%ein Item zu tauschen."
+  set {SB::robot::revertedrobottoitem::%{_lang}%} to "Dein Roboter wurde wieder zu einem Item."
 
   #
   # > Challenges
