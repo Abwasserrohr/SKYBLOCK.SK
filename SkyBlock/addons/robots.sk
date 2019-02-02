@@ -405,6 +405,10 @@ function breakrobot(player:player):
       message "{@prefix} {@revertedrobottoitem}" to {_player}
     else:
       message "%{SB::lang::prefix::%{_lang}%}% %{SB::robot::revertedrobottoitem::%{_lang}%}%" to {_player}
+    loop {TMP::activerobo::*}:
+      if loop-value is {_robot}:
+        delete {TMP::activerobo::%loop-index%}
+        stop loop
     kill {_robot}
     give 1 of {_item} to {_player}
   else:
