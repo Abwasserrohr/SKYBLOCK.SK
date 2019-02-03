@@ -44,7 +44,6 @@ import:
   org.bukkit.Particle
   org.bukkit.Effect
   org.bukkit.Color
-  org.bukkit.event.player.PlayerInteractEntityEvent
 
 #
 # > Configure this skript as you want in the options.
