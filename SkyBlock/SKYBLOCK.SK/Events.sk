@@ -347,6 +347,12 @@ on script load:
     #
     # > Loop through the whole island and remove every block and clear all block inventories.
     loop blocks within {_loc1} to {_loc2}:
+      #
+      # > Loop through entities that may live at the block.
+      loop entities in radius 0.7 of loop-block:
+        #
+        # > If there is a entity, kill it.
+        kill loop-entity
       if loop-block is any chest or trapped chest:
         clear loop-block's inventory
       if loop-block is not air:
