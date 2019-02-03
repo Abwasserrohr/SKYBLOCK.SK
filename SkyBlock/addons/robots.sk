@@ -1,4 +1,21 @@
-
+#
+# ==============
+# robots.sk v0.0.1
+# ==============
+# Give your players robots which can help them farm stuff.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > customheads.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/customheads.sk
+# ==============
+# How to use it:
+# ==============
+# > Add robots.sk to your "plugins/Skript/scripts" folder and then reload.
+# > Use the command /giverobot <name> to give players the robot.
+# --------------
 #
 # > Import Java classes and nms Java classes for robots.
 import: 
@@ -361,8 +378,12 @@ on load:
   set {SB::robot::design::helmet::21} to getcustomhead("Blaze","eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA2ZTM0MmY5MGVjNTM4YWFhMTU1MmIyMjRmMjY0YTA0MDg0MDkwMmUxMjZkOTFlY2U2MTM5YWE1YjNjN2NjMyJ9fX0=")
   set {SB::robot::design::color::21} to true
   set {SB::robot::design::rgb::21} to Color.fromRGB(255, 128, 0)
-  # make them lava resistent
-  
+
+#
+# > Function - getnbtvalue
+# > Parameters: <item>item with the nbt value, <text>the nbt tag data which is needed
+# > Actions:
+# > Loads nbt value for the parameter tag and return the value.
 function getnbtvalue(item:item,tag:text) :: object:
   set {_item} to 1 of {_item}
   set {_CraftItemStack} to CraftItemStack.asNMSCopy({_item})
@@ -373,28 +394,61 @@ function getnbtvalue(item:item,tag:text) :: object:
     set {_value} to {_NBTTagCompound}.getString("%{_tag}%")
     return {_value}
 
+#
+# > Function - setnbtvalue
+# > Parameters: <item>item to set the nbt value on, <text>the tag which should be set, <text>the value which should be set
+# > Actions:
+# > Sets the tag to the value and return the item with the new nbt data.
 function setnbtvalue(item:item,tag:text,value:text) :: item:
+  #
+  # > Setting 1 of the item parameter turns it into a valid Bukkit item which can be used.
   set {_item} to 1 of {_item}
+  #
+  # > Set the Bukkit ItemStack into a nms CraftItemStack.
   set {_CraftItemStack} to CraftItemStack.asNMSCopy({_item})
+  #
+  # > Get the nbt Tag data from the nms CraftItemStack.
   set {_NBTTagCompound} to {_CraftItemStack}.getTag()
+  #
+  # > If the item has no nbt Tag data, create a new one.
   if {_NBTTagCompound} is not set:
     set {_NBTTagCompound} to new NBTTagCompound()
+  #
+  # > Set the new tag with the value to the nbt Tag data of the item.
   {_NBTTagCompound}.set("%{_tag}%", new NBTTagString("%{_value}%"))
+  #
+  # > Render the new nbt Tag compound as nbt using the Mojangson Parser Java class.
   set {_nbt} to MojangsonParser.parse("%{_NBTTagCompound}%")
+  #
+  # > Set the nbt Tag data back to the nms CraftItemStack.
   {_CraftItemStack}.setTag({_nbt})
+  #
+  # > Set the nms CraftItemStack back to a Bukkit ItemStack.
   set {_item1} to CraftItemStack.asBukkitCopy({_CraftItemStack})
+  #
+  # > Return the new item with the new NBT data.
   return {_item1}
-    
+#
+# > Function - breakrobot
+# > Parameters: <player>the player who breaks the robot
+# > Actions:
+# > Dismantles the robot of the player. The player has to be in the inventory
+# > menu of the robot to work.
 function breakrobot(player:player):
+  #
+  # > Get the robot variable and close the inventory of the player.
   set {_robot} to {TMP::currentrobot::%{_player}%}
   close {_player}'s inventory
+  #
+  # > Sets the data of the current robot into local variables
   set {_loc} to location of {_robot}
   set {_item} to helmet of {_robot}
   set {_blocks} to getnbtvalue({_item},"blocks")
   set {_job} to getnbtvalue({_item},"currentjob")
   set {_design} to getnbtvalue({_item},"robotdesign")
   set {_name} to getnbtvalue({_item},"robotname")
-
+  #
+  # > Create a new item and set the old NBT Tag data into the new item.
   set {_item} to {@robotitem}
   set {_item} to {_item} named "{@robotname}"
   set line 1 of lore of {_item} to "{@robotitemlore}"
@@ -402,28 +456,43 @@ function breakrobot(player:player):
   set {_item} to setnbtvalue({_item},"blocks","%{_blocks}%")
   set {_item} to setnbtvalue({_item},"currentjob","%{_job}%")
   set {_item} to setnbtvalue({_item},"robotname","%{_name}%")
-
   set {_item} to setnbtvalue({_item},"robot","robotsk")
+  #
+  # > Set local variables which are used below.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
+  #
+  # > Only break the roboot if the player has space for the new item.
   if {_player}'s inventory has space for 1 of {_item}:
+    #
+    # > Print the success message to the player.
     if {SB::robot::revertedrobottoitem::%{_lang}%} is not set:
       message "{@prefix} {@revertedrobottoitem}" to {_player}
     else:
       message "%{SB::lang::prefix::%{_lang}%}% %{SB::robot::revertedrobottoitem::%{_lang}%}%" to {_player}
+    #
+    # > Remove the robot out of the active robot list.
     loop {TMP::activerobo::*}:
       if loop-value is {_robot}:
         delete {TMP::activerobo::%loop-index%}
         stop loop
+    #
+    # > Kill the robot and give the player the item.
     kill {_robot}
     give 1 of {_item} to {_player}
+  #
+  # > If the player has not enough space for the item in his inventory, send a error message to the player.
   else:
     if {SB::lang::storage::notenoughinvspace::%{_lang}%} is not set:
       message "{@prefix} {@notenoughinvspace}" to {_player}
     else:
       message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::notenoughinvspace::%{_lang}%}%" to {_player}
-	
-command /giverobo:
+#
+# > Command - giverobot
+# > Arguments: <player>the player who should get the robot
+# > Actions:
+# > Gives a new robot to the player.
+command /giverobot <player>:
   permission: is.admin
   trigger:
     set {_item} to {@robotitem}
@@ -435,25 +504,54 @@ command /giverobo:
     set {_item} to setnbtvalue({_item},"currentjob","1")
     set {_item} to setnbtvalue({_item},"robot","robotsk")
     set {_item} to setnbtvalue({_item},"robotname","{@robotname}")
+    give 1 of {_item} to arg-1
 
-    give 1 of {_item} to player
-
+#
+# > Event - on place of the defined item in the options
+# > Actions:
+# > Places a robot if the item is a valid robot.
 on place of {@robotitem}:
+  #
+  # > Get the value saved to the nbt Tag "robot".
   set {_value} to getnbtvalue(player's tool,"robot")
+  #
+  # > If the nbt Tag "robot" is "robotsk", it is (hopefully) a robot from robot.sk.
   if {_value} is "robotsk":
+    #
+    # > Set the tool of the player as a variable, since it is used many times.
     set {_item} to player's tool
+    #
+    # > The language is needed below, set it as local variable.
     set {_lang} to {SK::lang::%uuid of player%}
+    #
+    # > Cancel the normal behaviour of block placing.
     cancel event
+    #
+    # > Remove 1 of the robot item from the inventory of the player.
     remove 1 of {_item} from player's inventory
+    #
+    # > Take NBT Tag data out of the saved item and save it to local variables.
     set {_blocks} to getnbtvalue({_item},"blocks")
     set {_level} to getnbtvalue({_item},"level")
     set {_design} to getnbtvalue({_item},"robotdesign")
     set {_job} to getnbtvalue({_item},"currentjob")
     set {_name} to getnbtvalue({_item},"robotname")
+    #
+    # > Set the local variable to create a spawn animation. 
     set {_loc} to event-location
-    wait 1 tick
+    #
+    # > Set a barrier block to prevent more robots being spawned at the same location while
+	# > the robot is being spawned.
     set block at {_loc} to barrier
+    #
+    # > Wait a tick to prevent any gliches that may occur from having too many actions
+	# > happening at once.
+    wait 1 tick
+    #
+    # > Add 20 to the y-coordinate of the location for the spawn animation.
     add 20 to y-coord of {_loc}
+    #
+    # > Set the direction of the robot depending on the yaw of the player.
     if player's yaw is between 315 and 360:
       set yaw of {_loc} to 0
     else if player's yaw is between 0 and 45:
@@ -464,13 +562,31 @@ on place of {@robotitem}:
       set yaw of {_loc} to 180
     else if player's yaw is between 225 and 315:
       set yaw of {_loc} to 270
+    #
+    # > The world is needed for particle spawning, use a local variable
+    # > for this.
     set {_world} to player's world
-  
+    #
+    # > Spawn the armor stand which is the robot.
     spawn 1 armor stand at {_loc}
+    #
+    # > Get the robot in a variable, which has been spawned above.
     set {_robo} to last spawned entity
-    set metadata "robo" of {_robo} to 1
-    add {_robo} to {TMP::activerobo::*}
-
+    #
+    # > If instant starts of the robots is enabled, set the needed variables for it.
+    if {@instantstart} is true:
+      #
+      # > Set the metadata of the robot with the key "robo" to 1, 
+      # > which means that the robot is on. This is temporary data
+      # > and has no influence on robots which are disabled by default
+      # > on spawn.
+      set metadata "robo" of {_robo} to 1
+	  #
+	  # > Add the robot to the activerobot variable to allow disabling it later easily.
+      add {_robo} to {TMP::activerobo::*}
+    #
+    # > Change the robot to the default settings which are needed. These are
+    # > hard coded and not meant to be changed. Only the custom name is changeable.	
     {_robo}.setGravity(false)
     {_robo}.setBasePlate(false)
     {_robo}.setCanPickupItems(false)
@@ -480,59 +596,82 @@ on place of {@robotitem}:
     {_robo}.setSmall(true)
     {_robo}.setArms(true)
     {_robo}.setInvulnerable(true)
-
-
-    
+    #
+    # > The robot is going to wear armor and tools, these are defined here.
     set {_leggings} to new ItemStack({SB::robot::design::leggings::%{_design}%})
     set {_boots} to new ItemStack({SB::robot::design::boots::%{_design}%})
     set {_chestplate} to new ItemStack({SB::robot::design::chestplate::%{_design}%})
     set {_head} to {SB::robot::design::helmet::%{_design}%}
     set {_color} to {SB::robot::design::color::%{_design}%}
     set {_rgb} to {SB::robot::design::rgb::%{_design}%}
-  
-
+    #
+    # > The helmet (head) of the new robot gets the NBT Tag data from the item, which has
+    # > been used to spawn this robot.
     set {_head} to setnbtvalue({_head},"blocks","%{_blocks}%")
     set {_head} to setnbtvalue({_head},"level","%{_level}%")
     set {_head} to setnbtvalue({_head},"robotdesign","%{_design}%")
     set {_head} to setnbtvalue({_head},"currentjob","%{_job}%")
     set {_head} to setnbtvalue({_head},"robotname","%{_name}%")
     set {_head} to setnbtvalue({_head},"owner",uuid of player)
-    
     set {_head} to setnbtvalue({_head},"robot","robotsk")
-
-
+    #
+    # > If the setting for this design is set to have colored armor,
+	# > give the armor some rgb colors.
     if {_color} is true:
       set {_meta} to {_boots}.getItemMeta()
       {_meta}.setColor({_rgb})
       {_boots}.setItemMeta({_meta})
       {_leggings}.setItemMeta({_meta})
       {_chestplate}.setItemMeta({_meta})
-
-
+    #
+    # > Set the job tool of the robot to the predefined one, which
+	# > has been set for the job the robot has.
     set {_jobtool} to {SB::robot::job::tool::%{_job}%}
+    #
+    # > Also make the job tool glow to make it fancier.
     set {_jobtool} to glowing {_jobtool}
+    #
+    # > Set the armor, helmet and tools to the robot.
     {_robo}.setLeggings({_leggings})
     {_robo}.setHelmet({_head})
     {_robo}.setBoots({_boots})
     {_robo}.setChestplate({_chestplate})
     {_robo}.setItemInHand({_jobtool})
-    set {_move} to 1
+    #
+    # > Start the animation of the robot (spawning) and play a sound to it.
+	# > The sound can be predefined in the options.
     set {_soundloc} to location of player
     add 10 to y-coord of {_soundloc}
     playsound(player,{_soundloc},"{@summonsound}","master",1,1)
-
+    #
+    # > The robot spawn is animated with this loop.
     loop 41 times:
+      #
+      # > Each loop waits 1 tick to make it look fluid.
       wait 1 tick
+      #
+      # > Teleport the robot 0.5 y-coordinate down unil it is at the right location.
       remove 0.5 from y-coord of {_loc}
       teleport {_robo} to {_loc}
       set {_x} to x-coord of {_loc}
       set {_y} to y-coord of {_loc}
       set {_z} to z-coord of {_loc}
+      #
+      # > Make the spawn animation fancier by spawning some particles.
       {_world}.spawnParticle(Particle.{@summonparticles}!,{_x},{_y},{_z}, 0.5)
+    #
+    # > Once the robot is there, play a sound for that too.
     playsound(player,{_soundloc},"{@arrivesound}","master",1,0.5)
+    #
+    # > Loop 100 times and spawn particles for fancier look.
     loop 100 times:
       {_world}.spawnParticle(Particle.{@arriveparticles}!,{_x},{_y},{_z}, 0.9)
+    #
+    # > Remove the barrier block which has been placed to prevent any other robot placement.
     set block at {_loc} to air
+    #
+    # > If the robot should start instantly, call the roboanimation function.
+	# > Also add a predefined "on" string to the name of the robot.
     if {@instantstart} is true:
       set {_roboton} to {SB::robot::on::%{_lang}%}
       if {_roboton} is not set:
@@ -541,6 +680,8 @@ on place of {@robotitem}:
         set {_roboton} to {_roboton}
       {_robo}.setCustomName("%{_name}% %{_roboton}%")
       roboanimation({_robo},1)
+    #
+    # > If the robot should not start instantly, add a predefined "off" to the name.
     else:
       set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
       if {_robotoff} is not set:
@@ -548,16 +689,27 @@ on place of {@robotitem}:
       else:
         set {_robooff} to {_robotoff}
       {_robo}.setCustomName("%{_name}% %{_robotoff}%")
+#
+# > Function - openrobotskmenuback
+# > Parameters: <player>a player who clicked on a "back" item in a robot.sk menu.
+# > Actions:
+# > Calls the openrobotskmenu for the player, if the player used a "back" item in
+# > the robot.sk menus.
 function openrobotskmenuback(player:player):
   set {_robot} to {TMP::currentrobot::%{_player}%}
   openrobotskmenu({_robot},{_player})
-
+#
+# > Function - openrobotskmenu
+# > Parameters: <entity>the robot, <player>the player, who clicked on the robot
+# > Actions:
+# > Opens the robot.sk main menu.
 function openrobotskmenu(robot:entity,player:player):
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
-  
+  #
+  # > Open the robot main menu to the player
   if {SB::robot::robotguiname::%{_lang}%} is not set:
     opengui({_player},36,"{@robotguiname}")
   else:
@@ -566,8 +718,13 @@ function openrobotskmenu(robot:entity,player:player):
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
-  set metadata "currentrobot" of {_player} to {_robot}
+  #
+  # > Save the current robot which has been opened to a variable
+  # > to get the robot later again, if needed.
   set {TMP::currentrobot::%{_player}%} to {_robot}
+  #
+  # > Check if the language for the status is set and use it, if not,
+  # > use fallback translation options included in this skript.
   if {SB::robot::robotstatuson::%{_lang}%} is not set:
     set {_robotstatuson} to "{@robotstatuson}"
     set {_robotstatusoff} to "{@robotstatusoff}"
@@ -576,13 +733,20 @@ function openrobotskmenu(robot:entity,player:player):
     set {_robotstatuson} to {SB::robot::robotstatuson::%{_lang}%}
     set {_robotstatusoff} to {SB::robot::robotstatusoff::%{_lang}%}
     set {_clicktotogglesstatus} to {SB::robot::clicktotogglesstatus::%{_lang}%}
+  #
+  # > If the temporary metadata value of the key "robo" is 1, the robot is on.
+  # > Set the slot to a emerald block, if it is on or to a redstone block, if it is off.
   if metadata value "robo" of {_robot} is 1:
     setguiitem({_player},13,emerald block,1,"%{_robotstatuson}%","%{_clicktotogglesstatus}%","changerobotstate(false,""%{_player}%"" parsed as player)",true)
   else:
     setguiitem({_player},13,redstone block,1,"%{_robotstatusoff}%","%{_clicktotogglesstatus}%","changerobotstate(true,""%{_player}%"" parsed as player)",true)
-  
+  #
+  # > Get the job and the design of the robot to display it in the menu.
   set {_job} to getnbtvalue(helmet of {_robot},"currentjob")
   set {_design} to getnbtvalue(helmet of {_robot},"robotdesign")
+  #
+  # > Get the translations for the jobs, also load fallback translations, if
+  # > the translation variables aren't available.
   if {SB::robot::currentjob::%{_lang}%} is not set:
     set {_currentjoblang} to "{@currentjob}"
     set {_currentdesignlang} to "{@currentdesign}"
@@ -597,38 +761,59 @@ function openrobotskmenu(robot:entity,player:player):
     set {_renamelanglore} to {SB::robot::renamelore::%{_lang}%}
     set {_breakrobot} to {SB::robot::breakrobot::%{_lang}%}
     set {_breakrobotlore} to {SB::robot::breakrobotlore::%{_lang}%}
+  #
+  # > Get the job name, there aren't any fallback translations available, since
+  # > this would make the configuration part harder for server operators.
   set {_jobname} to {SB::robot::job::name::%{_lang}%::%{_job}%}
   set {_joblore} to {SB::robot::job::lore::%{_lang}%::%{_job}%}
   set {_designname} to {SB::robot::design::name::%{_lang}%::%{_design}%}
+  #
+  # > Also set the tool for the job to set it in the main menu.
   set {_jobtool} to {SB::robot::job::tool::%{_job}%}
+  #
+  # > Get the secondary color of the SKYBLOCK.SK menu for the item lores.
   set {_s1} to {SB::config::color::secondary::1}
   setguiitem({_player},11,{_jobtool},1,"%{_currentjoblang}%","%{_s1}%%{_jobname}%","openrobotskjobmenu(""%{_player}%"" parsed as player)",true)
-
   setguiitem({_player},21,helmet of {_robot},1,"%{_currentdesignlang}%","%{_s1}%%{_designname}%","openrobotskdesignmenu(""%{_player}%"" parsed as player)",false)
   setguiitem({_player},23,nametag,1,"%{_renamelangtitle}%","%{_renamelanglore}%"," ",true)
   setguiitem({_player},31,{@robotitem},1,"%{_breakrobot}%","%{_breakrobotlore}%","breakrobot(""%{_player}%"" parsed as player)",false)
-
-
-  
+  #
+  # > While the player has the menu open, the block counter in the statistics
+  # > is automaticly updated.
   set {_cinv} to current inventory of {_player}
   while {_cinv} is current inventory of {_player}:
+    #
+    # > Get the blocks, which have been broken from the helmet NBT Tag data.
     set {_blocks} to getnbtvalue(helmet of {_robot},"blocks")
+    #
+    # > Set the translation variables to local variables, if the translation
+	# > is not available, use fallback translations.
     if {SB::robot::currentdesign::%{_lang}%} is not set:
       set {_blocksbroken} to "{@blocksbroken}"
       set {_stats} to "{@stats}"
     else:
       set {_blocksbroken} to {SB::robot::blocksbroken::%{_lang}%}
       set {_stats} to {SB::robot::stats::%{_lang}%}
+    #
+    # > Replace the placeholder of the language variable to the broken blocks statistic, then place it in the slot 15 of the menu.
     replace all "<blocks>" with "%{_blocks}%" in {_blocksbroken}
     setguiitem({_player},15,book,1,"%{_stats}%","%{_blocksbroken}%"," ",true)
+    #
+    # > Repeat the while loop but wait here 5 ticks to prevent endless loops to hang the game.
     wait 5 ticks
-
+#
+# > Function - openrobotskdesignmenu
+# > Parameters: <player>a player clicked on the design item in the main robot.sk menu
+# > Actions:
+# > Opens the robot design menu to select a new design.
 function openrobotskdesignmenu(player:player):
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  #
+  # > Open the design menu with 45 slots.
   if {SB::robot::robotdesignguiname::%{_lang}%} is not set:
     opengui({_player},45,"{@robotdesignguiname}")
   else:
@@ -637,29 +822,48 @@ function openrobotskdesignmenu(player:player):
   # > Fill the Inventory with empty glass panes.
   loop 45 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
-  
-  set {_amount} to size of {SB::robot::design::helmet::*}
+  #
+  # > Get the size of all designs, currently not used but could be useful in the future.
+  #set {_amount} to size of {SB::robot::design::helmet::*}
   set {_start} to 10
   set {_design} to 0
   set {_slotskip} to 0
+  #
+  # > Loop through the designs to set all design items into the
+  # > design menu. For that, the helmet is being used as loop to
+  # > use the head for the item in the menu.
   loop {SB::robot::design::helmet::*}:
     add 1 to {_design}
     add 1 to {_slotskip}
+    #
+	# > Every 7th slot, there are two slots skipped for menu
+	# > design purposes. The slot is skipped every 8, because it
+	# > is increased by 1 at the beginning of the loop.
     if {_slotskip} is 8:
       add 2 to {_start}
       set {_slotskip} to 1
+    #
+    # > Set the looped item to the menu with the predefined language variables.
     setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::design::name::%{_lang}%::%loop-index%}%","%{SB::robot::design::lore::%{_lang}%::%loop-index%}%","changerobotskdesign(""%{_player}%"" parsed as player,%{_design}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.
   setguiitem({_player},44,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","openrobotskmenuback(""%{_player}%"" parsed as player)",false)
-
+#
+# > Function - openrobotskjobmenu
+# > Parameters: <player>a player clicked on the job item in the main robot.sk menu
+# > Actions:
+# > Opens the robot job menu to select a new job.
 function openrobotskjobmenu(player:player):
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
+  #
+  # > Get the current robot for the player as local variable.
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  #
+  # > Opens the job menu with 27 slots.
   if {SB::robot::robotjobguiname::%{_lang}%} is not set:
     opengui({_player},27,"{@robotjobguiname}")
   else:
@@ -668,57 +872,88 @@ function openrobotskjobmenu(player:player):
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
-  
-  set {_amount} to size of {SB::robot::job::tool::*}
+  #
+  # > Set the amount of the jobs, could be useful later.
+  #set {_amount} to size of {SB::robot::job::tool::*}
   set {_start} to 10
   set {_design} to 0
   set {_slotskip} to 0
+  #
+  # > Loop through all the jobs.
   loop {SB::robot::job::tool::*}:
     add 1 to {_job}
     add 1 to {_slotskip}
+    #
+    # > Skip every 7th slot. It works the same as above in the design menu.
     if {_slotskip} is 8:
       add 2 to {_start}
       set {_slotskip} to 1
+    #
+    # > Set the item for this job into the jobs menu.
     setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::job::name::%{_lang}%::%loop-index%}%","%{SB::robot::job::lore::%{_lang}%::%loop-index%}%","changerobotskjob(""%{_player}%"" parsed as player,%{_job}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.
   setguiitem({_player},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","openrobotskmenuback(""%{_player}%"" parsed as player)",false)
-
-    
+#
+# > Function - changerobotskjob
+# > Parameters: <player>the player who clicked, <number>the job number
+# > Actions:
+# > Changes the job of the robot to the new job.
 function changerobotskjob(player:player,job:number):
+  #
+  # > Get the current robot from the predefined variable into local variable.
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  #
+  # > Close the menu, since it is no longer needed.
   close {_player}'s inventory
+  #
+  # > Get the helmet of the robot as a local variable.
   set {_head} to helmet of {_robot}
+  #
+  # > Set the new job to the head of the robot.
   set helmet of {_robot} to setnbtvalue({_head},"currentjob","%{_job}%")
-
-  
+  #
+  # > Give the robot the new job tool into the hand.
   set {_jobtool} to {SB::robot::job::tool::%{_job}%}
   set {_jobtool} to glowing {_jobtool}
-
   {_robot}.setItemInHand({_jobtool})
-  
+  #
+  # > Disable the robot. The player has to enable it manually.
   changerobotstate(false,{_player})
-  
-
+#
+# > Function - changerobotskdesign
+# > Parameters: <player>the player who clicked, <number>the design number
+# > Actions:
+# > Changes the design of the robot to the new design.
 function changerobotskdesign(player:player,design:number):
+  #
+  # > Get the current robot from the predefined variable into local variable.
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  #
+  # > Close the menu, it is no longer needed.
   close {_player}'s inventory
+  #
+  # > Get the helmet of the robot as a local variable
   set {_item} to helmet of {_robot}
-  
+  #
+  # > The head holds all the data, get existing data and set it to
+  # > local variables.
   set {_blocks} to getnbtvalue({_item},"blocks")
   set {_level} to getnbtvalue({_item},"level")
   set {_job} to getnbtvalue({_item},"currentjob")
   set {_name} to getnbtvalue({_item},"robotname")
   set {_owner} to getnbtvalue({_item},"owner")
-    
+  #
+  # > Create new armor and the head for the design.
   set {_leggings} to new ItemStack({SB::robot::design::leggings::%{_design}%})
   set {_boots} to new ItemStack({SB::robot::design::boots::%{_design}%})
   set {_chestplate} to new ItemStack({SB::robot::design::chestplate::%{_design}%})
   set {_head} to {SB::robot::design::helmet::%{_design}%}
   set {_color} to {SB::robot::design::color::%{_design}%}
   set {_rgb} to {SB::robot::design::rgb::%{_design}%}
-
+  #
+  # > Set the old values back to the new head.
   set {_head} to setnbtvalue({_head},"blocks","%{_blocks}%")
   set {_head} to setnbtvalue({_head},"level","%{_level}%")
   set {_head} to setnbtvalue({_head},"robotdesign","%{_design}%")
@@ -726,47 +961,72 @@ function changerobotskdesign(player:player,design:number):
   set {_head} to setnbtvalue({_head},"robotname","%{_name}%")
   set {_head} to setnbtvalue({_head},"owner","%{_owner}%")
   set {_head} to setnbtvalue({_head},"robot","robotsk")
-
-
+  #
+  # > If the colors are enabled for the armor, set it to the predefined color.
   if {_color} is true:
     set {_meta} to {_boots}.getItemMeta()
     {_meta}.setColor({_rgb})
     {_boots}.setItemMeta({_meta})
     {_leggings}.setItemMeta({_meta})
     {_chestplate}.setItemMeta({_meta})
-
+  #
+  # > Give the robot the new armor and head.
   {_robot}.setLeggings({_leggings})
   {_robot}.setHelmet({_head})
   {_robot}.setBoots({_boots})
   {_robot}.setChestplate({_chestplate})
-
-
+#
+# > Command - robotname
+# > Arguments: <text>the new name of the robot
+# > Actions:
+# > Renames the robot. Only available for the owner of the robot.
 command /robotname [<text>]:
   trigger:
-    set {_name::*} to arg-1 split at ""
+    #
+    # > Only go forward, if the player is looking at a armor stand.
     if player's target is armor stand:
+      #
+      # > Only forward, if the target is a valid robot from robot.sk.
+	  # > This should be the case, if the NBT Tag "robot" has the value "robotsk".
       set {_value} to getnbtvalue(helmet of player's target,"robot")
       if {_value} is "robotsk":
+        #
+        # > Only allow the owner of the robot to change the name, get the owner
+        # > from the NBT data of the robot.
         set {_owneruuid} to getnbtvalue(helmet of player's target,"owner")
         #
         # > Set frequently used data into local variables.
         set {_uuid} to uuid of player
         set {_lang} to {SK::lang::%{_uuid}%}
         #
+        # > Set the argument 1 to a list and split it at every letter,
+        # > this is kind of counting the letters.
+        set {_name::*} to arg-1 split at ""
+        #
         # > Check for the limit to prevent too long names.
         set {_name::*} to arg-1 split at ""
         set {_size} to (size of {_name::*}) - 1
-        if {_size} > {@maxnamesize}:
-          if {SB::robot::maxnamesizemsg::%{SK::lang::%{_uuid}%}%} is not set:
-            set {_msg} to "{@prefix} {@maxnamesizemsg}"
-          else:
-            set {_msg} to "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::maxnamesizemsg::%{_lang}%}%"
-          replace all "<max>" with "{@maxnamesize}" in {_msg}
-          message "%{_msg}%"
-          stop
+        #
+        # > If the player is the owner of the robot, to forward.
         if player's uuid is {_owneruuid}:
+          #
+          # > If the new name is longer than the allowed size, send error message to player.
+          if {_size} > {@maxnamesize}:
+            if {SB::robot::maxnamesizemsg::%{SK::lang::%{_uuid}%}%} is not set:
+              set {_msg} to "{@prefix} {@maxnamesizemsg}"
+            else:
+              set {_msg} to "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::maxnamesizemsg::%{_lang}%}%"
+            replace all "<max>" with "{@maxnamesize}" in {_msg}
+            message "%{_msg}%"
+            stop
+          #
+          # > Set the robot as local variable.
           set {_robot} to player's target
+          #
+          # > Set the new name as coloured argument 1. This converts color codes to actual colors.
           set {_name} to coloured arg-1
+          #
+          # > Set the name depending on the status of the robot to either <new name> [on] or <new name> [off].
           if metadata value "robo" of {_robot} is 1:
             if {SB::robot::on::%{SK::lang::%{_uuid}%}%} is not set:
               set {_roboon} to "{@roboton}"
@@ -779,84 +1039,197 @@ command /robotname [<text>]:
             else:
               set {_robooff} to "%{SB::robot::robotoff::%{_lang}%}%"
             {_robot}.setCustomName("%{_name}% %{_robooff}%")
+          #
+          # > Set the new robotname NBT Tag to the new name.
           set helmet of player's target to setnbtvalue(helmet of player's target,"robotname","%{_name}%")
+          #
+          # > Send a success message to the player.
           if {SB::robot::renamedrobot::%{SK::lang::%{_uuid}%}%} is not set:
             message "{@prefix} {@renamedrobot}"
           else:
             message "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::renamedrobot::%{_lang}%}%"
+        #
+        # > If the player is not the owner of the robot, send the player that only
+		# > the owner of the robot can change the name.
         else:
           if {SB::robot::onlyrobotownererror::%{SK::lang::%{_uuid}%}%} is not set:
             message "{@prefix} {@onlyrobotownererror}"
           else:
             message "%{SB::robot::prefix::%{_lang}%}% %{SB::robot::onlyrobotownererror::%{_lang}%}%"
-
-    
+#
+# > Function - changerobotstate
+# > Parameters: <boolean>state of the robot, <player>the player who wants to toggle the robot state
+# > Actions:
+# > Changes the robot state, eg. turns it off or turns it on. [on = true | off = false]
 function changerobotstate(state:boolean,player:player):
+  #
+  # > Get the robot as a local variable.
   set {_robot} to {TMP::currentrobot::%{_player}%}
+  #
+  # > Get the uuid and language code of the player.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
+  #
+  # > Get the current name of the robot to change it, the name
+  # > gets a suffix with [on] or [off], depending if it is
+  # > enabled or disabled.
   set {_name} to getnbtvalue(helm of {_robot},"robotname")
+  #
+  # > If the robot should be enabled, do the following code.
   if {_state} is true:
+    #
+	# > Set the predefined language for [on], if not set, use
+	# > the predefined option translation.
     if {SB::robot::on::%{SK::lang::%{_uuid}%}%} is not set:
       set {_roboon} to "{@roboton}"
     else:
       set {_roboon} to {SB::robot::on::%{_lang}%}
+    #
+    # > Change the name for the right suffix (on|off).
     {_robot}.setCustomName("%{_name}% %{_roboon}%")
+    #
+    # > Add the robot to the active robot list.
     add {_robot} to {TMP::activerobo::*}
+    #
+    # > Set the metadata value of the robot with the tag "robo" to 1 to
+	# > tag the robot as enabled. This value is only temporary.
     set metadata "robo" of {_robot} to 1
+    #
+    # > Call roboanimation, this function is doing the animation and
+	# > makes the robot functional.
     roboanimation({_robot},1)
+  #
+  # > If the robot should be disabled, do the following code.
   else:
+    #
+	# > Set the predefined language for [off], if not set, use
+	# > the predefined option translation.
     if {SB::robot::robotoff::%{SK::lang::%{_uuid}%}%} is not set:
       set {_robooff} to "{@robotoff}"
     else:
       set {_robooff} to {SB::robot::robotoff::%{_lang}%}
+    #
+    # > Change the name for the right suffix (on|off).
     {_robot}.setCustomName("%{_name}% %{_robooff}%")
+    #
+    # > Remove the robot from the active robot list.
     loop {TMP::activerobo::*}:
       if loop-value is {_robot}:
         delete {TMP::activerobo::%loop-index%}
+    #
+    # > Set the metadata value of the robot with the tag "robo" to 2 to
+	# > tag the robot as disabled. This value is only temporary.
     set metadata "robo" of {_robot} to 2
-    roboanimation({_robot},1)
-  
+#
+# > Event - on inventory close
+# > Actions:
+# > If a inventory is closed, remove the variable which holds the
+# > current robot.
 on inventory close:
   delete {TMP::currentrobot::%{_player}%}
-    
+#
+# > Function - roboanimation
+# > Parameters: <entity>the robot entity, <number>move number, defines the animation cycle
+# > Actions:
+# > Animates the robot animation and gives it functionality.
 function roboanimation(robo:entity,move:number):
+  #
+  # > Create a new EulerAngle, this is used to give the robot some animations.
   set {_angle} to new EulerAngle(-0.80, 0, 0)
+  #
+  # > To know in the while loop below if it started or not, this variable
+  # > is set to true.
   set {_start} to true
+  #
+  # > The breaks per fuel item are predefined in the options and here set
+  # > to a local variable.
   set {_breaks} to {@breaksperfuel}
+  #
+  # > If the chunk at the robot is not loaded, stop here.
   if chunk at {_robo} is not loaded:
     stop
-  set {_job} to getnbtvalue(helmet of {_robo},"currentjob")
-  set {_ticks} to {SB::robot::job::ticks::%{_job}%}
-  set {_timespan} to "%{_ticks}% ticks" parsed as timespan
-  set {_movementspeed} to {SB::robot::job::movespeed::%{_job}%}
-  set {_movementspeed} to {_movementspeed} * {SB::robot::job::ticks::%{_job}%}
   #
-  # > Movements for the miner (ID 1)
+  # > Get the current job of the robot.
+  set {_job} to getnbtvalue(helmet of {_robo},"currentjob")
+  #
+  # > Get the predefined tick speed of this job.
+  set {_ticks} to {SB::robot::job::ticks::%{_job}%}
+  #
+  # > Parse the time as timespan to use it to wait (sleep) for a specific time within the loop.
+  set {_timespan} to "%{_ticks}% ticks" parsed as timespan
+  #
+  # > Set the movement speed of the job to a predefined value.
+  set {_movementspeed} to {SB::robot::job::movespeed::%{_job}%}
+  #
+  # > Calculate the movement speed with the tick speed, this allows a less fluent but correct animation.
+  set {_movementspeed} to {_movementspeed} * {_ticks}
+  #
+  # > Movements for the miner (ID 1) - currently, this is the only available movement and used by treecutter and miner.
+  # > Later, here more jobs with different animations could be added.
   while {_robo}.isValid():
+    #
+    # > Wait some time to reduce lag.
     wait {_timespan}
+    #
+    # > Get the x-angle of the EulerAngle.
     set {_x} to {_angle}.getX()
+    #
+    # > If the x-angle is equal or lower than -2.70, set the animation
+    # > cycle variable {_move} to 2.
     if {_x} <= -2.70:
       set {_move} to 2
       delete {_start}
+    #
+    # > If the x-angle is equal or higher than -0.80, set the animation
+    # > cycle variable {_move} to 1.
     if {_x} >= -0.80:
       set {_move} to 1
+      #
+      # > Get the block in front of the robot to break it.
       set {_loc} to location of block in front of {_robo}
       set {_block} to block at {_loc}
+      #
+      # > If the cycle has not started right now, try to break the block.
       if {_start} is not set:
+		#
+        # > If the block is not disallowed in the options, break it.
         if {_block} is not {@disallowedblocks}:
+          #
+          # > To update the broken blocks stats, the helmet of the robot is needed.
           set {_item} to helmet of {_robo}
-          set {_value} to getnbtvalue({_item},"blocks")
-          set {_value} to {_value} parsed as number
-          if {_value} is "":
-            set {_value} to 0
-          add 1 to {_value}
-          set {_item} to setnbtvalue({_item},"blocks","%{_value}%")
-          set helmet of {_robo} to {_item}
+          #
+          # > Get the NBT Tag data value "blocks" from the helmet.
+          set {_brokenblocks} to getnbtvalue({_item},"blocks")
+          #
+          # > Parse the value to a number to increase it by 1.
+          set {_brokenblocks} to {_brokenblocks} parsed as number
+          #
+          # > If the value has not been set, set it to 0.
+          if {_brokenblocks} is "":
+            set {_brokenblocks} to 0
+          #
+          # > Increase the block counter by 1.
+          add 1 to {_brokenblocks}
+          #
+          # > Set the new broken blocks counter back to the helmet of the robot.
+          set helmet of {_robo} to setnbtvalue({_item},"blocks","%{_brokenblocks}%")
+          #
+          # > If the fuel for the robot is enabled, handle the fuel here.
           if {@fuel} is true:
+            #
+            # > The robot takes its fuel from a chest below it.
             set {_chest} to block below {_robo}
+            #
+            # > Get the amount of the fuel items from the inventory of the chest.
             set {_amount} to amount of {@fuelitem} in {_chest}'s inventory
+            #
+            # > If there aren't any fuel items in the chest below the robot,
+			# > it is going to stop.
             if {_amount} is 0:
+              #
+              # > Disable the robot, get the owner uuid to set the suffix of the robot
+              # > name correctly. If there is no language predefined, use the fallback
+			  # > option translation.
               set {_uuid} to getnbtvalue({_item},"owner")
               if {SB::robot::robotoff::%{SK::lang::%{_uuid}%}%} is not set:
                 set {_robooff} to "{@robotoff}"
@@ -865,41 +1238,77 @@ function roboanimation(robo:entity,move:number):
               {_robo}.setCustomName("{@robotname} %{_robooff}%")
               set metadata "robo" of {_robo} to 2
               stop
+            #
+            # > Add 1 to the breaks local variable, which defines how many
+            # > blocks have been broken by the robot without fuel.
             add 1 to {_breaks}
+            #
+            # > Break the block in front of the robot naturally.
             {_block}.breakNaturally()
-
+            #
+            # > If there are more or as many breaks as defined in the options,
+            # > remove 1 fuel of the inventory of the chest and set the
+			# > breaks variable back to 0.
             if {_breaks} >= {@breaksperfuel}:
               set {_breaks} to 0
               remove 1 of {@fuelitem} from {_chest}'s inventory
+          #
+          # > If there is no fuel enabled, only break the block.
           else:
             {_block}.breakNaturally()
+      #
+      # > If the robot has been disabled somewhere else, stop it here too.
+      # > The metadata key "robo" has to be 1 to be on. If the value is 2,
+	  # > the robot is disabled.
       if metadata value "robo" of {_robo} is 2:
         stop
+    #
+    # > Multiplicate the movement animation speed depending on the tick speed.
     set {_movement3} to {_ticks} * 0.03
+    #
+    # > Change the EulerAngle depending on the animation cycle.
     if {_move} is 1:
       set {_angle} to {_angle}.subtract({_movementspeed},0,{_movement3})
     if {_move} is 2:
       set {_angle} to {_angle}.add({_movementspeed},0,{_movement3})
+    #
+    # > Set the arm pose of the robot. This job only has one change, the right arm pose.
     {_robo}.setRightArmPose({_angle})
-
+#
+# > Event - on death of armor stand
+# > Actions:
+# > If a armor stand dies, it could also be a robot,
+# > if it is a robot, drop the robot as a item and
+# > cancel normal drops.
 on death of armor stand:
+  #
+  # > Loop through the drops and search for a item with a "robot" NBT Tag.
   loop drops:
     set {_value} to getnbtvalue(loop-item,"robot")
     if {_value} is "robotsk":
       set {_item} to loop-item
       stop loop
+  #
+  # > Check if there is a value set to "robotsk".
   if {_value} is "robotsk":
+    #
+    # > This is a robot, clear the drops.
     clear drops
+    #
+    # > Remove the robot from the active robot list.
     loop {TMP::activerobo::*}:
       if loop-value is victim:
         delete {TMP::activerobo::%loop-index%}
         stop loop
+    #
+    # > Get the NBT Tag data from the old head into local variables.
     set {_loc} to location of victim
     set {_blocks} to getnbtvalue({_item},"blocks")
     set {_job} to getnbtvalue({_item},"currentjob")
     set {_design} to getnbtvalue({_item},"robotdesign")
     set {_name} to getnbtvalue({_item},"robotname")
-
+    #
+    # > Set the new robot item with the NBT Tag data from the old head.
     set {_item} to {@robotitem}
     set {_item} to {_item} named "{@robotname}"
     set line 1 of lore of {_item} to "{@robotitemlore}"
@@ -907,14 +1316,23 @@ on death of armor stand:
     set {_item} to setnbtvalue({_item},"blocks","%{_blocks}%")
     set {_item} to setnbtvalue({_item},"currentjob","%{_job}%")
     set {_item} to setnbtvalue({_item},"robotname","%{_name}%")
-
     set {_item} to setnbtvalue({_item},"robot","robotsk")
-
+    #
+    # > Drop the head at the location of the robot.
     drop {_item} at {_loc}
-    
+#
+# > Event - on chunk unload
+# > Actions:
+# > If a chunk unloads, check the active robots, if they're
+# > within it. If there is one within the unloading chunk,
+# > disable it.
 on chunk unload:
   loop {TMP::activerobo::*}:
+    #
+    # > If the looped robot is within the chunk.
     if loop-value's chunk is event-chunk:
+      #
+      # > Get the robot name and the owner for the right suffix (on|off).
       set {_name} to getnbtvalue(helm of loop-value,"robotname")
       set {_uuid} to getnbtvalue(helm of loop-value,"owner")
       set {_lang} to {SK::lang::%{_uuid}%}
@@ -923,14 +1341,30 @@ on chunk unload:
         set {_robooff} to "{@robotoff}"
       else:
         set {_robooff} to {_robotoff}
+      #
+      # > Rename the robot to give it the new suffix (off).
       loop-value.setCustomName("%{_name}% %{_robooff}%")
+      #
+      # > Set the metadata Tag "robo" if the robot to 2,
+	  # > this stops the animation.
       set metadata "robo" of loop-value to 2
-
+      #
+      # > Deletes the robot out of the active robot list.
       delete {TMP::activerobo::%loop-index%}
-
+#
+# > Event - on unload
+# > Actions:
+# > If the skript unloads or the server stops,
+# > disable all active robots.
 on unload:
+  #
+  # > Delete all temporary set robots from menus.
   delete {TMP::currentrobot::*}
+  #
+  # > Loop through all active robots to disable them.
   loop {TMP::activerobo::*}:
+    #
+    # > Get the robot name and the owner uuid to set the correct suffix (on|off).
     set {_name} to getnbtvalue(helm of loop-value,"robotname")
     set {_uuid} to getnbtvalue(helm of loop-value,"owner")
     set {_lang} to {SK::lang::%{_uuid}%}
@@ -939,18 +1373,24 @@ on unload:
       set {_robooff} to "{@robotoff}"
     else:
       set {_robooff} to {_robotoff}
+    #
+    # > Set the new name of the robot with the correct suffix (off).
     loop-value.setCustomName("%{_name}% %{_robooff}%")
+    #
+    # > Set the "robo" metadata key of the robot to 2 to disable it.
     set metadata "robo" of loop-value to 2
+    #
+    # > Remove the robot from the active robot list.
     delete {TMP::activerobo::%loop-index%}
-
-on PlayerInteractEntityEvent:
-  set {_value} to getnbtvalue(helmet of event.getRightClicked(),"robot")
-  if {_value} is "robotsk":
-    cancel event
+#
+# > Event - PlayerArmorStandManipulateEvent
+# > Actions:
+# > If the player wants to manipulate the armor stand (taking items out of it),
+# > cancel the event and open the robot main menu. This event happens always once
+# > a player clicks on the armor stand.
 on PlayerArmorStandManipulateEvent:
   set {_value} to getnbtvalue(helmet of event.getRightClicked(),"robot")
   if {_value} is "robotsk":
     cancel event
     openrobotskmenu(event.getRightClicked(),event.getPlayer())
     stop
-
