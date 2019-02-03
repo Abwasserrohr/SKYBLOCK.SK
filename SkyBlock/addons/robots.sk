@@ -511,6 +511,13 @@ command /giverobot <player>:
 # > Places a robot if the item is a valid robot.
 on place of {@robotitem}:
   #
+  # > If the player is not allowed to build on the island, cancel the
+  # > event and stop here.
+  set {_allowed} to checkislandaccess(player,event-location,"build")
+  if {_allowed} is false:
+    cancel event
+    stop
+  #
   # > Get the value saved to the nbt Tag "robot".
   set {_value} to getnbtvalue(player's tool,"robot")
   #
@@ -1391,5 +1398,11 @@ on PlayerArmorStandManipulateEvent:
   set {_value} to getnbtvalue(helmet of event.getRightClicked(),"robot")
   if {_value} is "robotsk":
     cancel event
-    openrobotskmenu(event.getRightClicked(),event.getPlayer())
-    stop
+    #
+    # > Only allow the owner of the robot to access it.
+    set {_owneruuid} to getnbtvalue(helmet of event.getRightClicked(),"owner")
+    set {_player} to event.getPlayer()
+    set {_uuid} to uuid of {_player}
+    if {_uuid} is {_owneruuid}:
+      openrobotskmenu(event.getRightClicked(),event.getPlayer())
+      stop
