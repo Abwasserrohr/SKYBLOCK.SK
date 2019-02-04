@@ -138,12 +138,6 @@ function createisland(p:player,island:text="1"):
         set {_backloc} to {_p}'s location
         subtract 1 from y-coord of {_loc}
         #
-        # > Set barrier below the location and teleport the player there.
-        set block at {_loc} to barrier
-        add 1 to y-coord of {_loc}
-        teleport {_p} to {_loc}
-        wait 5 ticks
-        #
         # > Prepare location for strucure file format.
         set {_loccx} to "%x-coord of {_loc}%"
         set {_loccy} to "%y-coord of {_loc}%"
