@@ -89,20 +89,20 @@ on load:
   set {SB::config::challenges::c::1::7::repeatsperday} to 5
 
   set {SB::config::challenges::c::2::1::needed} to "16-oak log,16-spruce log,16-birch log,16-jungle log,16-acacia log,16-dark oak log"
-  set {SB::config::challenges::c::2::1::reward} to "20-xp,16-redstone dust,5-iron ore,1-wolf spawner egg"
-  set {SB::config::challenges::c::2::1::repeatreward} to "1-xp,3-redstone dust,1-iron ore,1-nether wart"
+  set {SB::config::challenges::c::2::1::reward} to "20-xp,16-redstone dust,5-iron ore,1-wolf spawn egg"
+  set {SB::config::challenges::c::2::1::repeatreward} to "1-xp,3-redstone dust,1-iron ore,1-nether wart item"
   set {SB::config::challenges::c::2::1::item} to oak log
   set {SB::config::challenges::c::2::1::repeat} to true
   set {SB::config::challenges::c::2::1::repeatsperday} to 5
 
-  set {SB::config::challenges::c::2::2::needed} to "3-diamond,2-iron bar"
+  set {SB::config::challenges::c::2::2::needed} to "3-diamond,2-iron ingot"
   set {SB::config::challenges::c::2::2::reward} to "150-xp,3-dirt"
   set {SB::config::challenges::c::2::2::repeatreward} to "10-xp,1-dirt"
   set {SB::config::challenges::c::2::2::item} to dirt
   set {SB::config::challenges::c::2::2::repeat} to true
   set {SB::config::challenges::c::2::2::repeatsperday} to 5
 
-  set {SB::config::challenges::c::2::3::needed} to "64-nether wart"
+  set {SB::config::challenges::c::2::3::needed} to "64-nether wart item"
   set {SB::config::challenges::c::2::3::reward} to "45-xp,8-soul sand,16-netherrack"
   set {SB::config::challenges::c::2::3::repeatreward} to "3-xp,1-soul sand,1-magma block,8-netherrack"
   set {SB::config::challenges::c::2::3::item} to netherrack
@@ -144,9 +144,9 @@ on load:
   set {SB::config::challenges::c::3::1::repeat} to true
   set {SB::config::challenges::c::3::1::repeatsperday} to 5
 
-  set {SB::config::challenges::c::3::2::needed} to "64-raw fish"
-  set {SB::config::challenges::c::3::2::reward} to "150-xp,4-sea pickle,4-kelp,2-nautilus shell,4-tube coral fan,4-brain coral fan,4-bubble coral fan,4-fire coral fan,4-horn coral fan"
-  set {SB::config::challenges::c::3::2::repeatreward} to "10-xp,2-sea pickle,2-kelp,1-nautilus shell,4-tube coral fan,4-brain coral fan,4-bubble coral fan,4-fire coral fan,4-horn coral fan"
+  set {SB::config::challenges::c::3::2::needed} to "64-raw cod"
+  set {SB::config::challenges::c::3::2::reward} to "150-xp,4-sea pickle,4-kelp,2-nautilus shell"
+  set {SB::config::challenges::c::3::2::repeatreward} to "10-xp,2-sea pickle,2-kelp,1-nautilus shell"
   set {SB::config::challenges::c::3::2::item} to raw cod
   set {SB::config::challenges::c::3::2::repeat} to true
   set {SB::config::challenges::c::3::2::repeatsperday} to 5
