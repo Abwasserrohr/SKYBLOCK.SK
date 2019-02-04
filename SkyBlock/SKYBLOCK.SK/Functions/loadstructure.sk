@@ -45,7 +45,9 @@ function loadstructure(location:location,file:text,nomobs:boolean=false,rotation
   # > Get the current world from the location.
   set {_world} to {_location}.getWorld().getHandle()
   #
-  # > Set the rotation
+  # > Set the rotation, to keep it simple for users,
+  # > it accepts numbers which are here "converted" into EnomBlockMirror
+  # > types.
   if {_rotation} is 90:
     set {_rotation} to EnumBlockMirror.CLOCKWISE_90!
   else if {_rotation} is 180:
