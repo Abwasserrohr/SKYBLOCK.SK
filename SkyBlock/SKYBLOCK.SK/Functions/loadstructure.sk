@@ -1,0 +1,70 @@
+#
+# ==============
+# loadstructure.sk
+# ==============
+# loadstructure.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Import all necessary bukkit and nms classes needed to load nbt structures.
+import: 
+  org.bukkit.Bukkit
+
+option nms:
+  get: 
+    set {_nms version} to Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
+    return "net.minecraft.server.%{_nms version}%"
+
+import:
+  {@nms}.BlockPosition
+  {@nms}.DefinedStructure
+  {@nms}.DefinedStructureInfo
+  {@nms}.EnumBlockMirror
+  {@nms}.EnumBlockRotation
+  {@nms}.NBTCompressedStreamTools
+  java.io.FileInputStream
+
+#
+# > function - loadstructure
+# > Parameters:
+# > <location>the location corner, remove 16 from the x- and z-coord to get a´n centered structure paste
+# > <text>file location, starting from the plugins/ folder
+# > [<boolean>]false to also place mobs which are in the structure file
+# > [<number>]the rotation. Possible are: 0,90,180,270
+function loadstructure(location:location,file:text,nomobs:boolean=false,rotation:number=0):
+  #
+  # > Create a new structure
+  set {_structure} to new DefinedStructure()
+  #
+  # > Open a file stream to get the nbt file.
+  set {_stream} to new FileInputStream({_file})
+  #
+  # > Get the file from the stream as valid NBT structure using NBTCompressedStreamTools.
+  {_structure}.b(NBTCompressedStreamTools.a({_stream}))
+  #
+  # > Get the current world from the location.
+  set {_world} to {_location}.getWorld().getHandle()
+  #
+  # > Set the rotation, to keep it simple for users,
+  # > it accepts numbers which are here "converted" into EnomBlockMirror
+  # > types.
+  if {_rotation} is 90:
+    set {_rotation} to EnumBlockMirror.CLOCKWISE_90!
+  else if {_rotation} is 180:
+    set {_rotation} to EnumBlockMirror.CLOCKWISE_180!
+  else if {_rotation} is 270:
+    set {_rotation} to EnumBlockMirror.COUNTERCLOCKWISE_90!
+  else:
+    set {_rotation} to EnumBlockMirror.NONE!
+  #
+  # > Define structure info.
+  set {_structureinfo} to new DefinedStructureInfo().a(EnumBlockMirror.NONE!).a({_rotation}).a({_nomobs})
+  #
+  # > Set the position as Blockposition.
+  set {_position} to new BlockPosition(x-coord of {_location}, y-coord of {_location}, z-coord of {_location})
+  #
+  # > Load the structure into the world.
+  {_structure}.a({_world}, {_position}, {_structureinfo})
+  #
+  # > Set the file stream to null to stop the stream.
+  set {_stream} to null

@@ -138,12 +138,6 @@ function createisland(p:player,island:text="1"):
         set {_backloc} to {_p}'s location
         subtract 1 from y-coord of {_loc}
         #
-        # > Set barrier below the location and teleport the player there.
-        set block at {_loc} to barrier
-        add 1 to y-coord of {_loc}
-        teleport {_p} to {_loc}
-        wait 5 ticks
-        #
         # > Prepare location for strucure file format.
         set {_loccx} to "%x-coord of {_loc}%"
         set {_loccy} to "%y-coord of {_loc}%"
@@ -163,13 +157,12 @@ function createisland(p:player,island:text="1"):
         #
         # > If structure files are defined as format, set a structure_block to load the file.
         if {SB::config::isstorage} is "Structure":
-          execute console command "/setblock %{_loccx}% %{_loccy}% %{_loccz}% minecraft:structure_block[mode=load]{name:""%{_schematic}%"",posX:-16,posY:-1,posZ:-16,rotation:""NONE"",mirror:""NONE"",mode:""LOAD""} destroy"
-          wait 5 ticks
-          subtract 1 from y-coord of {_loc}
           #
-          # > Execute the structure block.
-          execute console command "/setblock %{_loccx}% %{_loccy}-1% %{_loccz}% minecraft:redstone_block"
-          wait 5 ticks
+          # > Create a new location with the correct coordinates and then call the loadstructure function.
+          set {_pasteloc} to location at {_loccx}, {_loccy}, {_loccz} in "%{SB::config::world}%" parsed as world
+          remove 16 from x-coord of {_pasteloc}
+          remove 16 from z-coord of {_pasteloc}
+          loadstructure({_pasteloc},"plugins/Skript/scripts/SkyBlock/islands/%{_schematic}%.nbt")
         else if {SB::config::isstorage} is "Schematic":
           #
           # Schematics are currently not supported. 1.13 still has some issues.

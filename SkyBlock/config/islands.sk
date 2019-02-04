@@ -22,10 +22,10 @@ on load:
   add 0 to {SB::schematics::price::*}
   #
   # > Set chest content for this schematic and also the relative location for the chest
-  set {SB::schematics::loc::%{_schematicname}%::chest} to "0,6,2"
+  set {SB::schematics::loc::%{_schematicname}%::chest} to "0,7,2"
   #
   # > Set the teleport location for this shematic in relation:
-  set {SB::schematics::loc::%{_schematicname}%::home} to "-1,5,-1"
+  set {SB::schematics::loc::%{_schematicname}%::home} to "-1,6,-1"
 
   #
   # > Set the chest for this island:
