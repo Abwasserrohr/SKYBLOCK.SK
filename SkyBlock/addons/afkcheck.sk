@@ -1,0 +1,166 @@
+#
+# ==============
+# afkcheck.sk v0.0.1
+# ==============
+# Check your players for being afk without using the chat.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13+ - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > Add robots.sk to your "plugins/Skript/scripts" folder and then reload.
+# > Use the command /afkcheck <name> check a player for being afk.
+# --------------
+#
+#
+# > Change this addon either here in the options or below as you want.
+options:
+  #
+  # > If the team checks a player, this is the time the
+  # > player has time to respond.
+  timer: 60
+  #
+  # > Set the permission of the team which should be
+  # > allowed to use the /afkcheck command.
+  teampermission: team
+  #
+  # > Fallback translations
+  prefix: &7[&6AFK&7] &8>>&7
+  title: AFK Check
+  subtitle: Please write &6&l/afkok
+  noresponse: <player> didn't respond.
+  notafk: You're not afk. Thank you for letting us know.
+  onlyifasked: Only type in this comment if you get asked to do it.
+  playernotafk: <player> has responded after <time> seconds.
+  #
+  # > Set the colors of the addon here, these are used, if there is
+  # > no default color schema set in the SKYBLOCK.SK config.
+  primarycolor: &6
+  warncolor: &4
+  background: &8
+#
+# > Command - afkcheck
+# > Arguments:
+# > <player>the player who should be checked for afk
+# > Actions:
+# > The command starts a while loop and asks the defined paraemter player
+# > to type in /afkok to let the team know that the player isn't afk.
+command /afkcheck <player>:
+  permission: {@teampermission}
+  trigger:
+    set {_player} to arg-1
+    #
+    # > Set frequently used data into local variables.
+    set {_uuid} to uuid of {_player}
+    set {_lang} to {SK::lang::%{_uuid}%}
+    set {TMP::afkcheck::%{_player}%} to true
+    set {_timer} to {@timer}
+    #
+    # > Set the translations to either the defined
+    # > language or the fallback translation.
+    if {SB::lang::afkcheck::title::%{_lang}%} is not set:
+      set {_title} to "{@title}"
+    else:
+      set {_title} to {SB::lang::afkcheck::title::%{_lang}%}
+    if {SB::lang::afkcheck::subtitle::%{_lang}%} is not set:
+      set {_subtitle} to "{@subtitle}"
+    else:
+      set {_subtitle} to {SB::lang::afkcheck::subtitle::%{_lang}%}
+    if {SB::lang::prefix::%{_lang}%} is not set:
+      set {_prefix} to "{@prefix}"
+    else:
+      set {_prefix} to {SB::lang::prefix::%{_lang}%}
+    if {SB::config::color::primary::1} is not set:
+      set {_primary} to "{@primarycolor}"
+    else:
+      set {_primary} to {SB::config::color::primary::1}
+    if {SB::config::color::background::1} is not set:
+      set {_background} to "{@background}"
+    else:
+      set {_background} to {SB::config::color::background::1}
+    if {SB::config::color::warn::1} is not set:
+      set {_warn} to "{@warncolor}"
+    else:
+      set {_warn} to {SB::config::color::warn::1}
+    #
+    # > If the player goes offline, stop the while loop.
+    while {_player} is online:
+      #
+      # > If the afkcheck variable is not true, stop the while loop here.
+      if {TMP::afkcheck::%{_player}%} is not true:
+        stop loop
+      if {_timer} <= 10:
+        send title "%{_title}%%{_warn}%[%{_timer}%]" with subtitle "%{_subtitle}%" to {_player} for 2 seconds with fadein 0 ticks and fadeout 0 ticks
+        send action bar "%{_background}%&l%{_title}% | %{_player}% | [%{_timer}%]" to player
+      else:
+        send title "%{_title}% %{_primary}%[%{_timer}%]" with subtitle "%{_subtitle}%" to {_player} for 2 seconds with fadein 0 ticks and fadeout 0 ticks
+        send action bar "%{_background}%&l%{_title}% | %{_player}% | [%{_timer}%]" to player
+      remove 1 from {_timer}
+      #
+      # > If the timer variable is lower than 0, stop the while loop here.
+      if {_timer} < 0:
+        send title "%{_title}% %{_warn}%[0]" with subtitle "%{_subtitle}%" to {_player} for 1 seconds with fadein 0 ticks and fadeout 0 ticks
+        set {TMP::afkcheck::%{_player}%} to false
+        stop loop
+      wait 1 second
+    #
+    # > Inform the team member about the status. Also use fallback translations,
+    # > if they're needed.
+    set {_lang} to {SK::lang::%uuid of player%}
+    if {TMP::afkcheck::%{_player}%} is set:
+      if {SB::lang::afkcheck::noresponse::%{_lang}%} is not set:
+        set {_noresponse} to "{@noresponse}"
+      else:
+        set {_noresponse} to {SB::lang::afkcheck::noresponse::%{_lang}%}
+      replace all "<player>" with "%{_player}%" in {_noresponse}
+      message "%{_prefix}% %{_noresponse}%"
+    else:
+      if {SB::lang::afkcheck::playernotafk::%{_lang}%} is not set:
+        set {_responded} to "{@playernotafk}"
+      else:
+        set {_responded} to {SB::lang::afkcheck::playernotafk::%{_lang}%}
+      replace all "<player>" with "%{_player}%" in {_responded}
+      replace all "<time>" with "%{@timer} - {_timer}%" in {_responded}
+      message "%{_prefix}% %{_responded}%"
+#
+# > Command - afkok
+# > Actions:
+# > The command should be used by a player who has been
+# > specified with /afkcheck <player> and can confirm
+# > here that the defined player isn't afk.
+command /afkok:
+  trigger:
+    #
+    # > Set frequently used data into local variables.
+    set {_uuid} to uuid of player
+    set {_lang} to {SK::lang::%{_uuid}%}
+    #
+    # > Set the translations to either the defined
+    # > language or the fallback translation.
+    if {SB::lang::prefix::%{_lang}%} is not set:
+      set {_prefix} to "{@prefix}"
+    else:
+      set {_prefix} to {SB::lang::prefix::%{_lang}%}
+    #
+    # > If a afk check is active, delete it and inform the
+    # > player that the command was successful.
+    if {TMP::afkcheck::%player%} is set:
+      delete {TMP::afkcheck::%player%}
+      if {SB::lang::afkcheck::notafk::%{_lang}%} is not set:
+        set {_notafk} to "{@notafk}"
+      else:
+        set {_notafk} to {SB::lang::afkcheck::notafk::%{_lang}%}
+      message "%{_prefix}% %{_notafk}%"
+    #
+    # > If there is no afk check active, kick the player to prevent
+    # > automatic command inputs every 30 seconds from bots.
+    else:
+      if {SB::lang::afkcheck::onlyifasked::%{_lang}%} is not set:
+        set {_onlyifasked} to "{@onlyifasked}"
+      else:
+        set {_onlyifasked} to {SB::lang::afkcheck::onlyifasked::%{_lang}%}
+      message "%{_prefix}% %{_onlyifasked}%"
+      kick player

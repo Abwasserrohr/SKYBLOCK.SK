@@ -125,6 +125,7 @@ on load:
   # > Change this to match the colors with your corporate identity
   set {SB::config::color::primary::1} to "&6"
   set {SB::config::color::primary::2} to "&e"
+  set {SB::config::color::warn::1} to "&4"
   set {SB::config::color::secondary::2} to "&7"
   set {SB::config::color::background::1} to "&8"
 
