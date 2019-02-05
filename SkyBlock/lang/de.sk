@@ -367,6 +367,15 @@ on script load:
   set {SB::lang::lootbox::clicktoopen::%{_lang}%} to "%{_s1}%Klicke %{_p1}%hier%{_s1}%,\n%{_s1}%um zu öffnen."
   
   #
+  # > AFK Check
+  set {SB::lang::afkcheck::title::%{_lang}%} to "AFK Check"
+  set {SB::lang::afkcheck::subtitle::%{_lang}%} to "Bitte schreibe &6&l/afkok"
+  set {SB::lang::afkcheck::noresponse::%{_lang}%} to "<player> hat nicht geantwortet."
+  set {SB::lang::afkcheck::notafk::%{_lang}%} to "Du bist nicht afk. Danke für deine Mitteilung."
+  set {SB::lang::afkcheck::onlyifasked::%{_lang}%} to "Schreibe diesen Befehl nur, wenn du danach gefragt wirst."
+  set {SB::lang::afkcheck::playernotafk::%{_lang}%} to "<player> hat nach <time> Sekunden geantwortet."
+
+  #
   # > Robots
   #
   # > Robot jobs
