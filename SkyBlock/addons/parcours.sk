@@ -108,6 +108,13 @@ on dispense of bedrock:
 						actionbar(loop-player,"&4Invalid finish")
 			stop
 			
+on damage of player:
+	if metadata value "parcour" of victim is "ingame":
+		cancel event
+		if "%damage cause%" is "void":
+			parcourcheckpoint(victim)
+			
+			
 function startparcourtimer(player:player,parcourid:text):
 	set {_runid} to metadata value "runid" of {_player}
 	set {_start} to now
@@ -152,9 +159,7 @@ on rightclick holding sign:
 	if player's gamemode is adventure:
 		if metadata value "parcour" of player is "ingame":
 			cancel event
-			apply potion of resistance of tier 5 to player for 1 second
-			set {_checkpoint} to metadata value "checkpoint" of player
-			teleport player to {_checkpoint}
+			parcourcheckpoint(player)
 			
 on rightclick holding eye of ender:
 	if player's gamemode is adventure:
@@ -185,6 +190,11 @@ on inventory open:
 		if metadata value "parcour" of player is "ingame":
 			cancel event
 			message "Während dem Parkour sind Inventare gespeert."
+
+function parcourcheckpoint(player:player):
+	apply potion of resistance of tier 5 to {_player} for 1 second
+	set {_checkpoint} to metadata value "checkpoint" of {_player}
+	teleport {_player} to {_checkpoint}
 
 function exitparcour(player:player):
 	clear {_player}'s inventory
@@ -276,9 +286,7 @@ command /checkpoint:
 	aliases: /cp
 	trigger:
 		if metadata value "parcour" of player is "ingame":
-			apply potion of resistance of tier 5 to player for 1 second
-			set {_checkpoint} to metadata value "checkpoint" of player
-			teleport player to {_checkpoint}
+			parcourcheckpoint(player)
 		
 on place of {@parcouritem}:
 	set {_value} to getnbtvalue(player's tool,"type")
