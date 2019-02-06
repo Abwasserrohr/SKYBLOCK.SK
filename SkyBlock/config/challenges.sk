@@ -103,8 +103,8 @@ on load:
   set {SB::config::challenges::c::2::2::repeatsperday} to 5
 
   set {SB::config::challenges::c::2::3::needed} to "64-nether wart item"
-  set {SB::config::challenges::c::2::3::reward} to "45-xp,8-soul sand,16-netherrack"
-  set {SB::config::challenges::c::2::3::repeatreward} to "3-xp,1-soul sand,1-magma block,8-netherrack"
+  set {SB::config::challenges::c::2::3::reward} to "45-xp,32-netherrack"
+  set {SB::config::challenges::c::2::3::repeatreward} to "3-xp,1-magma block,18-netherrack"
   set {SB::config::challenges::c::2::3::item} to netherrack
   set {SB::config::challenges::c::2::3::repeat} to true
   set {SB::config::challenges::c::2::3::repeatsperday} to 5
@@ -151,14 +151,14 @@ on load:
   set {SB::config::challenges::c::3::2::repeat} to true
   set {SB::config::challenges::c::3::2::repeatsperday} to 5
 
-  set {SB::config::challenges::c::3::3::needed} to "9-tube coral,9-brain coral,9-bubble coral,9-fire coral,9-horn coral"
-  set {SB::config::challenges::c::3::3::reward} to "150-xp,2-tube coral block,2-brain coral block,2-bubble coral block,2-fire coral block,2-horn coral block"
-  set {SB::config::challenges::c::3::3::repeatreward} to "10-xp,1-tube coral block,1-brain coral block,1-bubble coral block,1-fire coral blck,1-horn coral block"
+  set {SB::config::challenges::c::3::3::needed} to "9-living tube coral plant,9-living brain coral plant,9-living bubble coral plant,9-living fire coral plant,9-living horn coral plant"
+  set {SB::config::challenges::c::3::3::reward} to "150-xp,2-living tube coral block,2-living brain coral block,2-living bubble coral block,2-living fire coral block,2-living horn coral block"
+  set {SB::config::challenges::c::3::3::repeatreward} to "10-xp,1-living tube coral block,1-living brain coral block,1-living bubble coral block,1-living fire coral blck,1-living horn coral block"
   set {SB::config::challenges::c::3::3::item} to living pink coral block
   set {SB::config::challenges::c::3::3::repeat} to true
   set {SB::config::challenges::c::3::3::repeatsperday} to 5
 
-  set {SB::config::challenges::c::3::4::needed} to "64-tube coral block,64-brain coral block,64-bubble coral block,64-fire coral block,64-horn coral block"
+  set {SB::config::challenges::c::3::4::needed} to "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
   set {SB::config::challenges::c::3::4::reward} to "150-xp,1-heart of the sea"
   set {SB::config::challenges::c::3::4::repeatreward} to "10-xp,1-heart of the sea"
   set {SB::config::challenges::c::3::4::item} to heart of the sea
