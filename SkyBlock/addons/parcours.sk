@@ -1,0 +1,795 @@
+#
+# ==============
+# parcours.sk v0.0.1
+# ==============
+# Let players create jump and run parcours. There are start, checkpoint and finish blocks which can
+# be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
+# some parcours if they want to do that.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > SKQuery - https://www.spigotmc.org/resources/unofficial-skquery-fork-1-6-1-12.36631/
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > First use: Place parcours.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Commands: /giveparcour <player>
+# > Usage for players: Place the blocks and use the inventory of these blocks to get
+# > checkpoint and finish blocks. They can be removed using their inventory menu.
+# > To disable, simply put a "-" in front of this file name.
+
+#
+# > If you want to change the look or settings, here are the options.
+# > You can also change the skript itself to work as you want.
+options:
+  #
+  # > This item will be given to the players when they get a parcour
+  # > set through the /giveparcour <player> command.
+  parcouritem: sticky piston
+  #
+  # > This is the block which is going to be placed on top of a
+  # > parcour block. It has to trigger the block below.
+  pressureplate: stone pressure plate
+  #
+  # > This is the block which stores the parcour data. It needs a inventory
+  # > and has to spit out items on a redstone signal.
+  parcourblock: upward dropper
+  #
+  # > This block should be the same as above but without any direction definition.
+  parcourblock1: dropper
+  #
+  # > Define the parcour inventory items for the player.
+  itemcheckpoint: floor sign
+  itemrestart: eye of ender
+  itemexit: barrier
+  #
+  # > These are the items which are displayed in the menu, feel free to change
+  # > them as you want.
+  menuitemcheckpoint: heavy weighted pressure plate
+  menuitemfinish: light weighted pressure plate
+  menuitembreak: barrier
+  #
+  # > Fallback translations
+  # > The fallback translations are used if there isn't the right
+  # > language available for this part of SKYBLOCK.SK.
+  guiheader: &lParcour
+  prefix: &7[&6Parcour&7]
+  checkpointreached: Checkpoint reached
+  checkpointinvalid: &4Invalid Checkpoint
+  finishinvalid: &4Invalid finish
+  itemcheckpointname: &rCheckpoint
+  itemrestartname: &rRestart
+  itemexitname: &rExit
+  parcourunloaded: The parcour has been unloaded. Thank you for playing.
+  finishmsg: Congratulations! You have reached the finish.
+  yourtime: Your time: <time>
+  menucheckpointitemname: Checkpoint Plate
+  menufinishitemname: Finish Plate
+  menuremoveblockname: Remove this parcour block
+  menucheckpointitemlore: Get a checkpoint plate to place.
+  menufinishitemlore: Get a finish plate to place.
+  menuremoveblocklore: You get it back as item.
+  noinventoryinparcour: You can't open inventories while in the parcour.
+  parcouritemcheckpoint: &r&eParcour - Checkpoint
+  parcouritemfinish: &r&eParcour - Goal
+  parcouritemstart: &r&eParcour - Start
+  
+import:
+  java.util.UUID
+
+#
+# > Commands
+
+#
+# > Command - /giveparcour
+# > Arguments:
+# > <player>the player who should get the parcour block
+# > Actions:
+# > Gives the player a parcour start block usingg the
+# > getparcourtools function, also defined a new
+# > random uuid for each newly given out parcour tool start block.
+command /giveparcour <player>:
+  permission: is.admin
+  trigger:
+    set {_parcourid} to UUID.randomUUID()
+    getparcourtools(arg-1,3,"%{_parcourid}%")
+    
+#
+# > Command - /checkpoint
+# > Actions:
+# > If the player wants to get back to the checkpoint,
+# > /checkpoint or /cp is teleporting the player
+# > back to the last checkpoint.
+command /checkpoint:
+  aliases: /cp
+  trigger:
+    if metadata value "parcour" of player is "ingame":
+      parcourcheckpoint(player)
+
+#
+# > Events
+
+#
+# > Event - on dispense of bedrock
+# > Actions:
+# > If a bedrock gets dispended, it is very likely that this is a parcour
+# > bedrock, if the name of the block is also "parcour", the event is
+# > cancelled and players in the area are looped to either start a parcour,
+# > set a checkpoint or finish the parcour.
+on dispense of bedrock:
+  if name of event-item is "parcour":
+    cancel event
+    #
+    # > Set some data to a local variable, which is needed
+    # > later.
+    set {_item} to event-item
+    set {_type} to getnbtvalue({_item},"type")
+    set {_parcourid} to getnbtvalue({_item},"id")
+    set {_loc} to event-location
+    add 1 to y-coord of {_loc}
+    #
+    # > The block is a parcour checkpoint.
+    if {_type} is "checkpoint":
+      #
+      # > Loop around all players within the location.
+      loop players in radius 1.5 of {_loc}:
+        #
+        # > Only continue, if the loop player is within the parcour mode
+        # > and has the same parcour id as the block.
+        if metadata value "parcour" of loop-player is "ingame":
+          if metadata value "parcourid" of loop-player is {_parcourid}:
+            set {_blocklocation} to location of event-block
+            add 0.5 to y-coord of {_blocklocation}
+            #
+            # > Get the language code of the player
+            set {_lang} to getlangcode(loop-player)
+            #
+            # > Heal and feed the player.
+            healandfeed(loop-player)
+            #
+            # > If this checkpoint location isn't already set, send a subtitle message.
+            if metadata value "checkpoint" of loop-player is not {_blocklocation}:
+              #
+              # > Check for translation, if not available, use fallback.
+              if {SB::lang::parcour::checkpointreached::%{_lang}%} is not set:
+                set {_msg} to "{@checkpointreached}"
+              else:
+                set {_msg} to {SB::lang::parcour::checkpointreached::%{_lang}%}
+              send subtitle "%{_msg}%" to loop-player for 0.5 seconds with fadein 5 tick and fade out 5 tick
+            #
+            # > Set the new location to the checkpoint metadata of the player.
+            set metadata "checkpoint" of loop-player to {_blocklocation}
+          #
+          # > If the parcour id isn't the same, send a error.
+          else:
+            #
+            # > Check for translation, if not available, use fallback.
+            if {SB::lang::parcour::checkpointinvalid::%{_lang}%} is not set:
+              set {_msg} to "{@checkpointinvalid}"
+            else:
+              set {_msg} to {SB::lang::parcour::checkpointinvalid::%{_lang}%}
+            send subtitle "%{_msg}%" to loop-player for 0.5 seconds with fadein 5 tick and fade out 5 tick
+    #
+    # > The block is a parcour start.
+    else if {_type} is "start":
+      set {_creatoruuid} to getnbtvalue({_item},"creator")
+      set {_creator} to {_creatoruuid} parsed as player
+      loop players in radius 1 of {_loc}:
+        set {_blocklocation} to location of event-block
+        add 0.5 to y-coord of {_blocklocation}
+        #
+        # > Set the parcour id and the run id to a metadata value on the
+        # > player to prevent cheating later.
+        set metadata "parcourid" of loop-player to {_parcourid}
+        set metadata "runid" of loop-player to UUID.randomUUID()
+        #
+        # > Get the language code of the player
+        set {_lang} to getlangcode(loop-player)
+        #
+        # > Start the parcour timer.
+        startparcourtimer(loop-player,{_parcourid})
+        #
+        # > If the player has not already activated this start, set a checkpoint
+        # > and startpoint there to get back if the player wants.
+        if metadata value "checkpoint" of loop-player is not {_blocklocation}:
+          set metadata "checkpoint" of loop-player to {_blocklocation}
+          set metadata "startpoint" of loop-player to {_blocklocation}
+          if metadata value "parcour" of loop-player is not "ingame":
+            saveinventory(loop-player)
+            clear loop-player's inventory
+            #
+            # > Check for translation, if not available, use fallback.
+            if {SB::lang::parcour::itemcheckpointname::%{_lang}%} is not set:
+              set {_name1} to "{@itemcheckpointname}"
+              set {_name2} to "{@itemrestartname}"
+              set {_name3} to "{@itemexitname}"
+            else:
+              set {_name1} to {SB::lang::parcour::itemcheckpointname::%{_lang}%}
+              set {_name2} to {SB::lang::parcour::itemrestartname::%{_lang}%}
+              set {_name3} to {SB::lang::parcour::itemexitname::%{_lang}%}
+            set {_item1} to 1 of {@itemcheckpoint} named "%{_name1}%"
+            set {_item2} to 1 of {@itemrestart} named "%{_name2}%"
+            set {_item3} to 1 of {@itemexit} named "%{_name3}%"
+            #
+            # > Give the player a parcour item inventory to use.
+            set slot 0 of loop-player's inventory to {_item1}
+            set slot 4 of loop-player's inventory to {_item2}
+            set slot 8 of loop-player's inventory to {_item3}
+          #
+          # > Mark the player as parcour player and also set the
+          # > game mode to adventure, then heal the player.
+          set metadata "parcour" of loop-player to "ingame"
+          set gamemode of loop-player to adventure
+          healandfeed(loop-player)
+    #
+    # > The block is a parcour goal.
+    else if {_type} is "finish":
+      loop players in radius 1 of {_loc}:
+        #
+        # > Only continue, if the loop player is within the parcour mode
+        # > and has the same parcour id as the block.
+        if metadata value "parcour" of loop-player is "ingame":
+          if metadata value "parcourid" of loop-player is {_parcourid}:
+            set {_blocklocation} to location of event-block
+            add 0.5 to y-coord of {_blocklocation}
+            set {_player} to loop-player
+            #
+            # > Get the language code of the player
+            set {_lang} to getlangcode(loop-player)
+            #
+            # > Only allow the player to finish the game if it hasn't
+            # > been finished by the player a second before.
+            if metadata value "checkpoint" of loop-player is not "finish":
+              #
+              # > Check for translation, if not available, use fallback.
+              # > Tell the player that this is the goal.
+              if {SB::lang::parcour::finishmsg::%{_lang}%} is not set:
+                message "{@prefix} {@finishmsg}" to loop-player
+                set {_msg} to "{@prefix} {@yourtime}"
+                set {_subtitle} to "{@finishmsg}"
+              else:
+                message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::finishmsg::%{_lang}%}%" to loop-player
+                set {_msg} to "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::yourtime::%{_lang}%}%"
+                set {_subtitle} to "%{SB::lang::parcour::finishmsg::%{_lang}%}%"
+              set {_start} to metadata value "%{_parcourid}%-start" of loop-player
+              set {_diff} to difference between now and {_start}
+              #
+              # > Send the player the time it took to get to the goal.
+              send subtitle "%{_subtitle}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
+              replace all "<time>" with "%{_diff}%" in {_msg}
+              message "%{_msg}%" to loop-player
+              set metadata "checkpoint" of loop-player to "finish"
+              delete metadata "%{_parcourid}%-start" of {_player}
+              exitparcour(loop-player)
+          #
+          # > If the parcour id isn't the same, send a error.
+          else:
+            #
+            # > Check for translation, if not available, use fallback.
+            if {SB::lang::parcour::finishinvalid::%{_lang}%} is not set:
+              set {_msg} to "{@finishinvalid}"
+            else:
+              set {_msg} to {SB::lang::parcour::finishinvalid::%{_lang}%}
+            #
+            # > Send the error as a subtitle.
+            send subtitle "%{_msg}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
+
+#
+# > Event - on damage of player
+# > Actions:
+# > Cancel any damage that occurs to the player while being in a
+# > parcour. If the player gets damage by the void, teleport the
+# > player back to the checkpoint.
+on damage of player:
+  if metadata value "parcour" of victim is "ingame":
+    cancel event
+    if "%damage cause%" is "void":
+      parcourcheckpoint(victim)
+
+#
+# > Event - on inventory click
+# > Actions:
+# > To prevent duplication gliches of the parcour items,
+# > prevent any inventory clicks while in the parcour.
+on inventory click:
+  if player's gamemode is adventure:
+    if {SK::GUI::inv::%player%} is not set:
+      if metadata value "parcour" of player is "ingame":
+        cancel event
+
+#
+# > Event - on rightclick holding the predefined checkpoint item
+# > Actions:
+# > If a player is within the parcour, cancel the event and teleport
+# > the player back to the checkpoint using the parcourcheckpoint function.
+on rightclick holding {@itemcheckpoint}:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      cancel event
+      parcourcheckpoint(player)
+
+#
+# > Event - on rightclick holding the predefined restart item
+# > Actions:
+# > If a player is within the parcour, cancel the event and teleport
+# > the player back to start. Also apply resistance of level 5, which
+# > makes the player invulnerable.
+on rightclick holding {@itemrestart}:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      cancel event
+      apply potion of resistance of tier 5 to player for 1 second
+      set {_checkpoint} to metadata value "startpoint" of player
+      teleport player to {_checkpoint}
+
+#
+# > Event - on rightclick holding the predefined exit item
+# > Actions:
+# > If a player is in the adventure gamemode and has a exit item, let the player
+# > exit the parcour. The metadata value isn't checked because on server restarts
+# > or crashes, the value isn't saved. Also cancel the event.
+on rightclick holding {@itemexit}:
+  if player's gamemode is adventure:
+    cancel event
+    exitparcour(player)
+
+#
+# > Event - on pickup
+# > Actions:
+# > If a player wants to pickup items while in the parcour
+# > cancel the event to prevent item loss, since the player
+# > can't drop anything while in that mode.
+on pickup:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      cancel event
+
+#
+# > Event - on drop
+# > Actions:
+# > If a player wants to drop items while in the parcour
+# > cancel the event to prevent parcour items from being
+# > duplicated.
+on drop:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      cancel event
+
+#
+# > Event - on quit
+# > Actions:
+# > If a player leaves the game while in a parcour,
+# > leave the parcour for the player to prevent
+# > inventory loss.
+on quit:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      exitparcour(player)
+
+#
+# > Event - on unload
+# > Actions:
+# > If this skript unloads, throw all players out who
+# > are currently in a parcour to restore their inventory
+# > to prevent any item loss or faulty behaviour after restart.
+on unload:
+  loop all players:
+    if metadata value "parcour" of loop-player is "ingame":
+      #
+      # > Get the language code of the player
+      set {_lang} to getlangcode(loop-player)
+      #
+      # > Check for translation, if not available, use fallback.
+      if {SB::lang::parcour::parcourunloaded::%{_lang}%} is not set:
+        message "{@prefix} {@parcourunloaded}" to loop-player
+      else:
+        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::parcourunloaded::%{_lang}%}%" to loop-player
+      exitparcour(loop-player)
+
+#
+# > Event - on inventory open
+# > Actions:
+# > If the player is in the adventure gamemode and has a metadata value
+# > of "ingame" set to the "parcour" tag, cancel the event.
+# > If a player opens a inventory with a bedrock in slot 0,
+# > which has the name "parcour", it opens the parcour inventory,
+# > which allows to break and get more parcour blocks.
+on inventory open:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      #
+      # > Get the language code of the player
+      set {_lang} to getlangcode(player)
+      #
+      # > Check for translation, if not available, use fallback.
+      if {SB::lang::parcour::noinventoryinparcour::%{_lang}%} is not set:
+        message "{@prefix} {@noinventoryinparcour}"
+      else:
+        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::noinventoryinparcour::%{_lang}%}%"
+      cancel event
+  else if slot 0 of event-inventory is bedrock:
+    if name of slot 0 of event-inventory is "parcour":
+      openparcourinventory(event-inventory,player)
+      cancel event
+
+#
+# > Event - on place of hopper
+# > Actions:
+# > To prevent the removal of the bedrock out of the parcours
+# > block, hoppers are canceled, if the block above is a parcour block.
+on place of hopper:
+  set {_blockabove} to block 1 above event-location
+  if slot 0 of {_blockabove}'s inventory is bedrock:
+    if name of slot 0 of event-inventory is "parcour":
+      cancel event
+#
+# > Event - on break of the predefined pressure plate
+# > Actions:
+# > If the inventory of the block below the pressure plate has a bedrock in slot 0,
+# > cancel the event. Bedrock is not achievable in the game.
+on break of {@pressureplate}:
+  set {_blockbelow} to block 1 below event-location
+  if slot 0 of {_blockbelow}'s inventory is bedrock:
+    cancel event
+      
+#
+# > Event - on break of the predefined parcour block
+# > Actions:
+# > If the inventory of the block has a bedrock in slot 0,
+# > cancel the event. Bedrock is not achievable in the game.
+on break of {@parcourblock1}:
+  if slot 0 of event-block's inventory is bedrock:
+    cancel event
+
+#
+# > Event - on place of the predefined parcour item
+# > Actions:
+# > Checks if the item has a specific nbt value for the
+# > nbt tag "type", if it has, cancel the vanilla behaviour
+# > and place a start|checkpoint|finish parcour block.
+on place of {@parcouritem}:
+  #
+  # > Get the type of the parcour item, if it is one.
+  set {_value} to getnbtvalue(player's tool,"type")
+  if {_value} is "start" or "finish" or "checkpoint":
+    #
+    # > This is a valid parcour item block, cancel the event.
+    cancel event
+    #
+    # > Get the parcour id of the tool the player is using,
+    # > which is the current parcour item block the player
+    # > wants to set.
+    set {_parcourid} to getnbtvalue(player's tool,"id")
+    #
+    # > Remove one of the parcour blocks out of the inventory of the player.
+    remove 1 of player's tool from player's inventory
+    #
+    # > Set variables here which are needed below.
+    set {_item1} to 1 of {@parcourblock}
+    set {_item2} to 1 of {@pressureplate}
+    set {_loc} to event-location
+    set {_parcourslot} to 1 of bedrock named "parcour"
+    #
+    # > Place the parcour block at the event-location
+    # > Wait 1 tick to allow the placement to happen.
+    wait 1 tick
+    set block at {_loc} to {_item1}
+    #
+    # > Set the pressure plate above the new parcour block.
+    set block 1 above {_loc} to {_item2}
+  #
+  # > Set the creator of the parcour here. Also set the type and id of this
+  # > parcour block, which is saved in the inventory slot 0 of the block
+  # > within a bedrock.
+  if {_value} is "start":
+    set {_parcourslot} to setnbtvalue({_parcourslot},"creator",uuid of player)
+    set {_parcourslot} to setnbtvalue({_parcourslot},"type","start")
+    set {_parcourslot} to setnbtvalue({_parcourslot},"id","%{_parcourid}%")
+    set slot 0 of block at {_loc} to {_parcourslot}
+  else if {_value} is "checkpoint":
+    set {_parcourslot} to setnbtvalue({_parcourslot},"type","checkpoint")
+    set {_parcourslot} to setnbtvalue({_parcourslot},"id","%{_parcourid}%")
+    set slot 0 of block at {_loc} to {_parcourslot}
+  else if {_value} is "finish":
+    set {_parcourslot} to setnbtvalue({_parcourslot},"type","finish")
+    set {_parcourslot} to setnbtvalue({_parcourslot},"id","%{_parcourid}%")
+    set slot 0 of block at {_loc} to {_parcourslot}
+
+#
+# > Functions
+
+#
+# > Function - startparcourtimer
+# > Parameters:
+# > <player>the player who should get the timer
+# > <ttext>the parcour id of the current parcour
+# > Actions:
+# > Starts a timer for the player and displays the difference between
+# > start time and now within the actionbar of the player.
+function startparcourtimer(player:player,parcourid:text):
+  #
+  # > Get the current run id of the player, this id is
+  # > unique for every run.
+  set {_runid} to metadata value "runid" of {_player}
+  #
+  # > Save the start time within a local variable and as metadata
+  # > tag for the current parcour id.
+  set {_start} to now
+  set metadata "%{_parcourid}%-start" of {_player} to {_start}
+  #
+  # > Do a while loop as long as the run id doesn't change.
+  while metadata value "runid" of {_player} is {_runid}:
+    #
+    # > Display the difference between now and the start time in the actionbar.
+    set {_difference} to "%difference between now and {_start}%"
+    replace all " seconds" with "" in {_difference}
+    replace all " second" with "" in {_difference}
+    replace all "." with ":" in {_difference}
+    replace all " minutes and " with ":" in {_difference}
+    replace all " minute and " with ":" in {_difference}
+    #
+    # > If the difference is higher than 1 hour, stop it,
+    # > there is no reason to keep a timer running.
+    if difference between now and {_start} > 1 hour:
+      stop
+    #
+    # > As long as there is a minute or less, add "00:" to the
+    # > timer in the actionbar.
+    if difference between now and {_start} <= 1 minutes:
+      set {_difference} to "00:%{_difference}%"
+    #
+    # > Split the generated time and make it consistent.
+    set {_time::*} to {_difference} split at ":"
+    loop {_time::*}:
+      #
+      # > If the lenght of a time is only 1, eg. "5", change it to "05".
+      if length of loop-value is 1:
+        set {_time::%loop-index%} to "0%loop-value%"
+    #
+    # > If there is a section of the timer empty, set it to "00".
+    if {_time::3} is not set:
+      set {_time::3} to "00"
+    if {_time::2} is not set:
+      set {_time::2} to "00"
+    if {_time::1} is not set:
+      set {_time::1} to "00"
+    #
+    # > Display the time to the player in the actionbar.
+    actionbar({_player},"%{_time::1}%:%{_time::2}%:%{_time::3}%")
+    #
+    # > Stop the loop if the player is no longer online.
+    if {_player} is offline:
+      stop
+    #
+    # > Repeat the loop every 2 ticks.
+    wait 2 ticks
+
+#
+# > Function - exitparcour
+# > Parameters:
+# > <player>the player who wants to exit the parcour
+# > Actions:
+# > Throws the player parameter out of the parcour.
+function parcourcheckpoint(player:player):
+  #
+  # > Prevent damage event of any fall with resistance.
+  apply potion of resistance of tier 5 to {_player} for 1 second
+  #
+  # > Teleport player back to the last checkpoint location.
+  set {_checkpoint} to metadata value "checkpoint" of {_player}
+  teleport {_player} to {_checkpoint}
+
+#
+# > Function - exitparcour
+# > Parameters:
+# > <player>the player who wants to exit the parcour
+# > Actions:
+# > Throws the player parameter out of the parcour.
+function exitparcour(player:player):
+  #
+  # > Clear the parcour inventory and restore the inventory of the player.
+  clear {_player}'s inventory
+  restoreinventory({_player})
+  #
+  # > Delete metadata which marked the player as parcour player.
+  delete metadata value "parcour" of {_player}
+  delete metadata "checkpoint" of {_player}
+  delete metadata "runid" of {_player}
+  #
+  # > Set the player back to survival mode.
+  set gamemode of {_player} to survival
+
+#
+# > Function - healandfeed
+# > Parameters:
+# > <player>the player who should get healed and feeded
+# > Actions:
+# > Feeds and heals the player
+function healandfeed(player:player):
+  heal {_player}
+  set {_player}'s food level to 10
+
+#
+# > Function - saveinventory
+# > Parameters:
+# > <player>the player who should get the inventory saved
+# > Actions:
+# > Saves the inventory of the player to variables to restore it later.
+function saveinventory(player:player):
+  set {_num} to 0
+  #
+  # > Loop through the inventory of the player to save all slots.
+  loop 36 times:
+    set {_item} to slot {_num} of {_player}'s inventory
+    set {TMP::parcour::%{_player}%::%{_num}%} to {_item}
+    add 1 to {_num}
+  #
+  # > Save the armor, health and hunger of the player.
+  set {TMP::parcour::%{_player}%::helmet} to {_player}'s helmet
+  set {TMP::parcour::%{_player}%::chestplate} to {_player}'s chestplate
+  set {TMP::parcour::%{_player}%::legging} to {_player}'s legging
+  set {TMP::parcour::%{_player}%::boots} to {_player}'s boots
+  set {TMP::parcour::%{_player}%::offhand} to {_player}'s offhand tool
+  set {TMP::parcour::%{_player}%::health} to {_player}'s health
+  set {TMP::parcour::%{_player}%::hunger} to {_player}'s hunger
+
+#
+# > Function - restoreinventory
+# > Parameters:
+# > <player>the player who should get the inventory restored
+# > Actions:
+# > Restores the previously saved inventory.
+function restoreinventory(player:player):
+  set {_num} to 0
+  #
+  # > Loop through all the slots the player has and restore the items.
+  loop 36 times:
+    set slot {_num} of {_player}'s inventory to {TMP::parcour::%{_player}%::%{_num}%}
+    delete {TMP::parcour::%{_player}%::%{_num}%}
+    add 1 to {_num}
+  #
+  # > Restone the armor, health and hunger.
+  set {_player}'s helmet to {TMP::parcour::%{_player}%::helmet}
+  set {_player}'s chestplate to {TMP::parcour::%{_player}%::chestplate}
+  set {_player}'s legging to {TMP::parcour::%{_player}%::legging}
+  set {_player}'s boots to {TMP::parcour::%{_player}%::boots}
+  set {_player}'s offhand tool to {TMP::parcour::%{_player}%::offhand}
+  set {_player}'s health to {TMP::parcour::%{_player}%::health}
+  set {_player}'s hunger to {TMP::parcour::%{_player}%::hunger}
+  #
+  # > Delete all restore variables of the player.
+  delete {TMP::parcour::%{_player}%::helmet}
+  delete {TMP::parcour::%{_player}%::chestplate}
+  delete {TMP::parcour::%{_player}%::legging}
+  delete {TMP::parcour::%{_player}%::boots}
+  delete {TMP::parcour::%{_player}%::offhand}
+  delete {TMP::parcour::%{_player}%::health}
+  delete {TMP::parcour::%{_player}%::hunger}
+  delete {TMP::parcour::%{_player}%::*}
+  delete {TMP::parcour::%{_player}%}
+
+#
+# > Function - openparcourinventory
+# > Parameters:
+# > <inventory>the inventory of the current parcour block
+# > <player>the player who should get the inventory
+# > Actions:
+# > Opens the parcour menu
+function openparcourinventory(inventory:inventory,player:player):
+  #
+  # > Get the language code of the player
+  set {_lang} to getlangcode({_player})
+  #
+  # > Get nbt data out of the parcour item.
+  set {_item} to slot 0 of {_inventory}
+  set {_type} to getnbtvalue({_item},"type")
+  set {_parcourid} to getnbtvalue({_item},"id")
+  #
+  # > Get the location of the current parcour block.
+  set {_loc} to {_inventory}.getHolder().getLocation()
+  #
+  # > Set the current target to a non persistent metadata tag.
+  set metadata "targetblock" of {_player} to {_loc}
+  #
+  # > Check for translation, if not available, use fallback.
+  if {SB::lang::parcour::guiheader::%{_lang}%} is not set:
+    set {_msg} to "{@guiheader}"
+  else:
+    set {_msg} to {SB::lang::parcour::guiheader::%{_lang}%}
+  #
+  # > Open the menu to the player.
+  opengui({_player},27,"%{_msg}%")
+  #
+  # > Check for translation, if not available, use fallback.
+  if {SB::lang::parcour::guiheader::%{_lang}%} is not set:
+    set {_checkpointitemname} to "{@menucheckpointitemname}"
+    set {_menufinishitemname} to "{@menufinishitemname}"
+    set {_menuremoveblockname} to "{@menuremoveblockname}"
+    set {_menucheckpointitemlore} to "{@menucheckpointitemlore}"
+    set {_menufinishitemlore} to "{@menufinishitemlore}"
+    set {_menuremoveblocklore} to "{@menuremoveblocklore}"
+  else:
+    set {_checkpointitemname} to {SB::lang::parcour::menucheckpointitemname::%{_lang}%}
+    set {_menufinishitemname} to {SB::lang::parcour::menufinishitemname::%{_lang}%}
+    set {_menuremoveblockname} to {SB::lang::parcour::menuremoveblockname::%{_lang}%}
+    set {_menucheckpointitemlore} to {SB::lang::parcour::menucheckpointitemlore::%{_lang}%}
+    set {_menufinishitemlore} to {SB::lang::parcour::menufinishitemlore::%{_lang}%}
+    set {_menuremoveblocklore} to {SB::lang::parcour::menuremoveblocklore::%{_lang}%}
+  #
+  # > Fill the Inventory with empty glass panes.
+  loop 27 times:
+    set slot loop-number - 1 of {_players}'s current inventory to black stained glass pane named " "
+  #
+  # > Set menu items depending on the type of parcour block.
+  if {_type} is "start":
+    setguiitem({_player},11,{@menuitemcheckpoint},1,"%{_checkpointitemname}%","%{_menucheckpointitemlore}%","getparcourtools(""%{_player}%"" parsed as player,1,""%{_parcourid}%"")",false)
+    setguiitem({_player},13,{@menuitemfinish},1,"%{_menufinishitemname}%","%{_menufinishitemlore}%","getparcourtools(""%{_player}%"" parsed as player,2,""%{_parcourid}%"")",false)
+    setguiitem({_player},15,{@menuitembreak},1,"%{_menuremoveblockname}%","%{_menuremoveblocklore}%","breakparcourblock(""%{_player}%"" parsed as player)",true)
+  else if {_type} is "checkpoint":
+    setguiitem({_player},13,{@menuitembreak},1,"%{_menuremoveblockname}%","%{_menuremoveblocklore}%","breakparcourblock(""%{_player}%"" parsed as player)",true)
+  else if {_type} is "finish":
+    setguiitem({_player},13,{@menuitembreak},1,"%{_menuremoveblockname}%","%{_menuremoveblocklore}%","breakparcourblock(""%{_player}%"" parsed as player)",true)
+
+#
+# > Function - breakparcourblock
+# > Parameters:
+# > <player>the player who wanted to break the parcour block
+# > Actions:
+# > Breaks the parcour block and gives the player the block as item back.
+function breakparcourblock(player:player):
+  set {_loc} to metadata value "targetblock" of {_player}
+  set {_item} to slot 0 of block at {_loc}'s inventory
+  set {_type} to getnbtvalue({_item},"type")
+  set {_parcourid} to getnbtvalue({_item},"id")
+  clear block at {_loc}'s inventory
+  set block 1 above {_loc} to air
+  set block at {_loc} to air
+  if {_type} is "checkpoint":
+    set {_type} to 1
+  else if {_type} is "finish":
+    set {_type} to 2
+  else if {_type} is "start":
+    set {_type} to 3
+  getparcourtools({_player},{_type},{_parcourid})
+
+#
+# > Function - getparcourtools
+# > Parameters:
+# > <player>the player who should get the parcour tool
+# > <number>the parcour tool number
+# > <text>the parcour id
+# > Actions:
+# > Gives the player paremeter the defined tool.
+# > 1 = Checkpoint, 2 = Finish, 3 = Start.
+function getparcourtools(player:player,tool:number,parcourid:text):
+  #
+  # > Get the language code of the player.
+  set {_lang} to getlangcode({_player})
+  if {_tool} is 1:
+    if {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemcheckpoint}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%}
+    set {_item} to setnbtvalue({_item},"type","checkpoint")
+    set {_item} to setnbtvalue({_item},"id",{_parcourid})
+    add 1 of {_item} to {_player}'s inventory
+  else if {_tool} is 2:
+    if {SB::lang::parcour::parcouritemfinish::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemfinish}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemfinish::%{_lang}%}
+    set {_item} to setnbtvalue({_item},"type","finish")
+    set {_item} to setnbtvalue({_item},"id",{_parcourid})
+    add 1 of {_item} to {_player}'s inventory
+  else if {_tool} is 3:
+    if {SB::lang::parcour::parcouritemstart::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemstart}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemstart::%{_lang}%}
+    set {_item} to setnbtvalue({_item},"type","start")
+    set {_item} to setnbtvalue({_item},"id",{_parcourid})
+    add 1 of {_item} to {_player}'s inventory
