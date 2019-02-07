@@ -1,6 +1,6 @@
 #
 # ==============
-# parcours.sk v0.0.1
+# parcours.sk v0.0.2
 # ==============
 # Let players create jump and run parcours. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -93,8 +93,10 @@ import:
 # > getparcourtools function, also defined a new
 # > random uuid for each newly given out parcour tool start block.
 command /giveparcour <player>:
-  permission: is.admin
   trigger:
+    if executor is not console:
+      if executor doesn't have permission "is.admin":
+        stop
     set {_parcourid} to UUID.randomUUID()
     getparcourtools(arg-1,3,"%{_parcourid}%")
     
