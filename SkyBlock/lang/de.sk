@@ -376,6 +376,26 @@ on script load:
   set {SB::lang::afkcheck::playernotafk::%{_lang}%} to "<player> hat nach <time> Sekunden geantwortet."
 
   #
+  # > Parcours
+  set {SB::lang::parcour::guiheader::%{_lang}%} to "&lParkour"
+  set {SB::lang::parcour::checkpointreached::%{_lang}%} to "Checkpoint erreicht"
+  set {SB::lang::parcour::checkpointinvalid::%{_lang}%} to "Ungültiger Checkpoint"
+  set {SB::lang::parcour::finishinvalid::%{_lang}%} to "Ungültiges Ziel"
+  set {SB::lang::parcour::itemcheckpointname::%{_lang}%} to "&rCheckpoint"
+  set {SB::lang::parcour::itemrestartname::%{_lang}%} to "&rNeustart"
+  set {SB::lang::parcour::itemexitname::%{_lang}%} to "&rBeenden"
+  set {SB::lang::parcour::parcourunloaded::%{_lang}%} to "Der Parkour wurde entladen. Danke fürs spielen."
+  set {SB::lang::parcour::finishmsg::%{_lang}%} to "Glückwunsch! Du hast das Ziel erreicht."
+  set {SB::lang::parcour::yourtime::%{_lang}%} to "Deine Zeit: <time>"
+  set {SB::lang::parcour::menucheckpointitemname::%{_lang}%} to "&rCheckpoint Platte"
+  set {SB::lang::parcour::menufinishitemname::%{_lang}%} to "&rZiel Platte"
+  set {SB::lang::parcour::menuremoveblockname::%{_lang}%} to "&rEntferne diesen Parkour Block"
+  set {SB::lang::parcour::menucheckpointitemlore::%{_lang}%} to "%{_s1}%Erhalte eine Checkpoint\n%{_s1}%Platte zum platzieren.\n\n%{_s1}%Funktioniert nur\n%{_s1}%für diesen Parkour."
+  set {SB::lang::parcour::menufinishitemlore::%{_lang}%} to "%{_s1}%Erhalte eine Ziel\n%{_s1}%Platte zum platzieren.\n\n%{_s1}%Funktioniert nur\n%{_s1}%für diesen Parkour."
+  set {SB::lang::parcour::menuremoveblocklore::%{_lang}%} to "%{_s1}%Erhalte den Block\n%{_s1}%als Item zurück."
+  set {SB::lang::parcour::noinventoryinparcour::%{_lang}%} to "Du kannst während dem Parkour keine Inventare öffnen."
+
+  #
   # > Robots
   #
   # > Robot jobs
