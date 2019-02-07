@@ -74,6 +74,9 @@ options:
   menufinishitemlore: Get a finish plate to place.
   menuremoveblocklore: You get it back as item.
   noinventoryinparcour: You can't open inventories while in the parcour.
+  parcouritemcheckpoint: &r&eParcour - Checkpoint
+  parcouritemfinish: &r&eParcour - Goal
+  parcouritemstart: &r&eParcour - Start
   
 import:
   java.util.UUID
@@ -763,18 +766,30 @@ function breakparcourblock(player:player):
 # > Gives the player paremeter the defined tool.
 # > 1 = Checkpoint, 2 = Finish, 3 = Start.
 function getparcourtools(player:player,tool:number,parcourid:text):
+  #
+  # > Get the language code of the player.
+  set {_lang} to getlangcode({_player})
   if {_tool} is 1:
-    set {_item} to 1 of {@parcouritem} named "&rCheckpoint"
+    if {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemcheckpoint}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%}
     set {_item} to setnbtvalue({_item},"type","checkpoint")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
   else if {_tool} is 2:
-    set {_item} to 1 of {@parcouritem} named "&rFinish"
+    if {SB::lang::parcour::parcouritemfinish::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemfinish}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemfinish::%{_lang}%}
     set {_item} to setnbtvalue({_item},"type","finish")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
   else if {_tool} is 3:
-    set {_item} to 1 of {@parcouritem} named "&e&lParcour"
+    if {SB::lang::parcour::parcouritemstart::%{_lang}%} is not set:
+      set {_item} to 1 of {@parcouritem} named "{@parcouritemstart}"
+    else:
+      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemstart::%{_lang}%}
     set {_item} to setnbtvalue({_item},"type","start")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
