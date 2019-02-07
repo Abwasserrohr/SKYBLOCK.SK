@@ -41,23 +41,23 @@ on load:
   set {SB::config::challenges::c::1::1::repeatreward} to "1-xp,1-sand"
   set {SB::config::challenges::c::1::1::item} to sand block
   set {SB::config::challenges::c::1::1::repeat} to true
-  set {SB::config::challenges::c::1::1::repeatsperday} to 20
+  set {SB::config::challenges::c::1::1::repeatsperday} to 35
   set {SB::config::challenges::c::1::1::customfunction} to ""
   set {SB::config::challenges::c::1::1::customreward} to ""
 
   set {SB::config::challenges::c::1::2::needed} to "48-cobblestone,16-gunpowder"
-  set {SB::config::challenges::c::1::2::reward} to "1-xp,64-gravel"
-  set {SB::config::challenges::c::1::2::repeatreward} to "1-xp,32-gravel,32-soul sand"
+  set {SB::config::challenges::c::1::2::reward} to "1-xp,16-gravel"
+  set {SB::config::challenges::c::1::2::repeatreward} to "1-xp,8-gravel,2-soul sand"
   set {SB::config::challenges::c::1::2::item} to gravel block
   set {SB::config::challenges::c::1::2::repeat} to true
-  set {SB::config::challenges::c::1::2::repeatsperday} to 5
+  set {SB::config::challenges::c::1::2::repeatsperday} to 15
 
   set {SB::config::challenges::c::1::3::needed} to "64-oak leaves,32-cobblestone,32-stone brick"
-  set {SB::config::challenges::c::1::3::reward} to "1-xp,32-mossy cobblestone,32-mossy stone brick"
-  set {SB::config::challenges::c::1::3::repeatreward} to "1-xp,32-mossy cobblestone,32-mossy stone brick"
+  set {SB::config::challenges::c::1::3::reward} to "1-xp,16-mossy cobblestone,16-mossy stone brick"
+  set {SB::config::challenges::c::1::3::repeatreward} to "1-xp,4-mossy cobblestone,4-mossy stone brick"
   set {SB::config::challenges::c::1::3::item} to mossy stone brick
   set {SB::config::challenges::c::1::3::repeat} to true
-  set {SB::config::challenges::c::1::3::repeatsperday} to 5
+  set {SB::config::challenges::c::1::3::repeatsperday} to 10
   set {SB::config::challenges::c::1::3::customfunction} to ""
 
   set {SB::config::challenges::c::1::4::needed} to "6-apple"
@@ -72,21 +72,21 @@ on load:
   set {SB::config::challenges::c::1::5::repeatreward} to "1-xp,1-clay block"
   set {SB::config::challenges::c::1::5::item} to clay block
   set {SB::config::challenges::c::1::5::repeat} to true
-  set {SB::config::challenges::c::1::5::repeatsperday} to 5
+  set {SB::config::challenges::c::1::5::repeatsperday} to 15
 
   set {SB::config::challenges::c::1::6::needed} to "128-melon slice"
   set {SB::config::challenges::c::1::6::reward} to "15-xp,3-sand"
   set {SB::config::challenges::c::1::6::repeatreward} to "1-xp,1-sand"
   set {SB::config::challenges::c::1::6::item} to melon slice
   set {SB::config::challenges::c::1::6::repeat} to true
-  set {SB::config::challenges::c::1::6::repeatsperday} to 5
+  set {SB::config::challenges::c::1::6::repeatsperday} to 30
 
   set {SB::config::challenges::c::1::7::needed} to "64-pumpkin"
   set {SB::config::challenges::c::1::7::reward} to "20-xp,3-red sand"
   set {SB::config::challenges::c::1::7::repeatreward} to "1-xp,1-red sand"
   set {SB::config::challenges::c::1::7::item} to pumpkin
   set {SB::config::challenges::c::1::7::repeat} to true
-  set {SB::config::challenges::c::1::7::repeatsperday} to 5
+  set {SB::config::challenges::c::1::7::repeatsperday} to 15
 
   set {SB::config::challenges::c::2::1::needed} to "16-oak log,16-spruce log,16-birch log,16-jungle log,16-acacia log,16-dark oak log"
   set {SB::config::challenges::c::2::1::reward} to "20-xp,16-redstone dust,5-iron ore,1-wolf spawn egg"
@@ -107,7 +107,7 @@ on load:
   set {SB::config::challenges::c::2::3::repeatreward} to "3-xp,1-magma block,18-netherrack"
   set {SB::config::challenges::c::2::3::item} to netherrack
   set {SB::config::challenges::c::2::3::repeat} to true
-  set {SB::config::challenges::c::2::3::repeatsperday} to 5
+  set {SB::config::challenges::c::2::3::repeatsperday} to 30
 
   set {SB::config::challenges::c::2::4::needed} to "64-red mushroom,64-brown mushroom"
   set {SB::config::challenges::c::2::4::reward} to "40-xp,1-mycelium"
@@ -142,21 +142,21 @@ on load:
   set {SB::config::challenges::c::3::1::repeatreward} to "1-xp,1-iron ore"
   set {SB::config::challenges::c::3::1::item} to cobblestone
   set {SB::config::challenges::c::3::1::repeat} to true
-  set {SB::config::challenges::c::3::1::repeatsperday} to 5
+  set {SB::config::challenges::c::3::1::repeatsperday} to 15
 
   set {SB::config::challenges::c::3::2::needed} to "64-raw cod"
   set {SB::config::challenges::c::3::2::reward} to "150-xp,4-sea pickle,4-kelp,2-nautilus shell"
   set {SB::config::challenges::c::3::2::repeatreward} to "10-xp,2-sea pickle,2-kelp,1-nautilus shell"
   set {SB::config::challenges::c::3::2::item} to raw cod
   set {SB::config::challenges::c::3::2::repeat} to true
-  set {SB::config::challenges::c::3::2::repeatsperday} to 5
+  set {SB::config::challenges::c::3::2::repeatsperday} to 15
 
   set {SB::config::challenges::c::3::3::needed} to "9-living tube coral plant,9-living brain coral plant,9-living bubble coral plant,9-living fire coral plant,9-living horn coral plant"
   set {SB::config::challenges::c::3::3::reward} to "150-xp,2-living tube coral block,2-living brain coral block,2-living bubble coral block,2-living fire coral block,2-living horn coral block"
-  set {SB::config::challenges::c::3::3::repeatreward} to "10-xp,1-living tube coral block,1-living brain coral block,1-living bubble coral block,1-living fire coral blck,1-living horn coral block"
+  set {SB::config::challenges::c::3::3::repeatreward} to "10-xp,1-living tube coral block,1-living brain coral block,1-living bubble coral block,1-living fire coral block,1-living horn coral block"
   set {SB::config::challenges::c::3::3::item} to living pink coral block
   set {SB::config::challenges::c::3::3::repeat} to true
-  set {SB::config::challenges::c::3::3::repeatsperday} to 5
+  set {SB::config::challenges::c::3::3::repeatsperday} to 20
 
   set {SB::config::challenges::c::3::4::needed} to "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
   set {SB::config::challenges::c::3::4::reward} to "150-xp,1-heart of the sea"
@@ -173,18 +173,18 @@ on load:
   set {SB::config::challenges::c::3::5::repeatsperday} to 5
 
   set {SB::config::challenges::c::3::6::needed} to "16-emerald"
-  set {SB::config::challenges::c::3::6::reward} to "35-xp,64-bottle o' enchanting"
-  set {SB::config::challenges::c::3::6::repeatreward} to "5-xp,32-bottle o' enchanting"
+  set {SB::config::challenges::c::3::6::reward} to "35-xp,32-bottle o' enchanting"
+  set {SB::config::challenges::c::3::6::repeatreward} to "5-xp,8-bottle o' enchanting"
   set {SB::config::challenges::c::3::6::item} to bottle o' enchanting
   set {SB::config::challenges::c::3::6::repeat} to true
-  set {SB::config::challenges::c::3::6::repeatsperday} to 5
+  set {SB::config::challenges::c::3::6::repeatsperday} to 15
 
   set {SB::config::challenges::c::3::7::needed} to "32-diamond"
   set {SB::config::challenges::c::3::7::reward} to "250-xp,1-lava bucket"
   set {SB::config::challenges::c::3::7::repeatreward} to "150-xp,1-lava bucket"
   set {SB::config::challenges::c::3::7::item} to lava bucket
   set {SB::config::challenges::c::3::7::repeat} to true
-  set {SB::config::challenges::c::3::7::repeatsperday} to 5
+  set {SB::config::challenges::c::3::7::repeatsperday} to 2
 
   set {SB::config::challenges::c::4::1::needed} to "64-gold ingot"
   set {SB::config::challenges::c::4::1::reward} to "150-xp,2-blaze rod"
@@ -201,8 +201,8 @@ on load:
   set {SB::config::challenges::c::4::2::repeatsperday} to 5
   
   set {SB::config::challenges::c::4::3::needed} to "128-glass"
-  set {SB::config::challenges::c::4::3::reward} to "300-xp,7-dirt"
-  set {SB::config::challenges::c::4::3::repeatreward} to "150-xp,5-dirt"
+  set {SB::config::challenges::c::4::3::reward} to "300-xp,8-dirt"
+  set {SB::config::challenges::c::4::3::repeatreward} to "150-xp,2-dirt"
   set {SB::config::challenges::c::4::3::item} to dirt
   set {SB::config::challenges::c::4::3::repeat} to true
   set {SB::config::challenges::c::4::3::repeatsperday} to 5
@@ -275,11 +275,11 @@ on load:
   set {SB::config::challenges::c::5::6::repeatreward} to "400-xp,1-villager spawn egg,1-nametag"
   set {SB::config::challenges::c::5::6::item} to villager spawn egg
   set {SB::config::challenges::c::5::6::repeat} to true
-  set {SB::config::challenges::c::5::6::repeatsperday} to 5
+  set {SB::config::challenges::c::5::6::repeatsperday} to 2
   
   set {SB::config::challenges::c::5::7::needed} to "2-zombie head,2-skeleton head,7-creeper head,7-player head"
   set {SB::config::challenges::c::5::7::reward} to "2500-xp,1-dragon head"
   set {SB::config::challenges::c::5::7::repeatreward} to "500-xp,1-dragon head"
   set {SB::config::challenges::c::5::7::item} to dragon head
   set {SB::config::challenges::c::5::7::repeat} to true
-  set {SB::config::challenges::c::5::7::repeatsperday} to 5
+  set {SB::config::challenges::c::5::7::repeatsperday} to 1
