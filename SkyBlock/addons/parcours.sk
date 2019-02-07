@@ -155,7 +155,7 @@ on dispense of bedrock:
               if {SB::lang::parcour::checkpointreached::%{_lang}%} is not set:
                 set {_msg} to "{@checkpointreached}"
               else:
-                set {_msg} to {SB::lang::parcour::guiheader::%{_lang}%}
+                set {_msg} to {SB::lang::parcour::checkpointreached::%{_lang}%}
               send subtitle "%{_msg}%" to loop-player for 0.5 seconds with fadein 5 tick and fade out 5 tick
             #
             # > Set the new location to the checkpoint metadata of the player.
@@ -247,14 +247,16 @@ on dispense of bedrock:
               if {SB::lang::parcour::finishmsg::%{_lang}%} is not set:
                 message "{@prefix} {@finishmsg}" to loop-player
                 set {_msg} to "{@prefix} {@yourtime}"
+                set {_subtitle} to "{@finishmsg}"
               else:
                 message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::finishmsg::%{_lang}%}%" to loop-player
                 set {_msg} to "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::yourtime::%{_lang}%}%"
+                set {_subtitle} to "%{SB::lang::parcour::finishmsg::%{_lang}%}%"
               set {_start} to metadata value "%{_parcourid}%-start" of loop-player
               set {_diff} to difference between now and {_start}
               #
               # > Send the player the time it took to get to the goal.
-              send subtitle "{@finishmsg}" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
+              send subtitle "%{_subtitle}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
               replace all "<time>" with "%{_diff}%" in {_msg}
               message "%{_msg}%" to loop-player
               set metadata "checkpoint" of loop-player to "finish"
