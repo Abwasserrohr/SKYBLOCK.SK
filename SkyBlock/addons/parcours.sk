@@ -628,6 +628,7 @@ function saveinventory(player:player):
   set {TMP::parcour::%{_player}%::chestplate} to {_player}'s chestplate
   set {TMP::parcour::%{_player}%::legging} to {_player}'s legging
   set {TMP::parcour::%{_player}%::boots} to {_player}'s boots
+  set {TMP::parcour::%{_player}%::offhand} to {_player}'s offhand tool
   set {TMP::parcour::%{_player}%::health} to {_player}'s health
   set {TMP::parcour::%{_player}%::hunger} to {_player}'s hunger
 
@@ -651,6 +652,7 @@ function restoreinventory(player:player):
   set {_player}'s chestplate to {TMP::parcour::%{_player}%::chestplate}
   set {_player}'s legging to {TMP::parcour::%{_player}%::legging}
   set {_player}'s boots to {TMP::parcour::%{_player}%::boots}
+  set {_player}'s offhand tool to {TMP::parcour::%{_player}%::offhand}
   set {_player}'s health to {TMP::parcour::%{_player}%::health}
   set {_player}'s hunger to {TMP::parcour::%{_player}%::hunger}
   #
@@ -659,6 +661,7 @@ function restoreinventory(player:player):
   delete {TMP::parcour::%{_player}%::chestplate}
   delete {TMP::parcour::%{_player}%::legging}
   delete {TMP::parcour::%{_player}%::boots}
+  delete {TMP::parcour::%{_player}%::offhand}
   delete {TMP::parcour::%{_player}%::health}
   delete {TMP::parcour::%{_player}%::hunger}
   delete {TMP::parcour::%{_player}%::*}
