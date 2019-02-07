@@ -1,0 +1,15 @@
+#
+# ==============
+# getlangcode.sk
+# ==============
+# getlangcode.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+# > Function - getlangcode:
+# > Arguments:
+# > <player>the player for which the language code is needed
+# > Actions:
+# > Returns the language code of the player.
+function getlangcode(player:player) :: text:
+  set {_uuid} to uuid of {_player}
+  return {SK::lang::%{_uuid}%}
