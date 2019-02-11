@@ -201,8 +201,8 @@ on load:
   set {SB::config::challenges::c::4::2::repeatsperday} to 5
   
   set {SB::config::challenges::c::4::3::needed} to "128-glass"
-  set {SB::config::challenges::c::4::3::reward} to "300-xp,8-dirt"
-  set {SB::config::challenges::c::4::3::repeatreward} to "150-xp,2-dirt"
+  set {SB::config::challenges::c::4::3::reward} to "150-xp,8-dirt"
+  set {SB::config::challenges::c::4::3::repeatreward} to "25-xp,2-dirt"
   set {SB::config::challenges::c::4::3::item} to dirt
   set {SB::config::challenges::c::4::3::repeat} to true
   set {SB::config::challenges::c::4::3::repeatsperday} to 5
