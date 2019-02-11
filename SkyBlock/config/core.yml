@@ -1,0 +1,96 @@
+#
+# ==============
+# core.yml
+# ==============
+# core.yml is part of the SKYBLOCK.SK configuration.
+# ==============
+
+#
+# > Set the worlds of the server.
+world: world
+netherworld: world_nether
+#
+# > SKYBLOCK.SK currently only supports structure files.
+isstorage: Structure
+#
+# > Set where the players should spawn.
+# > Format: x,y,z,pitch,yaw,world
+spawn: 20.0,87.0,81.5,0,-95,world
+debug: true
+#
+# > How much distance should be between islands (100 means 200x200 islands)
+distance: 100
+#
+# > Default size of the island, set it to the distance like above to make it as big as the distance is.
+# > Do not change the value once you have islands, since it messes up existing islands.
+# > Set it to the same amount as the distance to disable this feature.
+defaultsize: 25
+#
+# > Set a island level until which dirt, grass and farmland blocks should be bound to the
+# > island to prevent island creation abuse.
+binduntillevel: 100
+# >>>>>THIS PART WOULD BE BETTER IN THE upgrades.yml MAYBE CHANGE THIS IN THE FUTURE:
+#
+# > The default amount of hoppers, the player is allowed to place until
+# > the placement of hoppers is canceled.
+starthopper: 50
+#
+# > The maximum amount of hoppers, the player is allowed to place once the
+# > hopper upgrade is upgraded to the level 5. 
+maxhopper: 400
+#
+# > The default amount of homes the island has to use.
+starthomes: 1
+#
+# > The maximum amount of homes, once the island hits home upgrade level 5.
+maxhomes: 6
+#
+# > If the default island size is smaller than the distance between players, you can enable island upgrades,
+# > these are always cut into 5 upgrade packs which are calculated for the island upgrade menu.
+islandupgrades: true
+#
+# > You can disable the challenges with setting this setting to false.
+usechallenges: true
+#
+# > On which height should islands be created
+height: 100.5
+#
+# > Set the protection border between islands, 0 = no border:
+# > With a border of 0, 
+protect: 0
+#
+# > Cooldown, how long to wait until the invite is no longer valid:
+invitecooldown: 30 minutes
+#
+# > Delete Cooldown The user has to wait at least this time to delete a newly created island:
+deletecooldown: 30 minutes
+#
+# > Administrator permission, allows access anywhere.
+buildpermission: is.admin
+#
+# > Toggle the portal function, if the portal is disabled, players can't use it. [true=enabled|false=disabled]
+portalenter: true
+#
+# > Toggle the nether, if enabled [true], players can use a nether portal to use the space there too.
+nether: true
+#
+# > Only allow elytra in own skyblock island? true = yes, false = everywhere
+elytra: true
+#
+# > PvP between players. [true = allowed|false = disabled]
+pvp: false
+#
+# > Prevent fire from spreading  [true = prevent|false = do not prevent]
+firespread: true
+#
+# > Prevent phantoms from spawning [true = prevent|false = do not prevent]
+phantomspawn: true
+#
+# > Prevent hunger reset on death: true = yes, false = no:
+preventhungerreset: true
+#
+# > Set a cooldown for /is calc level calculation.
+calccooldown: 10 minutes
+#
+# > EXP for each level, if a player has level 5, he needs 500 exp for level 6 level * explevel:
+explevel: 50
