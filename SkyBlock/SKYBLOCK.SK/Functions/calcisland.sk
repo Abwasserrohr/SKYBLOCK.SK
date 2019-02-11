@@ -67,15 +67,23 @@ function calcisland(p:offline player):
       set {_b1} to location at x-coord of {_b1}, y-coord of {_b1}, z-coord of {_b1} in "%{SB::config::netherworld}%" parsed as world
       set {_b2} to location at x-coord of {_b2}, y-coord of {_b2}, z-coord of {_b2} in "%{SB::config::netherworld}%" parsed as world
     #
+    # > If there are robots active, check if there are any within,
+    # > the island and disable them to calculate properly.
+    set {_robotsize} to size of {TMP::activerobo::*}
+    if {_robotsize} >= 1:
+      loop {TMP::activerobo::*}:
+        if loop-value-2's location is within {_b1} to {_b2}:
+          disablerobot(loop-value-2)
+    #
 	# > Loop all blocks within the two borders:
     loop blocks within {_b1} to {_b2}:
       add 1 to {_i}
       #
       # > Setting the chunk of the current loop block to a local variable to load the chunk
       #
-      # > Every 10000 blocks, check for new percentages for the progress bar.
-      if {_i} is 10000:
-        add 10000 to {_b}
+      # > Every 1000 blocks, check for new percentages for the progress bar.
+      if {_i} is 5000:
+        add 5000 to {_b}
         wait 1 tick
         set {_percent} to ({_b}/{_size})*100
         #
@@ -87,7 +95,7 @@ function calcisland(p:offline player):
         # > Send the current progress bar to the player.
         actionbar({_p},"%{_progress}% %{SB::config::color::secondary::2}%[%{_b}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::2}%%{_size}%]")
         #
-        # > Set the counter back to 0 to do this again in 10000 blocks.
+        # > Set the counter back to 0 to do this again in 5000 blocks.
         set {_i} to 0
       #
       # > Count blocks that aren't air and check them.
