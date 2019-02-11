@@ -94,6 +94,9 @@ on script load:
   set {SB::lang::setwarpok::%{_lang}%} to "Der Warp wurde erfolgreich erstellt."
   set {SB::lang::delwarpok::%{_lang}%} to "Der Warp wurde erfolgreich gelöscht."
   set {SB::lang::warpnotfound::%{_lang}%} to "Dieser Warp wurde nicht gefunden."
+  set {SB::lang::warptop::%{_lang}%} to "%{_p2}%Am meisten besuchte Inseln:"
+  set {SB::lang::warptoplist::%{_lang}%} to "%{_p1}%&l<rank> %{_b1}%|&r %{_s1}%<leader> %{_b1}%|&r %{_s1}%Besuche: %{_p2}%<visits>"
+  set {SB::lang::warptoisland::%{_lang}%} to "%{_s1}%Besuche eine Insel: %{_p1}%/island warp %{_s1}%<%{_p1}%Spielername%{_s1}%>"
 
   #
   # > /island info:
