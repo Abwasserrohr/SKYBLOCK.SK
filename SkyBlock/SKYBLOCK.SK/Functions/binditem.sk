@@ -31,7 +31,7 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
   set block at {_el} to air
   #
   # > Get the current bedrock where the player wants to break an block:
-  set {_bedrock} to {SB::TEMPLOC::%{_p}%}
+  set {_bedrock} to getcurrentbedrock({_p},{_el})
   set {_x} to x-coord of {_bedrock}
   set {_y} to y-coord of {_bedrock}
   set {_z} to z-coord of {_bedrock}
