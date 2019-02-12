@@ -1,0 +1,176 @@
+#
+# ==============
+# flags.yml
+# ==============
+# flags.yml is part of the SKYBLOCK.SK configuration.
+# ==============
+
+#
+# > Changeable Flags
+# > Allow your players to toggle the flags for their island. True = allowed, false = denied.
+toggleflags: true
+
+#
+# > Default Flags for player islands (foreign flags):
+defaultislandflags-foreign:
+#
+# > Explosions. True = allowed, false = denied.
+- explosion: false
+#
+# > Let users use buttons. True = allowed, false = denied.
+- button: false
+#
+# > Let users use the doors. True = allowed, false = denied.
+- door: false
+#
+# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+# > Damage on mobs
+- mob-damage: false
+#
+# > Damage on animals
+- animal-damage: false
+#
+# > Interact with vehicles. True = allowed, false = denied.
+- interact-vehicle: false
+#
+# > Allow others to visit the island. True = allowed, false = denied.
+- publichome: false
+#
+# > Allow others to build on the island. True = allowed, false = denied.
+- build: false
+#
+# > Allow others to access to chests. True = allowed, false = denied.
+- chest: false
+#
+# > Allow others to click on the entitiy. True = allowed, false = denied.
+- entityclick: false
+#
+# > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+- redstone: false
+#
+# > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+- jetboots: false
+
+#
+# > Default Flags for player islands (trusted flags):
+defaultislandflags-trusted:
+#
+# > Explosions. True = allowed, false = denied.
+- explosion: false
+#
+# > Let users use buttons. True = allowed, false = denied.
+- button: true
+#
+# > Let users use the doors. True = allowed, false = denied.
+- door: true
+#
+# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+# > Damage on mobs
+- mob-damage: true
+#
+# > Damage on animals
+- animal-damage: false
+#
+# > Interact with vehicles. True = allowed, false = denied.
+- interact-vehicle: true
+#
+# > Allow others to visit the island. True = allowed, false = denied.
+- publichome: true
+#
+# > Allow others to build on the island. True = allowed, false = denied.
+- build: false
+#
+# > Allow others to access to chests. True = allowed, false = denied.
+- chest: false
+#
+# > Allow others to click on the entitiy. True = allowed, false = denied.
+- entityclick: false
+#
+# > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+- redstone: true
+#
+# > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+- jetboots: true
+
+#
+# > Default Flags for player islands (member flags):
+defaultislandflags-member:
+#
+# > Explosions. True = allowed, false = denied.
+- explosion: false
+#
+# > Let users use buttons. True = allowed, false = denied.
+- button: true
+#
+# > Let users use the doors. True = allowed, false = denied.
+- door: true
+#
+# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+# > Damage on mobs
+- mob-damage: true
+#
+# > Damage on animals
+- animal-damage: true
+#
+# > Interact with vehicles. True = allowed, false = denied.
+- interact-vehicle: true
+#
+# > Allow others to visit the island. True = allowed, false = denied.
+- publichome: true
+#
+# > Allow others to build on the island. True = allowed, false = denied.
+- build: true
+#
+# > Allow others to access to chests. True = allowed, false = denied.
+- chest: true
+#
+# > Allow others to click on the entitiy. True = allowed, false = denied.
+- entityclick: true
+#
+# > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+- redstone: true
+#
+# > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+- jetboots: true
+
+#
+# > Flags for not inhabited islands:
+# > Islands like the lobby island or currently not used islands
+defaultlobbyflag:
+#
+# > Explosions. True = allowed, false = denied.
+- explosion: false
+#
+# > Let users use buttons. True = allowed, false = denied.
+- button: true
+#
+# > Let users use the doors. True = allowed, false = denied.
+- door: true
+#
+# > Damage on entities like mobs, animals or item frames. True = allowed, false = denied.
+# > Damage on mobs
+- mob-damage: true
+#
+# > Damage on animals
+- animal-damage: false
+#
+# > Interact with vehicles. True = allowed, false = denied.
+- interact-vehicle: false
+#
+# > Allow others to visit the island. True = allowed, false = denied.
+- publichome: false
+#
+# > Allow others to build on the island. True = allowed, false = denied.
+- build: false
+#
+# > Allow others to access to chests. True = allowed, false = denied.
+- chest: false
+#
+# > Allow others to click on the entitiy. True = allowed, false = denied.
+- entityclick: false
+#
+# > Allow others to change redstone tools like redstone repeaters. True = allowed, false = denied.
+- redstone: false
+#
+# > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
+- jetboots: false
