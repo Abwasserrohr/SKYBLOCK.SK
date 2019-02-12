@@ -6,6 +6,18 @@
 # ==============
 
 #
+# > Event: on load
+# > Actions:
+# > Calls functions to load configurations.
+on load:
+  #
+  # > Load the yaml configurations using the loadconfig function.
+  loadconfig()
+  #
+  # > Functions to start after config loaded, do not change this if you don't know what you're doing.
+  loadislandstoworld()
+
+#
 # > Function - loadymlparsenumber
 # > Actions:
 # > Loads a yml value and returns it as a parsed number.
@@ -193,4 +205,3 @@ function loadconfig():
   #
   # > Load explevel
   set {SB::config::explevel} to loadymlparsenumber("explevel",{_corefile})
-
