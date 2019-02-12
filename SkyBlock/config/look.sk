@@ -1,0 +1,26 @@
+#
+# ==============
+# look.sk
+# ==============
+# look.sk is part of the SKYBLOCK.SK configuration.
+# ==============
+
+on load:
+  #
+  # > Color Scheme
+  # > Change this to match the colors with your corporate identity
+  set {SB::config::color::primary::1} to "&6"
+  set {SB::config::color::primary::2} to "&e"
+  set {SB::config::color::warn::1} to "&4"
+  set {SB::config::color::secondary::2} to "&7"
+  set {SB::config::color::background::1} to "&8"
+  #
+  # > If a spacer is needed in the chat, this is used as a spacer:
+  set {SB::config::spacer} to "%{SB::config::color::secondary::2}%&l&m---------------------------------------------"
+
+  #
+  # > If a spacer is needed in the item gui, this is used as a spacer:
+  set {SB::config::guispacer} to "%{SB::config::color::background::1}%&l&m-----------"
+  #
+  # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
+  set {SB::config::backguiitem} to redstone dust

@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.1
+# robots.sk v0.0.2
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -492,8 +492,10 @@ function breakrobot(player:player):
 # > Actions:
 # > Gives a new robot to the player.
 command /giverobot <player>:
-  permission: is.admin
   trigger:
+    if executor is not console:
+      if executor don't have permission "is.admin":
+        stop
     set {_item} to {@robotitem}
     set {_item} to {_item} named "{@robotname}"
     set line 1 of lore of {_item} to "{@robotitemlore}"
@@ -1127,6 +1129,39 @@ function changerobotstate(state:boolean,player:player):
 	# > tag the robot as disabled. This value is only temporary.
     set metadata "robo" of {_robot} to 2
 #
+# > Function - disablerobot
+# > Parameters: <boolean>the robot who should get disabled.
+# > Actions:
+# > Disables the robot and stops it.
+function disablerobot(robot:entity):
+  #
+  # > Get the current index id of the robot out of the
+  # > activerobot list.
+  loop {TMP::activerobo::*}:
+    if loop-value is {_robot}:
+      set {_tmpid} to loop-index
+  #
+  # > Get the robot name and the owner for the right suffix (on|off).
+  set {_name} to getnbtvalue(helm of {_robot},"robotname")
+  set {_uuid} to getnbtvalue(helm of {_robot},"owner")
+  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
+  if {_robotoff} is not set:
+    set {_robooff} to "{@robotoff}"
+  else:
+    set {_robooff} to {_robotoff}
+  #
+  # > Rename the robot to give it the new suffix (off).
+  {_robot}.setCustomName("%{_name}% %{_robooff}%")
+  #
+  # > Set the metadata Tag "robo" if the robot to 2,
+  # > this stops the animation.
+  set metadata "robo" of {_robot} to 2
+  #
+  # > Deletes the robot out of the active robot list.
+  delete {TMP::activerobo::%{_tmpid}%}
+
+#
 # > Event - on inventory close
 # > Actions:
 # > If a inventory is closed, remove the variable which holds the
@@ -1338,25 +1373,9 @@ on chunk unload:
     # > If the looped robot is within the chunk.
     if loop-value's chunk is event-chunk:
       #
-      # > Get the robot name and the owner for the right suffix (on|off).
-      set {_name} to getnbtvalue(helm of loop-value,"robotname")
-      set {_uuid} to getnbtvalue(helm of loop-value,"owner")
-      set {_lang} to {SK::lang::%{_uuid}%}
-      set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
-      if {_robotoff} is not set:
-        set {_robooff} to "{@robotoff}"
-      else:
-        set {_robooff} to {_robotoff}
-      #
-      # > Rename the robot to give it the new suffix (off).
-      loop-value.setCustomName("%{_name}% %{_robooff}%")
-      #
-      # > Set the metadata Tag "robo" if the robot to 2,
-	  # > this stops the animation.
-      set metadata "robo" of loop-value to 2
-      #
-      # > Deletes the robot out of the active robot list.
-      delete {TMP::activerobo::%loop-index%}
+      # > Disables the robot using the disablerobot function.
+      disablerobot(loop-value)
+
 #
 # > Event - on unload
 # > Actions:
@@ -1370,24 +1389,9 @@ on unload:
   # > Loop through all active robots to disable them.
   loop {TMP::activerobo::*}:
     #
-    # > Get the robot name and the owner uuid to set the correct suffix (on|off).
-    set {_name} to getnbtvalue(helm of loop-value,"robotname")
-    set {_uuid} to getnbtvalue(helm of loop-value,"owner")
-    set {_lang} to {SK::lang::%{_uuid}%}
-    set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
-    if {_robotoff} is not set:
-      set {_robooff} to "{@robotoff}"
-    else:
-      set {_robooff} to {_robotoff}
-    #
-    # > Set the new name of the robot with the correct suffix (off).
-    loop-value.setCustomName("%{_name}% %{_robooff}%")
-    #
-    # > Set the "robo" metadata key of the robot to 2 to disable it.
-    set metadata "robo" of loop-value to 2
-    #
-    # > Remove the robot from the active robot list.
-    delete {TMP::activerobo::%loop-index%}
+    # > Disables the robot using the disablerobot function.
+    disablerobot(loop-value)
+
 #
 # > Event - PlayerArmorStandManipulateEvent
 # > Actions:

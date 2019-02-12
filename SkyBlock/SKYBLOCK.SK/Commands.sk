@@ -307,7 +307,7 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Actions:
     # > Calls the warphandler function, which allows to teleport, set and delete warps.
     else if arg-1 is "warp" or "setwarp" or "delwarp":
-      warphandler(player,arg-1,arg-2)
+      warphandler(player,arg-1,arg-2,arg-3)
     #
     # > Argument: "lang" OR "language"
     # > If a player types in /island lang|language, the selectlanguage function is called.

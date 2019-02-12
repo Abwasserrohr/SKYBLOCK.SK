@@ -76,6 +76,7 @@ function deleteisland(p: offline player):
     
     delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%}
     delete {SB::islvl::%{_locx}%_%{_locy}%_%{_locz}%}
+    delete {SB::visits::%{_locx}%_%{_locy}%_%{_locz}%}
     delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::leader}
     delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::level}
     delete {SB::island::%{_locx}%_%{_locy}%_%{_locz}%::exp}

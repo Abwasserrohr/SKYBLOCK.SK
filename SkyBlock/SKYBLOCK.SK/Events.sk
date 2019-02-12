@@ -328,6 +328,18 @@ on explode:
   if {_allowed} is false:
     cancel event
 
+#
+# > Event: on load
+# > Actions:
+# > Calls functions to load configurations.
+on load:
+  #
+  # > Load the yaml configurations using the loadconfig function.
+  loadconfig()
+  #
+  # > Functions to start after config loaded, do not change this if you don't know what you're doing.
+  loadislandstoworld()
+ 
 # > Event: on script load
 # > Actions:
 # > This is loaded once the skript is loaded, it deletes some variables which aren't needed anymore

@@ -6,6 +6,52 @@
 # ==============
 
 #
+# > Function - loadymlparsenumber
+# > Actions:
+# > Loads a yml value and returns it as a parsed number.
+function loadymlparsenumber(value:text,file:text) :: number:
+  set {_tmpvalue} to yaml value {_value} from {_file}
+  set {_tmpvalue} to {_tmpvalue} parsed as number
+  return {_tmpvalue}
+
+#
+# > Function - parseasboolean
+# > Actions:
+# > If we have a boolean as text, convert it to a real one with this function.
+function parseasboolean(value:text) :: boolean:
+  if {_value} is "true":
+    return true
+  else if {_value} is "false":
+    return false
+
+#
+# > Function - loadymlparseboolean
+# > Actions:
+# > Loads a yml value and returns it as a parsed boolean.
+function loadymlparseboolean(value:text,file:text) :: boolean:
+  set {_tmpvalue} to yaml value {_value} from {_file}
+  return parseasboolean({_tmpvalue})
+
+#
+# > Function - loadymlparsetimespan
+# > Actions:
+# > Loads a yml value and returns it as a parsed timespan.
+function loadymlparsetimespan(value:text,file:text) :: timespan:
+  set {_tmpvalue} to yaml value {_value} from {_file}
+  set {_tmpvalue} to {_tmpvalue} parsed as timespan
+  return {_tmpvalue}
+  
+#
+# > Function - parseymllistpart:
+# > Actions:
+# > Removes json curly brackets from a string and seperates index from value.
+function parseymllistpart(value:text) :: objects:
+  replace all "{" with "" in {_value}
+  replace all "}" with "" in {_value}
+  set {_value::*} to {_value} split at "="
+  return {_value::*}
+
+#
 # > Function - loadconfig:
 # > Actions:
 # > This deletes variables to prevent old variables from being in the system
@@ -28,3 +74,123 @@ function loadconfig():
       #
       # > Save the extracted list values as variable.
       set {SB::config::%{_loopvalue::1}%} to {_loopvalue::2}
+  #
+  # > Load flags.yml and parse data as valid boolean.
+  delete {_load::*}
+
+  #
+  # > Load toggleflags
+  set {SB::config::toggleflags} to loadymlparseboolean("toggleflags","plugins/Skript/scripts/SkyBlock/config/flags.yml")
+
+  #
+  # > Load lists "defaultislandflags-foreign", "defaultislandflags-trusted" and "defaultislandflags-member" from flags.yml.
+  add "defaultislandflags-foreign", "defaultislandflags-trusted", "defaultislandflags-member" to {_load::*}
+  loop {_load::*}:
+    #
+    # > Get the type, eg. foreign, trusted or member into {_type::2}.
+    set {_type::*} to loop-value split at "-"
+    #
+    # > Get a list of the ones defined above.
+    set {_check::*} to yaml list "%loop-value%" from "plugins/Skript/scripts/SkyBlock/config/flags.yml"
+    #
+    # > Loop through the list and parse the data.
+    loop {_check::*}:
+      set {_value::*} to parseymllistpart("%loop-value-2%")
+      set {SB::config::defaultisflag::%{_type::2}%::%{_value::1}%} to parseasboolean({_value::2})
+  #
+  # > Load and parse the default island lobby flags.
+  set {_check::*} to yaml list "defaultlobbyflag" from "plugins/Skript/scripts/SkyBlock/config/flags.yml"
+  loop {_check::*}:
+    set {_value::*} to parseymllistpart("%loop-value%")
+    set {SB::config::defaultlobbyflag::%{_value::1}%} to parseasboolean({_value::2})
+
+  #
+  # > Load core.yml file data and parse it.
+  set {_corefile} to "plugins/Skript/scripts/SkyBlock/config/core.yml"
+  set {SB::config::world} to yaml value "world" from {_corefile}
+  set {SB::config::netherworld} to yaml value "netherworld" from {_corefile}
+  set {SB::config::isstorage} to yaml value "Structure" from {_corefile}
+  #
+  # > Load the spawn and parse it as valid location.
+  set {_spawnloc} to yaml value "spawn" from {_corefile}
+  set {_spawnloc::*} to {_spawnloc} split at ","
+  loop 5 times:
+    set {_spawnloc::%loop-number%} to {_spawnloc::%loop-number%} parsed as number
+  set {SB::config::spawn} to location at {_spawnloc::1}, {_spawnloc::2}, {_spawnloc::3} in "%{_spawnloc::6}%" parsed as world
+  set {SB::config::spawn}'s pitch to {_spawnloc::4}
+  set {SB::config::spawn}'s yaw to {_spawnloc::5}
+  set {_tmpvalue} to yaml value "debug" from {_corefile}
+  if {_tmpvalue} is "true":
+    set {SB::config::debug} to true
+  else:
+    set {SB::config::debug} to false
+  #
+  # > Load distance
+  set {SB::config::distance} to loadymlparsenumber("distance",{_corefile})
+  #
+  # > Load default size
+  set {SB::config::defaultsize} to loadymlparsenumber("defaultsize",{_corefile})
+  #
+  # > Load binduntillevel
+  set {SB::config::binduntillevel} to loadymlparsenumber("binduntillevel",{_corefile})
+  #
+  # > Load starthopper
+  set {SB::config::starthopper} to loadymlparsenumber("starthopper",{_corefile})
+  #
+  # > Load maxhopper
+  set {SB::config::maxhopper} to loadymlparsenumber("maxhopper",{_corefile})
+  #
+  # > Load starthomes
+  set {SB::config::starthomes} to loadymlparsenumber("starthomes",{_corefile})
+  #
+  # > Load maxhomes
+  set {SB::config::maxhomes} to loadymlparsenumber("maxhomes",{_corefile})
+  #
+  # > Load islandupgrades boolean
+  set {SB::config::maxhomes} to loadymlparseboolean("islandupgrades",{_corefile})
+  #
+  # > Load usechallenges boolean
+  set {SB::config::usechallenges} to loadymlparseboolean("usechallenges",{_corefile})
+  #
+  # > Load height
+  set {SB::config::height} to loadymlparsenumber("height",{_corefile})
+  #
+  # > Load protect
+  set {SB::config::protect} to loadymlparsenumber("protect",{_corefile})
+  #
+  # > Load invitecooldown
+  set {SB::config::invitecooldown} to loadymlparsetimespan("invitecooldown",{_corefile})
+  #
+  # > Load deletecooldown
+  set {SB::config::deletecooldown} to loadymlparsetimespan("deletecooldown",{_corefile})
+  #
+  # > Load calccooldown
+  set {SB::config::calccooldown} to loadymlparsetimespan("calccooldown",{_corefile})
+  #
+  # > Load buildpermission
+  set {SB::config::buildpermission} to yaml value "buildpermission" from {_corefile}
+  #
+  # > Load portalenter boolean
+  set {SB::config::portalenter} to loadymlparseboolean("portalenter",{_corefile})
+  #
+  # > Load nether boolean
+  set {SB::config::nether} to loadymlparseboolean("nether",{_corefile})
+  #
+  # > Load elytra boolean
+  set {SB::config::elytra} to loadymlparseboolean("elytra",{_corefile})
+  #
+  # > Load pvp boolean
+  set {SB::config::pvp} to loadymlparseboolean("pvp",{_corefile})
+  #
+  # > Load firespread boolean
+  set {SB::config::firespread} to loadymlparseboolean("firespread",{_corefile})
+  #
+  # > Load phantomspawn boolean
+  set {SB::config::phantomspawn} to loadymlparseboolean("phantomspawn",{_corefile})
+  #
+  # > Load preventhungerreset boolean
+  set {SB::config::preventhungerreset} to loadymlparseboolean("preventhungerreset",{_corefile})
+  #
+  # > Load explevel
+  set {SB::config::explevel} to loadymlparsenumber("explevel",{_corefile})
+

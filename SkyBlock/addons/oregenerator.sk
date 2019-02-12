@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.3
+# oregenerator.sk v0.0.5
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -73,22 +73,85 @@
 # > You're done! Have fun using a ore generator.
 # ==============
 
+#
+# > Configuration
+on load:
+  delete {SB::oregenc::*}
+  delete {SB::oregen::*}
+  # > Ore Generator:
+  # > Use this like this example:
+  # > The Chance amount can be between 100% and 0.01%, begin with low percentages
+  # > and go forward to bigger changes at the bottom. Do not add the % symbol.
+  # > To disable this feature, add a hyphen to the oregenerator.sk in the addons folder.
+  # > -------------------
+  # > Example for a chance of 0.2% for diamond ores:
+  # > add 0.2 to {SB::oregenc::*}
+  # > add diamond ore to {SB::oregen::*}
+  # > -------------------
+
+  add 0.5 to {SB::oregenc::*}
+  add diamond ore to {SB::oregen::*}
+  add 1 to {SB::oregenc::*}
+  add glowstone to {SB::oregen::*}
+  add 1 to {SB::oregenc::*}
+  add nether quartz ore to {SB::oregen::*}
+  add 3 to {SB::oregenc::*}
+  add redstone ore to {SB::oregen::*}
+  add 4 to {SB::oregenc::*}
+  add lapis ore to {SB::oregen::*}
+  add 3 to {SB::oregenc::*}
+  add gold ore to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add emerald ore to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add iron ore to {SB::oregen::*}
+  add 4 to {SB::oregenc::*}
+  add coal ore to {SB::oregen::*}
+  add 10 to {SB::oregenc::*}
+  add granite to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add andesite to {SB::oregen::*}
+  add 5 to {SB::oregenc::*}
+  add diorite to {SB::oregen::*}
+  add 100 to {SB::oregenc::*}
+  add stone to {SB::oregen::*}
+
+  #
+  # > Mutli level ore generator - Set to false to disable
+  #
+  set {SB::config::oregeneratorleveling} to true
+  
+  #
+  # > Increase ore spawning chances by percentage for every level
+  # > Example: 2 increases the chance of 0.2% to 0,204%
+  #
+  set {SB::config::oregenlevelbonus} to 10
+
+  #
+  # > How many stone blocks have to be produced until a new level is hit
+  #
+  set {SB::config::oregennewlevel} to 500
+  
+  #
+  # > Increase the difficulty to get the next ore generator level by multiplying it:
+  #
+  set {SB::config::oregenlevelmultiplyer} to 2
+  
+  #
+  # > Set the max. level bonus in percentage
+  # > 20 is a max. bonus of 20% on the chances
+  #
+  set {SB::config::oregenmaxlevelbonus} to 500
 
 #
-# > Event: on flow
-# > Triggered if water or lava is flowing
+# > Event: on block growth
+# > Triggered once a block is created
 # > Actions:
-# > If the event-block is lava and in radius of 1 blocks around this block is a cobblestone,
-# > execute the oregeneratorplace function with the location of the cobblestone.
-on flow:
-  #If the block that flows is lava:
-  if event-block is lava:
-    $ thread
-    #Do this loop in a thread and look for cobblestone to replace
-    loop blocks in radius 1 of event-block:
-      if y-coordinate of event-block is y-coordinate of loop-block:
-        if loop-block is cobblestone:
-          oregeneratorplace(location of loop-block)
+# > If the event-block is cobblestone or stone, call the oregeneratorplace
+# > function with the location of the event block.
+on block growth:
+  if event-block is cobblestone or stone:
+    oregeneratorplace(location of event-block)
 
 #
 # > Function - oregeneratorplace:
@@ -164,8 +227,9 @@ function oregeneratorplace(l:location):
       # > This is going to give the player a chance in a percentage, which is defined in {_chance}.
       chance of {_chance}%:
         #
-        # > If the player has been lucky, this is setting the block to the new "lucky" block and then
-        # > stops the function.
+        # > If the player has been lucky, wait a tick and then set the block
+        # > at the event location, then stop.
+        wait 1 tick
         set block at {_l} to {SB::oregen::%loop-index%}
         stop
   #
