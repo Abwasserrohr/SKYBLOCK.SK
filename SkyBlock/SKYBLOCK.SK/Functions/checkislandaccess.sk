@@ -107,7 +107,10 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
         return {_check}
       #
       # > If there hasn't been a return yet, return false now, since the player has no
-      # > right to do this action here.
+      # > right to do this action here. Also check if there are upgrades available to
+      # > give the player access to the island.
+      if {_t} is not 5:
+        checkforupgrades({_p},{_bedrock})
       return false
   #
   # > The locations aren't match, go forward and do another check, if that's also not
@@ -116,8 +119,29 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
     if {_t} is 1:
       return checkislandaccess({_p}, {_l}, {_event}, {_block}, 2)
     else:
+      #
+      # > The player isn't allowed, return false. Also check if there
+      # > are upgrades which could give the player access too this area.
+      if {_t} is not 5:
+        checkforupgrades({_p},{_bedrock})
       return false
 
+#
+# > Function - checkforupgrades:
+# > Parameters:
+# > <player>player
+# > <location>bedrock location of the current island
+# > Actions:
+# > If the player would be allowed on the island but the island is not fully upgraded,
+# > send a information that the island can be upgraded.
+function checkforupgrades(player:player,bedrock:location):
+  set {_allowed} to checkislandaccess({_player},{_bedrock},"build",air,5)
+  if {_allowed} is true:
+    set {_uuid} to uuid of {_player}
+    set {_lang} to {SK::lang::%{_uuid}%}
+    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::upgradeavailable::%{_lang}%}%" to {_player}
+
+#
 # > Function - getcurrentbedrock:
 # > Arguments:
 # > <player>player, <location>location
