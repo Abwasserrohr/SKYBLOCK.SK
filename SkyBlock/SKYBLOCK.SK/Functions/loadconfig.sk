@@ -15,15 +15,22 @@ function loadymlparsenumber(value:text,file:text) :: number:
   return {_tmpvalue}
 
 #
+# > Function - parseasboolean
+# > Actions:
+# > If we have a boolean as text, convert it to a real one with this function.
+function parseasboolean(value:text) :: boolean:
+  if {_value} is "true":
+    return true
+  else if {_value} is "false":
+    return false
+
+#
 # > Function - loadymlparseboolean
 # > Actions:
 # > Loads a yml value and returns it as a parsed boolean.
 function loadymlparseboolean(value:text,file:text) :: boolean:
   set {_tmpvalue} to yaml value {_value} from {_file}
-  if {_tmpvalue} is "true":
-    return true
-  else if {_tmpvalue} is "false":
-    return false
+  return parseasboolean({_tmpvalue})
 
 #
 # > Function - loadymlparsetimespan
@@ -34,6 +41,16 @@ function loadymlparsetimespan(value:text,file:text) :: timespan:
   set {_tmpvalue} to {_tmpvalue} parsed as timespan
   return {_tmpvalue}
   
+#
+# > Function - parseymllistpart:
+# > Actions:
+# > Removes json curly brackets from a string and seperates index from value.
+function parseymllistpart(value:text) :: objects:
+  replace all "{" with "" in {_value}
+  replace all "}" with "" in {_value}
+  set {_value::*} to {_value} split at "="
+  return {_value::*}
+
 #
 # > Function - loadconfig:
 # > Actions:
@@ -57,6 +74,35 @@ function loadconfig():
       #
       # > Save the extracted list values as variable.
       set {SB::config::%{_loopvalue::1}%} to {_loopvalue::2}
+  #
+  # > Load flags.yml and parse data as valid boolean.
+  delete {_load::*}
+
+  #
+  # > Load toggleflags
+  set {SB::config::toggleflags} to loadymlparseboolean("toggleflags","plugins/Skript/scripts/SkyBlock/config/flags.yml")
+
+  #
+  # > Load lists "defaultislandflags-foreign", "defaultislandflags-trusted" and "defaultislandflags-member" from flags.yml.
+  add "defaultislandflags-foreign", "defaultislandflags-trusted", "defaultislandflags-member" to {_load::*}
+  loop {_load::*}:
+    #
+    # > Get the type, eg. foreign, trusted or member into {_type::2}.
+    set {_type::*} to loop-value split at "-"
+    #
+    # > Get a list of the ones defined above.
+    set {_check::*} to yaml list "%loop-value%" from "plugins/Skript/scripts/SkyBlock/config/flags.yml"
+    #
+    # > Loop through the list and parse the data.
+    loop {_check::*}:
+      set {_value::*} to parseymllistpart("%loop-value-2%")
+      set {SB::config::defaultisflag::%{_type::2}%::%{_value::1}%} to parseasboolean({_value::2})
+  #
+  # > Load and parse the default island lobby flags.
+  set {_check::*} to yaml list "defaultlobbyflag" from "plugins/Skript/scripts/SkyBlock/config/flags.yml"
+  loop {_check::*}:
+    set {_value::*} to parseymllistpart("%loop-value%")
+    set {SB::config::defaultlobbyflag::%{_value::1}%} to parseasboolean({_value::2})
 
   #
   # > Load core.yml file data and parse it.
@@ -147,3 +193,4 @@ function loadconfig():
   #
   # > Load explevel
   set {SB::config::explevel} to loadymlparsenumber("explevel",{_corefile})
+
