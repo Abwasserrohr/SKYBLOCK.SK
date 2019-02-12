@@ -128,8 +128,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 
 #
 # > Function - checkforupgrades:
-# > Arguments:
-# > <player>player, <location>location, <block>bedrock location of the current island
+# > Parameters:
+# > <player>player
+# > <location>bedrock location of the current island
 # > Actions:
 # > If the player would be allowed on the island but the island is not fully upgraded,
 # > send a information that the island can be upgraded.
