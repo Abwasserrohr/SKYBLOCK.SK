@@ -12,7 +12,7 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 - [Vault](https://www.spigotmc.org/resources/vault.34315)
 - [Fe](https://www.spigotmc.org/resources/fe.723/) (Any economy plugin supporting Vault is possible)
 
-### Optional 
+### Useful extensions 
 - [AdvancedAchievements](https://github.com/PyvesB/AdvancedAchievements)
 
 ### Why SKYBLOCK.SK
