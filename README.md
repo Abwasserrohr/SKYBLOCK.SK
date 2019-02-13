@@ -12,6 +12,8 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 - [Vault](https://www.spigotmc.org/resources/vault.34315)
 - [Fe](https://www.spigotmc.org/resources/fe.723/) (Any economy plugin supporting Vault is possible)
 
+### Optional 
+- [AdvancedAchievements](https://github.com/PyvesB/AdvancedAchievements)
 
 ### Why SKYBLOCK.SK
 SKYBLOCK.SK allows server operators to open the files plain in any editor of their choice, like Notepad++ and saving it directly into the server folder. Then reload the server and it can be used.
