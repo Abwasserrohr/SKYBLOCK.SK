@@ -1,0 +1,854 @@
+#
+# ==============
+# customarmorstands.sk v0.0.1
+# ==============
+# Allow your players to edit their armor stands with ease.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > gui.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/gui.sk
+# > robots.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/robots.sk
+# ==============
+# How to use it:
+# ==============
+# > Add customarmorstands.sk to your "plugins/Skript/scripts" folder and then reload.
+# > Every armor stand can be changed if the player has the permission at the location.
+# > Change the "checkarmorstandplacepermission" function to fit your protection system.
+# > Predefined to work with SKYBLOCK.SK.
+# --------------
+#
+# > Change these options as you want. They are meant to be changed.
+options:
+	#
+	# > Permissions:
+	#
+	# > This permission allows to place and break any armor stand.
+	adminpermission: is.admin
+	#
+	# > This permission allows to get the clone tool to duplicate
+	# > armor stands. This is only suitable for creative servers.
+	clonepermission: is.admin
+	#
+	# > The copy tool which is given to the player if a armor stand gets
+	# > removed or cloned.
+	copytool: stick
+	#
+	# > Menu background item
+	backgrounditem: black stained glass pane
+	#
+	# > No item selected item
+	noitemselecteditem: white stained glass pane
+	#
+	# > X coordinate item
+	xcoorditem: red wool
+	#
+	# > Y coordinate item
+	ycoorditem: green wool
+	#
+	# > Z coordinate item
+	zcoorditem: blue wool
+	#
+	# > Change direction item
+	directionitem: magenta glazed terracotta
+	#
+	# > Clone item
+	cloneitem: armor stand
+	#
+	# > Toggle size item
+	togglesizeitem: red mushroom
+	#
+	# > Toggle visibility item
+	togglevisibilityitem: water bottle
+	#
+	# > Toggle glow item
+	toggleglowitem: glowstone block
+	#
+	# > Toggle baseplate item
+	togglebaseplateitem: stone slab
+	#
+	# > Toglle arms item
+	togglearmsitem: stick
+	#
+	# > Toggle name visibility item
+	togglenamevisibilityitem: name tag
+	#
+	# > Remove armor stand item
+	removearmorstanditem: barrier
+	#
+	# > Fallback translations - These get used if there is no SKYBLOCK.SK
+	# > language file loaded. You can find these language files here: 
+	# > https://github.com/Abwasserrohr/SKYBLOCK.SK/tree/master/SkyBlock/lang
+	guiheader: &lCustom Stands
+	head: &rHead
+	body: &rBody
+	legs: &rLegs
+	rightleg: &rRight leg
+	leftleg: &rLeft leg
+	rightarm: &rRight arm
+	leftarm: &rLeft arm
+	feet: &rFeet
+	xcoord: &rChange &cX&r Coordinate
+	ycoord: &rChange &2Y&r Coordinate
+	zcoord: &rChange &bZ&r Coordinate
+	placeitemslot: &7Place here the item\n&7you want for this slot.
+	copytoolname: &rCopy Stick
+	copytoollore: &7This tool only copies\n&7the armor stand temporary,\n&7do not use it to\n&7store for long term.
+	togglesize: &rSize
+	togglesizelore: &7Toggle the size\n&7between big and small.
+	togglevisibility: &rVisibility
+	togglevisibilitylore: &7Toggle the visibility\n&7of this armor stand.
+	toggleglow: &rGlow
+	toggleglowlore: &7Toggle the glow\n&7of the armor stand.
+	togglebaseplate: &rBaseplate
+	togglebaseplatelore: &7Toggle the baseplate\n&7of the armor stand.
+	togglearms: &rArms
+	togglearmslore: &7Toggle the arms\n&7of the armor stand.
+	changedirection: &rDirection
+	changedirectionlore: &rChange the direction\n&7of the armor stand.
+	copyarmorstand: &rCopy
+	copyarmorstandlore: &7Copy the armor stand.
+	togglename: &rName
+	togglenamelore: &7Toggle the name\n&7between visible and invisible.\n&7Customize the name\n&7with /renamestand <text>.
+	removearmorstand: &rRemove
+	removearmorstandlore: &7Remove this armor stand\n&7and get a copy of it\n&7to replace the armor stand.
+	#
+	# > Please note: You may want to change the function "checkarmorstandplacepermission" below to fit
+	# > it into your protections system. It should return true if the player is allowed to change the armor stand.
+
+#
+# > Function - checkarmorstandplacepermission
+# > Parameters:
+# > <player>player
+# > Actions:
+# > Feel free to change this function to fit your server.
+# > If this function returns true, the user is allowed to
+# > place, modify and remove the armor stands.
+function checkarmorstandplacepermission(player:player,location:location) :: boolean:
+	if {_player} has permission "{@adminpermission}":
+		return true
+	#
+	# > Use SKYBLOCK.SK function to determine if the player is allowed.
+	return checkislandaccess({_player},{_location})
+
+#
+# > Event - on rightclick holding the predefined copy tool
+# > Actions:
+# > Creates a copy of the already created armor stand which is
+# > stored as metadata.
+on rightclick holding {@copytool}:
+	set {_copytool} to getnbtvalue(player's tool,"customstand")
+	if {_copytool} is not "":
+		cancel event
+		set {_loc} to location of player's target block
+		add 0.5 to y-coordinate of {_loc}
+		if checkarmorstandplacepermission(player,{_loc}) is not true:
+			stop
+		set {_target} to metadata value "%{_copytool}%" of player
+		if player's gamemode is not creative:
+			remove 1 of player's tool from player's inventory
+		spawn 1 armor stand at {_loc}
+		set {_robo} to last spawned entity
+		{_robo}.setGravity(false)
+		{_robo}.setBasePlate({_target}.hasBasePlate())
+		{_robo}.setCanPickupItems(false)
+		{_robo}.setCustomName({_target}.getCustomName())
+		{_robo}.setCustomNameVisible({_target}.isCustomNameVisible())
+		{_robo}.setVisible({_target}.isVisible())
+		{_robo}.setSmall({_target}.isSmall())
+		{_robo}.setArms({_target}.hasArms())
+		{_robo}.setInvulnerable(true)
+		{_robo}.setGlowing({_target}.isGlowing())
+		
+		{_robo}.setHelmet({_target}.getHelmet())
+		{_robo}.setChestplate({_target}.getChestplate())
+		{_robo}.setLeggings({_target}.getLeggings())
+		{_robo}.setBoots({_target}.getBoots())
+		set {_robo}'s offhand tool to {_target}'s offhand tool
+		set {_robo}'s tool to {_target}'s tool
+		
+		{_robo}.setHeadPose({_target}.getHeadPose())
+		{_robo}.setBodyPose({_target}.getBodyPose())
+		{_robo}.setRightArmPose({_target}.getRightArmPose())
+		{_robo}.setLeftArmPose({_target}.getLeftArmPose())
+		{_robo}.setRightLegPose({_target}.getRightLegPose())
+		{_robo}.setLeftLegPose({_target}.getLeftLegPose())
+
+#
+# > On rightclick holding an armor stand
+# > Actions:
+# > If a player rightclicks holding a armor stand,
+# > a custom armor stand is placed which has special settings.
+on rightclick:
+	if player's tool is a armor stand:
+		cancel event
+		#
+		# > Set the location where the armor stand should be spawned.
+		set {_loc} to location of player's target block
+		add 0.5 to y-coordinate of {_loc}
+		#
+		# > Check if the player is allowed to place the armor stand at this location.
+		if checkarmorstandplacepermission(player,{_loc}) is not true:
+			stop
+		if gamemode of player is not creative:
+			remove 1 of player's tool from player's inventory
+		#
+		# > Spawn the armor stand at the location.
+		spawn 1 armor stand at {_loc}
+		#
+		# > Get the armor stand in a variable, which has been spawned above.
+		set {_stand} to last spawned entity
+
+		{_stand}.setGravity(false)
+		{_stand}.setCanPickupItems(false)
+		{_stand}.setVisible(true)
+		{_stand}.setInvulnerable(true)
+
+#
+# > Import a Java class from bukkit to catch the PlayerInteractAtEntityEvent event.
+import:
+	org.bukkit.event.player.PlayerInteractAtEntityEvent
+	java.util.UUID
+
+#
+# > Event - PlayerInteractAtEntityEvent
+# > Actions:
+# > If the entitiy is a armor stand, cancel the event and call the opencustomstandmenu
+# > function. Also sets the entity as a metadata value into the player.
+on PlayerInteractAtEntityEvent:
+	if event.getRightClicked() is armor stand:
+		set metadata "customarmorstand-target" of event.getPlayer() to event.getRightClicked()
+		opencustomstandmenu(event.getPlayer())
+		cancel event
+
+#
+# > Command - /renamestand
+# > Arugments:
+# > <text>name of the armor stand
+# > Actions:
+# > Renames the armor stand if the player is allowed to do it and if the name has
+# > a length of 20 or smaller.
+command /renamestand [<text>]:
+	trigger:
+		set {_target} to player's target
+		if {_target} is a armor stand:
+			if checkarmorstandplacepermission(player,{_target}'s location) is not true:
+				stop
+			if length of arg-1 <= 20:
+				{_target}.setCustomName(colored arg-1)
+
+#
+# > Function - opencustomstandmenu
+# > Parameters:
+# > <player>player
+# > Actions:
+# > Opens the custom armor stand menu. All functions are called through this menu and
+# > it has multilanguage support from SKYBLOCK.SK.
+function opencustomstandmenu(player:player):
+
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	if checkarmorstandplacepermission({_player},{_target}'s location) is not true:
+		stop
+
+	#
+	# > Get the translation for the menu.
+	set {_uuid} to uuid of {_player}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	#
+	# > If the translation isn't set, use the fallback one.
+	if {SB::lang::cs::guiheader::%{_lang}%} is not set:
+		set {_headerlang} to "{@guiheader}"
+		set {_headlang} to "{@head}"
+		set {_bodylang} to "{@body}"
+		set {_legslang} to "{@legs}"
+		set {_feetlang} to "{@feet}"
+		set {_rightleglang} to "{@rightleg}"
+		set {_leftleglang} to "{@leftleg}"
+		set {_rightarmlang} to "{@rightarm}"
+		set {_leftarmlang} to "{@leftarm}"
+		set {_xlang} to "{@xcoord}"
+		set {_ylang} to "{@ycoord}"
+		set {_zlang} to "{@zcoord}"
+		set {_placeslotlang} to "{@placeitemslot}"
+		set {_togglesizelang} to "{@togglesize}"
+		set {_togglesizelorelang} to "{@togglesizelore}"
+		set {_togglevisibilitylang} to "{@togglevisibility}"
+		set {_togglevisibilitylorelang} to "{@togglevisibilitylore}"
+		set {_toggleglowlang} to "{@toggleglow}"
+		set {_toggleglowlorelang} to "{@toggleglowlore}"
+		set {_togglebaseplatelang} to "{@togglebaseplate}"
+		set {_togglebaseplatelorelang} to "{@togglebaseplatelore}"
+		set {_togglearmslang} to "{@togglearms}"
+		set {_togglearmslorelang} to "{@togglearmslore}"
+		set {_changedirectionlang} to "{@changedirection}"
+		set {_changedirectionlorelang} to "{@changedirectionlore}"
+		set {_copyarmorstandlang} to "{@copyarmorstand}"
+		set {_copyarmorstandlorelang} to "{@copyarmorstandlore}"
+		set {_togglenamelang} to "{@togglename}"
+		set {_togglenamelorelang} to "{@togglenamelore}"
+		set {_removearmorstandlang} to "{@removearmorstand}"
+		set {_removearmorstandlorelang} to "{@removearmorstandlore}"
+	#
+	# > The translation is available, use it.
+	else:
+		set {_headerlang} to {SB::lang::cs::guiheader::%{_lang}%}
+		set {_headlang} to {SB::lang::cs::head::%{_lang}%}
+		set {_bodylang} to {SB::lang::cs::body::%{_lang}%}
+		set {_legslang} to {SB::lang::cs::legs::%{_lang}%}
+		set {_feetlang} to {SB::lang::cs::feet::%{_lang}%}
+		set {_rightleglang} to {SB::lang::cs::rightleg::%{_lang}%}
+		set {_leftleglang} to {SB::lang::cs::leftleg::%{_lang}%}
+		set {_rightarmlang} to {SB::lang::cs::rightarm::%{_lang}%}
+		set {_leftarmlang} to {SB::lang::cs::leftarm::%{_lang}%}
+		set {_xlang} to {SB::lang::cs::xcoord::%{_lang}%}
+		set {_ylang} to {SB::lang::cs::ycoord::%{_lang}%}
+		set {_zlang} to {SB::lang::cs::zcoord::%{_lang}%}
+		set {_placeslotlang} to {SB::lang::cs::placeitemslot::%{_lang}%}
+		set {_togglesizelang} to {SB::lang::cs::togglesize::%{_lang}%}
+		set {_togglesizelorelang} to {SB::lang::cs::togglesizelore::%{_lang}%}
+		set {_togglevisibilitylang} to {SB::lang::cs::togglevisibility::%{_lang}%}
+		set {_togglevisibilitylorelang} to {SB::lang::cs::togglevisibilitylore::%{_lang}%}
+		set {_toggleglowlang} to {SB::lang::cs::toggleglow::%{_lang}%}
+		set {_toggleglowlorelang} to {SB::lang::cs::toggleglowlore::%{_lang}%}
+		set {_togglebaseplatelang} to {SB::lang::cs::togglebaseplate::%{_lang}%}
+		set {_togglebaseplatelorelang} to {SB::lang::cs::togglebaseplatelore::%{_lang}%}
+		set {_togglearmslang} to {SB::lang::cs::togglearms::%{_lang}%}
+		set {_togglearmslorelang} to {SB::lang::cs::togglearmslore::%{_lang}%}
+		set {_changedirectionlang} to {SB::lang::cs::changedirection::%{_lang}%}
+		set {_changedirectionlorelang} to {SB::lang::cs::changedirectionlore::%{_lang}%}
+		set {_copyarmorstandlang} to {SB::lang::cs::copyarmorstand::%{_lang}%}
+		set {_copyarmorstandlorelang} to {SB::lang::cs::copyarmorstandlore::%{_lang}%}
+		set {_togglenamelang} to {SB::lang::cs::togglename::%{_lang}%}
+		set {_togglenamelorelang} to {SB::lang::cs::togglenamelore::%{_lang}%}
+		set {_removearmorstandlang} to {SB::lang::cs::removearmorstand::%{_lang}%}
+		set {_removearmorstandlorelang} to {SB::lang::cs::removearmorstandlore::%{_lang}%}
+	#
+	# > Only open the inventory, if it hasn't been opened.
+	if name of {_player}'s current inventory is not {_headerlang}:
+		opengui({_player},54,{_headerlang})
+	#
+	# > Fill the Inventory with empty glass panes.
+	loop 54 times:
+		setguiitem({_player},loop-number - 1,{@backgrounditem},1," "," ","",false)
+	#
+	# > Once a player clicks on one of these menu items, the functions defined in these are
+	# > called. This addon needs gui.sk to work.
+	#
+	# > Head
+	setguiitem({_player},0,leather helmet,1,"%{_headlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""head"")",false)
+	if {_target}.getHelmet() is air:
+		setguiitem({_player},1,{@noitemselecteditem},1,"%{_headlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""head"")",false)
+	else:
+		set {_item} to {_target}.getHelmet()
+		setguiitem({_player},1,{_item},1,"%{_headlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""head"")",false)
+	#
+	# > Head coordinate items
+	setguiitem({_player},3,{@xcoorditem},1,"%{_headlang}%",{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""head"",""x"")",true)
+	setguiitem({_player},4,{@ycoorditem},1,"%{_headlang}%",{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""head"",""y"")",true)
+	setguiitem({_player},5,{@zcoorditem},1,"%{_headlang}%",{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""head"",""z"")",true)
+	#
+	# > Body
+	setguiitem({_player},9,leather chestplate,1,"%{_bodylang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""body"")",false)
+	if {_target}.getChestplate() is air:
+		setguiitem({_player},10,{@noitemselecteditem},1,"%{_bodylang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""body"")",false)
+	else:
+		set {_item} to {_target}.getChestplate()
+		setguiitem({_player},10,{_item},1,"%{_bodylang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""body"")",false)
+	#
+	# > Body coordinate items
+	setguiitem({_player},12,{@xcoorditem},1,"%{_bodylang}%",{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""body"",""x"")",true)
+	setguiitem({_player},13,{@ycoorditem},1,"%{_bodylang}%",{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""body"",""y"")",true)
+	setguiitem({_player},14,{@zcoorditem},1,"%{_bodylang}%",{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""body"",""z"")",true)
+	#
+	# > Legs
+	setguiitem({_player},18,leather leggings,1,"%{_legslang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leg"")",false)
+	if {_target}.getLeggings() is air:
+		setguiitem({_player},19,{@noitemselecteditem},1,"%{_legslang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leg"")",false)
+	else:
+		set {_item} to {_target}.getLeggings()
+		setguiitem({_player},19,{_item},1,"%{_legslang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leg"")",false)
+	#
+	# > Right leg coordinate items
+	setguiitem({_player},21,{@xcoorditem},1,{_rightleglang},{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightleg"",""x"")",true)
+	setguiitem({_player},22,{@ycoorditem},1,{_rightleglang},{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightleg"",""y"")",true)
+	setguiitem({_player},23,{@zcoorditem},1,{_rightleglang},{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightleg"",""z"")",true)
+	#
+	# > Left leg coordinate items
+	setguiitem({_player},30,{@xcoorditem},1,{_leftleglang},{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftleg"",""x"")",true)
+	setguiitem({_player},31,{@ycoorditem},1,{_leftleglang},{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftleg"",""y"")",true)
+	setguiitem({_player},32,{@zcoorditem},1,{_leftleglang},{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftleg"",""z"")",true)
+	#
+	# > Boots
+	setguiitem({_player},27,leather boots,1,"%{_feetlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""foot"")",false)
+	if {_target}.getBoots() is air:
+		setguiitem({_player},28,{@noitemselecteditem},1,"%{_feetlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""foot"")",false)
+	else:
+		set {_item} to {_target}.getBoots()
+		setguiitem({_player},28,{_item},1,"%{_feetlang}%",{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""foot"")",false)
+	#
+	# > Right arm
+	setguiitem({_player},36,stick,1,{_rightarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""rightarm"")",false)
+	if {_target}'s tool is air:
+		setguiitem({_player},37,{@noitemselecteditem},1,{_rightarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""rightarm"")",false)
+	else:
+		set {_item} to {_target}'s tool
+		setguiitem({_player},37,{_item},1,{_rightarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""rightarm"")",false)
+	#
+	# > Right arm coordinate items
+	setguiitem({_player},39,{@xcoorditem},1,{_rightarmlang},{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightarm"",""x"")",true)
+	setguiitem({_player},40,{@ycoorditem},1,{_rightarmlang},{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightarm"",""y"")",true)
+	setguiitem({_player},41,{@zcoorditem},1,{_rightarmlang},{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""rightarm"",""z"")",true)
+	#
+	# > Left arm
+	setguiitem({_player},45,stick,1,{_leftarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leftarm"")",false)
+	if {_target}'s offhand tool is air:
+		setguiitem({_player},46,{@noitemselecteditem},1,{_leftarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leftarm"")",false)
+	else:
+		set {_item} to {_target}'s offhand tool
+		setguiitem({_player},46,{_item},1,{_leftarmlang},{_placeslotlang},"changecustomstandslot(""%{_player}%"" parsed as player,event,""leftarm"")",false)
+	#
+	# > Left arm coordinate items
+	setguiitem({_player},48,{@xcoorditem},1,{_leftarmlang},{_xlang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftarm"",""x"")",true)
+	setguiitem({_player},49,{@ycoorditem},1,{_leftarmlang},{_ylang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftarm"",""y"")",true)
+	setguiitem({_player},50,{@zcoorditem},1,{_leftarmlang},{_zlang},"starteditcustomstand(""%{_player}%"" parsed as player,""leftarm"",""z"")",true)
+	#
+	# > Special options
+	setguiitem({_player},7,{@directionitem},1,{_changedirectionlang},{_togglearmslorelang},"starteditcustomstand(""%{_player}%"" parsed as player,""direction"",""direction"")",true)
+	#
+	# > Only show the clone item in the inventory menu if the player has the permission to do so.
+	if {_player} has permission "{@clonepermission}":
+		setguiitem({_player},8,{@cloneitem},1,{_copyarmorstandlang},{_copyarmorstandlorelang},"copycustomstand(""%{_player}%"" parsed as player)",true)
+	#
+	# > Change X Coordinate
+	setguiitem({_player},16,{@xcoorditem},1,{_xlang},"","starteditcustomstand(""%{_player}%"" parsed as player,""location"",""x"")",true)
+	#
+	# > Change Y Coordinate
+	setguiitem({_player},25,{@ycoorditem},1,{_ylang},"","starteditcustomstand(""%{_player}%"" parsed as player,""location"",""y"")",true)
+	#
+	# > Change Z Coordinate
+	setguiitem({_player},34,{@zcoorditem},1,{_zlang},"","starteditcustomstand(""%{_player}%"" parsed as player,""location"",""z"")",true)
+	#
+	# > Toggle size
+	setguiitem({_player},17,{@togglesizeitem},1,{_togglesizelang},{_togglesizelorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""size"")",true)
+	#
+	# > Toggle visibility
+	setguiitem({_player},26,{@togglevisibilityitem},1,{_togglevisibilitylang},{_togglevisibilitylorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""visible"")",true)
+	#
+	# > Toggle glow
+	setguiitem({_player},35,{@toggleglowitem},1,{_toggleglowlang},{_toggleglowlorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""glow"")",true)
+	#
+	# > Toggle baseplate
+	setguiitem({_player},44,{@togglebaseplateitem},1,{_togglebaseplatelang},{_togglebaseplatelorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""baseplate"")",true)
+	#
+	# > Toggle arms
+	setguiitem({_player},53,{@togglearmsitem},1,{_togglearmslang},{_togglearmslorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""arms"")",true)
+	#
+	# > Toggle custom name visibility
+	setguiitem({_player},43,{@togglenamevisibilityitem},1,{_togglenamelang},{_togglenamelorelang},"togglecustomstanddata(""%{_player}%"" parsed as player,""name"")",true)
+	#
+	# > Remove the armor stand
+	setguiitem({_player},52,{@removearmorstanditem},1,{_removearmorstandlang},{_removearmorstandlorelang},"removecustomstand(""%{_player}%"" parsed as player)",true)
+
+#
+# > Function - removecustomstand
+# > Parameters:
+# > <player>player
+# > Actions:
+# > Kills the armor stand the player wanted to remove. This should only
+# > be called if the right target is set in the metadata of the player.
+function removecustomstand(player:player):
+	#
+	# > Give the player a copy of the custom armor stand and then kill it.
+	copycustomstand({_player})
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	kill {_target}
+
+#
+# > Function - copycustomstand
+# > Parameters:
+# > <player>player
+# > Actions:
+# > Creates a copy item which can be used to copy the armor stand.
+function copycustomstand(player:player):
+	#
+	# > Get the translation for the tool as local variable.
+	set {_uuid} to uuid of {_player}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	if {SB::lang::cs::copytoolname::%{_lang}%} is not set:
+		set {_copytoolnamelang} to "{@copytoolname}"
+		set {_copytoollorelang} to "{@copytoollore}"
+	else:
+		set {_copytoolnamelang} to {SB::lang::cs::copytoolname::%{_lang}%}
+		set {_copytoollorelang} to {SB::lang::cs::copytoollore::%{_lang}%}
+	#
+	# > Get the target from the metadata of the player.
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	#
+	# > Create a random uuid for the copied armor stand.
+	set {_newuuid} to UUID.randomUUID()
+	#
+	# > Create a new item which is the predefined copy tool from the options,
+	# > whicch is going to be named as written in the predefined language.
+	set {_item} to 1 of {@copytool} named "%{_copytoolnamelang}%"
+	#
+	# > Set the lore of the tool to the information for the player. Also
+	# > uses the predefined text from the language files or fallback translation.
+	set {_copytoollorelang::*} to {_copytoollorelang} split at "\n"
+	loop size of {_copytoollorelang::*} times:
+		set line loop-number of {_item}'s lore to {_copytoollorelang::%loop-number%}
+	#
+	# > Sets the armor stand object to the metadata value named
+	# > after the new random uuid to the player.
+	set metadata "%{_newuuid}%" of {_player} to {_target}	
+	#
+	# > Save the random uuid to the nbt tag "customstand" to get the
+	# > armor stand object later back, if the player uses the tool.
+	set {_item} to setnbtvalue({_item},"customstand","%{_newuuid}%")
+	#
+	# > Give the player one of the copy tool.
+	give 1 of {_item} to {_player}
+
+#
+# > Function - changecustomstandslot
+# > Parameters:
+# > <player>the player who wants to change the slot
+# > <event>the click event to get the cursor
+# > <text>the destination of which slot should be changed
+# > Actions:
+# > Changes the defined slot of the armor stand to the one the player
+# > has in the cursor.
+function changecustomstandslot(player:player,event:event,destination:text):
+	#
+	# > Get the target to change the slot. This is a custom armor stand.
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	
+	#
+	# > Gegt the item in the curser of the player.
+	set {_item} to {_event}.getCursor()
+	#
+	# > If the amount of the item in the curser is 1, set the curser item to air.
+	if {_item}.getAmount() is 1:
+		{_player}.setItemOnCursor(null)
+	#
+	# > If the amount of the curser is bigger than 0, remove 1 from the ItemStack.
+	else:
+		{_item}.setAmount({_item}.getAmount()-1)
+	#
+	# > Set the item to a valid ItemStack amount to place it within a slot
+	# > of a armor stand.
+	set {_placeitem} to 1 of {_item}
+	#
+	# > Depending of the destination, set the slots. Also call the
+	# > getarmorstanditemback function to give the player the item
+	# > back with a fluent transition.
+	if {_destination} is "head":
+		getarmorstanditemback({_player},{_event}.getCursor(),{_target}.getHelmet())
+		{_target}.setHelmet({_placeitem})
+	if {_destination} is "body":
+		getarmorstanditemback({_player},{_event}.getCursor(),{_target}.getChestplate())
+		{_target}.setChestplate({_placeitem})
+	if {_destination} is "leg":
+		getarmorstanditemback({_player},{_event}.getCursor(),{_target}.getLeggings())
+		{_target}.setLeggings({_placeitem})
+	if {_destination} is "foot":
+		getarmorstanditemback({_player},{_event}.getCursor(),{_target}.getBoots())
+		{_target}.setBoots({_placeitem})
+	if {_destination} is "rightarm":
+		#
+		# > We have to set the tool to a variable before using it within a function,
+		# > otherwise this would result in an error. This may change in the future.
+		set {_tool} to {_target}'s tool
+		getarmorstanditemback({_player},{_event}.getCursor(),{_tool})
+		set {_target}'s tool to {_placeitem}
+	if {_destination} is "leftarm":
+		#
+		# > We have to set the tool to a variable before using it within a function,
+		# > otherwise this would result in an error. This may change in the future.
+		set {_tool} to {_target}'s offhand tool
+		getarmorstanditemback({_player},{_event}.getCursor(),{_tool})
+		set {_target}'s offhand tool to {_placeitem}
+	#
+	# > Update the inventory of the player and reopen the updated version of the menu.
+	{_player}.updateInventory()
+	opencustomstandmenu({_player})
+
+#
+# > Functions - getarmorstanditemback
+# > Parameters:
+# > <player>the player who should get the item back
+# > <item>the current cursor item of the player
+# > <item>the item which should be given to the player
+# > Actions:
+# > Give the player the item back.
+function getarmorstanditemback(player:player,cursor:item,item:item):
+	#
+	# > If the cursor is empty (air), set the cursor directly to the item.
+	if {_cursor} is air:
+		{_player}.setItemOnCursor({_item})
+	#
+	# > If the cursor isn't empty, give it into the inventory, if there
+	# > is enough space.
+	else:
+		if {_player}'s inventory has space for {_item}:
+			give {_item} to {_player}'s inventory
+		#
+		# > If there is not enough space, drop the item at the player.
+		else:
+			drop {_item} at {_player}'s location
+
+#
+# > Function - starteditcustomstand
+# > Parameters:
+# > <player>the player who edits the custom armor stand
+# > <text>the part which should be edited by the player
+# > <text>the angle which is edited by the player
+# > Actions:
+# > Changes the armor stand by checking the current hotbar slot of the player.
+# > By scrolling with the mouse, the player can change the angles of the
+# > armor stand with ease. Calls the customstandchangepose function to
+# > change the armor stand.
+function starteditcustomstand(player:player,part:text,angle:text):
+	#
+	# > Get the armor stand which should be changed.
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	#
+	# > Set the current part and angle as metadata.
+	set metadata "customarmorstand-part" of {_player} to {_part}
+	set metadata "customarmorstand-angle" of {_player} to {_angle}
+	#
+	# > Set the current timestamp as metadata. This is needed because the while
+	# > loop has to detect if the time has changed, which would mean that the player
+	# > started another edit process.
+	set {_now} to now
+	set metadata "customarmorstand-now" of {_player} to {_now}
+	#
+	# > While loop this as long as {_ok} is true.
+	set {_ok} to true
+	while {_ok} is true:
+		#
+		# > Wait a tick between every loop.
+		wait 1 tick
+		#
+		# > If the previously saved timestamp has changed, stop here.
+		if metadata "customarmorstand-now" of {_player} is not {_now}:
+			stop
+		#
+		# > To prevent the while loop from endlessly looping,
+		# > check if the player is no longer looking at the
+		# > armor stand which should be changed, after 50 times
+		# > not looking at the armor stand, this loop is stopped.
+		if {_target} is not {_player}'s target:
+			add 1 to {_notok}
+			if {_notok} > 50:
+				set {_ok} to false
+				actionbar({_player},"")
+				stop
+			actionbar({_player},"Look at the armorstand to edit it [%{_notok}%/50]")
+		#
+		# > If the player looks at the armor stand and has looked away
+		# > for some time, delete the "not looking to the armor stand" counter.
+		else:
+			if {_notok} is set:
+				actionbar({_player},"")
+			delete {_notok}
+		#
+		# > Change the armor stand depending on the previous slot of the
+		# > player. The player can change the armor stand by scrolling through
+		# > the hotbar.
+		set {_changed} to false
+		set {_slot} to current hotbar slot id of {_player}
+		if {_lastslot} is not set:
+			set {_lastslot} to {_slot}
+		#
+		# > If the last slot was 8 (the last one on the right side) and the
+		# > current one is 0, which is the first one on the left side, the
+		# > player wanted to increase value.
+		if {_lastslot} is 8:
+			if {_slot} is 0:
+				if {_changed} is false:
+					set {_changed} to true
+					set {_lastslot} to {_slot}
+					customstandchangepose("add",{_target},{_player})
+		#
+		# > If the last slow was 0, (first one on the left side) and the
+		# > current one is slot 8, (the last one on the right side), the player
+		# > wanted to reduce the value.
+		if {_lastslot} is 0:
+			if {_slot} is 8:
+				if {_changed} is false:
+					set {_changed} to true
+					set {_lastslot} to {_slot}
+					customstandchangepose("remove",{_target},{_player})
+		#
+		# > If the slot is bigger than the last slot, the player wants
+		# > to increase the value.
+		if {_lastslot} < {_slot}:
+			if {_changed} is false:
+				set {_changed} to true
+				set {_lastslot} to {_slot}
+				customstandchangepose("add",{_target},{_player})
+		#
+		# > If the slot is smaller than the last slot, the player wants
+		# > to reduce the value.
+		if {_lastslot} > {_slot}:
+			if {_changed} is false:
+				set {_changed} to true
+				set {_lastslot} to {_slot}
+				customstandchangepose("remove",{_target},{_player})
+
+#
+# > Function - togglecustomstanddata
+# > Parameters:
+# > <player>the player who edits the custom armor stand
+# > <text>action - what should be toggled
+# > Actions:
+# > Toggles booleans for different settings.
+function togglecustomstanddata(player:player,action:text):
+	#
+	# > Get the armor stand which should be edited.
+	set {_target} to metadata value "customarmorstand-target" of {_player}
+	#
+	# > Toggle the size.
+	if {_action} is "size":
+		if {_target}.isSmall():
+			{_target}.setSmall(false)
+		else:
+			{_target}.setSmall(true)
+	#
+	# > Toggle the visibility.
+	else if {_action} is "visible":
+		if {_target}.isVisible():
+			{_target}.setVisible(false)
+		else:
+			{_target}.setVisible(true)
+	#
+	# > Toggle the glowing state.
+	else if {_action} is "glow":
+		if {_target}.isGlowing():
+			{_target}.setGlowing(false)
+		else:
+			{_target}.setGlowing(true)
+	#
+	# > Toggle the baseplate.
+	else if {_action} is "baseplate":
+		if {_target}.hasBasePlate():
+			{_target}.setBasePlate(false)
+		else:
+			{_target}.setBasePlate(true)
+	#
+	# > Toggle the arms.
+	else if {_action} is "arms":
+		if {_target}.hasArms():
+			{_target}.setArms(false)
+		else:
+			{_target}.setArms(true)
+	#
+	# > Toggle the visibility of the name.
+	else if {_action} is "name":
+		if {_target}.isCustomNameVisible():
+			{_target}.setCustomNameVisible(false)
+		else:
+			{_target}.setCustomNameVisible(true)
+
+#
+# > Function - customstandchangepose
+# > Parameters:
+# > <text>the action, either "add" or "remove"
+# > <entity>the target entity which should be changed
+# > <player>the player who wants to change the custom armor stand
+# > Actions:
+# > Changes the armor stand depending on what the player decided within the
+# > custom armor stand menu.
+function customstandchangepose(action:text,target:entity,player:player):
+	#
+	# > Get which part and angle the player wants to change.
+	set {_part} to metadata value "customarmorstand-part" of {_player}
+	set {_anglesetting} to metadata value "customarmorstand-angle" of {_player}
+	#
+	# > If the player is sneaking, decrese the value which is changed,
+	# > to allow the player making precise movements.
+	if {_player} is sneaking:
+		set {_change} to 0.005
+		#
+		# > If the player wants to change the direction, be less percise.
+		if {_part} is "direction":
+			set {_change} to 0.5
+	#
+	# > If the player is not sneaking, be less percise.
+	else:
+		set {_change} to 0.1
+		if {_part} is "direction":
+			set {_change} to 5
+	#
+	# > Depending on which part should be edited, get the angle, location or
+	# > what is needed to change the pose.
+	if {_part} is "head":
+		set {_angle} to {_target}.getHeadPose()
+	else if {_part} is "body":
+		set {_angle} to {_target}.getBodyPose()
+	else if {_part} is "rightarm":
+		set {_angle} to {_target}.getRightArmPose()
+	else if {_part} is "leftarm":
+		set {_angle} to {_target}.getLeftArmPose()
+	else if {_part} is "rightleg":
+		set {_angle} to {_target}.getRightLegPose()
+	else if {_part} is "leftleg":
+		set {_angle} to {_target}.getLeftLegPose()
+	else if {_part} is "direction":
+		set {_loc} to location of {_target}
+	else if {_part} is "location":
+		set {_loc} to location of {_target}
+	#
+	# > If the change should be added, add it depending on what should be changed.
+	# > Possible is any EulerAnlge part, location and direction.
+	if {_action} is "add":
+		if {_anglesetting} is "x":
+			set {_angle} to {_angle}.add({_change},0,0)
+			if {_part} is "location":
+				add {_change} to x-coord of {_loc}
+		else if {_anglesetting} is "y":
+			set {_angle} to {_angle}.add(0,{_change},0)
+			if {_part} is "location":
+				add {_change} to y-coord of {_loc}
+		else if {_anglesetting} is "z":
+			set {_angle} to {_angle}.add(0,0,{_change})
+			if {_part} is "location":
+				add {_change} to z-coord of {_loc}
+		else if {_anglesetting} is "direction":
+			add {_change} to {_loc}'s yaw
+	#
+	# > The same as above with the add action. Here are EulerAnlges, locations
+	# > and directions changed which get later assigned back to the armor stand.
+	if {_action} is "remove":
+		if {_anglesetting} is "x":
+			set {_angle} to {_angle}.subtract({_change},0,0)
+			if {_part} is "location":
+				remove {_change} from x-coord of {_loc}
+		else if {_anglesetting} is "y":
+			set {_angle} to {_angle}.subtract(0,{_change},0)
+			if {_part} is "location":
+				remove {_change} from y-coord of {_loc}
+		else if {_anglesetting} is "z":
+			set {_angle} to {_angle}.subtract(0,0,{_change})
+			if {_part} is "location":
+				remove {_change} from z-coord of {_loc}
+		else if {_anglesetting} is "direction":
+			remove {_change} from {_loc}'s yaw
+	#
+	# > Set the changed data back to the armor stand.
+	if {_part} is "head":
+		{_target}.setHeadPose({_angle})
+	else if {_part} is "body":
+		{_target}.setBodyPose({_angle})
+	else if {_part} is "rightarm":
+		{_target}.setRightArmPose({_angle})
+	else if {_part} is "leftarm":
+		{_target}.setLeftArmPose({_angle})
+	else if {_part} is "rightleg":
+		{_target}.setRightLegPose({_angle})
+	else if {_part} is "leftleg":
+		{_target}.setLeftLegPose({_angle})
+	else if {_part} is "direction" or "location":
+		teleport {_target} to {_loc}
