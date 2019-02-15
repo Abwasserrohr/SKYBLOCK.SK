@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.5
+# GUI.SK v0.0.6
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -248,8 +248,7 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
   {_ItemMeta}.setLore({_itemlore})
   {_ItemStack}.setItemMeta({_ItemMeta})
   set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}
-  if {_exec} != "":
-    set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+  set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
   if {_close} is true:
     set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
 
@@ -263,10 +262,12 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
 # > If it was defined to close the players inventory, it is going to happen, if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true.
 on InventoryClickEvent:
   set {_player} to event.getWhoClicked()
+
   if {SK::GUI::inv::%{_player}%} is set:
     if size of {SK::GUI::items::%{_player}%::*} is not 0:
-      cancel event
       set {_slot} to event.getRawSlot()
+      if {SK::GUI::items::%{_player}%::%{_slot}%} is set:
+        cancel event
       #
       # > If guis should do something special on shiftclick, they can add another function with ||, which gets executed on shift click.
       set {_exec::*} to {SK::GUI::items::%{_player}%::%{_slot}%} split at "||"
