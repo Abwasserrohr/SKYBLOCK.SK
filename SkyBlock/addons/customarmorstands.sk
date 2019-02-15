@@ -135,6 +135,23 @@ function checkarmorstandplacepermission(player:player,location:location) :: bool
 	return checkislandaccess({_player},{_location})
 
 #
+# > Function - checkarmorstandblacklist
+# > Parameters:
+# > <entity>the armor stand
+# > Actions:
+# > This function should only return true if it is not being used by
+# > other plugins or addons. Add these armor stands here to the blacklist
+# > to support these armor stands. Feel free to open a issue if you don't
+# > know how this could be done.
+function checkarmorstandblacklist(entity:entity) :: boolean:
+	#
+	# > Check for robots.sk armor stands.
+	set {_check} to getnbtvalue(helmet of {_entity},"blocks")
+	if {_check} is not false:
+		return false
+	return true
+
+#
 # > Event - on rightclick holding the predefined copy tool
 # > Actions:
 # > Creates a copy of the already created armor stand which is
@@ -237,6 +254,8 @@ command /renamestand [<text>]:
 		if {_target} is a armor stand:
 			if checkarmorstandplacepermission(player,{_target}'s location) is not true:
 				stop
+			if checkarmorstandblacklist({_target}) is not true:
+				stop
 			if length of arg-1 <= 20:
 				{_target}.setCustomName(colored arg-1)
 
@@ -252,7 +271,8 @@ function opencustomstandmenu(player:player):
 	set {_target} to metadata value "customarmorstand-target" of {_player}
 	if checkarmorstandplacepermission({_player},{_target}'s location) is not true:
 		stop
-
+	if checkarmorstandblacklist({_target}) is not true:
+		stop
 	#
 	# > Get the translation for the menu.
 	set {_uuid} to uuid of {_player}
