@@ -114,6 +114,7 @@ options:
 	togglenamelore: &7Toggle the name\n&7between visible and invisible.\n&7Customize the name\n&7with /renamestand <text>.
 	removearmorstand: &rRemove
 	removearmorstandlore: &7Remove this armor stand\n&7and get a copy of it\n&7to replace the armor stand.
+	lookatstand: Look at the armorstand to edit it [<number>/50]
 	#
 	# > Please note: You may want to change the function "checkarmorstandplacepermission" below to fit
 	# > it into your protections system. It should return true if the player is allowed to change the armor stand.
@@ -645,7 +646,14 @@ function starteditcustomstand(player:player,part:text,angle:text):
 				set {_ok} to false
 				actionbar({_player},"")
 				stop
-			actionbar({_player},"Look at the armorstand to edit it [%{_notok}%/50]")
+			set {_uuid} to uuid of {_player}
+			set {_lang} to {SK::lang::%{_uuid}%}
+			if {SB::lang::cs::lookatstand::%{_lang}%} is not set:
+				set {_msg} to "{@lookatstand}"
+			else:
+				set {_msg} to {SB::lang::cs::lookatstand::%{_lang}%}
+			replace all "<number>" with "%{_notok}%" in {_msg}
+			actionbar({_player},{_msg})
 		#
 		# > If the player looks at the armor stand and has looked away
 		# > for some time, delete the "not looking to the armor stand" counter.
