@@ -150,31 +150,31 @@ on rightclick holding {@copytool}:
 		if player's gamemode is not creative:
 			remove 1 of player's tool from player's inventory
 		spawn 1 armor stand at {_loc}
-		set {_robo} to last spawned entity
-		{_robo}.setGravity(false)
-		{_robo}.setBasePlate({_target}.hasBasePlate())
-		{_robo}.setCanPickupItems(false)
-		{_robo}.setCustomName({_target}.getCustomName())
-		{_robo}.setCustomNameVisible({_target}.isCustomNameVisible())
-		{_robo}.setVisible({_target}.isVisible())
-		{_robo}.setSmall({_target}.isSmall())
-		{_robo}.setArms({_target}.hasArms())
-		{_robo}.setInvulnerable(true)
-		{_robo}.setGlowing({_target}.isGlowing())
+		set {_stand} to last spawned entity
+		{_stand}.setGravity(false)
+		{_stand}.setBasePlate({_target}.hasBasePlate())
+		{_stand}.setCanPickupItems(false)
+		{_stand}.setCustomName({_target}.getCustomName())
+		{_stand}.setCustomNameVisible({_target}.isCustomNameVisible())
+		{_stand}.setVisible({_target}.isVisible())
+		{_stand}.setSmall({_target}.isSmall())
+		{_stand}.setArms({_target}.hasArms())
+		{_stand}.setInvulnerable(true)
+		{_stand}.setGlowing({_target}.isGlowing())
 		
-		{_robo}.setHelmet({_target}.getHelmet())
-		{_robo}.setChestplate({_target}.getChestplate())
-		{_robo}.setLeggings({_target}.getLeggings())
-		{_robo}.setBoots({_target}.getBoots())
-		set {_robo}'s offhand tool to {_target}'s offhand tool
-		set {_robo}'s tool to {_target}'s tool
+		{_stand}.setHelmet({_target}.getHelmet())
+		{_stand}.setChestplate({_target}.getChestplate())
+		{_stand}.setLeggings({_target}.getLeggings())
+		{_stand}.setBoots({_target}.getBoots())
+		set {_stand}'s offhand tool to {_target}'s offhand tool
+		set {_stand}'s tool to {_target}'s tool
 		
-		{_robo}.setHeadPose({_target}.getHeadPose())
-		{_robo}.setBodyPose({_target}.getBodyPose())
-		{_robo}.setRightArmPose({_target}.getRightArmPose())
-		{_robo}.setLeftArmPose({_target}.getLeftArmPose())
-		{_robo}.setRightLegPose({_target}.getRightLegPose())
-		{_robo}.setLeftLegPose({_target}.getLeftLegPose())
+		{_stand}.setHeadPose({_target}.getHeadPose())
+		{_stand}.setBodyPose({_target}.getBodyPose())
+		{_stand}.setRightArmPose({_target}.getRightArmPose())
+		{_stand}.setLeftArmPose({_target}.getLeftArmPose())
+		{_stand}.setRightLegPose({_target}.getRightLegPose())
+		{_stand}.setLeftLegPose({_target}.getLeftLegPose())
 
 #
 # > On rightclick holding an armor stand
