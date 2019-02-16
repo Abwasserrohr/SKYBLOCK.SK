@@ -28,6 +28,7 @@ function openflagmenu(p:player,type:text):
     # > Empty slots are shown as black stained glass.
     loop 27 times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+      protectslot({_p},loop-number - 1)
 
     setguiitem({_p},11,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
     setguiitem({_p},13,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
@@ -62,6 +63,7 @@ function openflagmenu(p:player,type:text):
     # > Empty slots are shown as black stained glass.
     loop {_slots} times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+      protectslot({_p},loop-number - 1)
 
     #
     # > Set {_i} to 10, to order the items in the menu right.
