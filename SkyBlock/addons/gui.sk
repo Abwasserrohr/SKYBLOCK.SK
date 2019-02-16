@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.7
+# GUI.SK v0.0.8
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -151,15 +151,17 @@ effect:
       {_ItemStack}.setItemMeta({_ItemMeta})
     #
     # > Set the item into the defined slot.
-    set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_ItemStack}
+    set {_inventory} to metadata value "gui-inv" of {_player}
+    set slot {_slot} of {_inventory} to {_ItemStack}
     #
-    # > This variable is later used to execute the given code.
-    set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+    # > This metadata value is later used to execute the given code.
+    set metadata value "gui-items-%{_slot}%" of {_player} to {_exec}
     #
     # > If {_close} is true, set a variable to check later if the inventory
     # > should be closed on click.
     if {_close} is true:
-      set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+      set metadata value "gui-itemsclose-%{_slot}%" of {_player} to true
+
 #
 # Custom effect: Opens a GUI
 # Pattern:
@@ -182,7 +184,9 @@ effect:
     # > Set expressions to local variables to make it easier to read.
     set {_name} to expr-1
     set {_player} to expr-2
-    delete {SK::GUI::items::%{_player}%::*}
+    loop 54 times:
+      delete metadata value "gui-items-%loop-number - 1%" of {_player}
+      delete metadata value "gui-itemsclose-%loop-number - 1%" of {_player}
     #
     # > If the player defined a inventory type, we have the pattern 2.
     if the matched pattern is 2:
@@ -197,9 +201,11 @@ effect:
     # > Open the inventory to the player
     {_player}.openInventory({_inventory})
     #
-    # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
-    set {SK::GUI::inv::%{_player}%} to {_inventory}
+    # > Set the created inventory into the metadata value "gui-inv" of player to check later
+	# > if the user clicks within the correct gui menu.
+    set metadata value "gui-inv" of {_player} to {_inventory}
 
+#
 # Function: opengui - Opens a GUI
 # Arguments:
 # > <player>player, <integer>size, <text>name,[<inventory type>inventory type]
@@ -211,16 +217,22 @@ effect:
 # > Deletes set items from any old GUI by the defined player and opens the specified inventory,
 # > set the {SK::GUI::inv::%{_player}%} variable to inventory and then return
 function opengui(player:player,size:integer,name:text,invtype:inventory type=chest inventory) :: boolean:
-  delete {SK::GUI::items::%{_player}%::*}
+  loop 54 times:
+    delete metadata value "gui-items-%loop-number - 1%" of {_player}
+    delete metadata value "gui-itemsclose-%loop-number - 1%" of {_player}
+  #
   # > Set the {_inventory} variable to a new inventory, owned by the player and set to the {_invtype}, named after {_name}
   if {_invtype} is chest inventory:
     set {_inventory} to Bukkit.createInventory({_player}, {_size}, {_name})
   else:
     set {_inventory} to Bukkit.createInventory({_player}, {_invtype}, {_name})
+  #
   # > Open the inventory to the player
   {_player}.openInventory({_inventory})
+  #
   # > Set the created inventory into the variable to check later, if the user clicks in the correct gui
-  set {SK::GUI::inv::%{_player}%} to {_inventory}
+  set metadata value "gui-inv" of {_player} to {_inventory}
+  #
   # > Everything went fine, return true.
   return true
 
@@ -247,10 +259,14 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
     {_itemlore}.add(coloured "&r%loop-value%")
   {_ItemMeta}.setLore({_itemlore})
   {_ItemStack}.setItemMeta({_ItemMeta})
-  set slot {_slot} of {SK::GUI::inv::%{_player}%} to {_amount} of {_ItemStack}
-  set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
+  #
+  # > Get the inventory from the metadata value "gui-inv" of the player.
+  set {_inventory} to metadata value "gui-inv" of {_player}
+  set slot {_slot} of {_inventory} to {_amount} of {_ItemStack}
+  set metadata value "gui-items-%{_slot}%" of {_player} to {_exec}
   if {_close} is true:
-    set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+    set metadata value "gui-itemsclose-%{_slot}%" of {_player} to true
+	
 #
 # > Function: protectslot - Protects a slot within the gui
 # > Parameters:
@@ -259,7 +275,7 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
 # > Actions:
 # > Set a variable for the slot to prevent modification of it.
 function protectslot(player:player,slot:number):
-  set {SK::GUI::items::%{_player}%::%{_slot}%} to " "
+  set metadata value "gui-items-%{_slot}%" of {_player} to " "
 
 # > Event - InventoryClickEvent
 # > This event gets triggered if a player clicks in his inventory.
@@ -271,15 +287,14 @@ function protectslot(player:player,slot:number):
 # > If it was defined to close the players inventory, it is going to happen, if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true.
 on InventoryClickEvent:
   set {_player} to event.getWhoClicked()
-
-  if {SK::GUI::inv::%{_player}%} is set:
-    if size of {SK::GUI::items::%{_player}%::*} is not 0:
-      set {_slot} to event.getRawSlot()
-      if {SK::GUI::items::%{_player}%::%{_slot}%} is set:
-        cancel event
+  if metadata value "gui-inv" of {_player} is set:
+    set {_slot} to event.getRawSlot()
+    if metadata value "gui-items-%{_slot}%" of {_player} is set:
+      cancel event
       #
       # > If guis should do something special on shiftclick, they can add another function with ||, which gets executed on shift click.
-      set {_exec::*} to {SK::GUI::items::%{_player}%::%{_slot}%} split at "||"
+      set {_value} to metadata value "gui-items-%{_slot}%" of {_player}
+      set {_exec::*} to {_value} split at "||"
       #
       # > If the shift click function isn't defined, use default.
       if {_exec::2} is not set:
@@ -288,7 +303,7 @@ on InventoryClickEvent:
         evaluate "%{_exec::2}%"
       else:
         evaluate "%{_exec::1}%"
-      if {SK::GUI::itemsclose::%{_player}%::%{_slot}%} is true:
+      if metadata value "gui-itemsclose-%{_slot}%" of {_player} is true:
         wait 1 tick
         close {_player}'s inventory
 
@@ -298,15 +313,7 @@ on InventoryClickEvent:
 # > Deletes variables which may exist:
 on InventoryCloseEvent:
   set {_player} to event.getPlayer()
-  delete {SK::GUI::inv::%{_player}%}
-  delete {SK::GUI::items::%{_player}%::*}
-  delete {SK::GUI::itemsclose::%{_player}%::*}
-
-# > Event - load
-# > This event is triggered on load of the skript.
-# > Actions:
-# > Deletes any variables that may exist due to corruption or server crash.
-on load:
-  delete {SK::GUI::inv::*}
-  delete {SK::GUI::items::*}
-  delete {SK::GUI::itemsclose::*}
+  loop 54 times:
+    delete metadata value "gui-items-%loop-number - 1%" of {_player}
+    delete metadata value "gui-itemsclose-%loop-number - 1%" of {_player}
+  delete metadata value "gui-inv" of {_player}
