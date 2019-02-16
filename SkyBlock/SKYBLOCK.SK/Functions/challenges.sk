@@ -183,6 +183,7 @@ function openchallenges(p:player):
         #
         # > The slot is not available, display a black glass pane instead.
         set slot {_slot} of {_p}'s current inventory to black glass pane named "%{_lvltranslation}%"
+        protectslot({_p},{_slot})
       #
 	  # > The challenge level part loop ends here, add 1 to the slot and challenge level part.
       add 1 to {_slot}
@@ -199,6 +200,7 @@ function openchallenges(p:player):
     else:
       set lore of {_head} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%{_challengelvl}%}%||%{SB::config::guispacer}%||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
     set slot {_slot} of {_p}'s current inventory to {_head}
+    protectslot({_p},{_slot})
     add 1 to {_slot}
     add 1 to {_challengelvl}
     #
@@ -332,7 +334,9 @@ function solvechallenge(p:player,challenge:text):
   # > If there is a custom function set for this challenge, execute it with evaluate.
   if {SB::config::challenges::c::%{_challenge}%::customfunction} is set:
     if {SB::config::challenges::c::%{_challenge}%::customfunction} is not "":
-      evaluate "%{SB::config::challenges::c::%{_challenge}%::customfunction}%"
+      set {_exec} to {SB::config::challenges::c::%{_challenge}%::customfunction}
+      replace all "<player>" with "%{_p}%" in {_exec}
+      evaluate "%{_exec}%"
   #
   # > Add experience to the island of the player.
   if {_xp} is set:
