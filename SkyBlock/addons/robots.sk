@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.4
+# robots.sk v0.0.5
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -726,6 +726,7 @@ function openrobotskmenu(robot:entity,player:player):
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
     setguiitem({_player},loop-number - 1,black stained glass pane,1," ",""," ",false)
+    protectslot({_p},loop-number - 1)
   #
   # > Save the current robot which has been opened to a variable
   # > to get the robot later again, if needed.
@@ -830,6 +831,7 @@ function openrobotskdesignmenu(player:player):
   # > Fill the Inventory with empty glass panes.
   loop 45 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Get the size of all designs, currently not used but could be useful in the future.
   #set {_amount} to size of {SB::robot::design::helmet::*}
@@ -880,6 +882,7 @@ function openrobotskjobmenu(player:player):
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
     set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Set the amount of the jobs, could be useful later.
   #set {_amount} to size of {SB::robot::job::tool::*}
