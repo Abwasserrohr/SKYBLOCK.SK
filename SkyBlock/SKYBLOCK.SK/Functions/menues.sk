@@ -20,6 +20,7 @@ function skyblockgui(p: player):
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
     set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_p}
@@ -84,6 +85,7 @@ function biomemenu(p: player):
     # > Fill the inventory with empty glass panes to make it look nicer
     loop {_slots} times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+      protectslot({_p},loop-number - 1)
     #
     # > Render all the biomes into the menu, they can be changed in the config.sk
     set {_slot} to 10
