@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.6
+# GUI.SK v0.0.7
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -251,6 +251,15 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
   set {SK::GUI::items::%{_player}%::%{_slot}%} to {_exec}
   if {_close} is true:
     set {SK::GUI::itemsclose::%{_player}%::%{_slot}%} to true
+#
+# > Function: protectslot - Protects a slot within the gui
+# > Parameters:
+# > <player>player
+# > <number> slot
+# > Actions:
+# > Set a variable for the slot to prevent modification of it.
+function protectslot(player:player,slot:number):
+  set {SK::GUI::items::%{_player}%::%{_slot}%} to " "
 
 # > Event - InventoryClickEvent
 # > This event gets triggered if a player clicks in his inventory.
