@@ -10,12 +10,10 @@
 # > Actions:
 # > Calls functions to load configurations.
 on load:
+  wait 1 second
   #
   # > Load the yaml configurations using the loadconfig function.
   loadconfig()
-  #
-  # > Functions to start after config loaded, do not change this if you don't know what you're doing.
-  loadislandstoworld()
 
 #
 # > Function - loadymlparsenumber

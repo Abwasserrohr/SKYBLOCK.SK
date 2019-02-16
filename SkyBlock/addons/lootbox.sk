@@ -1,6 +1,6 @@
 #
 # ==============
-# lootbox.sk v0.0.3
+# lootbox.sk v0.0.4
 # ==============
 # Create custom lootboxes with three different tiers and animations.
 # ==============
@@ -295,6 +295,7 @@ function openlootboxmenu(p:player):
   # > Empty slots are shown as black stained glass.
   loop 27 times:
     set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > The uuid only works if we set it first as a local variable.
   set {_uuid} to uuid of {_p}
@@ -364,10 +365,9 @@ function openlootbox(p:player,tier:integer):
   playsound({_p},location of {_p},"{@openlootboxsound}","master",1,1)
   #
   # > Create a fancy menu, which contains blacck glass panes.
-  set {_i} to 0
   loop 27 times:
-    set slot {_i} of {_p}'s current inventory to {@secondarymenuitem} named " "
-    add 1 to {_i}
+    set slot loop-number - 1 of {_p}'s current inventory to {@secondarymenuitem} named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Set the menu item for the lootbox into it, which starts the lootbox opening, if clicked.
   set {_uuid} to uuid of {_p}

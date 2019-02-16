@@ -36,10 +36,13 @@ function islandupgrademenu(p:player):
   if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
     set {_slots} to 54
     opengui({_p},{_slots},"&l%{SB::lang::bc::islandupgrades::%{_lang}%}%")
-    set {_i} to 0
-    loop 57 times:
-      set slot {_i} of {_p}'s current inventory to black glass pane named " "
-      add 1 to {_i}
+    loop {_slots} times:
+      set slot loop-number - 1 of {_p}'s current inventory to black glass pane named " "
+      protectslot({_p},loop-number - 1)
+    #
+    # > Set back item to get to the previous menu.
+    setguiitem({_p},{_slots}-1,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+
     #
     # > Set {_i} to 0, to order the items in the menu right.
     set {_i} to 1

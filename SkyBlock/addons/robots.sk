@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.2
+# robots.sk v0.0.4
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -40,7 +40,7 @@ import:
   org.bukkit.Material
   org.bukkit.inventory.ItemStack
   org.bukkit.util.EulerAngle
-  org.bukkit.event.player.PlayerArmorStandManipulateEvent 
+  org.bukkit.event.player.PlayerInteractAtEntityEvent
   org.bukkit.Particle
   org.bukkit.Effect
   org.bukkit.Color
@@ -725,7 +725,7 @@ function openrobotskmenu(robot:entity,player:player):
   #
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
-    set slot loop-number - 1 of {_player}'s current inventory to black stained glass pane named " "
+    setguiitem({_player},loop-number - 1,black stained glass pane,1," ",""," ",false)
   #
   # > Save the current robot which has been opened to a variable
   # > to get the robot later again, if needed.
@@ -1393,12 +1393,12 @@ on unload:
     disablerobot(loop-value)
 
 #
-# > Event - PlayerArmorStandManipulateEvent
+# > Event - PlayerInteractAtEntityEvent
 # > Actions:
-# > If the player wants to manipulate the armor stand (taking items out of it),
+# > If the player wants to click the armor stand,
 # > cancel the event and open the robot main menu. This event happens always once
 # > a player clicks on the armor stand.
-on PlayerArmorStandManipulateEvent:
+on PlayerInteractAtEntityEvent:
   set {_value} to getnbtvalue(helmet of event.getRightClicked(),"robot")
   if {_value} is "robotsk":
     cancel event

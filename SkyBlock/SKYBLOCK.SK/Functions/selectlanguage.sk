@@ -26,6 +26,7 @@ function selectlanguage(p:player):
   # > Empty slots are shown as black stained glass.
   loop 27 times:
     set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Set slot id, for the following loop.
   set {_slot} to 10

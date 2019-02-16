@@ -20,6 +20,7 @@ function skyblockgui(p: player):
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
     set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+    protectslot({_p},loop-number - 1)
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_p}
@@ -51,6 +52,7 @@ function skyblockgui(p: player):
   setguiitem({_p},16,jungle leaves,1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%","&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
   setguiitem({_p},19,{_customgui},1,"&r&6&l%{SB::lang::languages::%{_lang}%}%","&r%{SB::lang::maingui::guilanglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
   setguiitem({_p},20,lever,1,"&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%","&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+  setguiitem({_p},21,hopper,1,"&r&6&l%{SB::lang::bc::islandupgrades::%{_lang}%}%","&r%{SB::lang::maingui::islandupgradelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
 #
 # > Function - biomemenu:
 # > Arguments:
@@ -84,6 +86,7 @@ function biomemenu(p: player):
     # > Fill the inventory with empty glass panes to make it look nicer
     loop {_slots} times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+      protectslot({_p},loop-number - 1)
     #
     # > Render all the biomes into the menu, they can be changed in the config.sk
     set {_slot} to 10

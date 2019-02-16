@@ -221,6 +221,7 @@ on script load:
   set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
   set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
   set {SB::lang::maingui::guiflaglore::%{_lang}%} to "%{_s1}%Ändere die Flags deiner Insel."
+  set {SB::lang::maingui::islandupgradelore::%{_lang}%} to "%{_s1}%Erweitere deine Insel."
   set {SB::lang::guibacktopreviousmenulore::%{_lang}%} to "%{_s1}%Bringt dich zurück\n%{_s1}%zum übergeordneten Menü."
 
   #
@@ -401,6 +402,43 @@ on script load:
   set {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%} to "&r%{_p2}%Parkour - Checkpoint"
   set {SB::lang::parcour::parcouritemfinish::%{_lang}%} to "&r%{_p2}%Parkour - Ziel"
   set {SB::lang::parcour::parcouritemstart::%{_lang}%} to "&r%{_p2}%Parkour - Start"
+
+  #
+  # > Custom Stands addon
+  set {SB::lang::cs::guiheader::%{_lang}%} to "&lRüstungsständer anpassen"
+  set {SB::lang::cs::head::%{_lang}%} to "&rKopf"
+  set {SB::lang::cs::body::%{_lang}%} to "&rOberkörper"
+  set {SB::lang::cs::legs::%{_lang}%} to "&rBeine"
+  set {SB::lang::cs::feet::%{_lang}%} to "&rFüße"
+  set {SB::lang::cs::rightleg::%{_lang}%} to "&rRechtes Bein"
+  set {SB::lang::cs::leftleg::%{_lang}%} to "&rLinkes Bein"
+  set {SB::lang::cs::rightarm::%{_lang}%} to "&rRechter Arm"
+  set {SB::lang::cs::leftarm::%{_lang}%} to "&rLinker Arm"
+  set {SB::lang::cs::xcoord::%{_lang}%} to "X Koordinate"
+  set {SB::lang::cs::ycoord::%{_lang}%} to "Y Koordinate"
+  set {SB::lang::cs::zcoord::%{_lang}%} to "Z Koordinate"
+  set {SB::lang::cs::placeitemslot::%{_lang}%} to "&7Platziere das Item hier,\n&7welches du für diesen\n&7Slot haben möchtest."
+  set {SB::lang::cs::togglesize::%{_lang}%} to "&rGröße"
+  set {SB::lang::cs::togglesizelore::%{_lang}%} to "&7Schalte die Größe\n&7zwischen klein und groß um."
+  set {SB::lang::cs::togglevisibility::%{_lang}%} to "&rSichtbarkeit"
+  set {SB::lang::cs::togglevisibilitylore::%{_lang}%} to "&7Schalte die Sichtbarkeit\n&7des Rüstungsständers um."
+  set {SB::lang::cs::toggleglow::%{_lang}%} to "&rLeuchten"
+  set {SB::lang::cs::toggleglowlore::%{_lang}%} to "&7Schalte das Leuchten\n&7des Rüstungsständers um."
+  set {SB::lang::cs::togglebaseplate::%{_lang}%} to "&rBasisplatte"
+  set {SB::lang::cs::togglebaseplatelore::%{_lang}%} to "&7Schalte die Basisplatte\n&7des Rüstungsständers um."
+  set {SB::lang::cs::togglearms::%{_lang}%} to "&rArme"
+  set {SB::lang::cs::togglearmslore::%{_lang}%} to "&7Schalte die Arme\n&7des Rüstungsständers um."
+  set {SB::lang::cs::changedirection::%{_lang}%} to "&rRichtung"
+  set {SB::lang::cs::changedirectionlore::%{_lang}%} to "&7Stelle die Richtung\n&7des Rüstungsständers um."
+  set {SB::lang::cs::copyarmorstand::%{_lang}%} to "&rKopieren"
+  set {SB::lang::cs::copyarmorstandlore::%{_lang}%} to "&7Kopiere diesen\n&7Rüstungsständer."
+  set {SB::lang::cs::togglename::%{_lang}%} to "&rName"
+  set {SB::lang::cs::togglenamelore::%{_lang}%} to "&7Stelle den Namen des\n&7Rüstungsständers zwischen\n&7sichtbar und unsichtbar um.\n&7Ändere den Namen\n&7mit /renamestand <text>."
+  set {SB::lang::cs::removearmorstand::%{_lang}%} to "&rEntfernen"
+  set {SB::lang::cs::removearmorstandlore::%{_lang}%} to "&7Entferne diesen\n&7Rüstungsständer und\n&7erhalte eine Kopie\n&7davon zum platzieren."
+  set {SB::lang::cs::copytoolname::%{_lang}%} to "&rKopierstab"
+  set {SB::lang::cs::copytoollore::%{_lang}%} to "&7Dieses Werkzeug kopiert\n&7den Rüstungsständer temporär,\n&7verwende es nicht,\n&7zum lagern."
+  set {SB::lang::cs::lookatstand::%{_lang}%} to "Schaue den Rüstungsständer an, um ihn zu bearbeiten. [<number>/50]"
 
   #
   # > Robots

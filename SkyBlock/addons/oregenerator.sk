@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.5
+# oregenerator.sk v0.0.6
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -144,14 +144,38 @@ on load:
   set {SB::config::oregenmaxlevelbonus} to 500
 
 #
-# > Event: on block growth
+# > Import the BlockFromToEvent event from Bukkit to detect Cobblestone form.
+import:
+  org.bukkit.event.block.BlockFromToEvent
+#
+# > Event: BlockFromToEvent
 # > Triggered once a block is created
 # > Actions:
 # > If the event-block is cobblestone or stone, call the oregeneratorplace
 # > function with the location of the event block.
-on block growth:
-  if event-block is cobblestone or stone:
-    oregeneratorplace(location of event-block)
+on BlockFromToEvent:
+  set {_type} to event.getBlock()
+  if {_type} is water or stationary water or lava or stationary lava:
+    if event.getToBlock() is air:
+      if metadata value "generator" of event.getToBlock() is true:
+        #
+        # > Only generate a cobblestone and cancel if there is a valid
+        # > cobblestone generator there. (Lava + Water)
+        loop all blocks in radius 1 around event.getToBlock():
+          if {_type} is water or stationary water:
+            if loop-block is lava or stationary lava:
+              cancel event
+              oregeneratorplace(event.getToBlock().getLocation())
+              stop
+          if {_type} is lava or stationary lava:
+            if loop-block is water or stationary water:
+              cancel event
+              oregeneratorplace(event.getToBlock().getLocation())
+              stop
+      wait 1 tick
+      if event.getToBlock() is cobblestone or stone:
+        set metadata value "generator" of event.getToBlock() to true
+        oregeneratorplace(event.getToBlock().getLocation())
 
 #
 # > Function - oregeneratorplace:
