@@ -221,6 +221,7 @@ on script load:
   set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
   set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
   set {SB::lang::maingui::guiflaglore::%{_lang}%} to "%{_s1}%Ändere die Flags deiner Insel."
+  set {SB::lang::maingui::islandupgradelore::%{_lang}%} to "%{_s1}%Erweitere deine Insel."
   set {SB::lang::guibacktopreviousmenulore::%{_lang}%} to "%{_s1}%Bringt dich zurück\n%{_s1}%zum übergeordneten Menü."
 
   #
