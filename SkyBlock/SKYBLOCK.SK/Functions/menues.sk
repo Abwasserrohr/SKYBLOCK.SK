@@ -52,6 +52,7 @@ function skyblockgui(p: player):
   setguiitem({_p},16,jungle leaves,1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%","&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
   setguiitem({_p},19,{_customgui},1,"&r&6&l%{SB::lang::languages::%{_lang}%}%","&r%{SB::lang::maingui::guilanglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
   setguiitem({_p},20,lever,1,"&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%","&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+  setguiitem({_p},21,hopper,1,"&r&6&l%{SB::lang::bc::islandupgrades::%{_lang}%}%","&r%{SB::lang::maingui::islandupgradelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
 #
 # > Function - biomemenu:
 # > Arguments:
