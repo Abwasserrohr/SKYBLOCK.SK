@@ -36,6 +36,7 @@ function createisland(p:player,island:text="1"):
       # > Empty slots are displayed with black stained glass panes for better look.
       loop 27 times:
         set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
+        protectslot({_p},loop-number - 1)
       #
       # > Start with the list in the menu at this slot.
       set {_slot} to 10
