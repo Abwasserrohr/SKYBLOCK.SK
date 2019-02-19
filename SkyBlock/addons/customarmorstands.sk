@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.2
+# customarmorstands.sk v0.0.3
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -203,30 +203,15 @@ on rightclick holding {@copytool}:
 # > Actions:
 # > If a player rightclicks holding a armor stand,
 # > a custom armor stand is placed which has special settings.
-on rightclick:
-  if player's tool is a armor stand:
-    cancel event
-    #
-    # > Set the location where the armor stand should be spawned.
-    set {_loc} to location of player's target block
-    add 0.5 to y-coordinate of {_loc}
-    #
-    # > Check if the player is allowed to place the armor stand at this location.
-    if checkarmorstandplacepermission(player,{_loc}) is not true:
-      stop
-    if gamemode of player is not creative:
-      remove 1 of player's tool from player's inventory
-    #
-    # > Spawn the armor stand at the location.
-    spawn 1 armor stand at {_loc}
-    #
-    # > Get the armor stand in a variable, which has been spawned above.
-    set {_stand} to last spawned entity
+on spawn of a armor stand:
+  #
+  # > Get the armor stand in a variable, which has been spawned above.
+  set {_stand} to event-entity
 
-    {_stand}.setGravity(false)
-    {_stand}.setCanPickupItems(false)
-    {_stand}.setVisible(true)
-    {_stand}.setInvulnerable(true)
+  {_stand}.setGravity(false)
+  {_stand}.setCanPickupItems(false)
+  {_stand}.setVisible(true)
+  {_stand}.setInvulnerable(true)
 
 #
 # > Import a Java class from bukkit to catch the PlayerInteractAtEntityEvent event.
@@ -802,7 +787,7 @@ function customstandchangepose(action:text,target:entity,player:player):
   # > If the player is sneaking, decrese the value which is changed,
   # > to allow the player making precise movements.
   if {_player} is sneaking:
-    set {_change} to 0.005
+    set {_change} to 0.05
     #
     # > If the player wants to change the direction, be less percise.
     if {_part} is "direction":
@@ -828,9 +813,7 @@ function customstandchangepose(action:text,target:entity,player:player):
     set {_angle} to {_target}.getRightLegPose()
   else if {_part} is "leftleg":
     set {_angle} to {_target}.getLeftLegPose()
-  else if {_part} is "direction":
-    set {_loc} to location of {_target}
-  else if {_part} is "location":
+  else if {_part} is "direction" or "location":
     set {_loc} to location of {_target}
   #
   # > If the change should be added, add it depending on what should be changed.
@@ -849,7 +832,10 @@ function customstandchangepose(action:text,target:entity,player:player):
       if {_part} is "location":
         add {_change} to z-coord of {_loc}
     else if {_anglesetting} is "direction":
+      if metadata value "yaw" of {_target} is not {_loc}'s yaw:
+        add 0.5 to {_loc}'s yaw
       add {_change} to {_loc}'s yaw
+      set metadata value "yaw" of {_target} to {_loc}'s yaw
   #
   # > The same as above with the add action. Here are EulerAnlges, locations
   # > and directions changed which get later assigned back to the armor stand.
@@ -867,7 +853,10 @@ function customstandchangepose(action:text,target:entity,player:player):
       if {_part} is "location":
         remove {_change} from z-coord of {_loc}
     else if {_anglesetting} is "direction":
+      if metadata value "yaw" of {_target} is not {_loc}'s yaw:
+        remove 0.5 from {_loc}'s yaw
       remove {_change} from {_loc}'s yaw
+      set metadata value "yaw" of {_target} to {_loc}'s yaw
   #
   # > Set the changed data back to the armor stand.
   if {_part} is "head":
