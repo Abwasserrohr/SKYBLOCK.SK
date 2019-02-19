@@ -14,8 +14,8 @@
 function hoppercounter(p:player,action:text,amount:integer=1) :: boolean:
   if {_action} is "place":
     #
-    # > This function is called instantly after a bedrock check, we can use the temporary location variable.
-    set {_bedrock} to block at {SB::TEMPLOC::%{_p}%}
+    # > Get the current bedrock location using the function below.
+    set {_bedrock} to block at getcurrentbedrock({_p},location of {_p})
     #
     # > To be sure, we need the bedrock to continue.
     if {_bedrock} is a bedrock:
@@ -72,7 +72,8 @@ function hoppercounter(p:player,action:text,amount:integer=1) :: boolean:
   else if {_action} is "break":
     #
     # > To be sure, we need the bedrock to continue.
-    set {_bedrock} to block at {SB::TEMPLOC::%{_p}%}
+    set {_bedrock} to block at getcurrentbedrock({_p},location of {_p})
+    #
     #
     # > If we have a bedrock, we can continue and remove 1 of the hopper count.
     if {_bedrock} is a bedrock:

@@ -43,8 +43,7 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
   #
   # > The getcurrentbedrock function created some global temporary variables we can now check,
   # > if the location parameter is within the temporary variables, we can use them.
-
-  if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
+  if {_l} is within metadata value "TEMPLOCb1" of {_p} to metadata value "TEMPLOCb2" of {_p}:
     set {_uuid} to uuid of {_p}
     set {_x} to x-coord of {_bedrock}
     set {_y} to y-coord of {_bedrock}
@@ -149,11 +148,11 @@ function checkforupgrades(player:player,bedrock:location):
 # > Generatres temporary variables which store the current borders of the player,
 # > if the temporary variables are set, it returns them if everything is ok.
 function getcurrentbedrock(p:player, l:location) :: location:
-  if {SB::TEMPLOC::%{_p}%} is not set:
+  if metadata value "TEMPLOC" of {_p} is not set:
     set {_new} to true
-  if {SB::TEMPLOC::%{_p}%b1} is not set:
+  if metadata value "TEMPLOCb1" of {_p} is not set:
     set {_new} to true
-  if {SB::TEMPLOC::%{_p}%b2} is not set:
+  if metadata value "TEMPLOCb2" of {_p} is not set:
     set {_new} to true
   if {_new} is true:
     #
@@ -203,29 +202,29 @@ function getcurrentbedrock(p:player, l:location) :: location:
     
     #
     # > Set border 1 location
-    set {SB::TEMPLOC::%{_p}%b1} to {_pl::1}
+    set metadata value "TEMPLOCb1" of {_p} to {_pl::1}
     #
     # > Set border 2 location
-    set {SB::TEMPLOC::%{_p}%b2} to {_pl::2}
+    set metadata value "TEMPLOCb2" of {_p} to {_pl::2}
     #
     # > Set the location of the bedrock
-    set {SB::TEMPLOC::%{_p}%} to location of {_bedrock}
+    set metadata value "TEMPLOC" of {_p} to location of {_bedrock}
     #
     # > Returns the bedrock location
     return {_bedrock}
   else:
     #
     # > If the temporary location is usable and within the location, return it
-    if {_l} is within {SB::TEMPLOC::%{_p}%b1} to {SB::TEMPLOC::%{_p}%b2}:
-      return {SB::TEMPLOC::%{_p}%}
+    if {_l} is within metadata value "TEMPLOCb1" of {_p} to metadata value "TEMPLOCb2" of {_p}:
+      return metadata value "TEMPLOC" of {_p}
     #
     # > If the temporary location seems outdated, delete it and repeat.
     else:
-      delete {SB::TEMPLOC::%{_p}%}
-      delete {SB::TEMPLOC::%{_p}%b1}
-      delete {SB::TEMPLOC::%{_p}%b2}
+      delete metadata value "TEMPLOC" of {_p}
+      delete metadata value "TEMPLOCb1" of {_p}
+      delete metadata value "TEMPLOCb2" of {_p}
       return getcurrentbedrock({_p},{_l})
-  
+
 # > Function - getcurrentbedrockmain:
 # > Arguments:
 # > <location>location
@@ -360,8 +359,3 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
     else:
       if {SB::config::defaultisflag::%{_playertype}%::jetboots} is set:
         return {SB::config::defaultisflag::%{_playertype}%::jetboots}
-
-#
-# > Remove all temporary variables on load, which have been created trough the functions above.
-on load:
-  delete {SB::TEMPLOC::*}

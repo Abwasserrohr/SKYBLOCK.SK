@@ -72,11 +72,8 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
     # > the player is the leader.
     set {_leader} to getleader({_p})
     #
-    # > Update the current temporary bedrock location.
-    set {_allowed} to checkislandaccess({_p},location of {_p}) 
-    #
     # > Get the uuid of the current island leader the player is standing on.
-    set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+    set {_cbedrock} to getcurrentbedrock({_p},location of {_p})
     set {_cx} to x-coord of {_cbedrock}
     set {_cy} to y-coord of {_cbedrock}
     set {_cz} to z-coord of {_cbedrock}
@@ -107,11 +104,8 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
     # > the player is the leader.
     set {_leader} to getleader({_p})
     #
-    # > Update the current temporary bedrock location.
-    set {_allowed} to checkislandaccess({_p},location of {_p}) 
-    #
     # > Get the uuid of the current island leader the player is standing on.
-    set {_cbedrock} to {SB::TEMPLOC::%{_p}%}
+    set {_cbedrock} to getcurrentbedrock({_p},location of {_p})
     set {_cx} to x-coord of {_cbedrock}
     set {_cy} to y-coord of {_cbedrock}
     set {_cz} to z-coord of {_cbedrock}
