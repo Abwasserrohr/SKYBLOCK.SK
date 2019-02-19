@@ -82,7 +82,7 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
 function bindcheck(i:item, p:player) :: boolean:
   #
   # > Get the current bedrock where the player wants to build something:
-  set {_bedrock} to {SB::TEMPLOC::%{_p}%}
+  set {_bedrock} to getcurrentbedrock({_p},location of {_p})
   #
   # > If the lore is not empty, it has to be the bindcheck. Since dirt doesn't
   # > have any lore by default.
