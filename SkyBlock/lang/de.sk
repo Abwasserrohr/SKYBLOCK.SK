@@ -189,6 +189,8 @@ on script load:
   set {SB::lang::isadmin::changeleader::%{_lang}%} to "Möchtest du den Inselleiter von <oldleader> zu <newleader> wecchseln?"
   set {SB::lang::isadmin::fcalc::%{_lang}%} to "Das Insellevel wird nun berechnet."
   set {SB::lang::isadmin::isremovedonrestart::%{_lang}%} to "Die Inseln werden nach einem neustart gelöscht."
+  set {SB::lang::admincmd-removedchallengexp::%{_lang}%} to "%{_s1}%<player> wurde <amount> Herausforderungserfahrung abgezogen."
+  set {SB::lang::admincmd-addedchallengexp::%{_lang}%} to "%{_s1}%<player> wurde <amount> Herausforderungserfahrung hinzugefügt."
 
   #
   # > Event cancel messages
@@ -532,6 +534,8 @@ on script load:
   set {SB::lang::challenge::xpionlywclvl::%{_lang}%} to "&rSchließe||&rHerausforderungen||&rab, um dieses Level||&rzu erreichen."
   set {SB::lang::challenge::repeatable::%{_lang}%} to "&7Wiederholbar [<current>/<maxrepeat>]"
   set {SB::lang::challenge::notrepeatable::%{_lang}%} to "&7Nicht wiederholbar."
+  set {SB::lang::challenge::xp::%{_lang}%} to "&7XP: <amount>"
+  set {SB::lang::challenge::statssitelore::%{_lang}%} to "&7Erhalte deine aktuelle\n&7Herausforderungsstatistik."
 
   #
   # > Short rest for server
