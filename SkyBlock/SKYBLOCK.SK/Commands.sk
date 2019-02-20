@@ -8,8 +8,9 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
   aliases: /isadmin
   trigger:
     #
-    # > Set prefix for messages
-    set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+    # > Get the language code of the player and set prefix for messages
+    set {_lang} to {SK::lang::%uuid of player%}
+    set {_prefix} to {SB::lang::prefix::%{_lang}%}
     #
     # > Argument: "go" ("home" OR "tp")
     # > Teleports the user to the defined player
@@ -20,6 +21,32 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
       set {_uuid} to uuid of {_player}
       homehandler({_player},"home",arg-3,player)
       stop
+    #
+    # > If the admin wants to change challenge xp, the changechallengexp function
+    # > from the SkyBlock/SKYBLOCK.SK/Functions/challenge.sk is being called.
+    # > Print a message with the changed amount if it worked.
+    if arg-1 is "challenge":
+      if arg-2 is "xp":
+        if arg-3 is "add" or "remove":
+          #
+          # > Set a local variable for the player who gets the challenge xp modified.
+          set {_target} to arg-4 parsed as offline player
+          #
+          # > Call the changechallengexp function to change the xp.
+          set {_changed} to changechallengexp({_target},arg-3,arg-5 parsed as number)
+          #
+          # > Send a message depending if something has been added or removed.
+          if arg-3 is "add":
+            set {_msg} to {SB::lang::admincmd-addedchallengexp::%{_lang}%}
+            replace all "<amount>" with "%{_changed}%" in {_msg}
+            replace all "<player>" with "%{_target}%" in {_msg}
+            message "%{_prefix}% %{_msg}%"
+          else if arg-3 is "remove":
+            set {_msg} to {SB::lang::admincmd-removedchallengexp::%{_lang}%}
+            replace all "<amount>" with "%{_changed}%" in {_msg}
+            replace all "<player>" with "%{_target}%" in {_msg}
+            message "%{_prefix}% %{_msg}%"
+          stop
     #
     # > If something should be done with an island, this is the code:
     else if arg-1 is "island":
@@ -116,6 +143,7 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
       message "/isadmin island delete <player> - Deletes the island of the player"
       message "/isadmin island addmember <player> - adds the defined player to the island you're currently at, if no leader is set, the player gets the leader"
       message "/isadmin island calc <player> - calculates the island of the defined player"
+      message "/isadmin challenge xp add/remove <player> <amount> - changes challenge xp"
   
 command /island [<text>] [<text=1>] [<text>]:
   aliases: /is, /sb, /skyblock
