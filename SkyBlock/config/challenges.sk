@@ -159,8 +159,8 @@ on load:
   set {SB::config::challenges::c::3::3::repeatsperday} to 20
 
   set {SB::config::challenges::c::3::4::needed} to "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
-  set {SB::config::challenges::c::3::4::reward} to "150-xp,1-heart of the sea"
-  set {SB::config::challenges::c::3::4::repeatreward} to "10-xp,1-heart of the sea"
+  set {SB::config::challenges::c::3::4::reward} to "150-xp,1-sponge,1-heart of the sea"
+  set {SB::config::challenges::c::3::4::repeatreward} to "10-xp,1-sponge,1-heart of the sea"
   set {SB::config::challenges::c::3::4::item} to heart of the sea
   set {SB::config::challenges::c::3::4::repeat} to true
   set {SB::config::challenges::c::3::4::repeatsperday} to 5
