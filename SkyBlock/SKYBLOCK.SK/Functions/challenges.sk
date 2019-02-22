@@ -123,7 +123,7 @@ function openchallenges(p:player,page:number=0):
       setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
       #
       # > Render the challenge items in with the renderchallengeitems function.
-      renderchallengeitems({_p},{_page},{_xp})
+      renderchallengeitems({_p},{_page},{_xp},{_finalchallenges::*})
     else:
       #
       # > Get a custom head to display it for the current level (not selected).
@@ -152,7 +152,7 @@ function openchallenges(p:player,page:number=0):
 # > <number>the current challenge xp
 # > Actions:
 # > Renders the challenge items for the defined player and the challenge level.
-function renderchallengeitems(player:player,page:number,currentxp:number=0):
+function renderchallengeitems(player:player,page:number,currentxp:number=0,finalchallenges:objects=""):
   set {_challangelvlpart} to 1
   set {_slot} to 10
   #
