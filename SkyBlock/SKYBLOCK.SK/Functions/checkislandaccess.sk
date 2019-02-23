@@ -115,6 +115,10 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
   # > The locations aren't match, go forward and do another check, if that's also not
   # > working, return false.
   else:
+    #
+    # > If the player is a admin, return true.
+    if {_p} has permission "is.admin":
+      return true
     if {_t} is 1:
       return checkislandaccess({_p}, {_l}, {_event}, {_block}, 2)
     else:
