@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.3
+# customarmorstands.sk v0.0.4
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -429,7 +429,8 @@ function opencustomstandmenu(player:player):
   #
   # > Only show the clone item in the inventory menu if the player has the permission to do so.
   if {_player} has permission "{@clonepermission}":
-    setguiitem({_player},8,{@cloneitem},1,{_copyarmorstandlang},{_copyarmorstandlorelang},"copycustomstand(""%{_player}%"" parsed as player)",true)
+    if {_player}'s gamemode is creative:
+      setguiitem({_player},8,{@cloneitem},1,{_copyarmorstandlang},{_copyarmorstandlorelang},"copycustomstand(""%{_player}%"" parsed as player)",true)
   #
   # > Change X Coordinate
   setguiitem({_player},16,{@xcoorditem},1,{_xlang},"","starteditcustomstand(""%{_player}%"" parsed as player,""location"",""x"")",true)
