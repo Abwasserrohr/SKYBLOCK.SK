@@ -1,10 +1,10 @@
 #
 # ==============
-# parcours.sk v0.0.2
+# parkour.sk v0.0.3
 # ==============
-# Let players create jump and run parcours. There are start, checkpoint and finish blocks which can
+# Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
-# some parcours if they want to do that.
+# some parkour if they want to do that.
 # ==============
 # Dependencies
 # ==============
@@ -16,7 +16,7 @@
 # ==============
 # How to use it:
 # ==============
-# > First use: Place parcours.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > First use: Place parkour.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
 # > Commands: /giveparcour <player>
 # > Usage for players: Place the blocks and use the inventory of these blocks to get
 # > checkpoint and finish blocks. They can be removed using their inventory menu.
@@ -461,6 +461,10 @@ on place of {@parcouritem}:
     #
     # > This is a valid parcour item block, cancel the event.
     cancel event
+    #
+    # > If block below is a hopper which could take out items, prevent it.
+    if block 1 below event-location is a hopper:
+      stop
     #
     # > Get the parcour id of the tool the player is using,
     # > which is the current parcour item block the player
