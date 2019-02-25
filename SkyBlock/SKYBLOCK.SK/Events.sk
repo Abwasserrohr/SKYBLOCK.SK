@@ -42,7 +42,7 @@ on rightclick:
 # > If the player is allowed to do this action, cancel the event and then give a island
 # > bound lava bucket out.
 on bucket fill:
-  if target block is lava:
+  if event-block is lava:
     set {_allowed} to checkislandaccess(player,event-location)
     if {_allowed} is not false:
       cancel event
