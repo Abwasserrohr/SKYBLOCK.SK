@@ -123,7 +123,7 @@ function openchallenges(p:player,page:number=0):
       setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
       #
       # > Render the challenge items in with the renderchallengeitems function.
-      renderchallengeitems({_p},{_page},{_xp},{_finalchallenges::*})
+      renderchallengeitems({_p},{_page},{_xp})
     else:
       #
       # > Get a custom head to display it for the current level (not selected).
@@ -152,7 +152,22 @@ function openchallenges(p:player,page:number=0):
 # > <number>the current challenge xp
 # > Actions:
 # > Renders the challenge items for the defined player and the challenge level.
-function renderchallengeitems(player:player,page:number,currentxp:number=0,finalchallenges:objects=""):
+function renderchallengeitems(player:player,page:number,currentxp:number=0):
+  #
+  # > Get data to load island challenge data.
+  set {_uuid} to uuid of {_player}
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  set {_x} to x-coord of {_bedrock}
+  set {_y} to y-coord of {_bedrock}
+  set {_z} to z-coord of {_bedrock}
+  #
+  # > Get island challenge data for repeats.
+  set {_islandchallengedata} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challenges}
+  set {_islandchallengedata::*} to {_islandchallengedata} split at ","
+  loop {_islandchallengedata::*}:
+    set {_tdata::*} to loop-value split at "="
+    set {_tdata::2} to {_tdata::2} parsed as integer
+    set {_finalchallenges::%{_tdata::1}%} to {_tdata::2}
   set {_challangelvlpart} to 1
   set {_slot} to 10
   #
@@ -191,6 +206,7 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0,final
       # > Extract reward items for this challenge:
       #
       # > If the challenge has already been done, display the repeat rewand.
+      set {_finalchallenges::*} to metadata value "finalchallenges" of {_player}
       if {_finalchallenges::%{_page}%%{_challangelvlpart}%} is set:
         set {_done} to true
         set {_reward} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeatreward}
