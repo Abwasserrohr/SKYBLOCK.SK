@@ -372,6 +372,7 @@ on script load:
   #
   # > Store
   set {SB::lang::store::guititle::%{_lang}%} to "&lLaden"
+  set {SB::lang::store::lvlthreshold::%{_lang}%} to "&7Dieser Gegenstand\n&7ist erst ab Insellevel\n&7<level> verfügbar."
   set {SB::lang::store::pageforward::%{_lang}%} to "&rWeiter"
   set {SB::lang::store::pageforwardlore::%{_lang}%} to "&7Blättere weiter um\n&7die nächste Seite\n&7zu sehen."
   set {SB::lang::store::pagebackward::%{_lang}%} to "&rZurück"
