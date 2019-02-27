@@ -13,6 +13,10 @@ on script load:
   set {SB::lang::languages::%{_lang}%} to "Sprachen"
   set {SB::lang::changedlang::%{_lang}%} to "Deine Sprache wurde geändert."
   #
+  # > Translation for the currency name of the server
+  set {SB::lang::currency::name::%{_lang}%} to "Taler"
+
+  #
   # > Local variables for color schemes:
   #
   set {_p1} to {SB::config::color::primary::1}
@@ -365,6 +369,26 @@ on script load:
   set {SB::lang::recovery::recoveredinfo::%{_lang}%} to "%{_s1}%Dein Inventar wurde gesichert, erhalte es mit %{_p1}%/recovery%{_s1}% zurück."
   set {SB::lang::recovery::free::%{_lang}%} to "%{_p1}%Kostenlos"
   
+  #
+  # > Store
+  set {SB::lang::store::pageforward::%{_lang}%} to "&rWeiter"
+  set {SB::lang::store::pageforwardlore::%{_lang}%} to "&7Blättere weiter um\n&7die nächste Seite\n&7zu sehen."
+  set {SB::lang::store::pagebackward::%{_lang}%} to "&rZurück"
+  set {SB::lang::store::pagebackwardlore::%{_lang}%} to "&7Blättere zurück um\n&7die vorherige Seite\n&7zu sehen."
+  set {SB::lang::store::buymodeitem::%{_lang}%} to "Kaufen"
+  set {SB::lang::store::sellmodeitem::%{_lang}%} to "Verkaufen"
+  set {SB::lang::store::buymodeitemlore::%{_lang}%} to "&7Klicke hier, um\n&7Gegenstände zu\n&7kaufen."
+  set {SB::lang::store::sellmodeitemlore::%{_lang}%} to "&7Klicke hier, um\n&7Gegenstände zu\n&7verkaufen."
+  set {SB::lang::store::currentmodebuy::%{_lang}%} to "Aktuell: Kaufen"
+  set {SB::lang::store::currentmodesell::%{_lang}%} to "Aktuell: Verkaufen"
+  set {SB::lang::store::cantbuy::%{_lang}%} to "&7Dieser Gegenstand ist\n&7nicht kaufbar."
+  set {SB::lang::store::cantsell::%{_lang}%} to "&7Dieser Gegenstand ist\n&7nicht verkaufbar."
+  set {SB::lang::store::itemselllore::%{_lang}%} to "&7Ertrag: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu verkaufen."
+  set {SB::lang::store::itembuylore::%{_lang}%} to "&7Preis: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu kaufen."
+  set {SB::lang::store::soldxitems::%{_lang}%} to "Du hast <item> für <price> <currency> verkauft."
+  set {SB::lang::store::boughtxitems::%{_lang}%} to "Du hast <item> für <price> <currency> gekauft."
+  set {SB::lang::store::notenoughitem::%{_lang}%} to "Du hast nicht <item>."
+
   #
   # > Lootbox
   set {SB::lang::lootbox::reward::%{_lang}%} to "%{_s1}%Belohnung:%{_p1}%"
