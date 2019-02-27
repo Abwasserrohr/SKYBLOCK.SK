@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.4
+# jetboots.sk v0.0.5
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -50,7 +50,7 @@ options:
 # > Once this file is loaded by skript, the JetBoots get registered as a crafting recipe.
 # > Also, if there is a old jetboots list left, delete it.
 on load:
-  set {_item} to diamond boots
+  set {_item} to diamond boots of mending
   set name of {_item} to {@item_name}
   set line 1 of lore of {_item} to {@item_name}
   set line 2 of lore of {_item} to "&r0"
