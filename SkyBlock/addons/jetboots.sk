@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.3
+# jetboots.sk v0.0.4
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -42,6 +42,7 @@ options:
   fillinfo: "Fill &eJetBoots&r up with coal while wearing them."
   emptyinfo: "Your &eJetBoots&r are empty!"
   loadedinfo: "Your &eJetBoots&r have been filled up."
+  actionbar: &8[&6&lJetBoots&8] &8>> [&r<fuel>&8]
 
 #
 # > Event - on load
@@ -54,7 +55,6 @@ on load:
   set line 1 of lore of {_item} to {@item_name}
   set line 2 of lore of {_item} to "&r0"
   register new shaped recipe for {_item} using air, air, air, diamond block, feather, diamond block, diamond block, feather, diamond block
-  delete {SR::jetboots::*}
 
 #
 # > Event - on craft
@@ -78,103 +78,155 @@ import:
   org.bukkit.Effect
 
 #
-# > Event - on jump
+# > Event - on gamemode change to survival
 # > Actions:
-# > Once the player jumped, the JetBoots are activated, the player can now
-# > fly around, as long as they have enough fuel and the boots are in the
-# > Boot slot of the player.
-on jump:
+# > If the player is wearing the jetboots and the gamemode changes,
+# > reapply the jetboots functions.
+on gamemode change to survival:
   if line 1 of lore of player's boots is {@item_name}:
-    if {SR::jetboots::%player%} is true:
-      stop
+    jetboots(player)
+
+#
+# > Event - on inventory click
+# > Actions:
+# > If the player clicks and the event item is either diamond boots or the
+# > event-slot is the boots slot, check for the lore of the boots the
+# > player is currently wearing, if they're valid jetboots, call the
+# > jetboots function.
+on inventory click:
+  if event-item is diamond boots:
+    set {_check} to true
+  else if event-slot is player's boots:
+    set {_check} to true
+  if {_check} is true:
+    wait 2 ticks
+    if line 1 of lore of player's boots is {@item_name}:
+      jetboots(player)
+
+#
+# > Event - on quit
+# > Actions:
+# > If the player leaves the server, delete the metadata value for the jetboots
+# > from the player to stop while loops.
+on quit:
+  delete metadata value "jetboots" of player
+
+#
+# > Event - on join
+# > Actions:
+# > If the player is joining and wearing jetboots, call jetboots function.
+on join:
+  if line 1 of lore of player's boots is {@item_name}:
+    jetboots(player)
+
+#
+# > Event on rightclick holding diamond boots
+# > Actions:
+# > If the player is rightclicking with diamond boots,
+# > check if these are jetboots, if they are, call the
+# > jetboots function.
+on rightclick holding diamond boots:
+  wait 1 tick
+  if line 1 of lore of player's boots is {@item_name}:
+    jetboots(player)
+
+#
+# > Function - jetboots
+# > Parameters:
+# > <player>the player who is wearing jetboots
+# > Actions:
+# > Allows the player to fly with the jetboots. Stops the flying automatically
+# > if the player has no fuel or removes the jetboots from the boots inventory slot.
+function jetboots(player:player):
+  #
+  # > The uuid of the player is needed for messages.
+  set {_uuid} to uuid of {_player}
+  #
+  # > Wait a tick 
+  wait 1 tick
+  #
+  # > Make the player fly at a specified fly speed.
+  set {_player}'s flight mode to true
+  set {_player}'s fly speed to {@flyspeed}
+  #
+  # > Set the metadata value "jetboots" of the player to the current timestamp,
+  # > if the timestamp changes, running while loops are going to stop.
+  set {_now} to now
+  set metadata value "jetboots" of {_player} to {_now}
+  while line 1 of lore of {_player}'s boots is {@item_name}:
     #
-    # > Wait a tick 
+    # > If the temporary saved timestamp isn't the one which is set
+    # > to the metadata of the player, then stop the while loop.
+    if {_now} is not metadata value "jetboots" of {_player}:
+      stop loop
+    #
+    # > Before every while loop, wait 1 tick.
     wait 1 tick
     #
-    # > Make the player fly at a specified fly speed.
-    set player's flight mode to true
-    set the player's fly speed to {@flyspeed}
-    #
-    # > Set the {SR::jetboots::%player%} to true to prevent multiple while loops.
-    set {SR::jetboots::%player%} to true
-    while line 1 of lore of player's boots is {@item_name}:
+    # > Remove fuel from the JetBoots if the player is flying and
+    # > update the actionbar of the player.
+    if {_player} is flying:
+      set {_lore} to line 2 of lore of {_player}'s boots
+      replace all "&r" with "" in {_lore}
+      set {_lore} to {_lore} parsed as integer
+      if {_lore} > 500:
+        set {_display} to "{@actionbar}"
+        replace all "<fuel>" with "%{_lore}%" in {_display}
+        actionbar({_player},"%{_display}%")
       #
-      # > Before every while loop, wait 1 tick.
-      wait 1 tick
-      #
-      # > Remove fuel from the JetBoots if the player is flying and
-      # > update the actionbar of the player.
-      if player is flying:
-        set {_lore} to line 2 of lore of player's boots
-        replace all "&r" with "" in {_lore}
-        set {_lore} to {_lore} parsed as integer
-        if {_lore} > 500:
-          actionbar(player,"%{_lore}%")
-        #
-        # > Make the actionbar colored red and fat, if it is below 500.
-        else:
-          actionbar(player,"&4&l%{_lore}%")
-        if {_lore} <= 0:
-          #
-          # > If the lore is 0 or lower, print info to the player and stop flying.
-          set {_lang} to {SK::lang::%uuid of player%}
-          #
-          # > Print predefined messages, if no translation is available.
-          if {SB::lang::jetboots::ei::%{_lang}%} is not set:
-            message {@emptyinfo}
-          else:
-            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::ei::%{_lang}%}%"
-          if {SB::lang::jetboots::fi::%{_lang}%} is not set:
-            message {@fillinfo}
-          else:
-            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%"
-          set player's flight mode to false
-          set the player's fly speed to 0.08
-          delete {SR::jetboots::%player%}
-          stop
-        #
-        # > Check if the player is allowed to fly with the JetBoots at this locaction.
-        set {_allowed} to checkislandaccess(player,location of player,"jetboots")
-		#
-		# > If the player isn't allowed to fly, maybe only because the payer is above or below the
-		# > own island, check if the player is on/below y-coordinate 0 or on/above y-coord 255.
-        if {_allowed} is false:
-          if y-coord of {_p} <= 0:
-            set {_allowed} to true
-          if y-coord of {_p} >= 255:
-            set {_allowed} to true
-        if {_allowed} is false:
-          set player's flight mode to false
-          set the player's fly speed to 0.08
-          delete {SR::jetboots::%player%}
-          set {_lang} to {SK::lang::%uuid of player%}
-          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::flag::errorfalse::%{_lang}%}%"
-          actionbar(player,"&4%{SB::lang::flag::errorfalse::%{_lang}%}%")
-          stop
-        #
-        # > Spawn some jet particles using the jetparticle function.
-        jetparticle(player)
-        remove 1 from {_lore}
-        set line 2 of lore of player's boots to "&r%{_lore}%"
+      # > Make the actionbar colored red and fat, if it is below 500.
       else:
-        if block below player's location is air:
-          set {_i} to 0
-        add 1 to {_i}
-        if {_i} >= 50:
-          #
-          # > If the player is standing around, prevent while loops after 25 ticks,
-          # > if the player stands on ground and is not in the air.
-          set player's flight mode to false
-          set the player's fly speed to 0.08
-          delete {SR::jetboots::%player%}
-          stop
-    #
-    # > If the while loop ends, disable flying for player,
-    # > this happens, if the player takes the JetBoots off while
-    # > flying in the air.
-    delete {SR::jetboots::%player%}
-    set player's flight mode to false
-    set the player's fly speed to 0.08
+        set {_display} to "{@actionbar}"
+        replace all "<fuel>" with "&4&l%{_lore}%" in {_display}
+        actionbar({_player},"%{_display}%")
+      if {_lore} <= 0:
+        #
+        # > If the lore is 0 or lower, print info to the player and stop flying.
+        set {_lang} to {SK::lang::%{_uuid}%}
+        #
+        # > Print predefined messages, if no translation is available.
+        if {SB::lang::jetboots::ei::%{_lang}%} is not set:
+          message {@emptyinfo} to {_player}
+        else:
+          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::ei::%{_lang}%}%" to {_player}
+        if {SB::lang::jetboots::fi::%{_lang}%} is not set:
+          message {@fillinfo} to {_player}
+        else:
+          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%" to {_player}
+        set {_player}'s flight mode to false
+        set {_player}'s fly speed to 0.08
+        delete metadata value "jetboots" of {_player}
+        stop
+      #
+      # > Check if the player is allowed to fly with the JetBoots at the center of the current island.
+      set {_allowed} to checkislandaccess({_player},getcurrentbedrock({_player},location of {_player}),"jetboots")
+      #
+      # > If the player isn't allowed to fly, maybe only because the payer is above or below the
+      # > own island, check if the player is on/below y-coordinate 0 or on/above y-coord 255.
+      if {_allowed} is false:
+        if y-coord of {_p} <= 0:
+          set {_allowed} to true
+        if y-coord of {_p} >= 255:
+          set {_allowed} to true
+      if {_allowed} is false:
+        set {_player}'s flight mode to false
+        set {_lang} to {SK::lang::%{_uuid}%}
+        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::flag::errorfalse::%{_lang}%}%" to {_player}
+        actionbar({_player},"&4%{SB::lang::flag::errorfalse::%{_lang}%}%")
+        wait 1 tick
+        set {_player}'s flight mode to true
+      #
+      # > Spawn some jet particles using the jetparticle function.
+      jetparticle({_player})
+      remove 1 from {_lore}
+      set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
+  #
+  # > If the while loop ends, disable flying for player,
+  # > this happens, if the player takes the JetBoots off while
+  # > flying in the air.
+  delete metadata value "jetboots" of {_player}
+  set {_player}'s flight mode to false
+  set {_player}'s fly speed to 0.08
 
 #
 # > Function - jetparticle
