@@ -83,6 +83,9 @@ pvp: false
 # > Prevent fire from spreading  [true = prevent|false = do not prevent]
 firespread: true
 #
+# > Prevent fish from despawning [true = prevent|false = do not prevent]
+preventfishdespawn: true
+#
 # > Prevent phantoms from spawning [true = prevent|false = do not prevent]
 phantomspawn: true
 #
