@@ -1,0 +1,499 @@
+#
+# ==============
+# store.sk v0.0.1
+# ==============
+# Allow your players to buy and sell stuff easily.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > First use: Place store.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > store.sk needs SKYBLOCK.SK language files and addons: gui.sk
+# > Steps for users:
+# > Open the store with /store or /shop.
+
+options:
+  #
+  # > The item which should be display the click buy section.
+  buyitem: emerald block
+  #
+  # > The item which should be display the click sell section.
+  sellitem: redstone block
+  
+#
+# > Configure the categories and items of the store below.
+on load:
+	#
+	# > Delete old or already set variables. 
+	# > Do not change this.
+	loop {STORE::categories::*}:
+		delete {STORE::items::%loop-index%::*}
+		delete {STORE::prices::%loop-index%::*}
+		delete {STORE::buyreward::%loop-index%::*}
+	delete {STORE::categories::*}
+
+	#
+	# > Categories.
+	# > Example category with placeholders:
+	# > set {STORE::categories::<internal name of your new category>} to <display item>
+	# > set {STORE::catlang::<internal name of your new category>::<langcode>} to "Blöcke"
+	#
+	# > The language code default translations are in the language folder of SKYBLOCK.SK.
+	set {STORE::categories::blocks} to grass
+	set {STORE::catlang::blocks::de} to "Blöcke"
+
+	set {STORE::categories::items} to stick
+	set {STORE::catlang::items::de} to "Items"
+	
+	set {STORE::categories::eggs} to villager spawn egg
+	set {STORE::catlang::eggs::de} to "Spawneier"
+
+	set {STORE::categories::food} to cooked beef
+	set {STORE::catlang::food::de} to "Lebensmittel"
+
+	set {STORE::categories::functions} to command block
+	set {STORE::catlang::functions::de} to "Funktionen"
+
+	set {STORE::categories::decoration} to poppy
+	set {STORE::catlang::decoration::de} to "Dekoartikel"
+
+	#
+	# > Items for the categories.
+	# > Example for a item configuration with placeholders:
+	# > add 64 of cobblestone to {STORE::items::<replace this with internal category name>::*}
+	# > add "<price>" to {STORE::prices::<replace this with internal category name>::buy::*}
+	# > add "<price>" to {STORE::prices::<replace this with internal category name>::sell::*}
+	# > Add a function in, be sure to set it to "none", if the player should get the item.
+	add 64 of cobblestone to {STORE::items::blocks::*}
+	add "50" to {STORE::prices::blocks::buy::*}
+	add "5" to {STORE::prices::blocks::sell::*}
+	
+	add 1 of dirt to {STORE::items::blocks::*}
+	add "1000" to {STORE::prices::blocks::buy::*}
+	add "10" to {STORE::prices::blocks::sell::*}
+	
+	add 1 of sand to {STORE::items::blocks::*}
+	add "1000" to {STORE::prices::blocks::buy::*}
+	add "2" to {STORE::prices::blocks::sell::*}
+	
+	add 64 of stone to {STORE::items::blocks::*}
+	add "100" to {STORE::prices::blocks::buy::*}
+	add "15" to {STORE::prices::blocks::sell::*}
+	
+	add 1 of obsidian to {STORE::items::blocks::*}
+	add "10000" to {STORE::prices::blocks::buy::*}
+	add "1000" to {STORE::prices::blocks::sell::*}
+	
+	add 32 of oak log to {STORE::items::blocks::*}
+	add "100" to {STORE::prices::blocks::buy::*}
+	add "30" to {STORE::prices::blocks::sell::*}
+	
+	add 32 of raw diorite to {STORE::items::blocks::*}
+	add "50" to {STORE::prices::blocks::buy::*}
+	add "10" to {STORE::prices::blocks::sell::*}
+	
+	add 32 of raw andesite to {STORE::items::blocks::*}
+	add "50" to {STORE::prices::blocks::buy::*}
+	add "10" to {STORE::prices::blocks::sell::*}
+	
+	add 32 of raw granite to {STORE::items::blocks::*}
+	add "50" to {STORE::prices::blocks::buy::*}
+	add "10" to {STORE::prices::blocks::sell::*}
+	
+	add 16 of gravel to {STORE::items::blocks::*}
+	add "100" to {STORE::prices::blocks::buy::*}
+	add "10" to {STORE::prices::blocks::sell::*}
+	
+	add 1 of purpur block to {STORE::items::blocks::*}
+	add "20" to {STORE::prices::blocks::buy::*}
+	add "0.5" to {STORE::prices::blocks::sell::*}
+	
+	add 16 of white wool to {STORE::items::blocks::*}
+	add "100" to {STORE::prices::blocks::buy::*}
+	add "5" to {STORE::prices::blocks::sell::*}
+	
+	#
+	# > Mob spawn egg category
+	add 1 of villager spawn egg to {STORE::items::eggs::*}
+	add "150000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of pig spawn egg to {STORE::items::eggs::*}
+	add "5000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of cow spawn egg to {STORE::items::eggs::*}
+	add "5000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of chicken spawn egg to {STORE::items::eggs::*}
+	add "2000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of wolf spawn egg to {STORE::items::eggs::*}
+	add "25000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of sheep spawn egg to {STORE::items::eggs::*}
+	add "50000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of mooshroom spawn egg to {STORE::items::eggs::*}
+	add "150000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of donkey spawn egg to {STORE::items::eggs::*}
+	add "30000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+
+	add 1 of llama spawn egg to {STORE::items::eggs::*}
+	add "25000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+	
+	#
+	# > Food category
+	add 16 of steak to {STORE::items::food::*}
+	add "150" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked porkchop to {STORE::items::food::*}
+	add "150" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked chicken to {STORE::items::food::*}
+	add "120" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked rabbit to {STORE::items::food::*}
+	add "120" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked mutton to {STORE::items::food::*}
+	add "150" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 16 of baked potato to {STORE::items::food::*}
+	add "150" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked cod to {STORE::items::food::*}
+	add "140" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 16 of cooked salmon to {STORE::items::food::*}
+	add "140" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 16 of pumpkin pie to {STORE::items::food::*}
+	add "250" to {STORE::prices::food::buy::*}
+	add "5" to {STORE::prices::food::sell::*}
+
+	add 1 of rabbit stew to {STORE::items::food::*}
+	add "25" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+	add 1 of cake to {STORE::items::food::*}
+
+	add "75" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+	add 32 of cookie to {STORE::items::food::*}
+	add "50" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+	add 16 of carrot to {STORE::items::food::*}
+	add "50" to {STORE::prices::food::buy::*}
+	add "2" to {STORE::prices::food::sell::*}
+
+#
+# > Command - /store | /shop
+# > Actions:
+# > Calls the serverstore_open function with the player as parameter.
+command /store:
+	aliases: /shop
+	trigger:
+		serverstore_open(player)
+
+#
+# > Function - serverstore_open
+# > Parameters:
+# > <player>the player who wants to open the store
+# > <text>the mode, either "buy" or "sell". Default: "none"
+# > <text>the category, currently only used to know if the player has to select the mode or notenoughitem
+# > <number>the categorysite is used if there are more categories than they would fit on one site, open site 2 to display the 2nd site. Default: 1.
+# > <text>the shop which should be opened. This is a predefined category. Eg. "food". Default: "none".
+# > <number>if there are more items than they're fitting on one page, more pages are used to display them. Default 1.
+# > Actions:
+# > Opens a store menu which allows to buy and sell all predefined items of the categories.
+# > The process can render unlimited amounts of categories and items thanks to the multi site system, which
+# > automatically increases the sites, if more are needed.
+function serverstore_open(player:player,mode:text="none",category:text="selectmode",categorysite:number=1,shop:text="none",shopsite:number=1):
+	#
+	# > Get the uuid and the language code of the player.
+	set {_uuid} to uuid of {_player}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	#
+	# > Set the head data of the forward and backwards skins to make site scrolling possible.
+	set {_forwardpageheaddata} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDllY2NjNWMxYzc5YWE3ODI2YTE1YTdmNWYxMmZiNDAzMjgxNTdjNTI0MjE2NGJhMmFlZjQ3ZTVkZTlhNWNmYyJ9fX0="
+	set {_backwardpageheaddata} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY0Zjc3OWE4ZTNmZmEyMzExNDNmYTY5Yjk2YjE0ZWUzNWMxNmQ2NjllMTljNzVmZDFhN2RhNGJmMzA2YyJ9fX0="
+	#
+	# > Open the store menu.
+	opengui({_player},54,"%{SB::lang::store::guititle::%{_lang}%}%",chest inventory)
+	#
+	# > Give the menu some background items.
+	loop 54 times:
+		setguiitem({_player},loop-number - 1,black stained glass pane,1," "," ","",false)
+	#
+	# > If there is no specific buy or sell mode selected, show the selectmode menu.
+	if {_category} is "selectmode":
+		#
+		# > These items allow the player to select either the buy or sell mode.
+		setguiitem({_player},21,{@buyitem},1,"&r%{SB::lang::store::buymodeitem::%{_lang}%}%",{SB::lang::store::buymodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""buy"",""main"")",false)
+		setguiitem({_player},23,{@sellitem},1,"&r%{SB::lang::store::sellmodeitem::%{_lang}%}%",{SB::lang::store::sellmodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""sell"",""main"")",false)
+		#
+		# > Add back item to allow the player to go back to the previous menu.
+		setguiitem({_player},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{_lang}%}%","%{SB::lang::guibacktopreviousmenulore::%{_lang}%}%","make ""%{_player}%"" parsed as player execute command ""/is""",false)
+		stop
+	else:
+		#
+		# > Depending on the current mode, set a toggle mode item into slot 8 of the menu.
+		if {_mode} is "sell":
+			setguiitem({_player},8,{@sellitem},1,"&r%{SB::lang::store::currentmodesell::%{_lang}%}%",{SB::lang::store::buymodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""buy"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+		else if {_mode} is "buy":
+			setguiitem({_player},8,{@buyitem},1,"&r%{SB::lang::store::currentmodebuy::%{_lang}%}%",{SB::lang::store::sellmodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""sell"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+
+	#
+	# > Set the slot where the store is starting from.
+	set {_storeslot} to 9
+	#
+	# > Set the start shop id of the current shop site.
+	# > Every shop site has 21 entries.
+	set {_startshopid} to ({_shopsite}*21)-21
+	if {_shop} is not "none":
+		#
+		# > If the shop site isn't 1, add a backwards button to get back to the first site.
+		if {_shopsite} is not 1:
+			set {_item} to getcustomhead("blackbackwards",{_backwardpageheaddata})
+			setguiitem({_player},18,{_item},1,{SB::lang::store::pagebackward::%{_lang}%},"%{SB::lang::store::pagebackwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}-1%)",false)
+		#
+		# > Loop through all items for the selected shop.
+		loop {STORE::items::%{_shop}%::*}:
+			#
+			# > Count the loops to know which items should be displayed, important if
+			# > there are more pages than only one.
+			add 1 to {_loopnum}
+			#
+			# > If the loop id is equal or bigger than the startshop id.
+			# > This startshopid changes if there are more pages. Eg. site 2 = 21.
+			if {_loopnum} >= {_startshopid}:
+				#
+				# > If the loop number isn't equal or bigger than the shopsite+21.
+				if {_loopnum} <= ({_shopsite}+21):
+					#
+					# > The store menu should be filled, add 1 to the slot, also
+					# > increase tthe skipslot variable by one to skip every 8 slots
+					# > for a more beautiful menu.
+					add 1 to {_storeslot}
+					add 1 to {_skipslot}
+					#
+					# > If the skipslot variable is 8, reset it to 1 and add 2 extra
+					# > slots to the store slot.
+					if {_skipslot} is 8:
+						set {_skipslot} to 1
+						add 2 to {_storeslot}
+					#
+					# > Get the amount of the looped ItemStack to display it correctly on the menu.
+					set {_number} to "%loop-value.getAmount()%" parsed as number
+					#
+					# > Depending if the mode is "sell" or "buy", use different variables for translation
+					# > of the menu to fit better.
+					if {_mode} is "sell":
+						set {_lore} to "%{SB::lang::store::itemselllore::%{_lang}%}%"
+						set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
+						replace all "<amount>" with "%{_price}%" in {_lore}
+						replace all "<currency>" with "%{SB::lang::currency::name::%{_lang}%}%" in {_lore}
+						if {_price} is "-1":
+							set {_lore} to {SB::lang::store::cantsell::%{_lang}%}
+					else if {_mode} is "buy":
+						set {_lore} to "%{SB::lang::store::itembuylore::%{_lang}%}%"
+						set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
+						replace all "<amount>" with "%{STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}%" in {_lore}
+						replace all "<currency>" with "%{SB::lang::currency::name::%{_lang}%}%" in {_lore}
+						if {_price} is "-1":
+							set {_lore} to {SB::lang::store::cantbuy::%{_lang}%}
+					#
+					# > Once all the data to display has been prepared, place the item
+					# > into the current menu of the player.
+					setguiitem({_player},{_storeslot},loop-value,{_number},"","%{_lore}%","storeshophandler(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_shop}%"",%{_loopnum}%)||storeshophandler(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_shop}%"",%{_loopnum}%,true)",false)
+					#
+					# > The 34th slot gets a forward button which allows the player
+					# > to get to the next page, if there are enough items within this loop.
+					# > This only happens if there are actually enough items in the list.
+					if {_storeslot} is 34:
+						set {_item} to getcustomhead("blackforward",{_forwardpageheaddata})
+						setguiitem({_player},26,{_item},1,{SB::lang::store::pageforward::%{_lang}%},"%{SB::lang::store::pageforwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}+1%)",false)
+						stop loop
+	#
+	# > Get the current start it of the category site. There might be more sites of categories,
+	# > if the server operator decided to create more than 6 categories. Thanks to this, there
+	# > are no limits for categories.
+	set {_startcategoryid} to ({_categorysite}*7)-7
+	set {_loopnum} to 0
+	#
+	# > Set the slot where the category slots are starting.
+	# > This is predefined and should not be changed.
+	set {_slot} to 45
+	#
+	# > Loop through all categories to display the right ones.
+	loop {STORE::categories::*}:
+		#
+		# > Count the loops to display the right categories.
+		add 1 to {_loopnum}
+		#
+		# > Go forward if the loop number is equal or bigger than the start category id.
+		if {_loopnum} >= {_startcategoryid}:
+			#
+			# > If the slot is 45, this means that this is the first slot.
+			# > Check if the category site is not 1, if it is not 1, a "back" item is necessary
+			# > to be used here, to allow the player to navigate back.
+			if {_slot} is 45:
+				if {_categorysite} is not 1:
+					set {_item} to getcustomhead("blackbackwards",{_backwardpageheaddata})
+					setguiitem({_player},{_slot},{_item},1,{SB::lang::store::pagebackward::%{_lang}%},"%{SB::lang::store::pagebackwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}-1%,""%{_shop}%"",%{_shopsite}%)",false)
+					add 1 to {_slot}
+				else:
+					add 1 to {_slot}
+			#
+			# > If the loop number is equal or smaller than the startcategory id + 6, set the category with
+			# > the predefined category item.
+			if {_loopnum} <= ({_startcategoryid}+6):
+				setguiitem({_player},{_slot},loop-value,1,"&r%{STORE::catlang::%loop-index%::%{_lang}%}%","","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%loop-index%"",1)",false)
+				add 1 to {_slot}
+			#
+			# > If the loop number is exactly startcategory id + 7, we have hit the
+			# > last spot which can be used for a "go forward to the next site" item,
+			# > which is going to be used here if the slot is 52.
+			if {_loopnum} is ({_startcategoryid}+7):
+				if {_slot} is 52:
+					set {_item} to getcustomhead("blackforward",{_forwardpageheaddata})
+					setguiitem({_player},{_slot},{_item},1,{SB::lang::store::pageforward::%{_lang}%},"%{SB::lang::store::pageforwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}+1%,""%{_shop}%"",%{_shopsite}%)",false)
+	#
+	# > Set a go back to the previous menu item.
+	setguiitem({_player},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{_lang}%}%","%{SB::lang::guibacktopreviousmenulore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player)",false)
+
+#
+# > Function - storeshophandler
+# > Parameters:
+# > <player>the player who wants to buy|sell
+# > <text>the action, either "buy" or "sell"
+# > <text>the shop name (internal), eg. "food"
+# > <number>the item id of the shop.
+# > <boolean>does the player want to buy|sell mass? Default = false (doesn't want mass buy|sell)
+# > Actions:
+# > Buys or sells items for the player. Checks balance of the player, inventory and only
+# > proceeds, if the player has the money, items and/or space for the items.
+function storeshophandler(player:player,action:text,shop:text,itemshopid:number,mass:boolean=false):
+	#
+	# > Get frequently used variable data as local variable.
+	set {_uuid} to uuid of {_player}
+	set {_lang} to {SK::lang::%{_uuid}%}
+	set {_prefix} to {SB::lang::prefix::%{_lang}%}
+	set {_currency} to {SB::lang::currency::name::%{_lang}%}
+	#
+	# > Get the price of the item and parse it as number.
+	set {_price} to {STORE::prices::%{_shop}%::%{_action}%::%{_itemshopid}%} parsed as number
+	#
+	# > If the price is -1, stop here.
+	if {_price} is -1:
+		stop
+	#
+	# > Get the item which should be bought|sold as a local variable.
+	set {_item} to {STORE::items::%{_shop}%::%{_itemshopid}%}
+	#
+	# > Go through the following part if the player wants to buy.
+	if {_action} is "buy":
+		#
+		# > If the player has enough money, go forward.
+		if {_player}'s balance >= {_price}:
+			#
+			# > Only go forward if the player has enough space in his inventory.
+			if {_player}'s inventory has enough space for {_item}:
+				#
+				# > Remove the money from the player, send a success message and
+				# > give the player the item.
+				remove {_price} from {_player}'s balance
+				set {_msg} to {SB::lang::store::boughtxitems::%{_lang}%}
+				replace all "<item>" with "%{_item}%" in {_msg}
+				replace all "<price>" with "%{_price}%" in {_msg}
+				replace all "<currency>" with "%{_currency}%" in {_msg}
+				message "%{_prefix}% %{_msg}%" to {_player}
+				give {_item} to {_player}'s inventory
+			#
+			# > The player has not enough space, send a error message.
+			else:
+				message "%{_prefix}% %{SB::lang::storage::notenoughinvspace::%{_lang}%}%" to {_player}
+		#
+		# > The player doesn't have enough money, send a error message.
+		else:
+			message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_player}
+			stop
+	#
+	# > If the player wants to sell, go through this part.
+	else if {_action} is "sell":
+		#
+		# > If the player wants to sell in mass, go through this below.
+		if {_mass} is true:
+			#
+			# > Check if the player has 1 of the item, if yes that's true,
+			# > sell all of the item and calculate the correct price.
+			if {_player}'s inventory has 1 of {_item}:
+				#
+				# > Get the amount of the current ItemStack.
+				set {_number} to "%{_item}.getAmount()%" parsed as number
+				#
+				# > Divide the pricce with the amount of the ItemStack, that way, we get
+				# > the price of 1 piece.
+				set {_price} to {_price} / {_number}
+				#
+				# > Multiply the price for one piece with all pieces of the item the player
+				# > has in his inventory.
+				set {_price} to {_price} * number of {_item} in {_player}'s inventory
+				#
+				# > Set success message and replace placeholders, then send it to the player.
+				set {_msg} to {SB::lang::store::soldxitems::%{_lang}%} 
+				replace all "<item>" with "%number of {_item} in {_player}'s inventory% %1 of {_item}%" in {_msg}
+				replace all "<price>" with "%{_price}%" in {_msg}
+				replace all "<currency>" with "%{_currency}%" in {_msg}
+				message "%{_prefix}% %{_msg}%" to {_player}
+				#
+				# > Remove all the defined items and give the player the calculated money. Then stop.
+				remove number of {_item} in {_player}'s inventory of {_item} from {_player}'s inventory 
+				add {_price} to {_player}'s balance
+				stop
+		#
+		# > If the player doesn't want to sell in masses, check if the player has the item
+		# > amount in his inventory.
+		else if {_player}'s inventory has {_item}:
+			#
+			# > Send success message to the player. Replace placeholders.
+			set {_msg} to {SB::lang::store::soldxitems::%{_lang}%} 
+			replace all "<item>" with "%{_item}%" in {_msg}
+			replace all "<price>" with "%{_price}%" in {_msg}
+			replace all "<currency>" with "%{_currency}%" in {_msg}
+			message "%{_prefix}% %{_msg}%" to {_player}
+			#
+			# > Remove the item from the inventory of the player and give the money.
+			remove {_item} from {_player}'s inventory
+			add {_price} to {_player}'s balance
+			stop
+		#
+		# > The player doesn't have enough items. Send a error message.
+		else:
+			set {_msg} to {SB::lang::store::notenoughitem::%{_lang}%}
+			replace all "<item>" with "%{_item}%" in {_msg}
+			message "%{_prefix}% %{_msg}%" to {_player}
+			stop
