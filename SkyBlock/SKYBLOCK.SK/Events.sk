@@ -22,6 +22,14 @@ on PlayerArmorStandManipulateEvent:
     set {_allowed} to checkislandaccess({_player},{_l})
     if {_allowed} is false:
       cancel event
+#
+# > Event -  on despawn of any fish
+# > Actions:
+# > If a fish despawns, check if it should despawn or not depending 
+# > on the setting the server operator set.
+on despawn of any fish:
+  if {SB::config::preventfishdespawn} is true:
+    cancel event
 
 #
 # > Event - rightclick
