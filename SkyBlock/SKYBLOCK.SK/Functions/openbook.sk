@@ -1,0 +1,48 @@
+#
+# ==============
+# openbook.sk v0.0.1
+# ==============
+# Opens a book from the server side on the client.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# ==============
+# How to use it:
+# ==============
+# > Add openbook.sk to your "plugins/Skript/scripts" folder and then reload.
+# --------------
+
+#
+# Import some classes and also use reflection for nms classes.
+import: 
+  org.bukkit.Bukkit
+
+option nms:
+  get: 
+    set {_nms version} to Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
+    return "net.minecraft.server.%{_nms version}%"
+
+import:
+	io.netty.buffer.ByteBuf
+	io.netty.buffer.Unpooled
+	org.bukkit.entity.Player
+	{@nms}.MinecraftKey
+	{@nms}.PacketDataSerializer
+	{@nms}.PacketPlayOutCustomPayload
+
+#
+# > Function - openbook
+# > Parameters:
+# > <player>the player who should open the book, has to hold a book to work.
+# > Actions:
+# > Sends a "minecraft:book_open" packet to the client to open a book from the server.
+function openbook(player:player):
+	if {_player}'s tool is a written book:
+		set {_buffer} to Unpooled.buffer(256)
+		{_buffer}.setByte(0, 0)
+		{_buffer}.writerIndex(1)
+		set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
+		{_player}.getHandle().playerConnection!.sendPacket({_packet})
