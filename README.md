@@ -31,4 +31,4 @@ If you're running SKYBLOCK.SK, feel free to create a issue to get your server di
 - Create a documentation for server operators
   - Also include all variables which can be used by the server operator
 - Final Testing and bugfixing
-- Publish the Skript to https://www.spigotmc.org/ and maintain/update it for future versions of minecraft
+- Publish the Skript to https://forums.skunity.com and maintain/update it for future versions of minecraft
