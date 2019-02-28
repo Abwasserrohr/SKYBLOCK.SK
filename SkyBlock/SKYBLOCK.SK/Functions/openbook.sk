@@ -26,12 +26,12 @@ option nms:
     return "net.minecraft.server.%{_nms version}%"
 
 import:
-	io.netty.buffer.ByteBuf
-	io.netty.buffer.Unpooled
-	org.bukkit.entity.Player
-	{@nms}.MinecraftKey
-	{@nms}.PacketDataSerializer
-	{@nms}.PacketPlayOutCustomPayload
+  io.netty.buffer.ByteBuf
+  io.netty.buffer.Unpooled
+  org.bukkit.entity.Player
+  {@nms}.MinecraftKey
+  {@nms}.PacketDataSerializer
+  {@nms}.PacketPlayOutCustomPayload
 
 #
 # > Function - openbook
@@ -40,9 +40,12 @@ import:
 # > Actions:
 # > Sends a "minecraft:book_open" packet to the client to open a book from the server.
 function openbook(player:player):
-	if {_player}'s tool is a written book:
-		set {_buffer} to Unpooled.buffer(256)
-		{_buffer}.setByte(0, 0)
-		{_buffer}.writerIndex(1)
-		set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
-		{_player}.getHandle().playerConnection!.sendPacket({_packet})
+  if {_player}'s tool is a written book:
+    #
+	# > Prepare a byte buffer to send a packet, these packets are documented here:
+	# > https://wiki.vg/Plugin_channels#minecraft:book_open
+    set {_buffer} to Unpooled.buffer(256)
+    {_buffer}.setByte(0, 0)
+    {_buffer}.writerIndex(1)
+    set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
+    {_player}.getHandle().playerConnection!.sendPacket({_packet})
