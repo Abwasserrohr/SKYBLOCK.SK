@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.8
+# GUI.SK v0.0.9
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -253,12 +253,13 @@ function setguiitem(player:player,slot:number,item:item,amount:integer,name:text
   set {_ItemStack} to {_ItemStack} named {_name}
   set {_ItemMeta} to {_ItemStack}.getItemMeta()
   set {_itemlore} to new ArrayList()
-  set {_lore::*} to {_lore} split at "\n"
-  set {_slot} to {_slot} parsed as integer
-  loop {_lore::*}:
-    {_itemlore}.add(coloured "&r%loop-value%")
-  {_ItemMeta}.setLore({_itemlore})
-  {_ItemStack}.setItemMeta({_ItemMeta})
+  if {_lore} is not "" or " ":
+    set {_lore::*} to {_lore} split at "\n"
+    set {_slot} to {_slot} parsed as integer
+    loop {_lore::*}:
+      {_itemlore}.add(coloured "&r%loop-value%")
+    {_ItemMeta}.setLore({_itemlore})
+    {_ItemStack}.setItemMeta({_ItemMeta})
   #
   # > Get the inventory from the metadata value "gui-inv" of the player.
   set {_inventory} to metadata value "gui-inv" of {_player}
