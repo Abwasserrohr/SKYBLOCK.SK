@@ -27,10 +27,8 @@ If you're running SKYBLOCK.SK, feel free to create a issue to get your server di
   - [Discord](https://discord.gg/FRuK5BC)
 
 ### Roadmap
-- Add new addons which improve the game
 - Add multible languages to the project
 - Create a documentation for server operators
   - Also include all variables which can be used by the server operator
-- Add a logo for the project
 - Final Testing and bugfixing
 - Publish the Skript to https://www.spigotmc.org/ and maintain/update it for future versions of minecraft
