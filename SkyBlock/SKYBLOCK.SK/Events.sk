@@ -151,7 +151,8 @@ on PlayerInteractEvent:
   if {_b} is coarse dirt:
     set {_a} to event.getAction()
     if "%{_a}%" is "RIGHT_CLICK_BLOCK":
-      cancel event
+      if event.getPlayer()'s tool is any hoe:
+        cancel event
   #
   # > Check for the following redstone changes (there is a specific flag for this).
   if {_b} is repeater or comparator or daylight detector:
