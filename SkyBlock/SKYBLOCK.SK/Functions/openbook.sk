@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.1
+# openbook.sk v0.0.2
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -32,7 +32,13 @@ import:
   {@nms}.MinecraftKey
   {@nms}.PacketDataSerializer
   {@nms}.PacketPlayOutCustomPayload
-
+  net.md_5.bungee.api.chat.TextComponent
+  net.md_5.bungee.api.chat.BaseComponent
+  net.md_5.bungee.api.chat.ComponentBuilder
+  net.md_5.bungee.api.chat.ClickEvent
+  net.md_5.bungee.api.chat.HoverEvent
+  net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
+  net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
 #
 # > Function - openbook
 # > Parameters:
@@ -49,3 +55,37 @@ function openbook(player:player):
     {_buffer}.writerIndex(1)
     set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
     {_player}.getHandle().playerConnection!.sendPacket({_packet})
+
+#
+# > Function - overwritecomponentevents
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Overwrites the events of the text components to make them normal again.
+function overwritecomponentevents(msg:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,null))
+  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder(null).create()))
+  return {_msg}
+
+#
+# > Function - overwritecomponentevents
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Setts a on hover event on this text component and then returns it.
+# > HoverEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/HoverEvent.Action.html
+function sethovertextevent(msg:object,text:object) :: object:
+  replace all "\n" with " %nl%" in {_text}
+  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_text}).create()))
+  return {_msg}
+
+#
+# > Function - setclickcmdevent
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Sets the click event to this text component and then returns it.
+# > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
+function setclickcmdevent(msg:object,cmd:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
+  return {_msg}

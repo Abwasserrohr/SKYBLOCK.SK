@@ -46,7 +46,7 @@ function skyblockgui(p: player):
   setguiitem({_p},11,experience bottle,1,"%{SB::lang::guiexpname::%{_lang}%}%","%{SB::lang::maingui::guiislandinfo::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
   set {_bnq} to book and quill
   setguiitem({_p},12,{_bnq},1,"%{SB::lang::guichallangename::%{_lang}%}%","%{SB::lang::maingui::guichallangelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is c""",true)
-  setguiitem({_p},13,floor sign,1,"%{SB::lang::guitopname::%{_lang}%}%","%{SB::lang::maingui::guitoplore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is top""",true)
+  setguiitem({_p},13,floor sign,1,"%{SB::lang::guitopname::%{_lang}%}%","%{SB::lang::maingui::guitoplore::%{_lang}%}%","islandtoplist(""%{_p}%"" parsed as player,""1"",true)",false)
   setguiitem({_p},14,ender chest,1,"%{SB::lang::guirewardsname::%{_lang}%}%","%{SB::lang::maingui::guirewardslore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/openloot""",true)
   setguiitem({_p},15,end portal frame,1,"%{SB::lang::guihubname::%{_lang}%}%","%{SB::lang::maingui::guihublore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
   setguiitem({_p},16,jungle leaves,1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%","&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
