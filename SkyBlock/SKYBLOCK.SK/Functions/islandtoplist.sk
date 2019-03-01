@@ -5,12 +5,25 @@
 # islandtoplist.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
+import:
+	net.md_5.bungee.api.chat.TextComponent
+	net.md_5.bungee.api.chat.BaseComponent
+	net.md_5.bungee.api.chat.ComponentBuilder
+	net.md_5.bungee.api.chat.ClickEvent
+	net.md_5.bungee.api.chat.HoverEvent
+	net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
+	net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
+
 # > Function - islandtoplist:
 # > Arguments:
 # > <player>player, <text>pageint
 # > Actions:
 # > The islandtoplist sends a toplist into the chat of the player.
-function islandtoplist(p:player,pageint:text):
+function islandtoplist(p:player,pageint:text,gui:boolean=false):
+  #
+  # > Wait a short time to prevent client side bugs
+  if {_gui} is true:
+    wait 2 ticks
   #
   # > Save some variables to local variables.
   set {_pageint} to "%{_pageint}%" parsed as integer
@@ -84,15 +97,23 @@ function islandtoplist(p:player,pageint:text):
   if {_top::%{_pageint}%::*} is not set:
     set {_msg} to {SB::lang::pagenotfound::%{_lang}%}
     replace all "<pages>" with "%{_page}%" in {_msg}
-    message "%{_prefix}% %{_msg}%" to {_p}
     stop
-  message "%{SB::config::spacer}%" to {_p}
   #
-  # > Get the translation of the header and replace placeholders, then send it to the player.
-  set {_msg} to {SB::lang::istopheader::%{_lang}%}
-  replace all "<currentpage>" with "%{_pageint}%" in {_msg}
-  replace all "<allpages>" with "%{_page}%" in {_msg}
-  message "%{_prefix}% %{_msg}%" to {_p}
+  # > Create a new book which is going to be used.
+  set {_item} to written book
+  set {_bookmeta} to {_item}.getItemMeta()
+  {_bookmeta}.setTitle("test")
+  {_bookmeta}.setAuthor("Immanuel94")
+  #
+  # > Use the ComponentBuilder to create a text with hover and click events.
+  set {_toplistbook} to ""
+  set {_book} to new ComponentBuilder({_toplistbook})
+  #
+  # > The header line of the page.
+  set {_line} to {SB::lang::topheader::%{_lang}%}
+  replace all "<start>" with "%{_pageint}%" in {_line}
+  replace all "<end>" with "%{_page}%" in {_line}
+  {_book}.append("%{_line}%%nl%%nl%")
   #
   # > Loop through the toplist site, the player has requested.
   loop {_top::%{_pageint}%::*}:
@@ -109,17 +130,118 @@ function islandtoplist(p:player,pageint:text):
     set {_lp} to "%{SB::island::%loop-value%::leader}%" parsed as offline player
     #
     # > Get translated toplist and replace all placeholders to send it to the player.
-    set {_msg} to {SB::lang::istoplist::%{_lang}%}
-    replace all "<rank>" with loop-index in {_msg}
-    replace all "<leader>" with "%{_lp}%" in {_msg}
-    replace all "<points>" with "%{_level::%loop-value%}%" in {_msg}
-    replace all "<members>" with "%{_member}%" in {_msg}
-    message "%{_prefix}% %{_msg}%" to {_p}
+    set {_rank} to {SB::lang::istoplist::%{_lang}%}
+    set {_length} to loop-index parsed as number
+    set {_length} to "%{_length}+9%"
+    #
+    # > Changes all ranks to the same length by adding a 0 in front
+    # > of lower numbers.
+    if length of loop-index < length of {_length}:
+      replace all "<rank>" with "0%loop-index%" in {_rank}
+    else:
+      replace all "<rank>" with loop-index in {_rank}
+    #
+    # > Replace the name placeholder with the rank holder.
+    replace all "<name>" with "%{_lp}%" in {_rank}
+    set {_msg} to new TextComponent("%{_rank}%%nl%")
+    set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}%")
+    {_msg}.setClickEvent({_clickevent})
+    #
+    # > Prepare and set the on hover event text for the toplist.
+    set {_hovertext} to {SB::lang::toplistbookhover::%{_lang}%}
+    replace all "<name>" with "%{_lp}%" in {_hovertext}
+    replace all "<rank>" with loop-index in {_hovertext}
+    replace all "<level>" with "%{_level::%loop-value%}%" in {_hovertext}
+    set {_msg} to sethovertextevent({_msg},{_hovertext})
+    {_book}.append({_msg})
+  #
+  # > Append a new line.
+  {_book}.append(new TextComponent(" %nl%"))
+  #
+  # > If this page isn't the first page, add a "back" button.
+  if {_pageint} != 1:
+    set {_msg} to new TextComponent("&l←&r")
+    set {_lore} to {SB::lang::store::pagebackwardlore::%{_lang}%}
+    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
+    set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} - 1%")
+    {_book}.append({_msg})
+  #
+  # > If the site is the first one, add the go back to previous menu command.
+  else:
+    set {_msg} to new TextComponent("&l←&r")
+    set {_lore} to {SB::lang::guibacktopreviousmenulore::%{_lang}%}
+    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
+    set {_msg} to setclickcmdevent({_msg},"/island")
+    {_book}.append({_msg})
+
+
+  #
+  # > If the current page is smaller than the maximum page size,
+  # > create the "go forward" text component.
+  if {_pageint} < {_page}:
+    #
+    # > Add some space between the "go backwards" text component.
+    set {_msg} to new TextComponent("                        ")
+    set {_msg} to overwritecomponentevents({_msg})
+    #
+    # > Add the actual "go forward" text component.
+    {_book}.append(new TextComponent({_msg}))
+    set {_msg} to new TextComponent("&l→&r")
+    set {_lore} to {SB::lang::store::pageforwardlore::%{_lang}%}
+    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pageforward::%{_lang}%}%%nl%%{_lore}%")
+    set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} + 1%")
+    {_book}.append({_msg})
   #
   # > If the rank is set, replace the translation placeholder and send it to the player.
   if {_pRank} is set:
     set {_msg} to {SB::lang::istoprankinfo::%{_lang}%}
     replace all "<rank>" with "%{_pRank}%" in {_msg}
     replace all "<islands>" with "%{_size}%" in {_msg}
-    message "%{_prefix}% %{_msg}%" to {_p}
-  message "%{SB::config::spacer}%" to {_p}
+
+  #
+  # > Complete the BaseComponent by creating it and adding it to the sites list.
+  add {_book}.create() to {_sites::*}
+  #
+  # > Set the sites to the book and then open it to the player.
+  {_bookmeta}.spigot().setPages({_sites::*})
+  {_item}.setItemMeta({_bookmeta})
+  #
+  # > Get the item of the player to give it back after the book has been opened.
+  set {_tool} to {_p}'s tool
+  set {_p}'s tool to 1 of {_item}
+  openbook({_p})
+  set {_p}'s tool to {_tool}
+
+#
+# > Function - overwritecomponentevents
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Overwrites the events of the text components to make them normal again.
+function overwritecomponentevents(msg:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,null))
+  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder(null).create()))
+  return {_msg}
+
+#
+# > Function - overwritecomponentevents
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Setts a on hover event on this text component and then returns it.
+# > HoverEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/HoverEvent.Action.html
+function sethovertextevent(msg:object,text:object) :: object:
+  replace all "\n" with " %nl%" in {_text}
+  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_text}).create()))
+  return {_msg}
+
+#
+# > Function - setclickcmdevent
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Sets the click event to this text component and then returns it.
+# > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
+function setclickcmdevent(msg:object,cmd:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
+  return {_msg}
