@@ -57,11 +57,11 @@ on load:
 	set {STORE::categories::food} to cooked beef
 	set {STORE::catlang::food::de} to "Lebensmittel"
 
-	set {STORE::categories::functions} to command block
-	set {STORE::catlang::functions::de} to "Funktionen"
-
 	set {STORE::categories::decoration} to poppy
 	set {STORE::catlang::decoration::de} to "Dekoartikel"
+
+	set {STORE::categories::ores} to diamond
+	set {STORE::catlang::ores::de} to "Erze"
 
 	#
 	# > Items for the categories.
@@ -87,8 +87,8 @@ on load:
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 64 of stone to {STORE::items::blocks::*}
-	add "100" to {STORE::prices::blocks::buy::*}
-	add "15" to {STORE::prices::blocks::sell::*}
+	add "75" to {STORE::prices::blocks::buy::*}
+	add "7.5" to {STORE::prices::blocks::sell::*}
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 1 of obsidian to {STORE::items::blocks::*}
@@ -102,18 +102,18 @@ on load:
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 32 of raw diorite to {STORE::items::blocks::*}
-	add "50" to {STORE::prices::blocks::buy::*}
-	add "10" to {STORE::prices::blocks::sell::*}
+	add "30" to {STORE::prices::blocks::buy::*}
+	add "5" to {STORE::prices::blocks::sell::*}
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 32 of raw andesite to {STORE::items::blocks::*}
-	add "50" to {STORE::prices::blocks::buy::*}
-	add "10" to {STORE::prices::blocks::sell::*}
+	add "30" to {STORE::prices::blocks::buy::*}
+	add "5" to {STORE::prices::blocks::sell::*}
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 32 of raw granite to {STORE::items::blocks::*}
-	add "50" to {STORE::prices::blocks::buy::*}
-	add "10" to {STORE::prices::blocks::sell::*}
+	add "30" to {STORE::prices::blocks::buy::*}
+	add "5" to {STORE::prices::blocks::sell::*}
 	add "0" to {STORE::lvlthreshold::blocks::*}
 	
 	add 16 of gravel to {STORE::items::blocks::*}
@@ -177,7 +177,12 @@ on load:
 	add "25000" to {STORE::prices::eggs::buy::*}
 	add "-1" to {STORE::prices::eggs::sell::*}
 	add "90" to {STORE::lvlthreshold::eggs::*}
-	
+
+	add 1 of rabbit spawn egg to {STORE::items::eggs::*}
+	add "5000" to {STORE::prices::eggs::buy::*}
+	add "-1" to {STORE::prices::eggs::sell::*}
+	add "90" to {STORE::lvlthreshold::eggs::*}
+
 	#
 	# > Food category
 	add 16 of steak to {STORE::items::food::*}
@@ -249,7 +254,12 @@ on load:
 	add "25" to {STORE::prices::food::buy::*}
 	add "2" to {STORE::prices::food::sell::*}
 	add "0" to {STORE::lvlthreshold::food::*}
-	
+
+	add 16 of bread to {STORE::items::food::*}
+	add "95" to {STORE::prices::food::buy::*}
+	add "4" to {STORE::prices::food::sell::*}
+	add "0" to {STORE::lvlthreshold::food::*}
+
 	#
 	# > Decoration
 	add 1 of dandelion to {STORE::items::decoration::*}
@@ -338,6 +348,48 @@ on load:
 	add "55" to {STORE::prices::items::buy::*}
 	add "2" to {STORE::prices::items::sell::*}
 	add "0" to {STORE::lvlthreshold::items::*}
+	
+	#
+	# > Ores
+	add 1 of iron ingot to {STORE::items::ores::*}
+	add "35" to {STORE::prices::ores::buy::*}
+	add "3" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+	
+	add 1 of gold ingot to {STORE::items::ores::*}
+	add "35" to {STORE::prices::ores::buy::*}
+	add "3" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 16 of lapis lazuli to {STORE::items::ores::*}
+	add "125" to {STORE::prices::ores::buy::*}
+	add "5" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 16 of coal to {STORE::items::ores::*}
+	add "25" to {STORE::prices::ores::buy::*}
+	add "2.5" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 1 of diamond to {STORE::items::ores::*}
+	add "175" to {STORE::prices::ores::buy::*}
+	add "20" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 16 of redstone to {STORE::items::ores::*}
+	add "90" to {STORE::prices::ores::buy::*}
+	add "4" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 1 of emerald to {STORE::items::ores::*}
+	add "45" to {STORE::prices::ores::buy::*}
+	add "0.5" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
+
+	add 1 of nether quartz to {STORE::items::ores::*}
+	add "40" to {STORE::prices::ores::buy::*}
+	add "2" to {STORE::prices::ores::sell::*}
+	add "0" to {STORE::lvlthreshold::ores::*}
 
 
 #
