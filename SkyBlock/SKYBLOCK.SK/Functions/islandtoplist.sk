@@ -6,13 +6,13 @@
 # ==============
 
 import:
-	net.md_5.bungee.api.chat.TextComponent
-	net.md_5.bungee.api.chat.BaseComponent
-	net.md_5.bungee.api.chat.ComponentBuilder
-	net.md_5.bungee.api.chat.ClickEvent
-	net.md_5.bungee.api.chat.HoverEvent
-	net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
-	net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
+  net.md_5.bungee.api.chat.TextComponent
+  net.md_5.bungee.api.chat.BaseComponent
+  net.md_5.bungee.api.chat.ComponentBuilder
+  net.md_5.bungee.api.chat.ClickEvent
+  net.md_5.bungee.api.chat.HoverEvent
+  net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
+  net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
 
 # > Function - islandtoplist:
 # > Arguments:
@@ -102,7 +102,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   # > Create a new book which is going to be used.
   set {_item} to written book
   set {_bookmeta} to {_item}.getItemMeta()
-  {_bookmeta}.setTitle("test")
+  {_bookmeta}.setTitle("Toplist")
   {_bookmeta}.setAuthor("Immanuel94")
   #
   # > Use the ComponentBuilder to create a text with hover and click events.
@@ -159,22 +159,18 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   {_book}.append(new TextComponent(" %nl%"))
   #
   # > If this page isn't the first page, add a "back" button.
+  set {_msg} to new TextComponent("&l←&r")
   if {_pageint} != 1:
-    set {_msg} to new TextComponent("&l←&r")
     set {_lore} to {SB::lang::store::pagebackwardlore::%{_lang}%}
     set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} - 1%")
-    {_book}.append({_msg})
   #
   # > If the site is the first one, add the go back to previous menu command.
   else:
-    set {_msg} to new TextComponent("&l←&r")
     set {_lore} to {SB::lang::guibacktopreviousmenulore::%{_lang}%}
     set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island")
-    {_book}.append({_msg})
-
-
+  {_book}.append({_msg})
   #
   # > If the current page is smaller than the maximum page size,
   # > create the "go forward" text component.
@@ -191,13 +187,6 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pageforward::%{_lang}%}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} + 1%")
     {_book}.append({_msg})
-  #
-  # > If the rank is set, replace the translation placeholder and send it to the player.
-  if {_pRank} is set:
-    set {_msg} to {SB::lang::istoprankinfo::%{_lang}%}
-    replace all "<rank>" with "%{_pRank}%" in {_msg}
-    replace all "<islands>" with "%{_size}%" in {_msg}
-
   #
   # > Complete the BaseComponent by creating it and adding it to the sites list.
   add {_book}.create() to {_sites::*}
