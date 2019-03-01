@@ -263,7 +263,7 @@ on load:
   set {SB::config::challenges::c::5::4::repeat} to true
   set {SB::config::challenges::c::5::4::repeatsperday} to 5
   
-  set {SB::config::challenges::c::5::5::needed} to "64-tube coral block,64-brain coral block,64-bubble coral block,64-fire coral block,64-horn coral block"
+  set {SB::config::challenges::c::5::5::needed} to "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
   set {SB::config::challenges::c::5::5::reward} to "150-xp,2-dolphin spawn egg,2-turtle egg,4-nametag"
   set {SB::config::challenges::c::5::5::repeatreward} to "10-xp,1-dolphin spawn egg,1-turtle egg,2-nametag"
   set {SB::config::challenges::c::5::5::item} to turtle egg
