@@ -174,8 +174,9 @@ on script load:
   # > /island top
   #
   set {SB::lang::istopheader::%{_lang}%} to " &eTop 10 &6&l(<currentpage>/<allpages>)"
-  set {SB::lang::istoplist::%{_lang}%} to "&e&l<rank>&8 - &6<leader>&7&l: &e<points> &7||&8 <members>"
+  set {SB::lang::istoplist::%{_lang}%} to "&7&l<rank>&8 | &8<name>"
   set {SB::lang::istoprankinfo::%{_lang}%} to "&eDu bist auf Platz <rank> von <islands> Inseln."
+  set {SB::lang::toplistbookhover::%{_lang}%} to "<name>%nl%%{SB::config::guispacer}%%nl%&r&7Rang: <rank>%nl%Insellevel: <level>%nl%%{SB::config::guispacer}%"
 
   #
   # > /isadmin - command feedback
@@ -234,7 +235,7 @@ on script load:
   #
   # > Chat headers
   #
-  set {SB::lang::topheader::%{_lang}%} to "&lTop 10 Inseln"
+  set {SB::lang::topheader::%{_lang}%} to "&lBestenliste (<start>/<end>)"
   set {SB::lang::levelheader::%{_lang}%} to " %{_p2}%Insel Level %{_s1}%&l- %{_p1}%"
   set {SB::lang::votereward::%{_lang}%} to "&bVote für Belohnungen: "
   set {SB::lang::rewardwoods::%{_lang}%} to "%{_p1}%Holzkiste"
