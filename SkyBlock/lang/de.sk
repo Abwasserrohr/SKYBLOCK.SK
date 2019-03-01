@@ -175,7 +175,6 @@ on script load:
   #
   set {SB::lang::istopheader::%{_lang}%} to " &eTop 10 &6&l(<currentpage>/<allpages>)"
   set {SB::lang::istoplist::%{_lang}%} to "&7&l<rank>&8 | &8<name>"
-  set {SB::lang::istoprankinfo::%{_lang}%} to "&eDu bist auf Platz <rank> von <islands> Inseln."
   set {SB::lang::toplistbookhover::%{_lang}%} to "<name>%nl%%{SB::config::guispacer}%%nl%&r&7Rang: <rank>%nl%Insellevel: <level>%nl%%{SB::config::guispacer}%"
 
   #
@@ -212,7 +211,7 @@ on script load:
   set {SB::lang::guigraslore::%{_lang}%} to "&9&lStarte eine Insel"
   set {SB::lang::guiexpname::%{_lang}%} to "&9&lInselinformationen"
   set {SB::lang::guichallangename::%{_lang}%} to "&a&lTägliche Aufgaben"
-  set {SB::lang::guitopname::%{_lang}%} to "&c&lTop &n10"
+  set {SB::lang::guitopname::%{_lang}%} to "&6&lBestenliste"
   set {SB::lang::guirewardsname::%{_lang}%} to "&d&lLootboxen"
   set {SB::lang::guihubname::%{_lang}%} to "%{_p1}%&lLobby"
   set {SB::lang::guibacktopreviousmenu::%{_lang}%} to "Zurück"
@@ -223,7 +222,7 @@ on script load:
   set {SB::lang::maingui::guigrasscreatelore::%{_lang}%} to "%{_s1}%Erstelle eine neue\n%{_s1}%Insel für dich."
   set {SB::lang::maingui::guiislandinfo::%{_lang}%} to "%{_s1}%Zeige Informationen\n%{_s1}%über deine Insel an."
   set {SB::lang::maingui::guichallangelore::%{_lang}%} to "%{_s1}%Öffne das das Herausforderungs-\n%{_s1}%menü, um Herausforderungen zu sehen."
-  set {SB::lang::maingui::guitoplore::%{_lang}%} to "%{_s1}%Zeigt dir die aktuelle Top 10\n%{_s1}%der besten Inseln an."
+  set {SB::lang::maingui::guitoplore::%{_lang}%} to "%{_s1}%Zeigt dir die aktuelle\n%{_s1}%Bestenliste aller\n%{_s1}%Inseln an."
   set {SB::lang::maingui::guirewardslore::%{_lang}%} to "%{_s1}%Hole dir wertvolle Belohnungen\n%{_s1}%für deine Insel ab."
   set {SB::lang::maingui::guihublore::%{_lang}%} to "%{_s1}%Teleportiert dich zur Lobby."
   set {SB::lang::maingui::guilanglore::%{_lang}%} to "%{_s1}%Ändere deine Sprache."
