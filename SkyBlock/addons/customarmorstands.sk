@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.4
+# customarmorstands.sk v0.0.5
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -162,7 +162,7 @@ function checkarmorstandblacklist(entity:entity) :: boolean:
 # > stored as metadata.
 on rightclick holding {@copytool}:
   set {_copytool} to getnbtvalue(player's tool,"customstand")
-  if {_copytool} is not "":
+  if {_copytool} is not "" or false:
     cancel event
     set {_loc} to location of player's target block
     add 0.5 to y-coordinate of {_loc}
