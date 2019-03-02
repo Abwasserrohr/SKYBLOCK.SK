@@ -39,6 +39,8 @@ import:
   net.md_5.bungee.api.chat.HoverEvent
   net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
   net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
+  net.md_5.bungee.api.chat.TranslatableComponent
+
 #
 # > Function - openbook
 # > Parameters:
@@ -107,4 +109,3 @@ function getTranslatableComponentFromItem(item:item) :: object:
     set {_vname} to "item.%{_vname}%"
   set {_item} to new TranslatableComponent({_vname})
   return new TranslatableComponent({_vname})
-
