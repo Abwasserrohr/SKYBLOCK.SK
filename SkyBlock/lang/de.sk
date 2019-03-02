@@ -388,9 +388,9 @@ on script load:
   set {SB::lang::store::cantsell::%{_lang}%} to "&7Dieser Gegenstand ist\n&7nicht verkaufbar."
   set {SB::lang::store::itemselllore::%{_lang}%} to "&7Ertrag: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu verkaufen."
   set {SB::lang::store::itembuylore::%{_lang}%} to "&7Preis: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu kaufen."
-  set {SB::lang::store::soldxitems::%{_lang}%} to "Du hast <item> für <price> <currency> verkauft."
-  set {SB::lang::store::boughtxitems::%{_lang}%} to "Du hast <item> für <price> <currency> gekauft."
-  set {SB::lang::store::notenoughitem::%{_lang}%} to "Du hast nicht <item>."
+  set {SB::lang::store::soldxitems::%{_lang}%} to "Du hast <ph><ph> für <ph> verkauft."
+  set {SB::lang::store::boughtxitems::%{_lang}%} to "Du hast <ph><ph> für <ph> gekauft."
+  set {SB::lang::store::notenoughitem::%{_lang}%} to "Du hast genug <ph>."
 
   #
   # > Lootbox

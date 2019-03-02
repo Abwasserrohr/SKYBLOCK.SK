@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.3
+# openbook.sk v0.0.4
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -109,3 +109,13 @@ function getTranslatableComponentFromItem(item:item) :: object:
     set {_vname} to "item.%{_vname}%"
   set {_item} to new TranslatableComponent({_vname})
   return new TranslatableComponent({_vname})
+
+#
+# > Function - newTextComponent
+# > Parameters:
+# > <text>the text which should be created as text component
+# > Actions:
+# > Returns a new text component, removes the need to import
+# > the neccessary classes everywhere.
+function newTextComponent(text:text) :: object:
+  return new TextComponent({_text})
