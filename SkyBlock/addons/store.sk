@@ -625,11 +625,14 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         # > Remove the money from the player, send a success message and
         # > give the player the item.
         remove {_price} from {_player}'s balance
-        set {_msg} to {SB::lang::store::boughtxitems::%{_lang}%}
-        replace all "<item>" with "%{_item}%" in {_msg}
-        replace all "<price>" with "%{_price}%" in {_msg}
-        replace all "<currency>" with "%{_currency}%" in {_msg}
-        message "%{_prefix}% %{_msg}%" to {_player}
+        #
+        # > Create new Text Components to send them to the player. Also sends an
+        # > TranslatableComponent, which is going to be translated by the client.
+        set {_langmsg::*} to {SB::lang::store::boughtxitems::%{_lang}%} split at "<ph>"
+        set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
+        {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+        {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
+        {_player}.sendMessage({_msg})
         give {_item} to {_player}'s inventory
       #
       # > The player has not enough space, send a error message.
@@ -662,12 +665,13 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         # > has in his inventory.
         set {_price} to {_price} * number of {_item} in {_player}'s inventory
         #
-        # > Set success message and replace placeholders, then send it to the player.
-        set {_msg} to {SB::lang::store::soldxitems::%{_lang}%} 
-        replace all "<item>" with "%number of {_item} in {_player}'s inventory% %1 of {_item}%" in {_msg}
-        replace all "<price>" with "%{_price}%" in {_msg}
-        replace all "<currency>" with "%{_currency}%" in {_msg}
-        message "%{_prefix}% %{_msg}%" to {_player}
+        # > Create new Text Components to send them to the player. Also sends an
+        # > TranslatableComponent, which is going to be translated by the client.
+        set {_langmsg::*} to {SB::lang::store::soldxitems::%{_lang}%} split at "<ph>"
+        set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%number of {_item} in {_player}'s inventory% %{_langmsg::2}%")
+        {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+        {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
+        {_player}.sendMessage({_msg})
         #
         # > Remove all the defined items and give the player the calculated money. Then stop.
         remove number of {_item} in {_player}'s inventory of {_item} from {_player}'s inventory 
@@ -678,12 +682,13 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
     # > amount in his inventory.
     else if {_player}'s inventory has {_item}:
       #
-      # > Send success message to the player. Replace placeholders.
-      set {_msg} to {SB::lang::store::soldxitems::%{_lang}%} 
-      replace all "<item>" with "%{_item}%" in {_msg}
-      replace all "<price>" with "%{_price}%" in {_msg}
-      replace all "<currency>" with "%{_currency}%" in {_msg}
-      message "%{_prefix}% %{_msg}%" to {_player}
+      # > Create new Text Components to send them to the player. Also sends an
+      # > TranslatableComponent, which is going to be translated by the client.
+      set {_langmsg::*} to {SB::lang::store::soldxitems::%{_lang}%} split at "<ph>"
+      set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
+      {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+      {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
+      {_player}.sendMessage({_msg})
       #
       # > Remove the item from the inventory of the player and give the money.
       remove {_item} from {_player}'s inventory
