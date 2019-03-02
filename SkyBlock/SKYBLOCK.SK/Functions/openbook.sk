@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.2
+# openbook.sk v0.0.3
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -39,6 +39,8 @@ import:
   net.md_5.bungee.api.chat.HoverEvent
   net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
   net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
+  net.md_5.bungee.api.chat.TranslatableComponent
+
 #
 # > Function - openbook
 # > Parameters:
@@ -89,3 +91,21 @@ function sethovertextevent(msg:object,text:object) :: object:
 function setclickcmdevent(msg:object,cmd:object) :: object:
   {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
   return {_msg}
+
+#
+# > Function - getTranslatableComponentFromItem
+# > Parameters:
+# > <item>the item which is needed as translatable component
+# > Actions:
+# > Converts the item stack to a translatable component, which
+# > is going to be translated client side. That means, no translation
+# > on server side is needed.
+function getTranslatableComponentFromItem(item:item) :: object:
+  set {_vname} to "%vanilla name of {_item}%"
+  replace all ":" with "." in {_vname}
+  if {_item}.getType().isBlock() is true:
+    set {_vname} to "block.%{_vname}%"
+  else:
+    set {_vname} to "item.%{_vname}%"
+  set {_item} to new TranslatableComponent({_vname})
+  return new TranslatableComponent({_vname})
