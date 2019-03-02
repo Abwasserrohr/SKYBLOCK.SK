@@ -20,6 +20,7 @@ import:
 function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
   #
   # > Get the block at the location as a new item.
+  delete {_block}
   set {_block} to "%block at {_el}%" parsed as item
   #
   # > Get the tool the player is holding to check, know later, if
@@ -41,7 +42,11 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
   if "%{_enchantments}%" does not contain "silk_touch":
     set {_block} to {_block1}
   #
-  # > If the block is lava or water, set it to bucket:
+  # > Delete any left over lore which might got here due to caching
+  # > in Skript itself.
+  set {_ItemMeta} to {_block}.getItemMeta()
+  {_ItemMeta}.setLore(null)
+  {_block}.setItemMeta({_ItemMeta})
   #
   # > If the island level is below a specified level in the configuration:
   if {SB::island::%{_x}%_%{_y}%_%{_z}%::level} < {SB::config::binduntillevel}:
