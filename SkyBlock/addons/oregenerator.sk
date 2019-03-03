@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.6
+# oregenerator.sk v0.0.7
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -89,25 +89,25 @@ on load:
   # > add diamond ore to {SB::oregen::*}
   # > -------------------
 
-  add 0.5 to {SB::oregenc::*}
+  add 0.2 to {SB::oregenc::*}
   add diamond ore to {SB::oregen::*}
   add 1 to {SB::oregenc::*}
   add glowstone to {SB::oregen::*}
   add 1 to {SB::oregenc::*}
   add nether quartz ore to {SB::oregen::*}
-  add 3 to {SB::oregenc::*}
+  add 2 to {SB::oregenc::*}
   add redstone ore to {SB::oregen::*}
-  add 4 to {SB::oregenc::*}
+  add 2 to {SB::oregenc::*}
   add lapis ore to {SB::oregen::*}
-  add 3 to {SB::oregenc::*}
+  add 2 to {SB::oregenc::*}
   add gold ore to {SB::oregen::*}
-  add 5 to {SB::oregenc::*}
+  add 3 to {SB::oregenc::*}
   add emerald ore to {SB::oregen::*}
-  add 5 to {SB::oregenc::*}
+  add 4 to {SB::oregenc::*}
   add iron ore to {SB::oregen::*}
   add 4 to {SB::oregenc::*}
   add coal ore to {SB::oregen::*}
-  add 10 to {SB::oregenc::*}
+  add 5 to {SB::oregenc::*}
   add granite to {SB::oregen::*}
   add 5 to {SB::oregenc::*}
   add andesite to {SB::oregen::*}
@@ -125,12 +125,12 @@ on load:
   # > Increase ore spawning chances by percentage for every level
   # > Example: 2 increases the chance of 0.2% to 0,204%
   #
-  set {SB::config::oregenlevelbonus} to 10
+  set {SB::config::oregenlevelbonus} to 2
 
   #
   # > How many stone blocks have to be produced until a new level is hit
   #
-  set {SB::config::oregennewlevel} to 500
+  set {SB::config::oregennewlevel} to 1000
   
   #
   # > Increase the difficulty to get the next ore generator level by multiplying it:
@@ -141,7 +141,7 @@ on load:
   # > Set the max. level bonus in percentage
   # > 20 is a max. bonus of 20% on the chances
   #
-  set {SB::config::oregenmaxlevelbonus} to 500
+  set {SB::config::oregenmaxlevelbonus} to 200
 
 #
 # > Import the BlockFromToEvent event from Bukkit to detect Cobblestone form.
@@ -370,7 +370,6 @@ function orechancesinfo(p:player):
   #
   # > Loop trough all available blocks and display the actual chance, either if leveling disabled directly
   # > or by the level of the player.
-  broadcast "lvl of %{_p}%: %{SB::ogplayerlevel::%{_uuid}%}%"
   loop {SB::oregenc::*}:
     if {SB::config::oregeneratorleveling} is false:
       send "%{_prefix}% %loop-value%%%: %{SB::oregen::%loop-index%}%" to {_player}
