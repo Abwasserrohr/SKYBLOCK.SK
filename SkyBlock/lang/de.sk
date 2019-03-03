@@ -390,7 +390,7 @@ on script load:
   set {SB::lang::store::itembuylore::%{_lang}%} to "&7Preis: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu kaufen."
   set {SB::lang::store::soldxitems::%{_lang}%} to "Du hast <ph><ph> für <ph> verkauft."
   set {SB::lang::store::boughtxitems::%{_lang}%} to "Du hast <ph><ph> für <ph> gekauft."
-  set {SB::lang::store::notenoughitem::%{_lang}%} to "Du hast genug <ph>."
+  set {SB::lang::store::notenoughitem::%{_lang}%} to "Du hast nicht genug <ph>."
 
   #
   # > Lootbox
