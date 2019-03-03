@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.1
+# store.sk v0.0.2
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -697,7 +697,11 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
     #
     # > The player doesn't have enough items. Send a error message.
     else:
-      set {_msg} to {SB::lang::store::notenoughitem::%{_lang}%}
-      replace all "<item>" with "%{_item}%" in {_msg}
-      message "%{_prefix}% %{_msg}%" to {_player}
-      stop
+      #
+      # > Create new Text Components to send them to the player. Also sends an
+      # > TranslatableComponent, which is going to be translated by the client.
+      set {_langmsg::*} to {SB::lang::store::notenoughitem::%{_lang}%} split at "<ph>"
+      set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%")
+      {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+      {_msg}.addExtra(newTextComponent("%{_langmsg::2}%"))
+      {_player}.sendMessage({_msg})
