@@ -7,13 +7,16 @@
 language:
 - language: Deutsch
 - languageskin: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ==
+  
   #
   # > Translation for "languages"
 - languages: Sprachen
 - changedlang: Deine Sprache wurde geändert.
+
   #
   # > Translation for the currency name of the server
 - currencyname: Taler
+
   #
   # > Command feedback messages
   #
@@ -21,7 +24,7 @@ language:
 - searchis: <p2>Freie Inseln werden gesucht.
 - foundis: <p1>Deine neue Insel wurde erstellt.
 - islands: <s1>&lInseln
-- clicktocreateisland: <s1>Klicke hier, damit \n<s1>diese Insel für dich\n<s1>erstellt wird.
+- clicktocreateisland: <s1>Klicke hier, damit <nl><s1>diese Insel für dich<nl><s1>erstellt wird.
 
   #
   # > /island home | /island go
@@ -149,7 +152,7 @@ language:
   # > /island top
 - istopheader: "&eTop 10 &6&l(<currentpage>/<allpages>)"
 - istoplist: "&7&l<rank>&8 | &8<name>"
-- toplistbookhover: "<name><nl><guispacer><nl>&r&7Rang: <rank><nl>Insellevel: <level><nl><guispacer>"
+- toplistbookhover: "<name><nl1><guispacer><nl1>&r&7Rang: <rank><nl1>Insellevel: <level><nl1><guispacer>"
 
   #
   # > /isadmin - command feedback
@@ -188,18 +191,18 @@ language:
 
   #
   # > GUI - menu - lore
-- maingui_guigrasslore: <s1>Teleportiere dich\n<s1>zu deiner Insel.
-- maingui_guigrasscreatelore: <s1>Erstelle eine neue\n<s1>Insel für dich.
-- maingui_guiislandinfo: <s1>Zeige Informationen\n<s1>über deine Insel an.
-- maingui_guichallangelore: <s1>Öffne das das Herausforderungs-\n<s1>menü, um Herausforderungen zu sehen.
-- maingui_guitoplore: <s1>Zeigt dir die aktuelle\n<s1>Bestenliste aller\n<s1>Inseln an.
-- maingui_guirewardslore: <s1>Hole dir wertvolle Belohnungen\n<s1>für deine Insel ab.
+- maingui_guigrasslore: <s1>Teleportiere dich<nl><s1>zu deiner Insel.
+- maingui_guigrasscreatelore: <s1>Erstelle eine neue<nl><s1>Insel für dich.
+- maingui_guiislandinfo: <s1>Zeige Informationen<nl><s1>über deine Insel an.
+- maingui_guichallangelore: <s1>Öffne das das Herausforderungs-<nl><s1>menü, um Herausforderungen zu sehen.
+- maingui_guitoplore: <s1>Zeigt dir die aktuelle<nl><s1>Bestenliste aller<nl><s1>Inseln an.
+- maingui_guirewardslore: <s1>Hole dir wertvolle Belohnungen<nl><s1>für deine Insel ab.
 - maingui_guihublore: <s1>Teleportiert dich zur Lobby.
 - maingui_guilanglore: <s1>Ändere deine Sprache.
 - maingui_guiflaglore: <s1>Ändere die Flags deiner Insel.
 - maingui_islandupgradelore: <s1>Erweitere deine Insel.
 - maingui_storelore: <s1>Öffnet den Laden.
-- guibacktopreviousmenulore: <s1>Bringt dich zurück\n<s1>zum übergeordneten Menü.
+- guibacktopreviousmenulore: <s1>Bringt dich zurück<nl><s1>zum übergeordneten Menü.
   
   #
   # > Chat headers
@@ -248,28 +251,28 @@ language:
 
   #
   # > Flag descriptions
-- flag_explosiond: <s1>Erlaubt zerstörerische\n<s1>Explosionen an deiner\n<s1>Insel.
-- flag_mob-spawningd: <s1>Erlaubt das erscheinen\n<s1>von Monstern auf\n<s1>deiner Insel.
-- flag_buttond: <s1>Erlaubt, die\n<s1>Knöpfe auf deiner Insel\n<s1>zu verwenden.
-- flag_doord: <s1>Erlaubt, die\n<s1>Türen auf deiner Insel\n<s1>zu verwenden.
-- flag_mob-damaged: <s1>Erlaubt, deine\n<s1>Monster zu schlagen.
-- flag_animal-damaged: <s1>Erlaubt, deine\n<s1>Tiere zu schlagen.
-- flag_itemframe-damaged: <s1>Erlaubt,\n<s1>deine Rahmen abzubauen.
-- flag_interact-vehicled: <s1>Erlaubt,\n<s1>Vehikel zu verwenden.
-- flag_publichomed: <s1>Erlaubt diesen Spielern,\n<s1>deine Insel zu besuchen.
-- flag_buildd: <s1>Erlaubt diesen Spielern,\n<s1>auf deiner Insel zu bauen\n<s1>und abzubauen.
-- flag_chestd: <s1>Erlaubt diesen Spielern,\n<s1>auf deiner Insel in die\n<s1>Inventare von\n<s1>von Blöcken zu schauen.
-- flag_entityclickd: <s1>Erlaubt diesen Spielern,\n<s1>Entities anzuklicken.
-- flag_redstoned: <s1>Erlaubt diesen Spielern,\n<s1>Redstone Einstellungen\n<s1>zu ändern.
-- flag_jetbootsd: <s1>Erlaubt diesen Spielern,\n<s1>JetBoots zu verwenden.
-- flag_foreignd: <s1>Erlaube Fremden diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
-- flag_trustedd: <s1>Erlaube Vertrauten diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
-- flag_memberd: <s1>Erlaube Mitgliedern diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
+- flag_explosiond: <s1>Erlaubt zerstörerische<nl><s1>Explosionen an deiner<nl><s1>Insel.
+- flag_mob-spawningd: <s1>Erlaubt das erscheinen<nl><s1>von Monstern auf<nl><s1>deiner Insel.
+- flag_buttond: <s1>Erlaubt, die<nl><s1>Knöpfe auf deiner Insel<nl><s1>zu verwenden.
+- flag_doord: <s1>Erlaubt, die<nl><s1>Türen auf deiner Insel<nl><s1>zu verwenden.
+- flag_mob-damaged: <s1>Erlaubt, deine<nl><s1>Monster zu schlagen.
+- flag_animal-damaged: <s1>Erlaubt, deine<nl><s1>Tiere zu schlagen.
+- flag_itemframe-damaged: <s1>Erlaubt,<nl><s1>deine Rahmen abzubauen.
+- flag_interact-vehicled: <s1>Erlaubt,<nl><s1>Vehikel zu verwenden.
+- flag_publichomed: <s1>Erlaubt diesen Spielern,<nl><s1>deine Insel zu besuchen.
+- flag_buildd: <s1>Erlaubt diesen Spielern,<nl><s1>auf deiner Insel zu bauen<nl><s1>und abzubauen.
+- flag_chestd: <s1>Erlaubt diesen Spielern,<nl><s1>auf deiner Insel in die<nl><s1>Inventare von<nl><s1>von Blöcken zu schauen.
+- flag_entityclickd: <s1>Erlaubt diesen Spielern,<nl><s1>Entities anzuklicken.
+- flag_redstoned: <s1>Erlaubt diesen Spielern,<nl><s1>Redstone Einstellungen<nl><s1>zu ändern.
+- flag_jetbootsd: <s1>Erlaubt diesen Spielern,<nl><s1>JetBoots zu verwenden.
+- flag_foreignd: <s1>Erlaube Fremden diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
+- flag_trustedd: <s1>Erlaube Vertrauten diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
+- flag_memberd: <s1>Erlaube Mitgliedern diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
   
   #
   # > Flag settings
-- flag_toggleflagstrue: <s1>Diese Einstellung\n<s1>kann geändert werden.
-- flag_toggleflagsfalse: <s1>Diese Einstellung\n<s1>kann nicht geändert werden.
+- flag_toggleflagstrue: <s1>Diese Einstellung<nl><s1>kann geändert werden.
+- flag_toggleflagsfalse: <s1>Diese Einstellung<nl><s1>kann nicht geändert werden.
 - flag_currentsetting: "<s1>Aktuelle Einstellung: "
 - flag_currenttrue: "&2An"
 - flag_currentfalse: "&4Aus"
@@ -295,13 +298,13 @@ language:
 
   #
   # > Island upgrades
-- bc_islandsizeshop: Vergrößert deine Insel\nauf <size>x<size> Blöcke.
+- bc_islandsizeshop: Vergrößert deine Insel<nl>auf <size>x<size> Blöcke.
 - bc_islandsizetitle: Inselgröße
 - bc_islandhoppertitle: Trichter
 - bc_islandhometitle: Zuhause
-- bc_islandhoppershop: Erlaubt dir insgesamt\n<size> Trichter zu setzen.
+- bc_islandhoppershop: Erlaubt dir insgesamt<nl><size> Trichter zu setzen.
 - bc_islandhopperlimitinfo: Du kannst nur <size> Trichter setzen.
-- bc_islandhomeshop: Erlaubt dir insgesamt\n<size> Homes zu setzen.
+- bc_islandhomeshop: Erlaubt dir insgesamt<nl><size> Homes zu setzen.
 - bc_islandupgrades: Insel Erweiterungen
 - upgradeavailable: "<s1>Die Insel ist nicht vollständig erweitert, erweitere die Insel, um auch hier bauen zu können: <p1>/island upgrades"
 
@@ -323,12 +326,12 @@ language:
 - storage_onlybreakempty: Du kannst nur leere Lagersysteme abbauen.
 - storage_notenoughinvspace: Du hast nicht genug Platz im Inventar.
 - storage_storeintitle: Einlagern
-- storage_storeinmenu: "&7Lagere alles von diesem\n&7Item im Lagersystem ein."
+- storage_storeinmenu: "&7Lagere alles von diesem<nl>&7Item im Lagersystem ein."
 - storage_getoutmenu: "&7Erhalte <max> aus diesem||&7Lagersystem.||<guispacer>||&7Vorrat: <supply>"
   
   #
   # > Recovery menu
-- recovery_guiitemlore: "<p2>Wiederherstellung\n<s1>Platziere diese Kiste,\n<s1>um dein Inventar zu erhalten.\n<guispacer>\n&7Preis: <price>\n<guispacer>\n&7Datum: <date>"
+- recovery_guiitemlore: "<p2>Wiederherstellung<nl><s1>Platziere diese Kiste,<nl><s1>um dein Inventar zu erhalten.<nl><guispacer><nl>&7Preis: <price><nl><guispacer><nl>&7Datum: <date>"
 - recovery_header: "&lWiederherstellung"
 - recovery_guiitemname: "&rErhalte dein Inventar zurück"
 - recovery_notenoughspace: <p1>Es sollte kein Block über der Wiederherstellungskiste sein.
@@ -340,21 +343,21 @@ language:
   #
   # > Store
 - store_guititle: "&lLaden"
-- store_lvlthreshold: "&7Dieser Gegenstand\n&7ist erst ab Insellevel\n&7<level> verfügbar."
+- store_lvlthreshold: "&7Dieser Gegenstand<nl>&7ist erst ab Insellevel<nl>&7<level> verfügbar."
 - store_pageforward: "&rWeiter"
-- store_pageforwardlore: "&7Blättere weiter um\n&7die nächste Seite\n&7zu sehen."
+- store_pageforwardlore: "&7Blättere weiter um<nl>&7die nächste Seite<nl>&7zu sehen."
 - store_pagebackward: "&rZurück"
-- store_pagebackwardlore: "&7Blättere zurück um\n&7die vorherige Seite\n&7zu sehen."
+- store_pagebackwardlore: "&7Blättere zurück um<nl>&7die vorherige Seite<nl>&7zu sehen."
 - store_buymodeitem: "Kaufen"
 - store_sellmodeitem: "Verkaufen"
-- store_buymodeitemlore: "&7Klicke hier, um\n&7Gegenstände zu\n&7kaufen."
-- store_sellmodeitemlore: "&7Klicke hier, um\n&7Gegenstände zu\n&7verkaufen."
+- store_buymodeitemlore: "&7Klicke hier, um<nl>&7Gegenstände zu<nl>&7kaufen."
+- store_sellmodeitemlore: "&7Klicke hier, um<nl>&7Gegenstände zu<nl>&7verkaufen."
 - store_currentmodebuy: "Aktuell: Kaufen"
 - store_currentmodesell: "Aktuell: Verkaufen"
-- store_cantbuy: "&7Dieser Gegenstand ist\n&7nicht kaufbar."
-- store_cantsell: "&7Dieser Gegenstand ist\n&7nicht verkaufbar."
-- store_itemselllore: "&7Ertrag: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu verkaufen."
-- store_itembuylore: "&7Preis: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu kaufen."
+- store_cantbuy: "&7Dieser Gegenstand ist<nl>&7nicht kaufbar."
+- store_cantsell: "&7Dieser Gegenstand ist<nl>&7nicht verkaufbar."
+- store_itemselllore: "&7Ertrag: <amount> <currency><nl>&7Klicke hier, um diesen<nl>&7Gegenstand zu verkaufen."
+- store_itembuylore: "&7Preis: <amount> <currency><nl>&7Klicke hier, um diesen<nl>&7Gegenstand zu kaufen."
 - store_soldxitems: "Du hast <ph><ph> für <ph> verkauft."
 - store_boughtxitems: "Du hast <ph><ph> für <ph> gekauft."
 - store_notenoughitem: "Du hast nicht genug <ph>."
@@ -364,8 +367,8 @@ language:
 - lootbox_reward: <s1>Belohnung:<p1>
 - lootbox_gotalootbox: <s1>Du hast eine Lootbox erhalten.
 - lootbox_gotalootboxvar: <s1>Du hast eine Lootbox erhalten. Öffne sie mit /island loot
-- lootbox_tierguiitemlore: "<s1>&lGüteklasse: <tier>\n<guispacer>\n<s1>Du kannst noch\n<p1><amount> <s1>öffnen."
-- lootbox_clicktoopen: <s1>Klicke <p1>hier<s1>,\n<s1>um zu öffnen.
+- lootbox_tierguiitemlore: "<s1>&lGüteklasse: <tier><nl><guispacer><nl><s1>Du kannst noch<nl><p1><amount> <s1>öffnen."
+- lootbox_clicktoopen: <s1>Klicke <p1>hier<s1>,<nl><s1>um zu öffnen.
 
   #
   # > AFK Check
@@ -391,9 +394,9 @@ language:
 - parcour_menucheckpointitemname: "&rCheckpoint Platte"
 - parcour_menufinishitemname: "&rZiel Platte"
 - parcour_menuremoveblockname: "&rEntferne diesen Parkour Block"
-- parcour_menucheckpointitemlore: <s1>Erhalte eine Checkpoint\n<s1>Platte zum platzieren.\n\n<s1>Funktioniert nur\n<s1>für diesen Parkour.
-- parcour_menufinishitemlore: <s1>Erhalte eine Ziel\n<s1>Platte zum platzieren.\n\n<s1>Funktioniert nur\n<s1>für diesen Parkour.
-- parcour_menuremoveblocklore: <s1>Erhalte den Block\n<s1>als Item zurück.
+- parcour_menucheckpointitemlore: <s1>Erhalte eine Checkpoint<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
+- parcour_menufinishitemlore: <s1>Erhalte eine Ziel<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
+- parcour_menuremoveblocklore: <s1>Erhalte den Block<nl><s1>als Item zurück.
 - parcour_noinventoryinparcour: Du kannst während dem Parkour keine Inventare öffnen.
 - parcour_parcouritemcheckpoint: "&r<p2>Parkour - Checkpoint"
 - parcour_parcouritemfinish: "&r<p2>Parkour - Ziel"
@@ -413,27 +416,27 @@ language:
 - cs_xcoord: "X Koordinate"
 - cs_ycoord: "Y Koordinate"
 - cs_xcoord: "Z Koordinate"
-- cs_placeitemslot: "&7Platziere das Item hier,\n&7welches du für diesen\n&7Slot haben möchtest."
+- cs_placeitemslot: "&7Platziere das Item hier,<nl>&7welches du für diesen<nl>&7Slot haben möchtest."
 - cs_togglesize: "&rGröße"
-- cs_togglesizelore: "&7Schalte die Größe\n&7zwischen klein und groß um."
+- cs_togglesizelore: "&7Schalte die Größe<nl>&7zwischen klein und groß um."
 - cs_togglevisibility: "&rSichtbarkeit"
-- cs_togglevisibilitylore: "&7Schalte die Sichtbarkeit\n&7des Rüstungsständers um."
+- cs_togglevisibilitylore: "&7Schalte die Sichtbarkeit<nl>&7des Rüstungsständers um."
 - cs_toggleglow: "&rLeuchten"
-- cs_toggleglowlore: "&7Schalte das Leuchten\n&7des Rüstungsständers um."
+- cs_toggleglowlore: "&7Schalte das Leuchten<nl>&7des Rüstungsständers um."
 - cs_togglebaseplate: "&rBasisplatte"
-- cs_togglebaseplatelore: "&7Schalte die Basisplatte\n&7des Rüstungsständers um."
+- cs_togglebaseplatelore: "&7Schalte die Basisplatte<nl>&7des Rüstungsständers um."
 - cs_togglearms: "&rArme"
-- cs_togglearmslore: "&7Schalte die Arme\n&7des Rüstungsständers um."
+- cs_togglearmslore: "&7Schalte die Arme<nl>&7des Rüstungsständers um."
 - cs_changedirection: "&rRichtung"
-- cs_changedirectionlore: "&7Stelle die Richtung\n&7des Rüstungsständers um."
+- cs_changedirectionlore: "&7Stelle die Richtung<nl>&7des Rüstungsständers um."
 - cs_copyarmorstand: "&rKopieren"
-- cs_copyarmorstandlore: "&7Kopiere diesen\n&7Rüstungsständer."
+- cs_copyarmorstandlore: "&7Kopiere diesen<nl>&7Rüstungsständer."
 - cs_togglename: "&rName"
-- cs_togglenamelore: "&7Stelle den Namen des\n&7Rüstungsständers zwischen\n&7sichtbar und unsichtbar um.\n&7Ändere den Namen\n&7mit /renamestand <text>."
+- cs_togglenamelore: "&7Stelle den Namen des<nl>&7Rüstungsständers zwischen<nl>&7sichtbar und unsichtbar um.<nl>&7Ändere den Namen<nl>&7mit /renamestand <text>."
 - cs_removearmorstand: "&rEntfernen"
-- cs_removearmorstandlore: "&7Entferne diesen\n&7Rüstungsständer und\n&7erhalte eine Kopie\n&7davon zum platzieren."
+- cs_removearmorstandlore: "&7Entferne diesen<nl>&7Rüstungsständer und<nl>&7erhalte eine Kopie<nl>&7davon zum platzieren."
 - cs_copytoolname: "&rKopierstab"
-- cs_copytoollore: "&7Dieses Werkzeug kopiert\n&7den Rüstungsständer temporär,\n&7verwende es nicht,\n&7zum lagern."
+- cs_copytoollore: "&7Dieses Werkzeug kopiert<nl>&7den Rüstungsständer temporär,<nl>&7verwende es nicht,<nl>&7zum lagern."
 - cs_lookatstand: "Schaue den Rüstungsständer an, um ihn zu bearbeiten. [<number>/50]"
 
   #
@@ -448,47 +451,47 @@ language:
   #
   # > Robot designs
 - robot_design_name_1: Schaf
-- robot_design_lore_1: <s1>Roboter im\n<s1>Schaf Stil.
+- robot_design_lore_1: <s1>Roboter im<nl><s1>Schaf Stil.
 - robot_design_name_2: Golem
-- robot_design_lore_2: <s1>Roboter im\n<s1>Schaf Stil.
+- robot_design_lore_2: <s1>Roboter im<nl><s1>Schaf Stil.
 - robot_design_name_3: Schwein
-- robot_design_lore_3: <s1>Roboter im\n<s1>Schwein Stil.
+- robot_design_lore_3: <s1>Roboter im<nl><s1>Schwein Stil.
 - robot_design_name_4: Schleim
-- robot_design_lore_4: <s1>Roboter im\n<s1>Schwein Stil.
+- robot_design_lore_4: <s1>Roboter im<nl><s1>Schwein Stil.
 - robot_design_name_5: Kuh
-- robot_design_lore_5: <s1>Roboter im\n<s1>Kuh Stil.
+- robot_design_lore_5: <s1>Roboter im<nl><s1>Kuh Stil.
 - robot_design_name_6: Huhn
-- robot_design_lore_6: <s1>Roboter im\n<s1>Huhn Stil.
+- robot_design_lore_6: <s1>Roboter im<nl><s1>Huhn Stil.
 - robot_design_name_7: Creeper
-- robot_design_lore_7: <s1>Roboter im\n<s1>Creeper Stil.
+- robot_design_lore_7: <s1>Roboter im<nl><s1>Creeper Stil.
 - robot_design_name_8: Dorfbewohner
-- robot_design_lore_8: <s1>Roboter im\n<s1>Dorfbewohner Stil.
+- robot_design_lore_8: <s1>Roboter im<nl><s1>Dorfbewohner Stil.
 - robot_design_name_9: Enderman
-- robot_design_lore_9: <s1>Roboter im\n<s1>Enderman Stil.
+- robot_design_lore_9: <s1>Roboter im<nl><s1>Enderman Stil.
 - robot_design_name_10: Lavaschleim
-- robot_design_lore_10: <s1>Roboter im\n<s1>Lavaschleim Stil.
+- robot_design_lore_10: <s1>Roboter im<nl><s1>Lavaschleim Stil.
 - robot_design_name_11: Kaktus
-- robot_design_lore_11: <s1>Roboter im\n<s1>Kaktus Stil.
+- robot_design_lore_11: <s1>Roboter im<nl><s1>Kaktus Stil.
 - robot_design_name_12: Kokusnuss
-- robot_design_lore_12: <s1>Roboter im\n<s1>Kokusnuss Stil.
+- robot_design_lore_12: <s1>Roboter im<nl><s1>Kokusnuss Stil.
 - robot_design_name_13: Kuchen
-- robot_design_lore_13: <s1>Roboter im\n<s1>Kuchen Stil.
+- robot_design_lore_13: <s1>Roboter im<nl><s1>Kuchen Stil.
 - robot_design_name_14: Ozelot
-- robot_design_lore_14: <s1>Roboter im\n<s1>Ozelot Stil.
+- robot_design_lore_14: <s1>Roboter im<nl><s1>Ozelot Stil.
 - robot_design_name_15: Zombie
-- robot_design_lore_15: <s1>Roboter im\n<s1>Zombie Stil.
+- robot_design_lore_15: <s1>Roboter im<nl><s1>Zombie Stil.
 - robot_design_name_16: Steve
-- robot_design_lore_16: <s1>Roboter im\n<s1>Steve Stil.
+- robot_design_lore_16: <s1>Roboter im<nl><s1>Steve Stil.
 - robot_design_name_17: Wither
-- robot_design_lore_17: <s1>Roboter im\n<s1>Wither Stil.
+- robot_design_lore_17: <s1>Roboter im<nl><s1>Wither Stil.
 - robot_design_name_18: Wither Skelett
-- robot_design_lore_18: <s1>Roboter im\n<s1>Wither Skelett Stil.
+- robot_design_lore_18: <s1>Roboter im<nl><s1>Wither Skelett Stil.
 - robot_design_name_19: Melone
-- robot_design_lore_19: <s1>Roboter im\n<s1>Melonen Stil.
+- robot_design_lore_19: <s1>Roboter im<nl><s1>Melonen Stil.
 - robot_design_name_20: Kürbis
-- robot_design_lore_20: <s1>Roboter im\n<s1>Kürbis Stil.
+- robot_design_lore_20: <s1>Roboter im<nl><s1>Kürbis Stil.
 - robot_design_name_21: Lohe
-- robot_design_lore_21: <s1>Roboter im\n<s1>Lohen Stil.
+- robot_design_lore_21: <s1>Roboter im<nl><s1>Lohen Stil.
 
   #
   # > Robot menu
@@ -498,7 +501,7 @@ language:
 - robot_currentjob: "&rAktueller Beruf"
 - robot_robotstatuson: "&rRoboter <s1>[<p1>&lAN&r<s1>]"
 - robot_robotstatusoff: "&rRoboter <s1>[<p1>&lAUS&r<s1>]"
-- robot_clicktotogglesstatus: "<s1>Klicke, um den\n<s1>Roboter zwischen\n<s1>an und aus umzustellen."
+- robot_clicktotogglesstatus: "<s1>Klicke, um den<nl><s1>Roboter zwischen<nl><s1>an und aus umzustellen."
 - robot_stats: "&rStatistik"
 - robot_blocksbroken: "<s1>Blöcke abgebaut: <p1><blocks>"
 - robot_robotjobguiname: "&lRoboter Berufe"
@@ -508,9 +511,9 @@ language:
 - robot_renamedrobot: "Der Roboter wurde umbenannt."
 - robot_onlyrobotownererror: "Nur der Besitzer des Roboters kann diesen umbenennen."
 - robot_renametitle: "&rUmbenennen"
-- robot_renamelore: "<s1>Benenne diesen Roboter\n<s1>mit /robotname <name> um."
+- robot_renamelore: "<s1>Benenne diesen Roboter<nl><s1>mit /robotname <name> um."
 - robot_breakrobot: "&rRoboter abbauen"
-- robot_breakrobotlore: "<s1>Klicke hier, um\n<s1>den Roboter zurück in\n<s1>ein Item zu tauschen."
+- robot_breakrobotlore: "<s1>Klicke hier, um<nl><s1>den Roboter zurück in<nl><s1>ein Item zu tauschen."
 - robot_revertedrobottoitem: "Dein Roboter wurde wieder zu einem Item."
 
   #
@@ -530,7 +533,7 @@ language:
 - challenge_repeatable: "&7Wiederholbar [<current>/<maxrepeat>]"
 - challenge_notrepeatable: "&7Nicht wiederholbar."
 - challenge_xp: "&7XP: <amount>"
-- challenge_statssitelore: "&7Erhalte deine aktuelle\n&7Herausforderungsstatistik."
+- challenge_statssitelore: "&7Erhalte deine aktuelle<nl>&7Herausforderungsstatistik."
 
   #
   # > Challenge names
