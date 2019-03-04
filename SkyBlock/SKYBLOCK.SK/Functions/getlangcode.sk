@@ -13,3 +13,6 @@
 function getlangcode(player:player) :: text:
   set {_uuid} to uuid of {_player}
   return {SK::lang::%{_uuid}%}
+
+function getlang(id:text,langcode:text) :: text:
+  return getconfigobject("%{_id}%-%{_langcode}%")
