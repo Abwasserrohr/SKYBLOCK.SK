@@ -39,7 +39,8 @@ function loadlanguage():
 	  #
 	  # > Split the variable and save it to metadata configuration for language.
       set {_loopvalue::*} to {_loopvalue} split at "="
-      replace all "<nl>" with " %nl%" in {_loopvalue::2}
+      replace all "<nl1>" with " %nl%" in {_loopvalue::2}
+      replace all "<nl>" with "\n" in {_loopvalue::2}
       replace all "<p1>" with "%{SB::config::color::primary::1}%" in {_loopvalue::2}
       replace all "<p2>" with "%{SB::config::color::primary::2}%" in {_loopvalue::2}
       replace all "<s1>" with "%{SB::config::color::secondary::2}%" in {_loopvalue::2}
