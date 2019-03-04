@@ -3,7 +3,6 @@
 # > COMPATIBLE VERSION: x (there is no release yet)
 #
 
-
 language:
 - language: Deutsch
 - languageskin: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ==
@@ -576,3 +575,12 @@ language:
 - challenge_name_5_5: Eins mit den Meerestieren
 - challenge_name_5_6: Dödelmeister
 - challenge_name_5_7: Ausgestopfte Drachen
+
+  #
+  # > Store categories
+- store_category_blocks: "Blöcke"
+- store_category_items: "&rItems"
+- store_category_eggs: "&rSpawneier"
+- store_category_food: "&rLebensmittel"
+- store_category_decoration: "&rDekoartikel"
+- store_category_ores: "&rErze"
