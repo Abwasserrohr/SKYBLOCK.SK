@@ -578,7 +578,7 @@ language:
 
   #
   # > Store categories
-- store_category_blocks: "Blöcke"
+- store_category_blocks: "&rBlöcke"
 - store_category_items: "&rItems"
 - store_category_eggs: "&rSpawneier"
 - store_category_food: "&rLebensmittel"
