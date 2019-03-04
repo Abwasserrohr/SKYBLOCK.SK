@@ -34,7 +34,7 @@ function selectlanguage(p:player):
   # > Get all files in the languages folder "plugins/Skript/scripts/SkyBlock/lang".
   set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/lang").listFiles()
   loop {_files::*}:
-    if loop-value.toString().endsWith(".sk") is true:
+    if loop-value.toString().endsWith(".yml") is true:
       set {_fname} to loop-value.getName()
 	  #
 	  # > Split the name in half, that way, we have ["langcode"], ["sk"] as a array.
