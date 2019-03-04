@@ -187,7 +187,7 @@ language:
 - guitopname: "&6&lBestenliste"
 - guirewardsname: "&d&lLootboxen"
 - guihubname: <p1>&lLobby
-- guibacktopreviousmenu: Zurück
+- guibacktopreviousmenu: "&rZurück"
 
   #
   # > GUI - menu - lore
@@ -348,8 +348,8 @@ language:
 - store_pageforwardlore: "&7Blättere weiter um<nl>&7die nächste Seite<nl>&7zu sehen."
 - store_pagebackward: "&rZurück"
 - store_pagebackwardlore: "&7Blättere zurück um<nl>&7die vorherige Seite<nl>&7zu sehen."
-- store_buymodeitem: "Kaufen"
-- store_sellmodeitem: "Verkaufen"
+- store_buymodeitem: "&rKaufen"
+- store_sellmodeitem: "&rVerkaufen"
 - store_buymodeitemlore: "&7Klicke hier, um<nl>&7Gegenstände zu<nl>&7kaufen."
 - store_sellmodeitemlore: "&7Klicke hier, um<nl>&7Gegenstände zu<nl>&7verkaufen."
 - store_currentmodebuy: "Aktuell: Kaufen"
