@@ -57,8 +57,8 @@ function getconfigarray(id:text) :: objects:
 #
 # > Function - getdummy
 # > Actions:
-# > Returns a offline player as a dummy for metadata storage.
-function getdummy() :: offline player:
-	if {SB::dummy} is not a offline player:
-		set {SB::dummy} to "Abwasserrohr" parsed as offline player
+# > Returns a block as a dummy for metadata storage.
+function getdummy() :: block:
+	if {SB::dummy} is not a block:
+		set {SB::dummy} to block at location at 0.0, 0.0, 0.0 in "dummy" parsed as world
 	return {SB::dummy}
