@@ -45,4 +45,4 @@ function loadlanguage():
       replace all "<p2>" with "%{SB::config::color::primary::2}%" in {_loopvalue::2}
       replace all "<s1>" with "%{SB::config::color::secondary::2}%" in {_loopvalue::2}
       replace all "<b1>" with "%{SB::config::color::background::1}%" in {_loopvalue::2}
-      loadconfigobject("lang-%{_loopvalue::1}%-%{_fname::1}%",colored "%{_loopvalue::2}%")
+      loadconfigobject("lang-%{_loopvalue::1}%-%{_fname::1}%",colored "&r%{_loopvalue::2}%")
