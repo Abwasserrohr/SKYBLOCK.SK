@@ -15,11 +15,11 @@
 # > it saves the list into metadata of a dummy player as arraylist 
 # > to return it later using getconfigarray("id").
 function loadconfigarray(id:text,values::*:objects):
-	set {_array} to new ArrayList()
-	set {_dummy} to getdummy()
-	loop {_values::*}:
-		{_array}.add(loop-value)
-	set metadata value {_id} of {_dummy} to {_array}
+  set {_array} to new ArrayList()
+  set {_dummy} to getdummy()
+  loop {_values::*}:
+    {_array}.add(loop-value)
+  set metadata value {_id} of {_dummy} to {_array}
 
 #
 # > Function - loadconfigobject
@@ -30,9 +30,9 @@ function loadconfigarray(id:text,values::*:objects):
 # > Should be called by another skript which loads configurations,
 # > it saves the object to metadata of a dummy player to return
 # > it later using getconfigobject("id").
-function loadconfigobject(id:text,value::object):
-	set {_dummy} to getdummy()
-	set metadata value {_id} of {_dummy} to {_value}
+function loadconfigobject(id:text,value:object):
+  set {_dummy} to getdummy()
+  set metadata value {_id} of {_dummy} to {_value}
 
 #
 # > Function - getconfigobject
@@ -41,8 +41,8 @@ function loadconfigobject(id:text,value::object):
 # > Actions:
 # > Returns the object which is saved to the id.
 function getconfigobject(id:text) :: object:
-	set {_dummy} to getdummy()
-	return metadata value {_id} of {_dummy}
+  set {_dummy} to getdummy()
+  return metadata value {_id} of {_dummy}
 
 #
 # > Function - getconfigarray
@@ -51,14 +51,14 @@ function getconfigobject(id:text) :: object:
 # > Actions:
 # > Returns the list which is saved to the id.
 function getconfigarray(id:text) :: objects:
-	set {_dummy} to getdummy()
-	return ...metadata value {_id} of {_dummy}
+  set {_dummy} to getdummy()
+  return ...metadata value {_id} of {_dummy}
 
 #
 # > Function - getdummy
 # > Actions:
 # > Returns a block as a dummy for metadata storage.
 function getdummy() :: block:
-	if {SB::dummy} is not a block:
-		set {SB::dummy} to block at location at 0.0, 0.0, 0.0 in "dummy" parsed as world
-	return {SB::dummy}
+  if {SB::dummy} is not a block:
+    set {SB::dummy} to block at location at 0.0, 0.0, 0.0 in "dummy" parsed as world
+  return {SB::dummy}
