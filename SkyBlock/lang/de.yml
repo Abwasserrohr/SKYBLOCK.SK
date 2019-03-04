@@ -1,0 +1,575 @@
+#
+# > SKYBLOCK.SK LANGUAGE: DE - German
+# > COMPATIBLE VERSION: x (there is no release yet)
+#
+
+
+language:
+- language: Deutsch
+- languageskin: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ==
+  #
+  # > Translation for "languages"
+- languages: Sprachen
+- changedlang: Deine Sprache wurde geändert.
+  #
+  # > Translation for the currency name of the server
+- currencyname: Taler
+  #
+  # > Command feedback messages
+  #
+  # > /island create
+- searchis: <p2>Freie Inseln werden gesucht.
+- foundis: <p1>Deine neue Insel wurde erstellt.
+- islands: <s1>&lInseln
+- clicktocreateisland: <s1>Klicke hier, damit \n<s1>diese Insel für dich\n<s1>erstellt wird.
+
+  #
+  # > /island home | /island go
+- tpis: <p1>Du wurdest zur Insel teleportiert.
+- tphome: <p1>Du wurdest zum Zuhause teleportiert.
+- homewarnair: "&cWarnung, dein Zuhause ist in der Luft!"
+- deledtedis: "&c&lDeine Insel wurde gelöscht."
+- alreadyis: <s1>Du bist bereits auf einer Insel.
+- alreadyotheris: <s1><player> ist bereits auf einer Insel.
+- waitis: <p2>&lEinen Moment...
+- cantleave: <s1>Du kannst diese Insel nicht verlassen.
+- notfoundhome: "<s1>Deine Zuhause: <homes>"
+  
+  #
+  # > /island invite | /island join
+- sentrequest: <p2>Du hat eine Anfrage geschickt.
+- gotrequest: <p2>Du hast eine Inseleinladung von <player> erhalten.
+- reqtoleader: <s1>Die Einladung wurde &nnicht<s1> angenommen.
+- clicktojoin: Klicke Hier, um <player> beizutreten.
+- reqtomember: <s1>Die Einladung ist &labgelaufen<s1>.
+- cantinviteself: "&cDu kannst dich nicht selber einladen."
+- joinedismember: <p2>Du bist der Insel von <arg-2> beigetreten.
+- joinedisleader: <p2><player> ist der Insel beigetreten.
+- norequest: <s1>Keine Einladungen verfügbar.
+- requests: "<s1>Einladungen:"
+- invitetargeterror: <s1>Es konnte keine Einladung an <arg-2> gesendet werden.
+  
+  #
+  # > /island leave
+- leftis: <s1>Du hast die Insel verlassen.
+
+  #
+  # > /island kick
+- kickmemberleader: <s1>Du hast <arg-2> von der Insel gekickt.
+- kickmember: <s1>Du wurdest von der Insel von <player> gekickt.
+  
+  #
+  # > /island sethome
+- sethomeok: Zuhause erfolgreich erstellt.
+- ishomecancel: Das neue Zuhause muss auf deiner Insel sein.
+- sethomeoverwritten: Zuhause erfolgreich überschrieben.
+- homedeleted: Zuhause <home> wurde entfernt.
+- cantdeletehome: <home> kann nicht entfernt werden.
+- sethomelmitreached: Du hast das Limit für noch mehr Zuhase erreicht.
+
+  #
+  # > /island reload
+- reloadstarted: <s1>Lade SKYBLOCK.SK neu...
+- reloadsuccess: <s1>SKYBLOCK.SK wurde erfolgreich neugeladen.
+
+  #
+  # > /island warp|setwarp|delwarp
+- setwarpok: Der Warp wurde erfolgreich erstellt.
+- delwarpok: Der Warp wurde erfolgreich gelöscht.
+- warpnotfound: Dieser Warp wurde nicht gefunden.
+- warptop: "<p2>Am meisten besuchte Inseln:"
+- warptoplist: "<p1>&l<rank> <b1>|&r <s1><leader> <b1>|&r <s1>Besuche: <p2><visits>"
+- warptoisland: "<s1>Besuche eine Insel: <p1>/island warp <s1><<p1>Spielername<s1>>"
+
+  #
+  # > /island info:
+- isinfo: "Informationen über diese Insel:"
+- isleader: "Inselleiter:"
+- ismember: "Mitglieder:"
+- istrusted: "Vertraute:"
+- isinfolevel: "Level:"
+- isinfobiome: "Biom:"
+- iscreated: "Erstellt:"
+- islastactive: "Zuletzt aktiv:"
+- isupgrades: "Inselverbesserungen:"
+- isinfonotfound: Insel konnte nicht gefunden werden.
+
+  #
+  # > /island trust:
+- trustplayerlist: "Alle vertrauten Spieler:"
+- alreadytrusted: Diesem Spieler wird schon vertraut.
+- trustnowtrusted: <player> wird nun vertraut.
+- notfoundplayer: Der Spieler wurde nicht gefunden.
+- trustremoved: <player> wird nicht länger vertraut.
+
+  #
+  # > /island help
+- iscreate: <p2>&lInsel erstellen <s1>- <p1>/is create
+- isdelete: <p2>&lInsel löschen <s1>- <p1>/is delete
+- isteleport: <p2>&lZur Insel teleportieren <s1>- <p1>/is home
+- issethome: <p2>&lInsel Zuhause ändern <s1>- <p1>/is sethome
+- isteleportgo: <p2>&lZum Grundstein teleportieren <s1>- <p1>/is go
+- islevel: <p1>&l> <p2>&lInsel Level <s1>- <p1>/is level
+- istop: <p1>&l> <p2>&lTop 10 <s1>- <p1>/is top <Seite>
+- isinvite: <p1>&l> <p2>&lSpieler einladen <s1>- <p1>/is invite <Spieler>
+- iskick: <p1>&l> <p2>&lSpieler rauswerfen <s1>- <p1>/is kick <Spieler>
+- isjoin: <p1>&l> <p2>&lEinladung annehmen <s1>- <p1>/is join <Spieler>
+- isleave: <p1>&l> <p2>&lInsel verlassen <s1>- <p1>/is leave
+- isgui: <p1>&l> <p2>&lSkyblock Menü <s1>- <p1>/is
+- isspawn: <p1>&l> <p2>&lZur Lobby <s1>- <p1>/is spawn
+- isore: <p1>&l> <p2>&lErz Chancen <s1>- <p1>/is ore
+- isgen: <p1>&l> <p2>&lGenerator Level <s1>- <p1>/is gen
+- trustadd: <p1>&l> <p2>&lVertraue einem Spieler <s1>- <p1>/is trust add <player>
+- trustremove: <p1>&l> <p2>&lTraue dem Spieler nicht länger <s1>- <p1>/is trust remove <player>
+- trustlist: <p1>&l> <p2>&lListe aller vertrauten Spieler <s1>- <p1>/is trust list
+- flaglist: <p1>&l> <p2>&lÖffnet das Flag menü <s1>- <p1>/is flags
+- helpwarp: <p1>&l> <p2>&lTeleportiert zum Warp <s1>- <p1>/is warp <Spieler>
+- helpsetwarp: <p1>&l> <p2>&lSetzt deinen Inselwarp <s1>- <p1>/is setwarp
+- helpdelwarp: <p1>&l> <p2>&lLöscht deinen Inselwarp <s1>- <p1>/is delwarp
+- helps2: Seite
+
+  #
+  # > /island - Errors
+- notallowed: "&cDer Befehl ist dem Inselbesitzer vorbehalten."
+- notleader: "&cDu bist nicht der Inselbesitzer."
+- notleaderofthisisland: "&cDu bist nicht der Inselbesitzer dieser Insel."
+- noperm: "&c&lDu besitzt keine Berechtigung für diesen Befehl."
+- leaderleaveinfo: <s1>Verwende /is delete, um deine Insel zu löschen.
+- havetodelete: <s1>Verwende /is delete, um deine Insel zu löschen.
+- nois: "&cDu hast keine Insel. Erstelle eine: &4&l/island create"
+- playeroff: <s1>Dieser Spieler ist offline.
+- havetoleave: <s1>Verwende /is leave, um die Insel zu verlassen.
+- cooldown: <s1>Dieser Befehl lädt noch auf.
+- plnotfound: <s1><player> konnte nicht gefunden werden.
+- notanumber: "&cBitte verwende Nummern und keinen Text."
+- pagenotfound: "&cDiese Seite exestiert nicht. Es gibt nur <pages> Seiten."
+- helpsiteerror: <p1>/is help <Seite>
+
+  #
+  # > /island top
+- istopheader: "&eTop 10 &6&l(<currentpage>/<allpages>)"
+- istoplist: "&7&l<rank>&8 | &8<name>"
+- toplistbookhover: "<name><nl><guispacer><nl>&r&7Rang: <rank><nl>Insellevel: <level><nl><guispacer>"
+
+  #
+  # > /isadmin - command feedback
+- isadmin_deletedxis: <amount> Inseln wurden gelöscht.
+- isadmin_xwouldbedeleted: <amount> Insel würden gelöscht werden, möchtest du löschen?
+- isadmin_areyousuretodelete: Bist du sicher, <amount> Insel zu löschen?
+- isadmin_yes: "&6&lYes."
+- isadmin_suretodeleteisofp: Bist du sicher, dass die Insel von <player> gelöscht werden soll?
+- isadmin_kickall: Jeder wurde von dieser Insel gekickt.
+- isadmin_kickallprompt: Möchtest du alle von <player> Insel kicken?
+- isadmin_islandofdeleted: Die Insel von <player> wurde gelöscht.
+- isadmin_newleaderhastobemember: Der neue Inselleiter muss Inselmitglied sein.
+- isadmin_newleader: <newleader> ist nun der neue Leiter, <oldleader> ist nun Mitglied der Insel.
+- isadmin_changeleader: Möchtest du den Inselleiter von <oldleader> zu <newleader> wecchseln?
+- isadmin_fcalc: Das Insellevel wird nun berechnet.
+- isadmin_isremovedonrestart: Die Inseln werden nach einem neustart gelöscht.
+- admincmd_removedchallengexp: <s1><player> wurde <amount> Herausforderungserfahrung abgezogen.
+- admincmd_addedchallengexp: <s1><player> wurde <amount> Herausforderungserfahrung hinzugefügt.
+
+  #
+  # > Event cancel messages
+- protect: Dieses Gebiet ist gesichert.
+- clearkick: Der Server startet neu. Warte einen Moment
+- nopvp: "&cPvP ist hier nicht möglich."
+  
+  #
+  # > GUI - menu - Titles
+- guigrassname: <p1>&lSkyblock
+- guigraslore: "&9&lStarte eine Insel"
+- guiexpname: "&9&lInselinformationen"
+- guichallangename: "&a&lTägliche Aufgaben"
+- guitopname: "&6&lBestenliste"
+- guirewardsname: "&d&lLootboxen"
+- guihubname: <p1>&lLobby
+- guibacktopreviousmenu: Zurück
+
+  #
+  # > GUI - menu - lore
+- maingui_guigrasslore: <s1>Teleportiere dich\n<s1>zu deiner Insel.
+- maingui_guigrasscreatelore: <s1>Erstelle eine neue\n<s1>Insel für dich.
+- maingui_guiislandinfo: <s1>Zeige Informationen\n<s1>über deine Insel an.
+- maingui_guichallangelore: <s1>Öffne das das Herausforderungs-\n<s1>menü, um Herausforderungen zu sehen.
+- maingui_guitoplore: <s1>Zeigt dir die aktuelle\n<s1>Bestenliste aller\n<s1>Inseln an.
+- maingui_guirewardslore: <s1>Hole dir wertvolle Belohnungen\n<s1>für deine Insel ab.
+- maingui_guihublore: <s1>Teleportiert dich zur Lobby.
+- maingui_guilanglore: <s1>Ändere deine Sprache.
+- maingui_guiflaglore: <s1>Ändere die Flags deiner Insel.
+- maingui_islandupgradelore: <s1>Erweitere deine Insel.
+- maingui_storelore: <s1>Öffnet den Laden.
+- guibacktopreviousmenulore: <s1>Bringt dich zurück\n<s1>zum übergeordneten Menü.
+  
+  #
+  # > Chat headers
+- topheader: "&lBestenliste (<start>/<end>"
+- levelheader: <p2>Insel Level <s1>&l- <p1>
+- votereward: "&bVote für Belohnungen: "
+- rewardwoods: <p1>Holzkiste
+- rewardenchant: "&5Effektkiste"
+- rewardender: "&3Enderkiste"
+- rewardunknown: "&4Unbekannte Kiste"
+
+  #
+  # > Other
+- prefix: <s1>[<p1>&lSkyBlock<s1>] <b1>&l>>&r
+- delismsg: <p2>Alte Inseln werden gerade gelöscht, bitte warte kurz.
+- deletekickmember: <s1>Die Insel, auf der du Mitglied warst, wurde gelöscht.
+- nonether: <s1>Die Hölle ist nicht zugänglich.
+- isdeleteqestion: <s1>Du möchtest deine Insel löschen? <p1>Klicke Hier<s1>
+  
+  #
+  # > Admintools:
+- at_isalreadyset: <s1>There is already a bedrock or a island set. Kick everyone first and remove the bedrock, then create the new island.
+- at_isnowset: <s1>The island is now set, add a island leader with /isadmin island addmember <new leader>.
+
+  #
+  # > Flags
+  
+  #
+  # > Flag titles
+- flag_explosiont: Explosionen
+- flag_buttont: Knöpfe & Hebel
+- flag_doort: Türen
+- flag_mob-damaget: Monster
+- flag_animal-damaget: Tiere
+- flag_interact-vehiclet: Vehikel
+- flag_publichomet: Zuhause
+- flag_buildt: Bauen und abbauen
+- flag_chestt: Blockinventare
+- flag_entityclickt: Entities
+- flag_redstonet: Redstone
+- flag_jetbootst: JetBoots
+- flag_flagst: "&lFlags"
+- flag_foreignt: Flags für Fremde
+- flag_trustedt: Flags für Vertraute
+- flag_membert: Flags für Mitglieder
+
+  #
+  # > Flag descriptions
+- flag_explosiond: <s1>Erlaubt zerstörerische\n<s1>Explosionen an deiner\n<s1>Insel.
+- flag_mob-spawningd: <s1>Erlaubt das erscheinen\n<s1>von Monstern auf\n<s1>deiner Insel.
+- flag_buttond: <s1>Erlaubt, die\n<s1>Knöpfe auf deiner Insel\n<s1>zu verwenden.
+- flag_doord: <s1>Erlaubt, die\n<s1>Türen auf deiner Insel\n<s1>zu verwenden.
+- flag_mob-damaged: <s1>Erlaubt, deine\n<s1>Monster zu schlagen.
+- flag_animal-damaged: <s1>Erlaubt, deine\n<s1>Tiere zu schlagen.
+- flag_itemframe-damaged: <s1>Erlaubt,\n<s1>deine Rahmen abzubauen.
+- flag_interact-vehicled: <s1>Erlaubt,\n<s1>Vehikel zu verwenden.
+- flag_publichomed: <s1>Erlaubt diesen Spielern,\n<s1>deine Insel zu besuchen.
+- flag_buildd: <s1>Erlaubt diesen Spielern,\n<s1>auf deiner Insel zu bauen\n<s1>und abzubauen.
+- flag_chestd: <s1>Erlaubt diesen Spielern,\n<s1>auf deiner Insel in die\n<s1>Inventare von\n<s1>von Blöcken zu schauen.
+- flag_entityclickd: <s1>Erlaubt diesen Spielern,\n<s1>Entities anzuklicken.
+- flag_redstoned: <s1>Erlaubt diesen Spielern,\n<s1>Redstone Einstellungen\n<s1>zu ändern.
+- flag_jetbootsd: <s1>Erlaubt diesen Spielern,\n<s1>JetBoots zu verwenden.
+- flag_foreignd: <s1>Erlaube Fremden diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
+- flag_trustedd: <s1>Erlaube Vertrauten diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
+- flag_memberd: <s1>Erlaube Mitgliedern diverse\n<s1>Aktionen auf deiner Insel\n<s1>auszuführen, ändere\n<s1>diese Einstellungen hier.
+  
+  #
+  # > Flag settings
+- flag_toggleflagstrue: <s1>Diese Einstellung\n<s1>kann geändert werden.
+- flag_toggleflagsfalse: <s1>Diese Einstellung\n<s1>kann nicht geändert werden.
+- flag_currentsetting: "<s1>Aktuelle Einstellung: "
+- flag_currenttrue: "&2An"
+- flag_currentfalse: "&4Aus"
+- flag_errorfalse: Der Besitzer hat diese Funktion abgeschaltet.
+  
+  #
+  # > Ore generator add-on
+- og_name: "Erz Generator:"
+- og_currentlvl: "Aktuelles Level:"
+- og_progress: "Fortschritt: <c> / <n> Blöcke"
+- og_chancesforyou: "Erz Generator Chancen für dich:"
+
+  #
+  # > Biome change add-on
+- bc_changing: "Ändere das Biom zu: <biome>"
+- bc_done: Biomänderung abgeschlossen.
+- bc_changebiomeheader: Biom ändern
+- bc_changebiomemenulore: "&rÄndere dein Biom"
+- bc_shopprice: "Preis: <price>"
+- bc_shopfree: Kostenlos
+- bc_notenoughmoney: Du hast nicht genug Geld dafür.
+
+
+  #
+  # > Island upgrades
+- bc_islandsizeshop: Vergrößert deine Insel\nauf <size>x<size> Blöcke.
+- bc_islandsizetitle: Inselgröße
+- bc_islandhoppertitle: Trichter
+- bc_islandhometitle: Zuhause
+- bc_islandhoppershop: Erlaubt dir insgesamt\n<size> Trichter zu setzen.
+- bc_islandhopperlimitinfo: Du kannst nur <size> Trichter setzen.
+- bc_islandhomeshop: Erlaubt dir insgesamt\n<size> Homes zu setzen.
+- bc_islandupgrades: Insel Erweiterungen
+- upgradeavailable: "<s1>Die Insel ist nicht vollständig erweitert, erweitere die Insel, um auch hier bauen zu können: <p1>/island upgrades"
+
+  #
+  # > Island item binding
+- islandbound: Inselgebunden
+- boundtoanotherisland: Dieser Block ist an eine andere Insel gebunden.
+
+  #
+  # > JetBoots
+- jetboots_fi: Fülle deine &eJetBoots&r mit Kohle auf, während du diese trägst. Pass auf, dass du nicht an einer Grenze nach unten fällst. Andere Inselinhaber haben die &eJetBoots&r wahrscheinlich für dich abgeschaltet.
+- jetboots_ei: Deine &eJetBoots&r sind leer!
+- jetboots_li: Deine &eJetBoots&r wurden aufgefüllt.
+
+  #
+  # > Storage unit
+- storage_menutitle: Lagersystem
+- storage_hopperbelowdisabled: Trichtertransport aus Lagersystemen ist deaktiviert.
+- storage_onlybreakempty: Du kannst nur leere Lagersysteme abbauen.
+- storage_notenoughinvspace: Du hast nicht genug Platz im Inventar.
+- storage_storeintitle: Einlagern
+- storage_storeinmenu: "&7Lagere alles von diesem\n&7Item im Lagersystem ein."
+- storage_getoutmenu: "&7Erhalte <max> aus diesem||&7Lagersystem.||<guispacer>||&7Vorrat: <supply>"
+  
+  #
+  # > Recovery menu
+- recovery_guiitemlore: "<p2>Wiederherstellung\n<s1>Platziere diese Kiste,\n<s1>um dein Inventar zu erhalten.\n<guispacer>\n&7Preis: <price>\n<guispacer>\n&7Datum: <date>"
+- recovery_header: "&lWiederherstellung"
+- recovery_guiitemname: "&rErhalte dein Inventar zurück"
+- recovery_notenoughspace: <p1>Es sollte kein Block über der Wiederherstellungskiste sein.
+- recovery_placetoget: <s1>Platziere diese Kiste um dein Inventar wiederherzustellen. Diese Wiederherstellung ist zeitlich limitiert und sollte schnellstmöglich durchgeführt werden.
+- recovery_inventoryspaceneeded: Du hast nicht genug Platz in deinem Inventar.
+- recovery_recoveredinfo: <s1>Dein Inventar wurde gesichert, erhalte es mit <p1>/recovery<s1> zurück.
+- recovery_free: <p1>Kostenlos
+
+  #
+  # > Store
+- store_guititle: "&lLaden"
+- store_lvlthreshold: "&7Dieser Gegenstand\n&7ist erst ab Insellevel\n&7<level> verfügbar."
+- store_pageforward: "&rWeiter"
+- store_pageforwardlore: "&7Blättere weiter um\n&7die nächste Seite\n&7zu sehen."
+- store_pagebackward: "&rZurück"
+- store_pagebackwardlore: "&7Blättere zurück um\n&7die vorherige Seite\n&7zu sehen."
+- store_buymodeitem: "Kaufen"
+- store_sellmodeitem: "Verkaufen"
+- store_buymodeitemlore: "&7Klicke hier, um\n&7Gegenstände zu\n&7kaufen."
+- store_sellmodeitemlore: "&7Klicke hier, um\n&7Gegenstände zu\n&7verkaufen."
+- store_currentmodebuy: "Aktuell: Kaufen"
+- store_currentmodesell: "Aktuell: Verkaufen"
+- store_cantbuy: "&7Dieser Gegenstand ist\n&7nicht kaufbar."
+- store_cantsell: "&7Dieser Gegenstand ist\n&7nicht verkaufbar."
+- store_itemselllore: "&7Ertrag: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu verkaufen."
+- store_itembuylore: "&7Preis: <amount> <currency>\n&7Klicke hier, um diesen\n&7Gegenstand zu kaufen."
+- store_soldxitems: "Du hast <ph><ph> für <ph> verkauft."
+- store_boughtxitems: "Du hast <ph><ph> für <ph> gekauft."
+- store_notenoughitem: "Du hast nicht genug <ph>."
+
+  #
+  # > Lootbox
+- lootbox_reward: <s1>Belohnung:<p1>
+- lootbox_gotalootbox: <s1>Du hast eine Lootbox erhalten.
+- lootbox_gotalootboxvar: <s1>Du hast eine Lootbox erhalten. Öffne sie mit /island loot
+- lootbox_tierguiitemlore: "<s1>&lGüteklasse: <tier>\n<guispacer>\n<s1>Du kannst noch\n<p1><amount> <s1>öffnen."
+- lootbox_clicktoopen: <s1>Klicke <p1>hier<s1>,\n<s1>um zu öffnen.
+
+  #
+  # > AFK Check
+- afkcheck_title: AFK Check
+- afkcheck_subtitle: Bitte schreibe &6&l/afkok
+- afkcheck_noresponse: <player> hat nicht geantwortet.
+- afkcheck_notafk: Du bist nicht afk. Danke für deine Mitteilung.
+- afkcheck_onlyifasked: Schreibe diesen Befehl nur, wenn du danach gefragt wirst.
+- afkcheck_playernotafk: <player> hat nach <time> Sekunden geantwortet.
+
+  #
+  # > Parcours
+- parcour_guiheader: "&lParkour"
+- parcour_checkpointreached: Checkpoint erreicht
+- parcour_checkpointinvalid: Ungültiger Checkpoint
+- parcour_finishinvalid: Ungültiges Ziel
+- parcour_itemcheckpointname: "&rCheckpoint"
+- parcour_itemrestartname: "&rNeustart"
+- parcour_itemexitname: "&rBeenden"
+- parcour_parcourunloaded: Der Parkour wurde entladen. Danke fürs spielen.
+- parcour_finishmsg: Glückwunsch! Du hast das Ziel erreicht.
+- parcour_yourtime: "Deine Zeit: <p2>&l<time>"
+- parcour_menucheckpointitemname: "&rCheckpoint Platte"
+- parcour_menufinishitemname: "&rZiel Platte"
+- parcour_menuremoveblockname: "&rEntferne diesen Parkour Block"
+- parcour_menucheckpointitemlore: <s1>Erhalte eine Checkpoint\n<s1>Platte zum platzieren.\n\n<s1>Funktioniert nur\n<s1>für diesen Parkour.
+- parcour_menufinishitemlore: <s1>Erhalte eine Ziel\n<s1>Platte zum platzieren.\n\n<s1>Funktioniert nur\n<s1>für diesen Parkour.
+- parcour_menuremoveblocklore: <s1>Erhalte den Block\n<s1>als Item zurück.
+- parcour_noinventoryinparcour: Du kannst während dem Parkour keine Inventare öffnen.
+- parcour_parcouritemcheckpoint: "&r<p2>Parkour - Checkpoint"
+- parcour_parcouritemfinish: "&r<p2>Parkour - Ziel"
+- parcour_parcouritemstart: "&r<p2>Parkour - Start"
+
+  #
+  # > Custom Stands addon
+- cs_guiheader: "&lRüstungsständer anpassen"
+- cs_head: "&rKopf"
+- cs_body: "&rOberkörper"
+- cs_legs: "&rBeine"
+- cs_feet: "&rFüße"
+- cs_rightleg: "&rRechtes Bein"
+- cs_leftleg: "&rLinkes Bein"
+- cs_rightarm: "&rRechter Arm"
+- cs_leftarm: "&rLinker Arm"
+- cs_xcoord: "X Koordinate"
+- cs_ycoord: "Y Koordinate"
+- cs_xcoord: "Z Koordinate"
+- cs_placeitemslot: "&7Platziere das Item hier,\n&7welches du für diesen\n&7Slot haben möchtest."
+- cs_togglesize: "&rGröße"
+- cs_togglesizelore: "&7Schalte die Größe\n&7zwischen klein und groß um."
+- cs_togglevisibility: "&rSichtbarkeit"
+- cs_togglevisibilitylore: "&7Schalte die Sichtbarkeit\n&7des Rüstungsständers um."
+- cs_toggleglow: "&rLeuchten"
+- cs_toggleglowlore: "&7Schalte das Leuchten\n&7des Rüstungsständers um."
+- cs_togglebaseplate: "&rBasisplatte"
+- cs_togglebaseplatelore: "&7Schalte die Basisplatte\n&7des Rüstungsständers um."
+- cs_togglearms: "&rArme"
+- cs_togglearmslore: "&7Schalte die Arme\n&7des Rüstungsständers um."
+- cs_changedirection: "&rRichtung"
+- cs_changedirectionlore: "&7Stelle die Richtung\n&7des Rüstungsständers um."
+- cs_copyarmorstand: "&rKopieren"
+- cs_copyarmorstandlore: "&7Kopiere diesen\n&7Rüstungsständer."
+- cs_togglename: "&rName"
+- cs_togglenamelore: "&7Stelle den Namen des\n&7Rüstungsständers zwischen\n&7sichtbar und unsichtbar um.\n&7Ändere den Namen\n&7mit /renamestand <text>."
+- cs_removearmorstand: "&rEntfernen"
+- cs_removearmorstandlore: "&7Entferne diesen\n&7Rüstungsständer und\n&7erhalte eine Kopie\n&7davon zum platzieren."
+- cs_copytoolname: "&rKopierstab"
+- cs_copytoollore: "&7Dieses Werkzeug kopiert\n&7den Rüstungsständer temporär,\n&7verwende es nicht,\n&7zum lagern."
+- cs_lookatstand: "Schaue den Rüstungsständer an, um ihn zu bearbeiten. [<number>/50]"
+
+  #
+  # > Robots
+  #
+  # > Robot jobs
+- robot_job_name_1: Minenarbeiter
+- robot_job_lore_1: <s1>Baut die Blöcke davor ab.
+- robot_job_name_2: Holzfäller
+- robot_job_lore_2: <s1>Fällt die Bäume davor.
+
+  #
+  # > Robot designs
+- robot_design_name_1: Schaf
+- robot_design_lore_1: <s1>Roboter im\n<s1>Schaf Stil.
+- robot_design_name_2: Golem
+- robot_design_lore_2: <s1>Roboter im\n<s1>Schaf Stil.
+- robot_design_name_3: Schwein
+- robot_design_lore_3: <s1>Roboter im\n<s1>Schwein Stil.
+- robot_design_name_4: Schleim
+- robot_design_lore_4: <s1>Roboter im\n<s1>Schwein Stil.
+- robot_design_name_5: Kuh
+- robot_design_lore_5: <s1>Roboter im\n<s1>Kuh Stil.
+- robot_design_name_6: Huhn
+- robot_design_lore_6: <s1>Roboter im\n<s1>Huhn Stil.
+- robot_design_name_7: Creeper
+- robot_design_lore_7: <s1>Roboter im\n<s1>Creeper Stil.
+- robot_design_name_8: Dorfbewohner
+- robot_design_lore_8: <s1>Roboter im\n<s1>Dorfbewohner Stil.
+- robot_design_name_9: Enderman
+- robot_design_lore_9: <s1>Roboter im\n<s1>Enderman Stil.
+- robot_design_name_10: Lavaschleim
+- robot_design_lore_10: <s1>Roboter im\n<s1>Lavaschleim Stil.
+- robot_design_name_11: Kaktus
+- robot_design_lore_11: <s1>Roboter im\n<s1>Kaktus Stil.
+- robot_design_name_12: Kokusnuss
+- robot_design_lore_12: <s1>Roboter im\n<s1>Kokusnuss Stil.
+- robot_design_name_13: Kuchen
+- robot_design_lore_13: <s1>Roboter im\n<s1>Kuchen Stil.
+- robot_design_name_14: Ozelot
+- robot_design_lore_14: <s1>Roboter im\n<s1>Ozelot Stil.
+- robot_design_name_15: Zombie
+- robot_design_lore_15: <s1>Roboter im\n<s1>Zombie Stil.
+- robot_design_name_16: Steve
+- robot_design_lore_16: <s1>Roboter im\n<s1>Steve Stil.
+- robot_design_name_17: Wither
+- robot_design_lore_17: <s1>Roboter im\n<s1>Wither Stil.
+- robot_design_name_18: Wither Skelett
+- robot_design_lore_18: <s1>Roboter im\n<s1>Wither Skelett Stil.
+- robot_design_name_19: Melone
+- robot_design_lore_19: <s1>Roboter im\n<s1>Melonen Stil.
+- robot_design_name_20: Kürbis
+- robot_design_lore_20: <s1>Roboter im\n<s1>Kürbis Stil.
+- robot_design_name_21: Lohe
+- robot_design_lore_21: <s1>Roboter im\n<s1>Lohen Stil.
+
+  #
+  # > Robot menu
+- robot_on: "&r<s1>[<p1>&lAN&r<s1>]"
+- robot_robotoff: "&r<s1>[<p1>&lAUS&r<s1>]"
+- robot_currentdesign: "&rAktuelles Design"
+- robot_currentjob: "&rAktueller Beruf"
+- robot_robotstatuson: "&rRoboter <s1>[<p1>&lAN&r<s1>]"
+- robot_robotstatusoff: "&rRoboter <s1>[<p1>&lAUS&r<s1>]"
+- robot_clicktotogglesstatus: "<s1>Klicke, um den\n<s1>Roboter zwischen\n<s1>an und aus umzustellen."
+- robot_stats: "&rStatistik"
+- robot_blocksbroken: "<s1>Blöcke abgebaut: <p1><blocks>"
+- robot_robotjobguiname: "&lRoboter Berufe"
+- robot_robotdesignguiname: "&lRoboter Designs"
+- robot_robotguiname: "&lRoboter Menü"
+- robot_prefix: "<s1>[<p1>Roboter<s1>]"
+- robot_renamedrobot: "Der Roboter wurde umbenannt."
+- robot_onlyrobotownererror: "Nur der Besitzer des Roboters kann diesen umbenennen."
+- robot_renametitle: "&rUmbenennen"
+- robot_renamelore: "<s1>Benenne diesen Roboter\n<s1>mit /robotname <name> um."
+- robot_breakrobot: "&rRoboter abbauen"
+- robot_breakrobotlore: "<s1>Klicke hier, um\n<s1>den Roboter zurück in\n<s1>ein Item zu tauschen."
+- robot_revertedrobottoitem: "Dein Roboter wurde wieder zu einem Item."
+
+  #
+  # > Challenges
+- challenge_menutitle: "&lHerausforderungen"
+- challenge_disabled: "&lHerausforderungen sind nicht verfügbar."
+- challenge_youneed: "Du benötigst:"
+- challenge_youstillneed: "Du benötigst noch:"
+- challenge_youget: "Du erhälst:"
+- challenge_amountofitem: "&7» <amount> <item>"
+- challenge_onlyxtimesaday: "Du kannst diese Herausforderung nur <amount> mal am Tag wiederholen."
+- challenge_cantrepeated: "Diese Herausforderung kann nicht wiederholt werden."
+- challenge_level: "&rLevel <level>"
+- challenge_unlocked: "&7Freigeschaltet"
+- challenge_xpneeded: "&rErfahrung benötigt"
+- challenge_xpionlywclvl: "&rSchließe||&rHerausforderungen||&rab, um dieses Level||&rzu erreichen."
+- challenge_repeatable: "&7Wiederholbar [<current>/<maxrepeat>]"
+- challenge_notrepeatable: "&7Nicht wiederholbar."
+- challenge_xp: "&7XP: <amount>"
+- challenge_statssitelore: "&7Erhalte deine aktuelle\n&7Herausforderungsstatistik."
+
+  #
+  # > Challenge names
+- challenge_name_1_1: Kakteenfarmer
+- challenge_name_1_2: Kiesverwender
+- challenge_name_1_3: Moosige Freunde
+- challenge_name_1_4: Waldfreund
+- challenge_name_1_5: Lehmige aussichten
+- challenge_name_1_6: Melonen Magnat
+- challenge_name_1_7: Kürbisbauer
+
+- challenge_name_2_1: Holzfäller
+- challenge_name_2_2: Erdmensch
+- challenge_name_2_3: Grüße aus der Hölle
+- challenge_name_2_4: Pilzzüchter
+- challenge_name_2_5: Krümelige Angelegenheit
+- challenge_name_2_6: Gartenarbeit
+- challenge_name_2_7: Bäckerei
+
+- challenge_name_3_1: Luftminenexperte
+- challenge_name_3_2: Riechendes Geschäft
+- challenge_name_3_3: Korall
+- challenge_name_3_4: Fliegendes Gewässer
+- challenge_name_3_5: Augenexperte
+- challenge_name_3_6: Erfahrungssammler
+- challenge_name_3_7: Heiße Sachen
+
+- challenge_name_4_1: Leuchtende Aussichten
+- challenge_name_4_2: Aufgesattelt
+- challenge_name_4_3: Glas? ERDE!
+- challenge_name_4_4: Seetang Räucherei
+- challenge_name_4_5: Brauereimeister
+- challenge_name_4_6: Tränen des Schreckens
+- challenge_name_4_7: Meister des Transports
+
+- challenge_name_5_1: Geheime Experimente
+- challenge_name_5_2: Geklebt, sieht aus wie echt!
+- challenge_name_5_3: Zzzsssss...
+- challenge_name_5_4: Kopfig
+- challenge_name_5_5: Eins mit den Meerestieren
+- challenge_name_5_6: Dödelmeister
+- challenge_name_5_7: Ausgestopfte Drachen
