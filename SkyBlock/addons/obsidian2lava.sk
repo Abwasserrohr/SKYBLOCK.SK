@@ -1,6 +1,6 @@
 #
 # ==============
-# obsidian2lava.sk v0.0.2
+# obsidian2lava.sk v0.0.3
 # ==============
 # Let users revert obsidian back to lava.
 # ==============
@@ -44,4 +44,7 @@ on block form of obsidian:
   $ thread
   loop all players:
     if distance between loop-player and event-location < 30:
-      send "%{SB::lang::prefix::%{SK::lang::%loop-value%}%}% %{SB::lang::o2lforminfo::%{SK::lang::%loop-value%}%}%" to loop-player
+      set {_lang} to getlangcode(loop-player)
+	  set {_prefix} to getlang("prefix",{_lang})
+	  set {_msg} to getlang("og_o2lforminfo",{_lang})
+      send "%{_prefix}% %{_msg}%" to loop-player
