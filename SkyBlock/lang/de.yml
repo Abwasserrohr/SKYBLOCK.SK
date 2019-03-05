@@ -283,7 +283,7 @@ language:
 - og_currentlvl: "Aktuelles Level:"
 - og_progress: "Fortschritt: <c> / <n> Blöcke"
 - og_chancesforyou: "Erz Generator Chancen für dich:"
-
+- og_o2lforminfo: Du kannst Obsidian wieder zu Lava verwandeln, indem du mit einem leeren Eimer darauf klickst.
   #
   # > Biome change add-on
 - bc_changing: "Ändere das Biom zu: <biome>"
@@ -363,6 +363,8 @@ language:
 
   #
   # > Lootbox
+- lootbox_guiheader: "&o» Loot&lKisten&7"
+- lootbox_itemname: "&fLoot&6&lKiste"
 - lootbox_reward: <s1>Belohnung:<p1>
 - lootbox_gotalootbox: <s1>Du hast eine Lootbox erhalten.
 - lootbox_gotalootboxvar: <s1>Du hast eine Lootbox erhalten. Öffne sie mit /island loot
@@ -380,26 +382,26 @@ language:
 
   #
   # > Parcours
-- parcour_guiheader: "&lParkour"
-- parcour_checkpointreached: Checkpoint erreicht
-- parcour_checkpointinvalid: Ungültiger Checkpoint
-- parcour_finishinvalid: Ungültiges Ziel
-- parcour_itemcheckpointname: "&rCheckpoint"
-- parcour_itemrestartname: "&rNeustart"
-- parcour_itemexitname: "&rBeenden"
-- parcour_parcourunloaded: Der Parkour wurde entladen. Danke fürs spielen.
-- parcour_finishmsg: Glückwunsch! Du hast das Ziel erreicht.
-- parcour_yourtime: "Deine Zeit: <p2>&l<time>"
-- parcour_menucheckpointitemname: "&rCheckpoint Platte"
-- parcour_menufinishitemname: "&rZiel Platte"
-- parcour_menuremoveblockname: "&rEntferne diesen Parkour Block"
-- parcour_menucheckpointitemlore: <s1>Erhalte eine Checkpoint<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
-- parcour_menufinishitemlore: <s1>Erhalte eine Ziel<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
-- parcour_menuremoveblocklore: <s1>Erhalte den Block<nl><s1>als Item zurück.
-- parcour_noinventoryinparcour: Du kannst während dem Parkour keine Inventare öffnen.
-- parcour_parcouritemcheckpoint: "&r<p2>Parkour - Checkpoint"
-- parcour_parcouritemfinish: "&r<p2>Parkour - Ziel"
-- parcour_parcouritemstart: "&r<p2>Parkour - Start"
+- parkour_guiheader: "&lParkour"
+- parkour_checkpointreached: Checkpoint erreicht
+- parkour_checkpointinvalid: Ungültiger Checkpoint
+- parkour_finishinvalid: Ungültiges Ziel
+- parkour_itemcheckpointname: "&rCheckpoint"
+- parkour_itemrestartname: "&rNeustart"
+- parkour_itemexitname: "&rBeenden"
+- parkour_parcourunloaded: Der Parkour wurde entladen. Danke fürs spielen.
+- parkour_finishmsg: Glückwunsch! Du hast das Ziel erreicht.
+- parkour_yourtime: "Deine Zeit: <p2>&l<time>"
+- parkour_menucheckpointitemname: "&rCheckpoint Platte"
+- parkour_menufinishitemname: "&rZiel Platte"
+- parkour_menuremoveblockname: "&rEntferne diesen Parkour Block"
+- parkour_menucheckpointitemlore: <s1>Erhalte eine Checkpoint<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
+- parkour_menufinishitemlore: <s1>Erhalte eine Ziel<nl><s1>Platte zum platzieren.<nl><nl><s1>Funktioniert nur<nl><s1>für diesen Parkour.
+- parkour_menuremoveblocklore: <s1>Erhalte den Block<nl><s1>als Item zurück.
+- parkour_noinventoryinparcour: Du kannst während dem Parkour keine Inventare öffnen.
+- parkour_parcouritemcheckpoint: "&r<p2>Parkour - Checkpoint"
+- parkour_parcouritemfinish: "&r<p2>Parkour - Ziel"
+- parkour_parcouritemstart: "&r<p2>Parkour - Start"
 
   #
   # > Custom Stands addon
