@@ -393,7 +393,11 @@ function orechancesinfo(p:player):
       # > If the chance is higher, set it to 100, since 100 is always.
       if {_chance} is bigger than 100:
         set {_chance} to 100
-      send "%{_prefix}% %{_chance}%%%: %{SB::oregen::%loop-index%}%" to {_player}
+      #
+      # > Send the text with components to allow translateable block names.
+      set {_msg} to newTextComponent("%{_prefix}% %{_chance}%%%: ")
+      {_msg}.addExtra(getTranslatableComponentFromItem({SB::oregen::%loop-index%}))
+      {_player}.sendMessage({_msg})
   #
   # > Prints a spacer
   send "%{SB::config::spacer}%" to {_player}
