@@ -23,15 +23,16 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
     set {_p2} to {_p2}
   set {_uuid} to uuid of {_p}
   set {_uuid2} to uuid of {_p2}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the player wants to set a home:
   if {_action} is "sethome":
     #
     # > If the player has no island, print an error.
     if {SB::player::%{_uuid}%::island::bedrock} is not set:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
     else:
       #
       # > If the returned {_leader} is the {_uuid} of the player,
@@ -73,14 +74,17 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
           #
           # > If the limit is reached, print error and stop.
           if size of {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*} > {_maxhomes}:
-            message "%{_prefix}% %{SB::lang::sethomelmitreached::%{_lang}%}%" to {_p2}
+            set {_msg} to getlang("sethomelmitreached",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p2}
             stop
         #
         # > Limit is not reached, set the new home.
         set {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} to location of {_p}
-        message "%{_prefix}% %{SB::lang::sethomeok::%{_lang}%}%" to {_p2}
+        set {_msg} to getlang("sethomeok",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p2}
       else:
-        message "%{_prefix}% %{SB::lang::ishomecancel::%{_lang}%}%" to {_p2}
+        set {_msg} to getlang("ishomecancel",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p2}
   #
   # > If the player wants to teleport to a home:
   else if {_action} is "home":
@@ -88,7 +92,8 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
     # > If the player has no island, print an error.
     set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
     if {_bedrock} is not set:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
       stop
     #
     # > Get the homes of the island:
@@ -101,13 +106,14 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
     # > Check if the player is allowed to teleport to this home:
     set {_check} to checkislandaccess({_p2},{_bedrock},"Home")
     if {_check} is false:
-      message "%{_prefix}% %{SB::lang::flag::errorfalse::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("flag_errorfalse",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
       stop
 
     #
     # > If there is nothing, print all available homes.
     if {_loc} is not set:
-      set {_msg} to {SB::lang::notfoundhome::%{_lang}%}
+      set {_msg} to getlang("notfoundhome",{_lang})
       loop {SB::island::%{_x}%_%{_y}%_%{_z}%::home::*}:
         add loop-index to {_homes::*}
       replace all "<homes>" with "%{_homes::*}%" in {_msg}
@@ -121,13 +127,14 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
         set {_loc2} to {_loc}
         subtract 1 from y-coord of {_loc2}
         if "%block at {_loc2}%" is "air":
-          broadcast "%{_loc2}%"
-          message "%{_prefix}% %{SB::lang::homewarnair::%{_lang}%}%" to {_p2}
+          set {_msg} to getlang("homewarnair",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p2}
           wait a tick
           make {_p} execute command "/is go"
           stop
       teleport {_p2} to {_loc}
-      message "%{_prefix}% %{SB::lang::tphome::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("tphome",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
       #
       # > If the home of the player is in lava, give the player resistance for 15 seconds to
       # > prevent any damage and to recover from the situation.
@@ -140,7 +147,8 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
     #
     # > Check if the user as an island:
     if {SB::player::%{_uuid}%::island::bedrock} is not set:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
     #
     # > If the user has an island, and he wants to delete a home thats not named "home",
     # > it is deleted.
@@ -166,16 +174,17 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
           set {_z} to z-coord of {_bedrock}
           if {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%} is set:
             delete {SB::island::%{_x}%_%{_y}%_%{_z}%::home::%{_arg1}%}
-            set {_msg} to {SB::lang::homedeleted::%{_lang}%}
+            set {_msg} to getlang("homedeleted",{_lang})
             replace all "<home>" with "%{_arg1}%" in {_msg}
             message "%{_prefix}% %{_msg}%" to {_p2}
           else:
-            set {_msg} to {SB::lang::cantdeletehome::%{_lang}%}
+            set {_msg} to getlang("cantdeletehome",{_lang})
             replace all "<home>" with "%{_arg1}%" in {_msg}
             message "%{_prefix}% %{_msg}%" to {_p2}
         else:
-          message "%{SB::lang::notleader::%{_lang}%}%" to {_p2}
+          set {_msg} to getlang("notleader",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p2}
       else:
-        set {_msg} to {SB::lang::cantdeletehome::%{_lang}%}
+        set {_msg} to getlang("cantdeletehome",{_lang})
         replace all "<home>" with "%{_arg1}%" in {_msg}
         message "%{_prefix}% %{_msg}%" to {_p2}
