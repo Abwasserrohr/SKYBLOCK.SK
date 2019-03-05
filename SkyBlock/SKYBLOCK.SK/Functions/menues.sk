@@ -84,7 +84,7 @@ function biomemenu(p: player):
     loop {SB::config::biome::menuitem::*}:
       set {_item} to {SB::config::biome::menuitem::%loop-index%}
       set {_price} to {SB::config::biome::price::%loop-index%}
-      set {_title} to getlang("biome_lang",{_lang})
+      set {_title} to {SB::config::biome::lang::%{_lang}%::%loop-index%}
       set {_biome} to {SB::config::biome::biomename::%loop-index%}
       #
       # > If the price is over 0, set the price in lore to a price
