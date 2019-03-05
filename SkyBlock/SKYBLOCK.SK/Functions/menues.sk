@@ -24,36 +24,25 @@ function skyblockgui(p: player):
   #
   # > Set frequently used data into local variables.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
   #
   # > Set the items into the menu.
   if {SB::player::%{_uuid}%::island::bedrock} is set:
-    # > The custom syntaxes aren't working right now. But as soon as they are going to work, they replace the functions.
-    #set gui menu item in slot 10 of {_p} to grass named "%{SB::lang::guigrassname::%{_lang}%}%" with lore "%{SB::lang::maingui::guigrasslore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is home""" then close
-    setguiitem({_p},10,grass,1,"%{SB::lang::guigrassname::%{_lang}%}%","%{SB::lang::maingui::guigrasslore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is home""",true)
+    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang}),getlang("maingui_guigrasslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is home""",true)
   else:
-    #set gui menu item in slot 10 of {_p} to grass named "%{SB::lang::guigrassname::%{_lang}%}%" with lore "%{SB::lang::maingui::guigrasscreatelore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is create""" then close
-    setguiitem({_p},10,grass,1,"%{SB::lang::guigrassname::%{_lang}%}%","%{SB::lang::maingui::guigrasscreatelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is create""",true)
-  #set gui menu item in slot 11 of {_p} to experience bottle named "%{SB::lang::guiexpname::%{_lang}%}%" with lore "%{SB::lang::maingui::guiislandinfo::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""" then close
-  #set gui menu item in slot 12 of {_p} to book and quill named "%{SB::lang::guichallangename::%{_lang}%}%" with lore "%{SB::lang::maingui::guichallangelore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is c""" then close
-  #set gui menu item in slot 13 of {_p} to sign named "%{SB::lang::guitopname::%{_lang}%}%" with lore "%{SB::lang::maingui::guitoplore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is top""" then close
-  #set gui menu item in slot 14 of {_p} to ender chest named "%{SB::lang::guirewardsname::%{_lang}%}%" with lore "%{SB::lang::maingui::guirewardslore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/openloot""" then close
-  #set gui menu item in slot 15 of {_p} to end portal frame named "%{SB::lang::guihubname::%{_lang}%}%" with lore "%{SB::lang::maingui::guihublore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is spawn""" then close
-  #set gui menu item in slot 16 of {_p} to jungle leaves named "&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%" with lore "&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%" to execute "biomemenu(""%{_p}%"" parsed as player)" then close
-  set {_customgui} to getcustomhead({SB::lang::language::%{_lang}%},{SB::lang::languageskin::%{_lang}%})
-  #set gui menu item in slot 19 of {_p} to {_customgui} named "&r&6&l%{SB::lang::languages::%{_lang}%}%" with lore "&r%{SB::lang::maingui::guilanglore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is lang""" then close
-  #set gui menu item in slot 20 of {_p} to lever named "&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%" with lore "&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%" to execute "make ""%{_p}%"" parsed as player execute command ""/is flags""" then close
-  setguiitem({_p},11,experience bottle,1,"%{SB::lang::guiexpname::%{_lang}%}%","%{SB::lang::maingui::guiislandinfo::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
+    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang}),getlang("maingui_guigrasscreatelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is create""",true)
+  set {_customgui} to getcustomhead(getlang("language",{_lang}),getlang("languageskin",{_lang}))
+  setguiitem({_p},11,experience bottle,1,getlang("guiexpname",{_lang}),getlang("maingui_guiislandinfo",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
   set {_bnq} to book and quill
-  setguiitem({_p},12,{_bnq},1,"%{SB::lang::guichallangename::%{_lang}%}%","%{SB::lang::maingui::guichallangelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is c""",true)
-  setguiitem({_p},13,floor sign,1,"%{SB::lang::guitopname::%{_lang}%}%","%{SB::lang::maingui::guitoplore::%{_lang}%}%","islandtoplist(""%{_p}%"" parsed as player,""1"",true)",false)
-  setguiitem({_p},14,ender chest,1,"%{SB::lang::guirewardsname::%{_lang}%}%","%{SB::lang::maingui::guirewardslore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/openloot""",true)
-  setguiitem({_p},15,end portal frame,1,"%{SB::lang::guihubname::%{_lang}%}%","%{SB::lang::maingui::guihublore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
-  setguiitem({_p},16,jungle leaves,1,"&r&6&l%{SB::lang::bc::changebiomeheader::%{_lang}%}%","&r%{SB::lang::bc::changebiomemenulore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
-  setguiitem({_p},19,{_customgui},1,"&r&6&l%{SB::lang::languages::%{_lang}%}%","&r%{SB::lang::maingui::guilanglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
-  setguiitem({_p},20,lever,1,"&r&6&l%{SB::lang::flag::flagst::%{_lang}%}%","&r%{SB::lang::maingui::guiflaglore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
-  setguiitem({_p},21,hopper,1,"&r&6&l%{SB::lang::bc::islandupgrades::%{_lang}%}%","&r%{SB::lang::maingui::islandupgradelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
-  setguiitem({_p},22,gold ingot,1,"&r&6%{SB::lang::store::guititle::%{_lang}%}%","&r%{SB::lang::maingui::storelore::%{_lang}%}%","make ""%{_p}%"" parsed as player execute command ""/store""",true)
+  setguiitem({_p},12,{_bnq},1,getlang("guichallangename",{_lang}),getlang("maingui_guichallangelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is c""",true)
+  setguiitem({_p},13,floor sign,1,getlang("guitopname",{_lang}),getlang("maingui_guitoplore",{_lang}),"islandtoplist(""%{_p}%"" parsed as player,""1"",true)",false)
+  setguiitem({_p},14,ender chest,1,getlang("guirewardsname",{_lang}),getlang("maingui_guirewardslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/openloot""",true)
+  setguiitem({_p},15,end portal frame,1,getlang("guihubname",{_lang}),getlang("maingui_guihublore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
+  setguiitem({_p},16,jungle leaves,1,getlang("bc_changebiomeheader",{_lang}),getlang("bc_changebiomemenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
+  setguiitem({_p},19,{_customgui},1,getlang("languages",{_lang}),getlang("maingui_guilanglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
+  setguiitem({_p},20,lever,1,getlang("flag_flagst",{_lang}),getlang("maingui_guiflaglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+  setguiitem({_p},21,hopper,1,getlang("bc_islandupgrades",{_lang}),getlang("maingui_islandupgradelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
+  setguiitem({_p},22,gold ingot,1,getlang("store_guititle",{_lang}),getlang("maingui_storelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/store""",true)
 #
 # > Function - biomemenu:
 # > Arguments:
@@ -68,6 +57,7 @@ function biomemenu(p: player):
   #
   # > Get the uuid of the island leader and check if the player is the leader.
   set {_leader} to getleader({_p})
+  set {_lang} to getlangcode({_p})
   if {_leader} is {_uuid}:
     #
     # > Count how many lines are needed:
@@ -82,7 +72,7 @@ function biomemenu(p: player):
       add 18 to {_slots}
     #
     # > Open a menu to the defined player, with the calculated slots and the translated menu header
-    opengui({_p},{_slots},"&l%{SB::lang::bc::changebiomeheader::%{SK::lang::%{_uuid}%}%}%")
+    opengui({_p},{_slots},getlang("bc_changebiomeheader",{_lang}))
     #
     # > Fill the inventory with empty glass panes to make it look nicer
     loop {_slots} times:
@@ -94,16 +84,16 @@ function biomemenu(p: player):
     loop {SB::config::biome::menuitem::*}:
       set {_item} to {SB::config::biome::menuitem::%loop-index%}
       set {_price} to {SB::config::biome::price::%loop-index%}
-      set {_title} to {SB::config::biome::lang::%{SK::lang::%{_uuid}%}%::%loop-index%}
+      set {_title} to getlang("biome_lang",{_lang})
       set {_biome} to {SB::config::biome::biomename::%loop-index%}
       #
       # > If the price is over 0, set the price in lore to a price
       if {_price} is bigger than 0:
-        set {_pricelore} to {SB::lang::bc::shopprice::%{SK::lang::%{_uuid}%}%}
+        set {_pricelore} to getlang("bc_shopprice",{_lang})
         replace all "<price>" with "%{_price}%" in {_pricelore}
       # > If the price is 0 or lower, tell the player that it is free.
       else:
-        set {_pricelore} to {SB::lang::bc::shopfree::%{SK::lang::%{_uuid}%}%}
+        set {_pricelore} to getlang("bc_shopfree",{_lang})
       setguiitem({_p},{_slot},{_item},1,"&r%{_title}%","&r%{_pricelore}%","buybiomechange(""%{_p}%"" parsed as player,""%{_biome}%"",%{_price}%,""%{_title}%"")",true)
       add 1 to {_slot}
       add 1 to {_loopamount}
@@ -113,8 +103,10 @@ function biomemenu(p: player):
     #
     # > Add back item to allow the player to go back to the previous menu.
     set {_slots} to {_slots} - 1
-    setguiitem({_p},{_slots},{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+    setguiitem({_p},{_slots},{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
   #
   # > If the player is not the owner, tell the player that this is for the island owner only
   else:
-    send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::notleader::%{SK::lang::%{_uuid}%}%}%" to {_p}
+    set {_prefix} to getlang("prefix",{_lang})
+    set {_msg} to getlang("notleader",{_lang})
+    send "%{_prefix}% %{_msg}%" to {_p}
