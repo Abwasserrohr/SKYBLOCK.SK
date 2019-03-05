@@ -20,8 +20,8 @@ function islandmember(p:player,a:text,target:text="1"):
   # > Set frequently used variables.
   set {_uuid} to uuid of {_p}
   set {_site} to {_site} parsed as integer
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If a player is invited to the island.
   if {_a} is "invite":
@@ -44,19 +44,19 @@ function islandmember(p:player,a:text,target:text="1"):
             #
             # > Only invite, if the target player is not already on an island.
             if {SB::player::%{_tuuid}%::island::bedrock} is set:
-              set {_msg} to {SB::lang::alreadyotheris::%{_lang}%}
+              set {_msg} to getlang("alreadyotheris",{_lang})
               replace all "<player>" with "%{_p2}%" in {_msg}
               message "%{_prefix}% %{_msg}%" to {_p}
               stop
             #
             # > If we're here, send the invite message and a clickable tellraw message.
-            set {_uuid2} to uuid of {_target}
-            set {_b} to {SB::lang::gotrequest::%{SK::lang::%{_uuid2}%}%}
-            message "%{_prefix}% %{SB::lang::sentrequest::%{_lang}%}%" to {_p}
+            set {_b} to getlang("gotrequest",getlangcode({_target}))
+            set {_msg} to getlang("sentrequest",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p}
             replace all "<player>" in {_b} with "%{_p}%"
             message "%{_prefix}% %{_b}%" to {_p2}
             set {_uuidp2} to uuid of {_p2}
-            set {_msg} to {SB::lang::clicktojoin::%{SK::lang::%{_uuidp2}%}%}
+            set {_msg} to getlang("clicktojoin",getlangcode({_target}))
             replace all "<player>" with "%{_p}%" in {_msg}
             tellrawmsg1({_p2},{_prefix},{_msg},"/is join %{_p}%")
             set {_cooldown} to {SB::config::invitecooldown}
@@ -71,30 +71,30 @@ function islandmember(p:player,a:text,target:text="1"):
             # > If the request variable is 0.
             if {SB::request::%{_target}%::%{_p}%} is 0:
               delete {SB::request::%{_target}%::%{_p}%}
-              set {_a} to {SB::lang::reqtoleader::%{_lang}%}
-              set {_uuid2} to uuid of {_target}
-              set {_b} to {SB::lang::reqtomember::%{SK::lang::%{_uuid2}%}%}
-              message "%{_prefix}% %{_a}%" to {_p}
-              message "%{_prefix}% %{_b}%" to {_p2}
+              set {_msg} to getlang("reqtoleader",{_lang})
+              set {_msg1} to getlang("reqtomember",getlangcode({_target}))
+              message "%{_prefix}% %{_msg}%" to {_p}
+              message "%{_prefix}% %{_msg1}%" to {_p2}
           #
           # > The player tried to invite himself.
           else:
-            set {_a} to {SB::lang::cantinviteself::%{_lang}%}
-            message "%{_prefix}% %{_a}%" to {_p}
+            set {_msg} to getlang("cantinviteself",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p}
         #
         # > The player tried to invite a offline player.
         else:
-          set {_a} to {SB::lang::playeroff::%{_lang}%}
-          message "%{_prefix}% %{_a}%" to {_p}
+          set {_msg} to getlang("playeroff",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p}
       #
       # > The player is not the leader.
       else:
-        set {_a} to {SB::lang::notleader::%{_lang}%}
-        message "%{_prefix}% %{_a}%" to {_p}
+        set {_msg} to getlang("notleader",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
     #
     # > The player doesn't have a island.
     else:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
   #
   # > If the player wants to join an island.
   if {_a} is "join":
@@ -106,13 +106,14 @@ function islandmember(p:player,a:text,target:text="1"):
     if {_target} is "1":
       loop {SB::request::%{_p}%::*}:
         set {_tplayer} to loop-index parsed as offline player
-        set {_msg} to {SB::lang::clicktojoin::%{_lang}%}
+        set {_msg} to getlang("clicktojoin",{_lang})
         replace all "<player>" with "%{_tplayer}%" in {_msg}
         tellrawmsg1({_p},{_prefix},{_msg},"/is join %{_tplayer}%")
       #
       # > If the size of the request list is 0, the player has no invites.
       if size of {SB::request::%{_p}%::*} is 0:
-        message "%{_prefix}% %{SB::lang::norequest::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("norequest",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
       stop
     #
     # > If a target is a valid player.
@@ -124,12 +125,15 @@ function islandmember(p:player,a:text,target:text="1"):
         # > If the player who wants to join is already on an island,
         # > send a message that the player has to delete/leave his island first.
         if {SB::player::%{_uuid}%::island::bedrock} is set:
-          message "%{_prefix}% %{SB::lang::alreadyis::%{_lang}%}%" to {_p}
+          set {_msg} to getlang("alreadyis",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p}
           set {_check} to getleader({_p})
           if {_check} is {_uuid}:
-            message "%{_prefix}% %{SB::lang::havetodelete::%{_lang}%}%" to {_p}
+            set {_msg} to getlang("havetodelete",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p}
           else:
-            message "%{_prefix}% %{SB::lang::havetoleave::%{_lang}%}%" to {_p}
+            set {_msg} to getlang("havetoleave",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p}
         #
         # > If the island is not on an island and is invited, join the island.
         else:
@@ -141,41 +145,43 @@ function islandmember(p:player,a:text,target:text="1"):
           set {SB::player::%{_uuid}%::island::bedrock} to {SB::player::%{_uuid2}%::island::bedrock}
           delete {SB::request::%{_p}%::%{_target}%}
           make {_p} execute command "/is home"
-          set {_a} to {SB::lang::joinedismember::%{_lang}%}
-          set {_uuid2} to uuid of {_target}
-          set {_b} to {SB::lang::joinedisleader::%{SK::lang::%{_uuid2}%}%}
-          replace all "<arg-2>" with "%{_target}%" in {_a}
-          replace all "<player>" with "%{_p}%" in {_b}
-          message "%{_prefix}% %{_a}%" to {_p}
+          set {_msg} to getlang("joinedismember",{_lang})
+          set {_msg1} to getlang("joinedisleader",getlangcode({_target}))
+          replace all "<arg-2>" with "%{_target}%" in {_msg}
+          replace all "<player>" with "%{_p}%" in {_msg1}
+          message "%{_prefix}% %{_msg}%" to {_p}
           set {_p2} to {_target}
-          message "%{_prefix}% %{_b}%" to {_p2}
+          message "%{_prefix}% %{_msg1}%" to {_p2}
       #
       # > The target island leader has not sent a request.
       else:
-        set {_a} to {SB::lang::norequest::%{_lang}%}
-        message "%{_prefix}% %{_a}%" to {_p}
+        set {_msg} to getlang("norequest",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
     #
     # > The target is not a valid player.
     else:
-      set {_a} to {SB::lang::invitetargeterror::%{_lang}%}
-      message "%{_prefix}% %{_a}%" to {_p}
+      set {_msg} to getlang("invitetargeterror",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
   #
   # > The player wants to leave the island.
   if {_a} is "leave":
     #
     # > Let the player only leave the island if there is a island to leave.
     if {SB::player::%{_uuid}%::island::bedrock} is not set:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       #
       # > Doesn't allow the leader to leave the island.
       set {_leader} to getleader({_p})
       if {_leader} is {_uuid}:
-        message "%{_prefix}% %{SB::lang::leaderleaveinfo::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("leaderleaveinfo",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
       #
       # > If the player is not a leader, the player can leave.
       else:
-        message "%{_prefix}% %{SB::lang::leftis::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("leftis",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
         leaveisland({_p}, "member")
   #
   # > If the player wants to kick the target.
@@ -183,7 +189,8 @@ function islandmember(p:player,a:text,target:text="1"):
     #
     # > To kick someone, the player first needs an island.
     if {SB::player::%{_uuid}%::island::bedrock} is not set:
-      message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("nois",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       #
       # > Check if the executor is the island leader.
@@ -201,22 +208,23 @@ function islandmember(p:player,a:text,target:text="1"):
           loop {SB::island::%{_bedrockloc}%::member::*}:
             if loop-value is uuid of {_target}:
               delete {SB::island::%{_bedrockloc}%::member::%loop-index%}
-              set {_a} to {SB::lang::kickmemberleader::%{_lang}%}
-              set {_b} to {SB::lang::kickmember::%{_lang}%}
-              replace all "<arg-2>" with "%{_target}%" in {_a}
-              replace all "<player>" with "%{_p}%" in {_b}
-              message "%{_prefix}% %{_a}%" to {_p}
+              set {_msg} to getlang("kickmemberleader",{_lang})
+              set {_msg1} to getlang("kickmember",{_lang})
+              replace all "<arg-2>" with "%{_target}%" in {_msg}
+              replace all "<player>" with "%{_p}%" in {_msg1}
+              message "%{_prefix}% %{_msg}%" to {_p}
+              message "%{_prefix}% %{_msg1}%" to {_target}
               leaveisland({_target}, "member")
               stop
-          set {_a} to {SB::lang::plnotfound::%{_lang}%}
-          replace all "<player>" with {_target} in {_a}
-          message "%{_prefix}% %{_a}%" to {_p}
+          set {_msg} to getlang("plnotfound",{_lang})
+          replace all "<player>" with {_target} in {_msg}
+          message "%{_prefix}% %{_msg}%" to {_p}
         #
         # > The target is not a valid player.
         else:
-          set {_a} to {SB::lang::invitetargeterror::%{_lang}%}
-          message "%{_prefix}% %{_a}%" to {_p}
+          set {_msg} to getlang("invitetargeterror",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p}
       #
       # > The player is not the leader and not allowed to kick players.
       else:
-        actionload({_p},{SB::lang::noperm::%{_lang}%})
+        actionload({_p},getlang("noperm",{_lang}))
