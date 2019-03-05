@@ -28,21 +28,21 @@ function skyblockgui(p: player):
   #
   # > Set the items into the menu.
   if {SB::player::%{_uuid}%::island::bedrock} is set:
-    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang}),getlang("maingui_guigrasslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is home""",true)
+    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang},"&r&6&l"),getlang("maingui_guigrasslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is home""",true)
   else:
-    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang}),getlang("maingui_guigrasscreatelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is create""",true)
-  set {_customgui} to getcustomhead(getlang("language",{_lang}),getlang("languageskin",{_lang}))
-  setguiitem({_p},11,experience bottle,1,getlang("guiexpname",{_lang}),getlang("maingui_guiislandinfo",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
+    setguiitem({_p},10,grass,1,getlang("guigrassname",{_lang},"&r&6&l"),getlang("maingui_guigrasscreatelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is create""",true)
+  set {_customgui} to getcustomhead(getlang("language",{_lang},"&r&6&l"),getlang("languageskin",{_lang}))
+  setguiitem({_p},11,experience bottle,1,getlang("guiexpname",{_lang},"&r&6&l"),getlang("maingui_guiislandinfo",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is info %{_p}%""",true)
   set {_bnq} to book and quill
-  setguiitem({_p},12,{_bnq},1,getlang("guichallangename",{_lang}),getlang("maingui_guichallangelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is c""",true)
-  setguiitem({_p},13,floor sign,1,getlang("guitopname",{_lang}),getlang("maingui_guitoplore",{_lang}),"islandtoplist(""%{_p}%"" parsed as player,""1"",true)",false)
-  setguiitem({_p},14,ender chest,1,getlang("guirewardsname",{_lang}),getlang("maingui_guirewardslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/openloot""",true)
-  setguiitem({_p},15,end portal frame,1,getlang("guihubname",{_lang}),getlang("maingui_guihublore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
-  setguiitem({_p},16,jungle leaves,1,getlang("bc_changebiomeheader",{_lang}),getlang("bc_changebiomemenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
-  setguiitem({_p},19,{_customgui},1,getlang("languages",{_lang}),getlang("maingui_guilanglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
-  setguiitem({_p},20,lever,1,getlang("flag_flagst",{_lang}),getlang("maingui_guiflaglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
-  setguiitem({_p},21,hopper,1,getlang("bc_islandupgrades",{_lang}),getlang("maingui_islandupgradelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
-  setguiitem({_p},22,gold ingot,1,getlang("store_guititle",{_lang}),getlang("maingui_storelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/store""",true)
+  setguiitem({_p},12,{_bnq},1,getlang("guichallangename",{_lang},"&r&6&l"),getlang("maingui_guichallangelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is c""",true)
+  setguiitem({_p},13,floor sign,1,getlang("guitopname",{_lang},"&r&6&l"),getlang("maingui_guitoplore",{_lang}),"islandtoplist(""%{_p}%"" parsed as player,""1"",true)",false)
+  setguiitem({_p},14,ender chest,1,getlang("guirewardsname",{_lang},"&r&6&l"),getlang("maingui_guirewardslore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/openloot""",true)
+  setguiitem({_p},15,end portal frame,1,getlang("guihubname",{_lang},"&r&6&l"),getlang("maingui_guihublore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is spawn""",true)
+  setguiitem({_p},16,jungle leaves,1,getlang("bc_changebiomeheader",{_lang},"&r&6&l"),getlang("bc_changebiomemenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is biome""",true)
+  setguiitem({_p},19,{_customgui},1,getlang("languages",{_lang},"&r&6&l"),getlang("maingui_guilanglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is lang""",true)
+  setguiitem({_p},20,lever,1,getlang("flag_flagst",{_lang},"&r&6&l"),getlang("maingui_guiflaglore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+  setguiitem({_p},21,hopper,1,getlang("bc_islandupgrades",{_lang},"&r&6&l"),getlang("maingui_islandupgradelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is upgrades""",true)
+  setguiitem({_p},22,gold ingot,1,getlang("store_guititle",{_lang},"&r&6&l"),getlang("maingui_storelore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/store""",true)
 #
 # > Function - biomemenu:
 # > Arguments:
