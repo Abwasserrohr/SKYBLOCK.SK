@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.3
+# storage.sk v0.0.4
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -97,9 +97,11 @@ on place of {@item}:
         if {@preventhopperbelow} is true:
           cancel event
           set {_uuid} to uuid of {_p}
-          set {_lang} to {SK::lang::%{_uuid}%}
-          if {SB::lang::storage::hopperbelowdisabled::%{_lang}%} is set:
-            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::hopperbelowdisabled::%{_lang}%}%"
+          set {_lang} to getlangcode({_p})
+          if getlang("storage_hopperbelowdisabled",{_lang}) is set:
+            set {_msg} to getlang("storage_hopperbelowdisabled",{_lang})
+            set {_prefix} to getlang("prefix",{_lang})
+            message "%{_prefix}% %{_msg}%"
           else:
             message "{@prefix} {@hopperbelowdisabled}"
           stop
@@ -137,9 +139,11 @@ on break of {@item}:
         # > send a error and cancel the event.
         if {_savedamount} is not 0:
           set {_uuid} to uuid of {_p}
-          set {_lang} to {SK::lang::%{_uuid}%}
-          if {SB::lang::storage::onlybreakempty::%{_lang}%} is set:
-            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::onlybreakempty::%{_lang}%}%"
+          set {_lang} to getlangcode({_p})
+          if getlang("storage_onlybreakempty",{_lang}) is set:
+            set {_msg} to getlang("storage_onlybreakempty",{_lang})
+            set {_prefix} to getlang("prefix",{_lang})
+            message "%{_prefix}% %{_msg}%"
           else:
             message "{@prefix} {@onlybreakempty}"
           cancel event
@@ -166,9 +170,11 @@ on place of hopper:
       if {@preventhopperbelow} is true:
         cancel event
         set {_uuid} to uuid of {_p}
-        set {_lang} to {SK::lang::%{_uuid}%}
-        if {SB::lang::storage::hopperbelowdisabled::%{_lang}%} is set:
-          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::hopperbelowdisabled::%{_lang}%}%"
+        set {_lang} to getlangcode({_p})
+        if getlang("storage_hopperbelowdisabled",{_lang}) is set:
+          set {_msg} to getlang("storage_hopperbelowdisabled",{_lang})
+          set {_prefix} to getlang("prefix",{_lang})
+          message "%{_prefix}% %{_msg}%"
         else:
           message "{@prefix} {@hopperbelowdisabled}"
 #
@@ -354,9 +360,9 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
   #
   # > Open hopper menu to the player.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  if {SB::lang::storage::menutitle::%{_lang}%} is set:
-    opengui({_p},5,"%{SB::lang::storage::menutitle::%{_lang}%}%",hopper inventory)
+  set {_lang} to getlangcode({_p})
+  if getlang("storage_menutitle",{_lang}) is set:
+    opengui({_p},5,getlang("storage_menutitle",{_lang}),hopper inventory)
   else:
     opengui({_p},5,"{@menutitle}",hopper inventory)
   #
@@ -435,10 +441,10 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     # > Create menu which allows the player to get items out of the storage unit using the getstorageitem function and
     # > store more items directly using the storestorageitem function.
     set {_uuid} to uuid of {_p}
-    set {_lang} to {SK::lang::%{_uuid}%}
+    set {_lang} to getlangcode({_p})
     setguiitem({_p},1,north facing chest,1,"","","getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)||getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%,true)",false)
-    if {SB::lang::storage::storeinmenu::%{_lang}%} is set:
-      setguiitem({_p},3,north facing chest,1,"&r%{SB::lang::storage::storeintitle::%{_lang}%}%","%{SB::lang::storage::storeinmenu::%{_lang}%}%","storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
+    if getlang("storage_storeinmenu",{_lang}) is set:
+      setguiitem({_p},3,north facing chest,1,getlang("storage_storeinmenu",{_lang}),getlang("storage_storeinmenu",{_lang}),"storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
     else:
       setguiitem({_p},3,north facing chest,1,"&r{@storeintitle}","{@storeinmenu}","storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
     #
@@ -447,8 +453,8 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     #
     # > The lore of the item, which displays the current supply of items.
     # > Also displays the maximum stack amount which the player gets per click.
-    if {SB::lang::storage::getoutmenu::%{_lang}%} is set:
-      set {_lore} to {SB::lang::storage::getoutmenu::%{_lang}%}
+    if getlang("storage_getoutmenu",{_lang}) is set:
+      set {_lore} to getlang("storage_getoutmenu",{_lang})
     else:
       set {_lore} to "{@getoutmenu}"
     replace all "<max>" with "%{_max}%" in {_lore}
@@ -486,8 +492,8 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
         set {_max} to {_item}.getMaxStackSize()
         if {_startcheck} <= {_max}:
           set {_max} to {_startcheck}
-        if {SB::lang::storage::getoutmenu::%{_lang}%} is set:
-          set {_lore} to {SB::lang::storage::getoutmenu::%{_lang}%}
+        if getlang("storage_getoutmenu",{_lang}) is set:
+          set {_lore} to getlang("storage_getoutmenu",{_lang})
         else:
           set {_lore} to "{@getoutmenu}"
         replace all "<max>" with "%{_max}%" in {_lore}
@@ -556,9 +562,11 @@ function getstorageitem(p:player,x:number,y:number,z:number,mass:boolean=false):
             openstoragemenu({_p},{_inv},{_loc})
             stop
           set {_uuid} to uuid of {_p}
-          set {_lang} to {SK::lang::%{_uuid}%}
-          if {SB::lang::storage::notenoughinvspace::%{_lang}%} is set:
-            message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::storage::notenoughinvspace::%{_lang}%}%" to {_p}
+          set {_lang} to getlangcode({_p})
+          if getlang("storage_notenoughinvspace",{_lang}) is set:
+            set {_prefix} to getlang("prefix",{_lang})
+            set {_msg} to getlang("storage_notenoughinvspace",{_lang})
+            message "%{_prefix}% %{_msg}%" to {_p}
           else:
             message "{@prefix} {@notenoughinvspace}" to {_p}
 
