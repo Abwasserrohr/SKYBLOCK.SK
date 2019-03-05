@@ -139,8 +139,8 @@ function openchallenges(p:player,page:number=0):
       else:
         #
         # > The level has to be unlocked first, add a specific lore for that and make it unclickable.
-		set {_lore1} to getlang("challenge_xpneeded",{_lang})
-		set {_lore2} to getlang("challenge_xpionlywclvl",{_lang})
+        set {_lore1} to getlang("challenge_xpneeded",{_lang})
+        set {_lore2} to getlang("challenge_xpionlywclvl",{_lang})
         set {_lore} to "%{_lore1}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%loop-number%}%||%{SB::config::guispacer}%||%{_lore2}%"
         replace all "||" with "\n" in {_lore}
         setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
