@@ -41,7 +41,7 @@ on load:
   set {SB::config::challenges::c::1::1::repeatreward} to "1-xp,1-sand"
   set {SB::config::challenges::c::1::1::item} to sand block
   set {SB::config::challenges::c::1::1::repeat} to true
-  set {SB::config::challenges::c::1::1::repeatsperday} to 35
+  set {SB::config::challenges::c::1::1::repeatsperday} to 150
   set {SB::config::challenges::c::1::1::customfunction} to ""
   set {SB::config::challenges::c::1::1::customreward} to ""
 
@@ -69,10 +69,10 @@ on load:
 
   set {SB::config::challenges::c::1::5::needed} to "64-sugar cane"
   set {SB::config::challenges::c::1::5::reward} to "10-xp,20-clay block"
-  set {SB::config::challenges::c::1::5::repeatreward} to "1-xp,1-clay block"
+  set {SB::config::challenges::c::1::5::repeatreward} to "1-xp,5-clay block"
   set {SB::config::challenges::c::1::5::item} to clay block
   set {SB::config::challenges::c::1::5::repeat} to true
-  set {SB::config::challenges::c::1::5::repeatsperday} to 15
+  set {SB::config::challenges::c::1::5::repeatsperday} to 45
 
   set {SB::config::challenges::c::1::6::needed} to "128-melon slice"
   set {SB::config::challenges::c::1::6::reward} to "15-xp,3-sand"
@@ -233,7 +233,21 @@ on load:
   set {SB::config::challenges::c::4::7::repeatreward} to "200-xp,1-elytra"
   set {SB::config::challenges::c::4::7::item} to elytra
   set {SB::config::challenges::c::4::7::repeat} to true
-  set {SB::config::challenges::c::4::7::repeatsperday} to 5    
+  set {SB::config::challenges::c::4::7::repeatsperday} to 5
+
+  set {SB::config::challenges::c::4::8::needed} to "64-sand,2-oak boat"
+  set {SB::config::challenges::c::4::8::reward} to "50-xp,24-prismarine shards,24-prismarine crystals"
+  set {SB::config::challenges::c::4::8::repeatreward} to "25-xp,12-prismarine shards,12-prismarine crystals"
+  set {SB::config::challenges::c::4::8::item} to prismarine crystals
+  set {SB::config::challenges::c::4::8::repeat} to true
+  set {SB::config::challenges::c::4::8::repeatsperday} to 10
+
+  set {SB::config::challenges::c::4::9::needed} to "1-water bucket,640-white wool"
+  set {SB::config::challenges::c::4::9::reward} to "50-xp,2-sponge"
+  set {SB::config::challenges::c::4::9::repeatreward} to "25-xp,1-sponge"
+  set {SB::config::challenges::c::4::9::item} to sponge
+  set {SB::config::challenges::c::4::9::repeat} to true
+  set {SB::config::challenges::c::4::9::repeatsperday} to 5
 
   set {SB::config::challenges::c::5::1::needed} to "1728-rotten flesh"
   set {SB::config::challenges::c::5::1::reward} to "150-xp,1-zombie head,3-diamond ore"
