@@ -231,22 +231,22 @@ language:
   
   #
   # > Flag titles
-- flag_explosiont: Explosionen
-- flag_buttont: Knöpfe & Hebel
-- flag_doort: Türen
-- flag_mob-damaget: Monster
-- flag_animal-damaget: Tiere
-- flag_interact-vehiclet: Vehikel
-- flag_publichomet: Zuhause
-- flag_buildt: Bauen und abbauen
-- flag_chestt: Blockinventare
-- flag_entityclickt: Entities
-- flag_redstonet: Redstone
-- flag_jetbootst: JetBoots
-- flag_flagst: "&lFlags"
-- flag_foreignt: Flags für Fremde
-- flag_trustedt: Flags für Vertraute
-- flag_membert: Flags für Mitglieder
+- flag_explosiont: "Explosionen"
+- flag_buttont: "&rKnöpfe & Hebel"
+- flag_doort: "&rTüren"
+- flag_mob-damaget: "&rMonster"
+- flag_animal-damaget: "&rTiere"
+- flag_interact-vehiclet: "&rVehikel"
+- flag_publichomet: "&rZuhause"
+- flag_buildt: "&rBauen und abbauen"
+- flag_chestt: "&rBlockinventare"
+- flag_entityclickt: "&rEntities"
+- flag_redstonet: "&rRedstone"
+- flag_jetbootst: "&rJetBoots"
+- flag_flagst: "Flags"
+- flag_foreignt: "Flags für Fremde"
+- flag_trustedt: "Flags für Vertraute"
+- flag_membert: "Flags für Mitglieder"
 
   #
   # > Flag descriptions
@@ -288,8 +288,8 @@ language:
   # > Biome change add-on
 - bc_changing: "Ändere das Biom zu: <biome>"
 - bc_done: Biomänderung abgeschlossen.
-- bc_changebiomeheader: Biom ändern
-- bc_changebiomemenulore: "&rÄndere dein Biom"
+- bc_changebiomeheader: "Biom ändern"
+- bc_changebiomemenulore: "<s1>Ändere dein Biom"
 - bc_shopprice: "Preis: <price>"
 - bc_shopfree: Kostenlos
 - bc_notenoughmoney: Du hast nicht genug Geld dafür.
@@ -298,13 +298,13 @@ language:
   #
   # > Island upgrades
 - bc_islandsizeshop: Vergrößert deine Insel<nl>auf <size>x<size> Blöcke.
-- bc_islandsizetitle: Inselgröße
-- bc_islandhoppertitle: Trichter
-- bc_islandhometitle: Zuhause
+- bc_islandsizetitle: "&rInselgröße"
+- bc_islandhoppertitle: "&rTrichter"
+- bc_islandhometitle: "&rZuhause"
 - bc_islandhoppershop: Erlaubt dir insgesamt<nl><size> Trichter zu setzen.
 - bc_islandhopperlimitinfo: Du kannst nur <size> Trichter setzen.
 - bc_islandhomeshop: Erlaubt dir insgesamt<nl><size> Homes zu setzen.
-- bc_islandupgrades: Insel Erweiterungen
+- bc_islandupgrades: "Insel Erweiterungen"
 - upgradeavailable: "<s1>Die Insel ist nicht vollständig erweitert, erweitere die Insel, um auch hier bauen zu können: <p1>/island upgrades"
 
   #
