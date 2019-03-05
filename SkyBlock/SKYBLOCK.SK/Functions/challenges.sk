@@ -32,11 +32,13 @@ function openchallenges(p:player,page:number=0):
   #
   # > Get local varibales we need, like uuid and language.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the challenges are disabled, print error and stop here.
   if {SB::config::usechallenges} is not true:
-    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::challenge::disabled::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("challenge_disabled",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Get the date and check, if the day is over. If the day is over,
@@ -48,8 +50,8 @@ function openchallenges(p:player,page:number=0):
     delete {SB::crepeats::*}
   #
   # > Open the menu to the player if it is not already opened.
-  if name of {_p}'s current inventory is not {SB::lang::challenge::menutitle::%{_lang}%}:
-    opengui({_p},54,"%{SB::lang::challenge::menutitle::%{_lang}%}%")
+  if name of {_p}'s current inventory is not getlang("challenge_menutitle",{_lang}):
+    opengui({_p},54,getlang("challenge_menutitle",{_lang}))
   loop 54 times:
     set slot loop-number - 1 of {_p}'s current inventory to 1 of {_backgrounditem}
     protectslot({_p},loop-number - 1)
@@ -94,8 +96,8 @@ function openchallenges(p:player,page:number=0):
     set {_finalchallenges::%{_tdata::1}%} to {_tdata::2}
   #
   # > Add challenge status head.
-  set {_lore} to {SB::lang::challenge::statssitelore::%{_lang}%}
-  set {_name} to {SB::robot::stats::%{_lang}%}
+  set {_lore} to getlang("challenge_statssitelore",{_lang})
+  set {_name} to getlang("robot_stats",{_lang})
   if {_page} is 0:
     #
     # > Add status data if the page is 0. Here are no challenges rendered.
@@ -103,7 +105,7 @@ function openchallenges(p:player,page:number=0):
     # > added more, like a store where XP can be exchanged in something.
     set {_item} to getcustomhead("yellowexclamation", "%{_lvlheadactive::exclamation}%")
     setguiitem({_p},45,{_item},1,"&r%{_name}%","&r%{_lore}%"," ",false)
-    set {_xplang} to {SB::lang::challenge::xp::%{_lang}%}
+    set {_xplang} to getlang("challenge_xp",{_lang})
     replace all "<amount>" with "%{_xp}%" in {_xplang}
     setguiitem({_p},22,{_p}'s skull,1,"&r%{SB::robot::stats::%{_lang}%}%","%{_xplang}%"," ",false)
   else:
@@ -112,14 +114,14 @@ function openchallenges(p:player,page:number=0):
   #
   # > Display all 5 challenge level heads and add click triggers for them.
   loop 5 times:
-    set {_lvltranslation} to {SB::lang::challenge::level::%{_lang}%}
+    set {_lvltranslation} to getlang("challenge_level",{_lang})
     replace all "<level>" with "%loop-number%" in {_lvltranslation}
     set {_slot} to 46 + loop-number
     if {_page} is loop-number:
       #
       # > Get a custom head to display it for the current level (selected level).
       set {_item} to getcustomhead("yellowint%loop-number%", "%{_lvlheadactive::%loop-number%}%")
-      set {_lore} to "%{SB::lang::challenge::unlocked::%{_lang}%}%"
+      set {_lore} to getlang("challenge_unlocked",{_lang})
       setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
       #
       # > Render the challenge items in with the renderchallengeitems function.
@@ -131,18 +133,20 @@ function openchallenges(p:player,page:number=0):
       if {_currentlevel} >= loop-number:
         #
         # > The level is unlocked, make it clickable and name it properly.
-        set {_lore} to "%{SB::lang::challenge::unlocked::%{_lang}%}%"
+        set {_lore} to getlang("challenge_unlocked",{_lang})
         replace all "||" with "\n" in {_lore}
         setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%","openchallenges(""%{_p}%"" parsed as player,%loop-number%)",false)
       else:
         #
         # > The level has to be unlocked first, add a specific lore for that and make it unclickable.
-        set {_lore} to "%{SB::lang::challenge::xpneeded::%{_lang}%}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%loop-number%}%||%{SB::config::guispacer}%||%{SB::lang::challenge::xpionlywclvl::%{_lang}%}%"
+		set {_lore1} to getlang("challenge_xpneeded",{_lang})
+		set {_lore2} to getlang("challenge_xpionlywclvl",{_lang})
+        set {_lore} to "%{_lore1}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%loop-number%}%||%{SB::config::guispacer}%||%{_lore2}%"
         replace all "||" with "\n" in {_lore}
         setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
   #
   # > Set a item to go back to the previous menu.
-  setguiitem({_p},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+  setguiitem({_p},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
 
 #
 # > Function - renderchallengeitems
@@ -173,7 +177,7 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
   #
   # > Get local varibales we need, like uuid and language.
   set {_uuid} to uuid of {_player}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_player})
   loop 21 times:
     add 1 to {_loops}
     if {_loops} is 8:
@@ -191,15 +195,17 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
     set {_needed::*} to {_needed} split at ","
     #
     # > Loop trough all needed items and create a lore compatible text:
-    set {_loreneeded} to "%{SB::lang::challenge::youneed::%{_lang}%}%"
+    set {_loreneeded} to getlang("challenge_youneed",{_lang})
     loop {_needed::*}:
       set {_tmp::*} to loop-value-2 split at "-"
       set {_loreneeded} to "%{_loreneeded}%\n"
-      set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+      set {_m} to getlang("challenge_amountofitem",{_lang})
       replace all "<amount>" with "%{_tmp::1}%" in {_m}
       if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
         replace all "<item>" with "%{_tmp::2}%" in {_m}
       else:
+        #
+        # > Once 1.14 is out, this part is going to be replaced with chat components. 
         replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
       set {_loreneeded} to "%{_loreneeded}%%{_m}%"
       #
@@ -218,7 +224,8 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
       #
       # > Split the rewards string to get a list of rewards.
       set {_reward::*} to {_reward} split at ","
-      set {_lorereward} to "\n%{SB::lang::challenge::youget::%{_lang}%}%"
+      set {_msg} to getlang("challenge_youget",{_lang})
+      set {_lorereward} to "\n%{_msg}%"
       #
       # > Add custom reward text to reward lore.
       if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::customreward} is set:
@@ -234,7 +241,7 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         set {_lorereward} to "%{_lorereward}%\n"
         #
         # > Get the translation and replace placeholders.
-        set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+        set {_m} to getlang("challenge_amountofitem",{_lang})
         replace all "<amount>" with "%{_tmp::1}%" in {_m}
         if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
           replace all "<item>" with "%{_tmp::2}%" in {_m}
@@ -245,7 +252,7 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
         set {_loreend} to "\n%{SB::config::guispacer}%\n"
         if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeat} is true:
-          set {_m} to {SB::lang::challenge::repeatable::%{_lang}%}
+          set {_m} to getlang("challenge_repeatable",{_lang})
           set {_c} to 0
           set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
           set {_max} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeatsperday}
@@ -263,14 +270,14 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         #
         # > If repeats are disabled for the challenge:
         else:
-          set {_loreend} to "%{_loreend}%%{SB::lang::challenge::notrepeatable::%{_lang}%}%"
+          set {_msg} to getlang("challenge_notrepeatable",{_lang})
+          set {_loreend} to "%{_loreend}%%{_msg}%"
           #
           # > Repeats for this challenge are disabled, if it has been done, make it glowing
           if {_done} is true:
             set {_item} to glowing {_item}
       # > Currently, custom syntax isn't always working as intended, use functions until they work better.
-      #set gui menu item in slot {_slot} of {_p} to {_item} named "&r%{SB::lang::challenge::name::%{_page}%::%{_challangelvlpart}%::%{_lang}%}%" with lore "&r%{_loreneeded}%%{_lorereward}%%{_loreend}%" to execute "solvechallenge(""%{_p}%"" parsed as player,""%{_challengelvl}%::%{_challangelvlpart}%"")"
-      setguiitem({_player},{_slot},{_item},1,"&r%{SB::lang::challenge::name::%{_page}%::%{_challangelvlpart}%::%{_lang}%}%","&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
+      setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang}),"&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
     #
 	# > The challenge level part loop ends here, add 1 to the slot and challenge level part.
     add 1 to {_slot}
@@ -294,8 +301,8 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
   set {_cid} to {_challenge}
   replace all "::" with "" in {_cid}
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
   set {_x} to x-coord of {_bedrock}
   set {_y} to y-coord of {_bedrock}
@@ -319,9 +326,9 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
         #
         # > If there are more repeats than allowed, print error and stop it.
         if {SB::crepeats::%{_uuid}%-%{_cid}%} >= {_repeatsperday}:
-          set {_m} to {SB::lang::challenge::onlyxtimesaday::%{_lang}%}
-          replace all "<amount>" with "%{_repeatsperday}%" in {_m}
-          message "%{_prefix}% %{_m}%" to {_p}
+          set {_msg} to getlang("challenge_onlyxtimesaday",{_lang})
+          replace all "<amount>" with "%{_repeatsperday}%" in {_msg}
+          message "%{_prefix}% %{_msg}%" to {_p}
           close {_p}'s inventory
           stop
   #
@@ -330,7 +337,8 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
     #
     # > If it is not allowed to repeat this challenge, print error and stop.
     if {_repeat} is false:
-      message "%{_prefix}% %{SB::lang::challenge::cantrepeated::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("challenge_cantrepeated",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
       close {_p}'s inventory
       stop
     #
@@ -358,20 +366,21 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
       #
       # >
       if {_incomplete} is not set:
-        message "%{_prefix}% %{SB::lang::challenge::youstillneed::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("challenge_youstillneed",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
       set {_amount} to number of {_tmp::2} in {_p}'s inventory
-      set {_m} to {SB::lang::challenge::amountofitem::%{_lang}%}
+      set {_msg} to getlang("challenge_amountofitem",{_lang})
       #
       # > Replace the amount of the item, which is already in the inventory and
       # > the amount, that is needed to complete (solve) this challange.
-      replace all "<amount>" with "%{_tmp::1} - {_amount}%" in {_m}
+      replace all "<amount>" with "%{_tmp::1} - {_amount}%" in {_msg}
       if {SB::lang::item::%{_tmp::3}%::%{_lang}%} is not set:
-        replace all "<item>" with "%{_tmp::3}%" in {_m}
+        replace all "<item>" with "%{_tmp::3}%" in {_msg}
       else:
-        replace all "<item>" with "%{SB::lang::item::%{_tmp::3}%::%{_lang}%}%" in {_m}
+        replace all "<item>" with "%{SB::lang::item::%{_tmp::3}%::%{_lang}%}%" in {_msg}
       #
       # > Print error to player that there is something missing to complete this challenge.
-      message "%{_prefix}% %{_m}%" to {_p}
+      message "%{_prefix}% %{_msg}%" to {_p}
       set {_incomplete} to true
   #
   # > If the player does not have everything in the inventory, stop here.
