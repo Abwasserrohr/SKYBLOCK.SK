@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.2
+# recovery.sk v0.0.3
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -63,11 +63,11 @@ function openrecoverymenu(p:player):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
   #
   # > Open the recovery menu.
   if {SB::lang::recovery::header::%{_lang}%} is set:
-    opengui({_p},54,"%{SB::lang::recovery::header::%{_lang}%}%")
+    opengui({_p},54,getlang("recovery_header",{_lang}))
   else:
     opengui({_p},54,{@r_header})
   set {_slot} to 0
@@ -91,13 +91,14 @@ function openrecoverymenu(p:player):
       set {_price} to {@default_price}
     #
     # > Create the lore and replace the placeholders.
-    if {SB::lang::recovery::guiitemlore::%{_lang}%} is set:
-      set {_lore} to {SB::lang::recovery::guiitemlore::%{_lang}%}
+    if getlang("recovery_guiitemlore",{_lang}) is set:
+      set {_lore} to getlang("recovery_guiitemlore",{_lang})
     else:          
       set {_lore} to "{@r_gui_lore}"
     if {_price} is 0:
-      if {SB::lang::recovery::free::%{_lang}%} is set:
-        replace all "<price>" with "%{SB::lang::recovery::free::%{_lang}%}%" in {_lore}
+      if getlang("recovery_free",{_lang}) is set:
+        set {_msg} to getlang("recovery_free",{_lang})
+        replace all "<price>" with "%{_msg}%" in {_lore}
       else:
         replace all "<price>" with "{@r_free}" in {_lore}
     else:
@@ -105,8 +106,8 @@ function openrecoverymenu(p:player):
     replace all "<date>" with "%{_now}%" in {_lore}
     #
     # > Set the items into the menu.
-    if {SB::lang::recovery::guiitemname::%{_lang}%} is set:
-      setguiitem({_p},{_slot},north facing chest,1,"%{SB::lang::recovery::guiitemname::%{_lang}%}%",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+    if getlang("recovery_guiitemname",{_lang}) is set:
+      setguiitem({_p},{_slot},north facing chest,1,getlang("recovery_guiitemname",{_lang}),{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
     else:
       setguiitem({_p},{_slot},north facing chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
     add 1 to {_slot}
@@ -124,15 +125,17 @@ function buyrecoverychest(p:player,invid:text,price:integer):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   set {_item} to north facing chest
   set line 1 of lore of {_item} to "&eRecovery"
   set line 2 of lore of {_item} to "&7%{_invid}%"
   #
   # > Only continue, if the player has enough money.
   if {_p}'s balance <= {_price}:
-    if {SB::lang::bc::notenoughmoney::%{_lang}%} is set:
-      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+    if getlang("bc_notenoughmoney",{_lang}) is set:
+      set {_msg} to getlang("bc_notenoughmoney",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       message "{@r_prefix} {@r_not_enough_money}" to {_p}
     stop
@@ -149,15 +152,17 @@ function buyrecoverychest(p:player,invid:text,price:integer):
     remove {_price} from {_p}'s balance
     #
     # > Send success message to player.
-    if {SB::lang::recovery::placetoget::%{_lang}%} is set:
-      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::placetoget::%{_lang}%}%" to {_p}
+    if getlang("recovery_placetoget",{_lang}) is set:
+      set {_msg} to getlang("recovery_placetoget",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       message "{@r_prefix} {@r_place_to_get}" to {_p}
   #
   # > Player has not enough space, send error to player.
   else:
-    if {SB::lang::recovery::notenoughspace::%{_lang}%} is set:
-      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::notenoughspace::%{_lang}%}%" to {_p}
+    if getlang("recovery_notenoughspace",{_lang}) is set:
+      set {_msg} to getlang("recovery_notenoughspace",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       message "{@r_prefix} {@r_not_enough_space}" to {_p}
 
@@ -238,8 +243,11 @@ on place of any chest:
         # > stop and inform that there is more space needed.
         if size of {SR::recovery::inv::%{_invid}%::*} > 27:
           if block above event-location is not air:
-            if {SB::lang::recovery::inventoryspaceneeded::%{_lang}%} is set:
-              message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::inventoryspaceneeded::%{_lang}%}%" to {_p}
+            set {_lang} to getlangcode({_p})
+            if getlang("recovery_inventoryspaceneeded",{_lang}) is set:
+              set {_prefix} to getlang("prefix",{_lang})
+              set {_msg} to getlang("recovery_inventoryspaceneeded",{_lang})
+              message "%{_prefix}% %{_msg}%" to {_p}
             else:
               message "{@r_prefix} {@r_spaceneeded}"
             cancel event
@@ -277,7 +285,7 @@ on death of player:
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of player
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode(player)
   #
   # > Create a unique uuid, check that it is actually unique.
   while {_s} is not set:
@@ -310,7 +318,9 @@ on death of player:
   #remove all 1 xp from drops
   #
   # > Send information how to get the recovery in the chat.
-  if {SB::lang::recovery::recoveredinfo::%{_lang}%} is set:
-    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::recovery::recoveredinfo::%{_lang}%}%" to player
+  if getlang("recovery_recoveredinfo",{_lang}) is set:
+    set {_prefix} to getlang("prefix",{_lang})
+    set {_msg} to getlang("recovery_recoveredinfo",{_lang})
+    message "%{_prefix}% %{_msg}%" to player
   else:
     message "{@r_prefix} {@r_recovered_info}" to player
