@@ -42,6 +42,7 @@ function loadlanguage():
       replace all "<nl1>" with " %nl%" in {_loopvalue::2}
       replace all "<nl>" with "\n" in {_loopvalue::2}
       replace all "<p1>" with "%{SB::config::color::primary::1}%" in {_loopvalue::2}
+      replace all "<guispacer>" with "%{SB::config::guispacer}%" in {_loopvalue::2}
       replace all "<p2>" with "%{SB::config::color::primary::2}%" in {_loopvalue::2}
       replace all "<s1>" with "%{SB::config::color::secondary::2}%" in {_loopvalue::2}
       replace all "<b1>" with "%{SB::config::color::background::1}%" in {_loopvalue::2}
