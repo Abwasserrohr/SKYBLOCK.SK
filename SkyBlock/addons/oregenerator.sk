@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.8
+# oregenerator.sk v0.0.9
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -91,28 +91,43 @@ on load:
 
   add 0.2 to {SB::oregenc::*}
   add diamond ore to {SB::oregen::*}
+  
   add 1 to {SB::oregenc::*}
   add glowstone to {SB::oregen::*}
+  
   add 1 to {SB::oregenc::*}
   add nether quartz ore to {SB::oregen::*}
+  
   add 2 to {SB::oregenc::*}
   add redstone ore to {SB::oregen::*}
+  
   add 2 to {SB::oregenc::*}
   add lapis ore to {SB::oregen::*}
+  
   add 2 to {SB::oregenc::*}
   add gold ore to {SB::oregen::*}
+  
   add 3 to {SB::oregenc::*}
   add emerald ore to {SB::oregen::*}
+  
+  add 2 to {SB::oregenc::*}
+  add any terracotta to {SB::oregen::*}
+  
   add 4 to {SB::oregenc::*}
   add iron ore to {SB::oregen::*}
+  
   add 4 to {SB::oregenc::*}
   add coal ore to {SB::oregen::*}
+  
   add 5 to {SB::oregenc::*}
   add granite to {SB::oregen::*}
+  
   add 5 to {SB::oregenc::*}
   add andesite to {SB::oregen::*}
+  
   add 5 to {SB::oregenc::*}
   add diorite to {SB::oregen::*}
+  
   add 100 to {SB::oregenc::*}
   add stone to {SB::oregen::*}
 
