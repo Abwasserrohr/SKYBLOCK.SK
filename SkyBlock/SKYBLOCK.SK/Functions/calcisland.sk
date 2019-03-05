@@ -131,6 +131,9 @@ function calcisland(p:offline player):
   set {_z} to z-coord of {_bedrock}
   set {SB::island::%{_x}%_%{_y}%_%{_z}%::level} to {_level}
   #
+  # > Delete the block list again to clear it out from the ram.
+  delete {_bxp::*}
+  #
   # > Set level to a list of all island levels.
   set {SB::islvl::%{_x}%_%{_y}%_%{_z}%} to {_level}
   #
