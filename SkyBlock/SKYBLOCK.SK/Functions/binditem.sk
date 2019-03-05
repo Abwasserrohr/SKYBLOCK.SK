@@ -54,7 +54,8 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
     # > Set the item lore to check later that it is island bound. It is also,
     # > marked as island bound.
     set {_uuid} to uuid of {_p}
-    set lore of {_block} to "&r%{SB::lang::islandbound::%{SK::lang::%{_uuid}%}%}%||&7%{_x}%_%{_z}%"
+    set {_lore} to getlang("islandbound",getlangcode({_p}))
+    set lore of {_block} to "&r%{_lore}%||&7%{_x}%_%{_z}%"
   #
   # > Now drop the item, either dirt or the block at the location.
   # > If the island is over the specified level, the item doesn't have a lore.
@@ -103,6 +104,7 @@ function bindcheck(i:item, p:player) :: boolean:
     else:
     #
     # > If the block is bound to another island, print error and return false.
-      set {_uuid} to uuid of {_p}
-      message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::boundtoanotherisland::%{SK::lang::%{_uuid}%}%}%" to {_p}
+      set {_prefix} to getlang("prefix",getlangcode({_p}))
+      set {_msg} to getlang("boundtoanotherisland",getlangcode({_p}))
+      message "%{_prefix}% %{_msg}%" to {_p}
       return false
