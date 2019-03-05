@@ -13,46 +13,45 @@
 function islandhelp(p:player,site:text="1"):
   #
   # > Set frequently used variables.
-  set {_uuid} to uuid of {_p}
   set {_site} to {_site} parsed as integer
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the player defined a not existing site, send error and stop.
   if {_site} > 5:
-    message "%{_prefix}% %{SB::lang::helpsiteerror::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""helpsiteerror"",{_lang})%" to {_p}
     stop
   if {_site} < 1:
-    message "%{_prefix}% %{SB::lang::helpsiteerror::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""helpsiteerror"",{_lang})%" to {_p}
     stop
   #
   # > Send the player the help depending on the defined site.
   send "%{SB::config::spacer}%" to {_p}
   if {_site} is 1:
-    message "%{_prefix}% %{SB::lang::iscreate::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isdelete::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isteleport::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::issethome::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isteleportgo::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""iscreate"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isdelete"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isteleport"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""issethome"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isteleportgo"",{_lang})%" to {_p}
   else if {_site} is 2:
-    message "%{_prefix}% %{SB::lang::islevel::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::istop::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isinvite::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::iskick::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isjoin::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""islevel"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""istop"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isinvite"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""iskick"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isjoin"",{_lang})%" to {_p}
   else if {_site} is 3:
-    message "%{_prefix}% %{SB::lang::isleave::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isgui::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isspawn::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isore::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::isgen::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""isleave"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isgui"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isspawn"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isore"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""isgen"",{_lang})%" to {_p}
   else if {_site} is 4:
-    message "%{_prefix}% %{SB::lang::trustadd::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::trustremove::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::trustlist::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::helpwarp::%{_lang}%}%" to {_p}
-    message "%{_prefix}% %{SB::lang::helpsetwarp::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""trustadd"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""trustremove"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""trustlist"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""helpwarp"",{_lang})%" to {_p}
+    message "%{_prefix}% %getlang(""helpsetwarp"",{_lang})%" to {_p}
   else if {_site} is 5:
-    message "%{_prefix}% %{SB::lang::helpdelwarp::%{_lang}%}%" to {_p}
-  send "%{_prefix}% &7%{SB::lang::helps2::%{_lang}%}%: %{_site}%/5 - %{SB::lang::helpsiteerror::%{_lang}%}%" to {_p}
+    message "%{_prefix}% %getlang(""helpdelwarp"",{_lang})%" to {_p}
+  send "%{_prefix}% &7%getlang(""helps2"",{_lang})%: %{_site}%/5 - %getlang(""helpsiteerror"",{_lang})%" to {_p}
   send "%{SB::config::spacer}%" to {_p}
