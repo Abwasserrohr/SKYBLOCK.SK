@@ -9,8 +9,8 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
   trigger:
     #
     # > Get the language code of the player and set prefix for messages
-    set {_lang} to {SK::lang::%uuid of player%}
-    set {_prefix} to {SB::lang::prefix::%{_lang}%}
+    set {_lang} to getlangcode(player)
+    set {_prefix} to getlang("prefix",{_lang})
     #
     # > Argument: "go" ("home" OR "tp")
     # > Teleports the user to the defined player
@@ -37,12 +37,12 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
           #
           # > Send a message depending if something has been added or removed.
           if arg-3 is "add":
-            set {_msg} to {SB::lang::admincmd-addedchallengexp::%{_lang}%}
+            set {_msg} to getlang("admincmd_addedchallengexp",{_lang})
             replace all "<amount>" with "%{_changed}%" in {_msg}
             replace all "<player>" with "%{_target}%" in {_msg}
             message "%{_prefix}% %{_msg}%"
           else if arg-3 is "remove":
-            set {_msg} to {SB::lang::admincmd-removedchallengexp::%{_lang}%}
+            set {_msg} to getlang("admincmd_removedchallengexp",{_lang})
             replace all "<amount>" with "%{_changed}%" in {_msg}
             replace all "<player>" with "%{_target}%" in {_msg}
             message "%{_prefix}% %{_msg}%"
@@ -59,7 +59,8 @@ command /islandadmin [<text>] [<text>] [<text>] [<text>] [<text>]:
         set {_player} to arg-3 parsed as offline player
         set {_uuid} to uuid of {_player}
         if {SB::player::%{_uuid}%::island::bedrock} is set:
-          message "%{_prefix}% %{SB::lang::isadmin::fcalc::%{SK::lang::%uuid of player%}%}%"
+          set {_msg} to getlang("isadmin_fcalc",{_lang})
+          message "%{_prefix}% %{_msg}%"
           $ thread
           calcisland({_player})
 
@@ -150,7 +151,8 @@ command /island [<text>] [<text=1>] [<text>]:
   trigger:
     #
     # > Set some frequently used variables.
-    set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
+    set {_lang} to getlangcode(player)
+    set {_prefix} to getlang("prefix",{_lang})
     #
     # > If the player has no argument set, open the skyblock menu.
     if arg-1 is not set:
@@ -162,9 +164,11 @@ command /island [<text>] [<text=1>] [<text>]:
     # > skript reload command for the SkyBlock folder.
     if arg-1 is "reload":
       if player has permission "%{SB::config::buildpermission}%":
-        message "%{_prefix}% %{SB::lang::reloadstarted::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("reloadstarted",{_lang})
+        message "%{_prefix}% %{_msg}%"
         reloadskyblocksk(1)
-        message "%{_prefix}% %{SB::lang::reloadsuccess::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("reloadsuccess",{_lang})
+        message "%{_prefix}% %{_msg}%"
 		
     #
     # > Argument "create"
@@ -204,12 +208,14 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Teleports the player to the bedrock of the island.
     else if arg-1 is "go":
       if {SB::player::%uuid of player%::island::bedrock} is not set:
-        message "%{_prefix}% %{SB::lang::nois::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("nois",{_lang})
+        message "%{_prefix}% %{_msg}%"
       else:
         set {_loc} to {SB::player::%uuid of player%::island::bedrock}
         add 1 to y-coordinate of {_loc}
         teleport player to {_loc}
-        message "%{_prefix}% %{SB::lang::tpis::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("tpis",{_lang})
+        message "%{_prefix}% %{_msg}%"
     #
     # > Argument: "delete" or "remove"
     # > Actions:
@@ -219,24 +225,28 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Only call deleteisland function, if player has an island and confirmed the deletation
     # > of the island.
       if {SB::player::%uuid of player%::island::bedrock} is not set:
-        message "%{_prefix}% %{SB::lang::cantleave::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("cantleave",{_lang})
+        message "%{_prefix}% %{_msg}%"
       else:
         if arg-2 is "2":
           set {_uuid} to uuid of player
           set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
           set {_bedrockloc} to "%x-coord of {_bedrockloc}%_%y-coord of {_bedrockloc}%_%z-coord of {_bedrockloc}%"
           if difference between {SB::island::%{_bedrockloc}%::created} and now < {SB::config::deletecooldown}:
-            message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
+            set {_msg} to getlang("cooldown",{_lang})
+            message "%{_prefix}% %{_msg}%"
           else:
             deleteisland(player)
         else:
-          tellrawmsg1(player,{_prefix},{SB::lang::isdeleteqestion::%{SK::lang::%uuid of player%}%},"/is delete 2")
+          set {_msg} to getlang("isdeleteqestion",{_lang})
+          tellrawmsg1(player,{_prefix},{_msg},"/is delete 2")
 
     else if arg-1 is "calc":
       #
       # > Only call the calcisland function if the last calculation is some time ago (loger than cooldown time).
       if difference between {SB::calcdown::%uuid of player%} and now < {SB::config::calccooldown}:
-        message "%{_prefix}% %{SB::lang::cooldown::%{SK::lang::%uuid of player%}%}%"
+        set {_msg} to getlang("cooldown",{_lang})
+        message "%{_prefix}% %{_msg}%"
       else:
         set {SB::calcdown::%uuid of player%} to now
         $ thread
