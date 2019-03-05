@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.5
+# jetboots.sk v0.0.6
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -9,6 +9,7 @@
 # > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
 # > actionbar.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/raw/master/SkyBlock/SKYBLOCK.SK/Functions/actionbar.sk
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
 # ==============
 # How to use it:
 # ==============
@@ -69,7 +70,9 @@ on craft:
     if {SB::lang::jetboots::fi::%{_lang}%} is not set:
       message {@fillinfo}
     else:
-      message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%"
+      set {_prefix} to getlang("prefix",{_lang})
+      set {_msg} to getlang("jetboots_fi",{_lang})
+      message "%{_prefix}% %{_msg}%"
 
 #
 # > Import Java classes from bukkit to use particle effects for the JetBoots in the jetparticle function.
@@ -116,6 +119,7 @@ on quit:
 # > Actions:
 # > If the player is joining and wearing jetboots, call jetboots function.
 on join:
+  wait 5 seconds
   if line 1 of lore of player's boots is {@item_name}:
     jetboots(player)
 
@@ -148,6 +152,10 @@ function jetboots(player:player):
   # > Make the player fly at a specified fly speed.
   set {_player}'s flight mode to true
   set {_player}'s fly speed to {@flyspeed}
+  #
+  # > Create a prefix, since it is needed frequently.
+  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > Set the metadata value "jetboots" of the player to the current timestamp,
   # > if the timestamp changes, running while loops are going to stop.
@@ -182,17 +190,18 @@ function jetboots(player:player):
       if {_lore} <= 0:
         #
         # > If the lore is 0 or lower, print info to the player and stop flying.
-        set {_lang} to {SK::lang::%{_uuid}%}
         #
         # > Print predefined messages, if no translation is available.
-        if {SB::lang::jetboots::ei::%{_lang}%} is not set:
+        if getlang("jetboots_ei",{_lang}) is not set:
           message {@emptyinfo} to {_player}
         else:
-          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::ei::%{_lang}%}%" to {_player}
+          set {_msg} to getlang("jetboots_ei",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_player}
         if {SB::lang::jetboots::fi::%{_lang}%} is not set:
           message {@fillinfo} to {_player}
         else:
-          message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::fi::%{_lang}%}%" to {_player}
+          set {_msg} to getlang("jetboots_fi",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_player}
         set {_player}'s flight mode to false
         set {_player}'s fly speed to 0.08
         delete metadata value "jetboots" of {_player}
@@ -211,8 +220,9 @@ function jetboots(player:player):
       if {_allowed} is false:
         set {_player}'s flight mode to false
         set {_lang} to {SK::lang::%{_uuid}%}
-        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::flag::errorfalse::%{_lang}%}%" to {_player}
-        actionbar({_player},"&4%{SB::lang::flag::errorfalse::%{_lang}%}%")
+        set {_msg} to getlang("flag_errorfalse",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_player}
+        actionbar({_player},"&4%{_msg}%")
         wait 1 tick
         set {_player}'s flight mode to true
       #
@@ -260,7 +270,9 @@ on rightclick holding coal:
       set {_lang} to {SK::lang::%uuid of player%}
       #
       # > Print predefined message, if no translation is available.
-      if {SB::lang::jetboots::li::%{_lang}%} is not set:
+      if getlang("jetboots_li",{_lang}) is not set:
         message {@loadedinfo}
       else:
-        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::jetboots::li::%{_lang}%}%"
+        set {_prefix} to getlang("prefix",{_lang})
+        set {_msg} to getlang("jetboots_li",{_lang})
+        message "%{_prefix}% %{_msg}%"
