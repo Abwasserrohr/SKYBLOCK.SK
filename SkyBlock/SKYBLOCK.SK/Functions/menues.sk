@@ -72,7 +72,7 @@ function biomemenu(p: player):
       add 18 to {_slots}
     #
     # > Open a menu to the defined player, with the calculated slots and the translated menu header
-    opengui({_p},{_slots},getlang("bc_changebiomeheader",{_lang}))
+    opengui({_p},{_slots},getlang("bc_changebiomeheader",{_lang},"&l"))
     #
     # > Fill the inventory with empty glass panes to make it look nicer
     loop {_slots} times:
