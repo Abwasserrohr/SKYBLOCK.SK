@@ -19,9 +19,11 @@ import:
 # > the changelanguage function is executed.
 function selectlanguage(p:player):
   set {_uuid} to uuid of {_p}
+  set {_lang1} to getlangcode({_p})
   #
   # > Open the language menu with 9 slots.
-  opengui({_p},27,"&l%{SB::lang::languages::%{SK::lang::%{_uuid}%}%}%")
+  set {_languages} to getlang("languages",{_lang1})
+  opengui({_p},27,"&l%{_languages}%")
   #
   # > Empty slots are shown as black stained glass.
   loop 27 times:
@@ -41,8 +43,8 @@ function selectlanguage(p:player):
       set {_l::*} to {_fname} split at "."
 	  #
 	  # > Get language and skin data from language variable.
-      set {_lang} to {SB::lang::language::%{_l::1}%}
-      set {_skin} to {SB::lang::languageskin::%{_l::1}%}
+      set {_lang} to getlang("language",{_l::1})
+      set {_skin} to getlang("languageskin",{_l::1})
 	  #
 	  # Create a custom head for this language.
       set {_head} to getcustomhead("%{_lang}%", "%{_skin}%","ce87a23b-3d55-437f-b0b0-4b3509db2a34")
@@ -52,7 +54,7 @@ function selectlanguage(p:player):
       #
       # > Add 1 to {_slot}, that way, every language has it's unique slot.
       add 1 to {_slot}
-  setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+  setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang1}),getlang("guibacktopreviousmenulore",{_lang1}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
 
 # > Function - changelanguage:
 # > Parameter:
@@ -62,6 +64,8 @@ function selectlanguage(p:player):
 # > If successful, the user gets a message in the new language that the change was successful.
 function changelanguage(p:player,lang:text):
   set {_uuid} to uuid of {_p}
-  if {SB::lang::language::%{_lang}%} is set:
+  if getlang("language",{_lang}) is set:
     set {SK::lang::%{_uuid}%} to {_lang}
-    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::changedlang::%{_lang}%}%" to {_p}
+    set {_prefix} to getlang("prefix",{_lang})
+    set {_msg} to getlang("changedlang",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
