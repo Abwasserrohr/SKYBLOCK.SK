@@ -277,7 +277,7 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
           if {_done} is true:
             set {_item} to glowing {_item}
       # > Currently, custom syntax isn't always working as intended, use functions until they work better.
-      setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang}),"&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
+      setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r"),"&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
     #
 	# > The challenge level part loop ends here, add 1 to the slot and challenge level part.
     add 1 to {_slot}
