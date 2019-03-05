@@ -292,8 +292,8 @@ on respawn:
     set hunger of player to {SB::hunger::%player%}
 
 on damage:
-  set {_prefix} to {SB::lang::prefix::%{Language::%attacker%}%}
-  set {_a} to {SB::lang::nopvp::%{Language::%attacker%}%}
+  set {_prefix} to getlang("prefix",getlangcode(attacker))
+  set {_a} to getlang("nopvp",getlangcode(attacker))
   if victim is a player:
     if {SB::invincible::%victim%} is set:
       cancel event
@@ -425,15 +425,16 @@ on script unload:
 on join:
   set {SB::invincible::%player%} to 1
   wait a tick
-  #todo check for default language in config.sk if there is "custom" choosen, let the user choose, if there is "api" choosen, use a api or database which has to be added.
-  if {SK::lang::%uuid of player%} is not set:
+  if getlangcode(player) is not set:
     set {SK::lang::%uuid of player%} to "de"
   set {_uuid} to uuid of player
   if {Leave.%{_uuid}%} is set:
     delete {Leave.%uuid of player%}
     leaveisland(player, "member")
     make player execute "/is leave"
-    send "%{SB::lang::deletekickmember::%{SK::lang::%uuid of player%}%}%"
+    set {_prefix} to getlang("prefix",getlangcode(player))
+    set {_msg} to getlang("deletekickmember",getlangcode(player))
+    send "%{_prefix}% %{_msg}%"
     
   #
   # > Set the last activity of the island the player is on to now
@@ -451,11 +452,11 @@ on join:
 # > Actions:
 # > Force the language "de" and kick the player if the island deletation process is ongoing.
 on connect:
-  set {SK::lang::%uuid of player%} to "de"
-  set {_prefix} to {SB::lang::prefix::%{SK::lang::%uuid of player%}%}
   if {SB::ISDELPROCESS} is set:
     if player doesn't have permission "%{SB::config::buildpermission}%":
-      kick player due to "%{_prefix}% %{SB::lang::delismsg::%{SK::lang::%uuid of player%}%}%"
+      set {_prefix} to getlang("prefix",getlangcode(player))
+      set {_msg} to getlang("delismsg",getlangcode(player))
+      kick player due to "%{_prefix}% %{_msg}%"
 #
 # > Event - teleport
 # > Triggered on a teleportation
