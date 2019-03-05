@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.5
+# customarmorstands.sk v0.0.6
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -9,8 +9,7 @@
 # > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
 # > skript-mirror - https://github.com/btk5h/skript-mirror/releases
-# > gui.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/gui.sk
-# > robots.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/robots.sk
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
 # ==============
 # How to use it:
 # ==============
@@ -303,37 +302,37 @@ function opencustomstandmenu(player:player):
   #
   # > The translation is available, use it.
   else:
-    set {_headerlang} to {SB::lang::cs::guiheader::%{_lang}%}
-    set {_headlang} to {SB::lang::cs::head::%{_lang}%}
-    set {_bodylang} to {SB::lang::cs::body::%{_lang}%}
-    set {_legslang} to {SB::lang::cs::legs::%{_lang}%}
-    set {_feetlang} to {SB::lang::cs::feet::%{_lang}%}
-    set {_rightleglang} to {SB::lang::cs::rightleg::%{_lang}%}
-    set {_leftleglang} to {SB::lang::cs::leftleg::%{_lang}%}
-    set {_rightarmlang} to {SB::lang::cs::rightarm::%{_lang}%}
-    set {_leftarmlang} to {SB::lang::cs::leftarm::%{_lang}%}
-    set {_xlang} to {SB::lang::cs::xcoord::%{_lang}%}
-    set {_ylang} to {SB::lang::cs::ycoord::%{_lang}%}
-    set {_zlang} to {SB::lang::cs::zcoord::%{_lang}%}
-    set {_placeslotlang} to {SB::lang::cs::placeitemslot::%{_lang}%}
-    set {_togglesizelang} to {SB::lang::cs::togglesize::%{_lang}%}
-    set {_togglesizelorelang} to {SB::lang::cs::togglesizelore::%{_lang}%}
-    set {_togglevisibilitylang} to {SB::lang::cs::togglevisibility::%{_lang}%}
-    set {_togglevisibilitylorelang} to {SB::lang::cs::togglevisibilitylore::%{_lang}%}
-    set {_toggleglowlang} to {SB::lang::cs::toggleglow::%{_lang}%}
-    set {_toggleglowlorelang} to {SB::lang::cs::toggleglowlore::%{_lang}%}
-    set {_togglebaseplatelang} to {SB::lang::cs::togglebaseplate::%{_lang}%}
-    set {_togglebaseplatelorelang} to {SB::lang::cs::togglebaseplatelore::%{_lang}%}
-    set {_togglearmslang} to {SB::lang::cs::togglearms::%{_lang}%}
-    set {_togglearmslorelang} to {SB::lang::cs::togglearmslore::%{_lang}%}
-    set {_changedirectionlang} to {SB::lang::cs::changedirection::%{_lang}%}
-    set {_changedirectionlorelang} to {SB::lang::cs::changedirectionlore::%{_lang}%}
-    set {_copyarmorstandlang} to {SB::lang::cs::copyarmorstand::%{_lang}%}
-    set {_copyarmorstandlorelang} to {SB::lang::cs::copyarmorstandlore::%{_lang}%}
-    set {_togglenamelang} to {SB::lang::cs::togglename::%{_lang}%}
-    set {_togglenamelorelang} to {SB::lang::cs::togglenamelore::%{_lang}%}
-    set {_removearmorstandlang} to {SB::lang::cs::removearmorstand::%{_lang}%}
-    set {_removearmorstandlorelang} to {SB::lang::cs::removearmorstandlore::%{_lang}%}
+    set {_headerlang} to getlang("cs_guiheader",{_lang})
+    set {_headlang} to getlang("cs_head",{_lang})
+    set {_bodylang} to getlang("cs_body",{_lang})
+    set {_legslang} to getlang("cs_legs",{_lang})
+    set {_feetlang} to getlang("cs_feet",{_lang})
+    set {_rightleglang} to getlang("cs_rightleg",{_lang})
+    set {_leftleglang} to getlang("cs_leftleg",{_lang})
+    set {_rightarmlang} to getlang("cs_rightarm",{_lang})
+    set {_leftarmlang} to getlang("cs_leftarm",{_lang})
+    set {_xlang} to getlang("cs_xcoord",{_lang})
+    set {_ylang} to getlang("cs_ycoord",{_lang})
+    set {_zlang} to getlang("cs_zcoord",{_lang})
+    set {_placeslotlang} to getlang("cs_placeitemslot",{_lang})
+    set {_togglesizelang} to getlang("cs_togglesize",{_lang})
+    set {_togglesizelorelang} to getlang("cs_togglesizelore",{_lang})
+    set {_togglevisibilitylang} to getlang("cs_togglevisibility",{_lang})
+    set {_togglevisibilitylorelang} to getlang("cs_togglevisibilitylore",{_lang})
+    set {_toggleglowlang} to getlang("cs_toggleglow",{_lang})
+    set {_toggleglowlorelang} to getlang("cs_toggleglowlore",{_lang})
+    set {_togglebaseplatelang} to getlang("cs_togglebaseplate",{_lang})
+    set {_togglebaseplatelorelang} to getlang("cs_togglebaseplatelore",{_lang})
+    set {_togglearmslang} to getlang("cs_togglearms",{_lang})
+    set {_togglearmslorelang} to getlang("cs_togglearmslore",{_lang})
+    set {_changedirectionlang} to getlang("cs_changedirection",{_lang})
+    set {_changedirectionlorelang} to getlang("cs_changedirectionlore",{_lang})
+    set {_copyarmorstandlang} to getlang("cs_copyarmorstand",{_lang})
+    set {_copyarmorstandlorelang} to getlang("cs_copyarmorstandlore",{_lang})
+    set {_togglenamelang} to getlang("cs_togglename",{_lang})
+    set {_togglenamelorelang} to getlang("cs_togglenamelore",{_lang})
+    set {_removearmorstandlang} to getlang("cs_removearmorstand",{_lang})
+    set {_removearmorstandlorelang} to getlang("cs_removearmorstandlore",{_lang})
   #
   # > Only open the inventory, if it hasn't been opened.
   if name of {_player}'s current inventory is not {_headerlang}:
