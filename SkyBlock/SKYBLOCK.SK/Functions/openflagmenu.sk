@@ -23,16 +23,16 @@ function openflagmenu(p:player,type:text):
   # > If there is no type set, open a menu where the player can select, on which type of
   # > player the flags should apply. The player can select between foreign, trusted and island member.
   if {_type} is "":
-    opengui({_p},27,getlang("flag_flagst",{_lang}),chest inventory)
+    opengui({_p},27,getlang("flag_flagst",{_lang},"&l"),chest inventory)
     #
     # > Empty slots are shown as black stained glass.
     loop 27 times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
       protectslot({_p},loop-number - 1)
 
-    setguiitem({_p},11,farmland,1,getlang("flag_foreignt",{_lang}),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},13,grass path,1,getlang("flag_trustedt",{_lang}),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},15,grass,1,getlang("flag_membert",{_lang}),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    setguiitem({_p},11,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},13,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},15,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
     #
     # > This item allows the user to go into the previous menu.
     setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
@@ -58,7 +58,7 @@ function openflagmenu(p:player,type:text):
     set {_slots} to 54
     #
     # > Open the flags menu.
-    set {_menuheader} to getlang("flag_%{_type}%t",{_lang})
+    set {_menuheader} to getlang("flag_%{_type}%t",{_lang},"&l")
     opengui({_p},{_slots},"&l%{_menuheader}%")
     #
     # > Empty slots are shown as black stained glass.
