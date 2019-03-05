@@ -200,7 +200,7 @@ language:
 - maingui_guilanglore: <s1>Ändere deine Sprache.
 - maingui_guiflaglore: <s1>Ändere die Flags deiner Insel.
 - maingui_islandupgradelore: <s1>Erweitere deine Insel.
-- maingui_storelore: <s1>Öffnet den Laden.
+- maingui_storelore: <s1>Klicke hier, um<nl><s1>zum Shop zu kommen.
 - guibacktopreviousmenulore: <s1>Bringt dich zurück<nl><s1>zum übergeordneten Menü.
   
   #
@@ -569,6 +569,8 @@ language:
 - challenge_name_4_5: Brauereimeister
 - challenge_name_4_6: Tränen des Schreckens
 - challenge_name_4_7: Meister des Transports
+- challenge_name_4_8: Tiefsee Abenteuer
+- challenge_name_4_9: Schwammiges Erlebnis
 
 - challenge_name_5_1: Geheime Experimente
 - challenge_name_5_2: Geklebt, sieht aus wie echt!
