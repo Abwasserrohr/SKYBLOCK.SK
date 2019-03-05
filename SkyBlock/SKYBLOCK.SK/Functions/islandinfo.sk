@@ -16,9 +16,8 @@ function islandinfo(p2:player,p:text="1"):
   #
   # > Set local variables to frequently used variables.
   set {_p} to {_p} parsed as offline player
-  set {_p2uuid} to uuid of {_p2}
-  set {_lang} to {SK::lang::%{_p2uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p2})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the player parameter is not valid, take the island the player is currently on.
   if {_p} is "1":
@@ -30,7 +29,8 @@ function islandinfo(p2:player,p:text="1"):
       # > Prints the defined spacers and a message that the island could not be found:
       #
       message "%{SB::config::spacer}%" to {_p2}
-      message "%{_prefix}% %{SB::lang::isinfonotfound::%{_lang}%}%" to {_p2}
+      set {_msg} to getlang("isinfonotfound",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p2}
       message "%{SB::config::spacer}%" to {_p2}
       stop
   else:
@@ -72,34 +72,34 @@ function islandinfo(p2:player,p:text="1"):
   message "%{SB::config::spacer}%" to {_p2}
   #
   # > Prints the header:
-  message "%{_prefix}% %{SB::lang::isinfo::%{_lang}%}%" to {_p2}
+  message "%{_prefix}% %getlang(""isinfo"",{_lang})%" to {_p2}
   #
   # > Prints the leader of the island:
-  message "%{_prefix}% %{SB::lang::isleader::%{_lang}%}% %{_uuid}%" to {_p2}
+  message "%{_prefix}% %getlang(""isleader"",{_lang})% %{_uuid}%" to {_p2}
   #
   # > Prints the members, if there is at least one member:
   if size of {_member::*} is not 0:
-    message "%{_prefix}% %{SB::lang::ismember::%{_lang}%}% %{_member::*}%" to {_p2}
+    message "%{_prefix}% %getlang(""ismember"",{_lang})% %{_member::*}%" to {_p2}
   #
   # > Prints the trusted player, if there is at least one trusted player:
   if size of {_trusted::*} is not 0:
-    message "%{_prefix}% %{SB::lang::istrusted::%{_lang}%}% %{_trusted::*}%" to {_p2}
+    message "%{_prefix}% %getlang(""istrusted"",{_lang})% %{_trusted::*}%" to {_p2}
   #
   # > Prints the island level:
-  message "%{_prefix}% %{SB::lang::isinfolevel::%{_lang}%}% %{_level}%" to {_p2}
+  message "%{_prefix}% %getlang(""isinfolevel"",{_lang})% %{_level}%" to {_p2}
   #
   # > Prints the biome:
-  message "%{_prefix}% %{SB::lang::isinfobiome::%{_lang}%}% %{_biome}%" to {_p2}
+  message "%{_prefix}% %getlang(""isinfobiome"",{_lang})% %{_biome}%" to {_p2}
   #
   # > Prints the creation date of the island:
-  message "%{_prefix}% %{SB::lang::iscreated::%{_lang}%}% %{_created}%" to {_p2}
+  message "%{_prefix}% %getlang(""iscreated"",{_lang})% %{_created}%" to {_p2}
   #
   # > Prints the last active date of the island:
-  message "%{_prefix}% %{SB::lang::islastactive::%{_lang}%}% %{_lastactive}%" to {_p2}
+  message "%{_prefix}% %getlang(""islastactive"",{_lang})% %{_lastactive}%" to {_p2}
   #
   # > Prints island upgrades
-  message "%{_prefix}% %{SB::lang::isupgrades::%{_lang}%}%" to {_p2}
-  message "%{_prefix}% | %{SB::lang::bc::islandhometitle::%{_lang}%}%%{_homelevel}% | %{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_hopperlevel}% | %{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_sizelevel}% |" to {_p2}
+  message "%{_prefix}% %getlang(""isupgrades"",{_lang})%" to {_p2}
+  message "%{_prefix}% | %getlang(""bc_islandhometitle"",{_lang})%%{_homelevel}% | %getlang(""bc_islandhoppertitle"",{_lang})%%{_hopperlevel}% | %getlang(""bc_islandsizetitle"",{_lang})%%{_sizelevel}% |" to {_p2}
   #
   # > Prints the defined spacer:
   message "%{SB::config::spacer}%" to {_p2}
