@@ -140,9 +140,10 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
 function checkforupgrades(player:player,bedrock:location):
   set {_allowed} to checkislandaccess({_player},{_bedrock},"build",air,5)
   if {_allowed} is true:
-    set {_uuid} to uuid of {_player}
-    set {_lang} to {SK::lang::%{_uuid}%}
-    message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::upgradeavailable::%{_lang}%}%" to {_player}
+    set {_lang} to getlangcode({_player})
+    set {_prefix} to getlang("prefix",{_lang})
+    set {_msg} to getlang("upgradeavailable",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_player}
 
 #
 # > Function - getcurrentbedrock:

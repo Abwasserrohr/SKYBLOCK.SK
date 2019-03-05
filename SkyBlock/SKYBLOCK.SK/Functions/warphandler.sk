@@ -14,8 +14,8 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
   #
   # > Get the uuid of the player, the current language code and also the chat prefix:
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   
   #
   # > If the function has been called to teleport:
@@ -61,11 +61,13 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
       else:
         #
         # > There is no warp, print error message.
-        message "%{_prefix}% %{SB::lang::warpnotfound::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("warpnotfound",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
     else:
       #
       # > There is no such player, print error message.
-      message "%{_prefix}% %{SB::lang::notfoundplayer::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("notfoundplayer",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
   if {_action} is "setwarp":
     #
     # > If the returned {_leader} is the {_uuid} of the player,
@@ -93,11 +95,13 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
       set {SB::island::%{_x}%_%{_y}%_%{_z}%::warp} to {_p}'s location
       #
       # > Print success message.
-      message "%{_prefix}% %{SB::lang::setwarpok::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("setwarpok",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       #
       # > The player is not the leader of this island, print error message.
-      message "%{_prefix}% %{SB::lang::notleaderofthisisland::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("notleaderofthisisland",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
   if {_action} is "delwarp":
     #
     # > If the returned {_leader} is the {_uuid} of the player,
@@ -124,11 +128,13 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
       delete {SB::island::%{_x}%_%{_y}%_%{_z}%::warp}
       #
       # > Print success message.
-      message "%{_prefix}% %{SB::lang::delwarpok::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("delwarpok",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
     else:
       #
       # > The player is not the leader of this island, print error message.
-      message "%{_prefix}% %{SB::lang::notleaderofthisisland::%{_lang}%}%" to {_p}
+      set {_msg} to getlang("notleaderofthisisland",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_p}
 
 #
 # > The warptoplist function is going to need a Java class to sort arrays.
@@ -145,8 +151,8 @@ function warptoplist(p:player,site:text):
   #
   # > Get the uuid of the player, the current language code and also the chat prefix:
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > Get the current site which should be displayed.
   set {_site} to {_site} parsed as number
@@ -157,7 +163,8 @@ function warptoplist(p:player,site:text):
   Arrays.sort({SB::visits::*})
   #
   # > Send header of the toplist to the player
-  message "%{_prefix}% %{SB::lang::warptop::%{_lang}%}%" to {_p}
+  set {_msg} to getlang("warptop",{_lang})
+  message "%{_prefix}% %{_msg}%" to {_p}
   #
   # > If the site is not 1, multiply it by 10 to make it compatible to the loop.
   set {_rankdisplay} to 1
@@ -169,11 +176,12 @@ function warptoplist(p:player,site:text):
     add 1 to {_rank}
     if {_rank} >= {_rankdisplay}:
       if {_rank} <= {_rankdisplay}+10:
-        set {_msg} to {SB::lang::warptoplist::%{_lang}%}
+        set {_msg} to getlang("warptoplist",{_lang})
         replace all "<rank>" with "%{_rank}%" in {_msg}
         replace all "<leader>" with "%{SB::island::%loop-index%::leader} parsed as offline player%" in {_msg}
         replace all "<visits>" with "%loop-value%" in {_msg}
         message "%{_prefix}% %{_msg}%" to {_p}
   #
   # > Help the player on how to visit an island.
-  message "%{_prefix}% %{SB::lang::warptoisland::%{_lang}%}%" to {_p}
+  set {_msg} to getlang("warptoisland",{_lang})
+  message "%{_prefix}% %{_msg}%" to {_p}

@@ -1,6 +1,6 @@
 #
 # ==============
-# afkcheck.sk v0.0.1
+# afkcheck.sk v0.0.2
 # ==============
 # Check your players for being afk without using the chat.
 # ==============
@@ -8,6 +8,7 @@
 # ==============
 # > Spigot 1.13+ - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
 # ==============
 # How to use it:
 # ==============
@@ -61,18 +62,18 @@ command /afkcheck <player>:
     #
     # > Set the translations to either the defined
     # > language or the fallback translation.
-    if {SB::lang::afkcheck::title::%{_lang}%} is not set:
+    if getlang("afkcheck_title",{_lang}) is not set:
       set {_title} to "{@title}"
     else:
-      set {_title} to {SB::lang::afkcheck::title::%{_lang}%}
-    if {SB::lang::afkcheck::subtitle::%{_lang}%} is not set:
+      set {_title} to getlang("afkcheck_title",{_lang})
+    if getlang("afkcheck_subtitle",{_lang}) is not set:
       set {_subtitle} to "{@subtitle}"
     else:
-      set {_subtitle} to {SB::lang::afkcheck::subtitle::%{_lang}%}
-    if {SB::lang::prefix::%{_lang}%} is not set:
+      set {_subtitle} to getlang("afkcheck_subtitle",{_lang})
+    if getlang("prefix",{_lang}) is not set:
       set {_prefix} to "{@prefix}"
     else:
-      set {_prefix} to {SB::lang::prefix::%{_lang}%}
+      set {_prefix} to getlang("prefix",{_lang})
     if {SB::config::color::primary::1} is not set:
       set {_primary} to "{@primarycolor}"
     else:
@@ -111,17 +112,17 @@ command /afkcheck <player>:
     # > if they're needed.
     set {_lang} to {SK::lang::%uuid of player%}
     if {TMP::afkcheck::%{_player}%} is set:
-      if {SB::lang::afkcheck::noresponse::%{_lang}%} is not set:
+      if getlang("afkcheck_noresponse",{_lang}) is not set:
         set {_noresponse} to "{@noresponse}"
       else:
-        set {_noresponse} to {SB::lang::afkcheck::noresponse::%{_lang}%}
+        set {_noresponse} to getlang("afkcheck_noresponse",{_lang})
       replace all "<player>" with "%{_player}%" in {_noresponse}
       message "%{_prefix}% %{_noresponse}%"
     else:
-      if {SB::lang::afkcheck::playernotafk::%{_lang}%} is not set:
+      if getlang("afkcheck_playernotafk",{_lang}) is not set:
         set {_responded} to "{@playernotafk}"
       else:
-        set {_responded} to {SB::lang::afkcheck::playernotafk::%{_lang}%}
+        set {_responded} to getlang("afkcheck_playernotafk",{_lang})
       replace all "<player>" with "%{_player}%" in {_responded}
       replace all "<time>" with "%{@timer} - {_timer}%" in {_responded}
       message "%{_prefix}% %{_responded}%"
@@ -140,27 +141,27 @@ command /afkok:
     #
     # > Set the translations to either the defined
     # > language or the fallback translation.
-    if {SB::lang::prefix::%{_lang}%} is not set:
+    if getlang("prefix",{_lang}) is not set:
       set {_prefix} to "{@prefix}"
     else:
-      set {_prefix} to {SB::lang::prefix::%{_lang}%}
+      set {_prefix} to getlang("prefix",{_lang})
     #
     # > If a afk check is active, delete it and inform the
     # > player that the command was successful.
     if {TMP::afkcheck::%player%} is set:
       delete {TMP::afkcheck::%player%}
-      if {SB::lang::afkcheck::notafk::%{_lang}%} is not set:
+      if getlang("afkcheck_notafk",{_lang}) is not set:
         set {_notafk} to "{@notafk}"
       else:
-        set {_notafk} to {SB::lang::afkcheck::notafk::%{_lang}%}
+        set {_notafk} to getlang("afkcheck_notafk",{_lang})
       message "%{_prefix}% %{_notafk}%"
     #
     # > If there is no afk check active, kick the player to prevent
     # > automatic command inputs every 30 seconds from bots.
     else:
-      if {SB::lang::afkcheck::onlyifasked::%{_lang}%} is not set:
+      if getlang("afkcheck_onlyifasked",{_lang}) is not set:
         set {_onlyifasked} to "{@onlyifasked}"
       else:
-        set {_onlyifasked} to {SB::lang::afkcheck::onlyifasked::%{_lang}%}
+        set {_onlyifasked} to getlang("afkcheck_onlyifasked",{_lang})
       message "%{_prefix}% %{_onlyifasked}%"
       kick player

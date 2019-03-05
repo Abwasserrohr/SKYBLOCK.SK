@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.2
+# store.sk v0.0.3
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -62,6 +62,7 @@ on load:
 
   set {STORE::categories::ores} to diamond
   set {STORE::catlang::ores::de} to "Erze"
+
 
   #
   # > Items for the categories.
@@ -424,13 +425,14 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
   set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
   set {_bedrockloc} to "%x-coord of {_bedrock}%_%y-coord of {_bedrock}%_%z-coord of {_bedrock}%"
   set {_level} to {SB::island::%{_bedrockloc}%::level}
+  set {_currency} to getlang("currencyname",{_lang})
   #
   # > Set the head data of the forward and backwards skins to make site scrolling possible.
   set {_forwardpageheaddata} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDllY2NjNWMxYzc5YWE3ODI2YTE1YTdmNWYxMmZiNDAzMjgxNTdjNTI0MjE2NGJhMmFlZjQ3ZTVkZTlhNWNmYyJ9fX0="
   set {_backwardpageheaddata} to "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY0Zjc3OWE4ZTNmZmEyMzExNDNmYTY5Yjk2YjE0ZWUzNWMxNmQ2NjllMTljNzVmZDFhN2RhNGJmMzA2YyJ9fX0="
   #
   # > Open the store menu.
-  opengui({_player},54,"%{SB::lang::store::guititle::%{_lang}%}%",chest inventory)
+  opengui({_player},54,getlang("store_guititle",{_lang}),chest inventory)
   #
   # > Give the menu some background items.
   loop 54 times:
@@ -440,19 +442,19 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
   if {_category} is "selectmode":
     #
     # > These items allow the player to select either the buy or sell mode.
-    setguiitem({_player},21,{@buyitem},1,"&r%{SB::lang::store::buymodeitem::%{_lang}%}%",{SB::lang::store::buymodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""buy"",""main"")",false)
-    setguiitem({_player},23,{@sellitem},1,"&r%{SB::lang::store::sellmodeitem::%{_lang}%}%",{SB::lang::store::sellmodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""sell"",""main"")",false)
+    setguiitem({_player},21,{@buyitem},1,getlang("store_buymodeitem",{_lang}),getlang("store_buymodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""buy"",""main"")",false)
+    setguiitem({_player},23,{@sellitem},1,getlang("store_sellmodeitem",{_lang}),getlang("store_sellmodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""sell"",""main"")",false)
     #
     # > Add back item to allow the player to go back to the previous menu.
-    setguiitem({_player},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{_lang}%}%","%{SB::lang::guibacktopreviousmenulore::%{_lang}%}%","make ""%{_player}%"" parsed as player execute command ""/is""",false)
+    setguiitem({_player},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_player}%"" parsed as player execute command ""/is""",false)
     stop
   else:
     #
     # > Depending on the current mode, set a toggle mode item into slot 8 of the menu.
     if {_mode} is "sell":
-      setguiitem({_player},8,{@sellitem},1,"&r%{SB::lang::store::currentmodesell::%{_lang}%}%",{SB::lang::store::buymodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""buy"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+      setguiitem({_player},8,{@sellitem},1,getlang("store_sellmodeitem",{_lang}),getlang("store_sellmodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""buy"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
     else if {_mode} is "buy":
-      setguiitem({_player},8,{@buyitem},1,"&r%{SB::lang::store::currentmodebuy::%{_lang}%}%",{SB::lang::store::sellmodeitemlore::%{_lang}%},"serverstore_open(""%{_player}%"" parsed as player,""sell"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+      setguiitem({_player},8,{@buyitem},1,getlang("store_buymodeitem",{_lang}),getlang("store_buymodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""sell"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
 
   #
   # > Set the slot where the store is starting from.
@@ -466,7 +468,7 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
     # > If the shop site isn't 1, add a backwards button to get back to the first site.
     if {_shopsite} is not 1:
       set {_item} to getcustomhead("blackbackwards",{_backwardpageheaddata})
-      setguiitem({_player},18,{_item},1,{SB::lang::store::pagebackward::%{_lang}%},"%{SB::lang::store::pagebackwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}-1%)",false)
+      setguiitem({_player},18,{_item},1,getlang("store_pagebackward",{_lang}),getlang("store_pagebackwardlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}-1%)",false)
     #
     # > Loop through all items for the selected shop.
     loop {STORE::items::%{_shop}%::*}:
@@ -500,19 +502,19 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
           # > Depending if the mode is "sell" or "buy", use different variables for translation
           # > of the menu to fit better.
           if {_mode} is "sell":
-            set {_lore} to "%{SB::lang::store::itemselllore::%{_lang}%}%"
+            set {_lore} to getlang("store_itemselllore",{_lang})
             set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
             replace all "<amount>" with "%{_price}%" in {_lore}
-            replace all "<currency>" with "%{SB::lang::currency::name::%{_lang}%}%" in {_lore}
+            replace all "<currency>" with "&7%{_currency}%" in {_lore}
             if {_price} is "-1":
-              set {_lore} to {SB::lang::store::cantsell::%{_lang}%}
+              set {_lore} to getlang("store_cantsell",{_lang})
           else if {_mode} is "buy":
-            set {_lore} to "%{SB::lang::store::itembuylore::%{_lang}%}%"
+            set {_lore} to getlang("store_itembuylore",{_lang})
             set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
             replace all "<amount>" with "%{STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}%" in {_lore}
-            replace all "<currency>" with "%{SB::lang::currency::name::%{_lang}%}%" in {_lore}
+            replace all "<currency>" with "&7%{_currency}%" in {_lore}
             if {_price} is "-1":
-              set {_lore} to {SB::lang::store::cantbuy::%{_lang}%}
+              set {_lore} to getlang("store_cantbuy",{_lang})
           #
           # > If the players island is equal or higher to the threshold, display the item with
           # > prepared lore.
@@ -534,7 +536,7 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
           # > This only happens if there are actually enough items in the list.
           if {_storeslot} is 34:
             set {_item} to getcustomhead("blackforward",{_forwardpageheaddata})
-            setguiitem({_player},26,{_item},1,{SB::lang::store::pageforward::%{_lang}%},"%{SB::lang::store::pageforwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}+1%)",false)
+            setguiitem({_player},26,{_item},1,getlang("store_pageforward",{_lang}),getlang("store_pageforwardlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}+1%)",false)
             stop loop
   #
   # > Get the current start it of the category site. There might be more sites of categories,
@@ -562,7 +564,7 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
       if {_slot} is 45:
         if {_categorysite} is not 1:
           set {_item} to getcustomhead("blackbackwards",{_backwardpageheaddata})
-          setguiitem({_player},{_slot},{_item},1,{SB::lang::store::pagebackward::%{_lang}%},"%{SB::lang::store::pagebackwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}-1%,""%{_shop}%"",%{_shopsite}%)",false)
+          setguiitem({_player},{_slot},{_item},1,getlang("store_pagebackward",{_lang}),getlang("store_pagebackwardlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}-1%,""%{_shop}%"",%{_shopsite}%)",false)
           add 1 to {_slot}
         else:
           add 1 to {_slot}
@@ -570,7 +572,7 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
       # > If the loop number is equal or smaller than the startcategory id + 6, set the category with
       # > the predefined category item.
       if {_loopnum} <= ({_startcategoryid}+6):
-        setguiitem({_player},{_slot},loop-value,1,"&r%{STORE::catlang::%loop-index%::%{_lang}%}%","","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%loop-index%"",1)",false)
+        setguiitem({_player},{_slot},loop-value,1,getlang("store_category_%loop-index%",{_lang}),"","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%loop-index%"",1)",false)
         add 1 to {_slot}
       #
       # > If the loop number is exactly startcategory id + 7, we have hit the
@@ -579,10 +581,10 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
       if {_loopnum} is ({_startcategoryid}+7):
         if {_slot} is 52:
           set {_item} to getcustomhead("blackforward",{_forwardpageheaddata})
-          setguiitem({_player},{_slot},{_item},1,{SB::lang::store::pageforward::%{_lang}%},"%{SB::lang::store::pageforwardlore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}+1%,""%{_shop}%"",%{_shopsite}%)",false)
+          setguiitem({_player},{_slot},{_item},1,getlang("store_pageforward",{_lang}),getlang("store_pageforwardlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}+1%,""%{_shop}%"",%{_shopsite}%)",false)
   #
   # > Set a go back to the previous menu item.
-  setguiitem({_player},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{_lang}%}%","%{SB::lang::guibacktopreviousmenulore::%{_lang}%}%","serverstore_open(""%{_player}%"" parsed as player)",false)
+  setguiitem({_player},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player)",false)
 
 #
 # > Function - storeshophandler
@@ -600,8 +602,8 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
   # > Get frequently used variable data as local variable.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
-  set {_currency} to {SB::lang::currency::name::%{_lang}%}
+  set {_prefix} to getlang("prefix",{_lang})
+  set {_currency} to getlang("currencyname",{_lang})
   #
   # > Get the price of the item and parse it as number.
   set {_price} to {STORE::prices::%{_shop}%::%{_action}%::%{_itemshopid}%} parsed as number
@@ -628,7 +630,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         #
         # > Create new Text Components to send them to the player. Also sends an
         # > TranslatableComponent, which is going to be translated by the client.
-        set {_langmsg::*} to {SB::lang::store::boughtxitems::%{_lang}%} split at "<ph>"
+        set {_langmsg::*} to getlang("store_boughtxitems",{_lang}) split at "<ph>"
         set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
         {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
         {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
@@ -637,11 +639,13 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       #
       # > The player has not enough space, send a error message.
       else:
-        message "%{_prefix}% %{SB::lang::storage::notenoughinvspace::%{_lang}%}%" to {_player}
+        set {_msg} to getlang("storage_notenoughinvspace",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_player}
     #
     # > The player doesn't have enough money, send a error message.
     else:
-      message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_player}
+      set {_msg} to getlang("bc_notenoughmoney",{_lang})
+      message "%{_prefix}% %{_msg}%" to {_player}
       stop
   #
   # > If the player wants to sell, go through this part.
@@ -667,7 +671,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         #
         # > Create new Text Components to send them to the player. Also sends an
         # > TranslatableComponent, which is going to be translated by the client.
-        set {_langmsg::*} to {SB::lang::store::soldxitems::%{_lang}%} split at "<ph>"
+        set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
         set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%number of {_item} in {_player}'s inventory% %{_langmsg::2}%")
         {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
         {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
@@ -684,7 +688,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       #
       # > Create new Text Components to send them to the player. Also sends an
       # > TranslatableComponent, which is going to be translated by the client.
-      set {_langmsg::*} to {SB::lang::store::soldxitems::%{_lang}%} split at "<ph>"
+      set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
       set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
       {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
       {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
@@ -700,7 +704,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       #
       # > Create new Text Components to send them to the player. Also sends an
       # > TranslatableComponent, which is going to be translated by the client.
-      set {_langmsg::*} to {SB::lang::store::notenoughitem::%{_lang}%} split at "<ph>"
+      set {_langmsg::*} to getlang("store_notenoughitem",{_lang}) split at "<ph>"
       set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%")
       {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
       {_msg}.addExtra(newTextComponent("%{_langmsg::2}%"))

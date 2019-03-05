@@ -68,6 +68,10 @@ function parseymllistpart(value:text) :: objects:
 function loadconfig():
   delete {SB::calcdown::*}
   #
+  # > Load all languages using the loadlanguage function,
+  # > located in "SkyBlock/SKYBLOCK.SK/Functions/loadlanguage.sk".
+  loadlanguage()
+  #
   # > Load configuration for "SkyBlock/config/upgrades.yml".
   # > Loops through all lists that are added to this local list.
   add "islandsizes", "islandhomes", "islandhoppers" to {_load::*}

@@ -17,30 +17,30 @@ function openflagmenu(p:player,type:text):
 
   #
   # > Get the language of the player in a local variable.
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
   
   #
   # > If there is no type set, open a menu where the player can select, on which type of
   # > player the flags should apply. The player can select between foreign, trusted and island member.
   if {_type} is "":
-    opengui({_p},27,"%{SB::lang::flag::flagst::%{_lang}%}%",chest inventory)
+    opengui({_p},27,getlang("flag_flagst",{_lang},"&l"),chest inventory)
     #
     # > Empty slots are shown as black stained glass.
     loop 27 times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
       protectslot({_p},loop-number - 1)
 
-    setguiitem({_p},11,farmland,1,"&r%{SB::lang::flag::foreignt::%{_lang}%}%","&r%{SB::lang::flag::foreignd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},13,grass path,1,"&r%{SB::lang::flag::trustedt::%{_lang}%}%","&r%{SB::lang::flag::trustedd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},15,grass,1,"&r%{SB::lang::flag::membert::%{_lang}%}%","&r%{SB::lang::flag::memberd::%{_lang}%}%","openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    setguiitem({_p},11,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},13,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},15,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
     #
     # > This item allows the user to go into the previous menu.
-    setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+    setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
     stop
 
   #
   # > Set the prefix for messages into the local variable {_prefix}.
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_prefix} to getlang("prefix",{_lang})
 
   #
   # > Get the bedrock of the player who executed the command.
@@ -58,7 +58,8 @@ function openflagmenu(p:player,type:text):
     set {_slots} to 54
     #
     # > Open the flags menu.
-    opengui({_p},{_slots},"&l%{SB::lang::flag::%{_type}%t::%{_lang}%}%")
+    set {_menuheader} to getlang("flag_%{_type}%t",{_lang},"&l")
+    opengui({_p},{_slots},"&l%{_menuheader}%")
     #
     # > Empty slots are shown as black stained glass.
     loop {_slots} times:
@@ -78,18 +79,23 @@ function openflagmenu(p:player,type:text):
         set {_boolean} to loop-value
       #
       # > Set a lore which is added to the menu item.
+      set {_loremsg1} to getlang("flag_%loop-index%d",{_lang})
+      set {_currentstate} to getlang("flag_current%{_boolean}%",{_lang})
+      set {_currentsetting} to getlang("flag_currentsetting",{_lang})
+      set {_toggleflagstrue} to getlang("flag_toggleflagstrue",{_lang})
+      set {_toggleflagsfalse} to getlang("flag_toggleflagsfalse",{_lang})
       if {SB::config::toggleflags} is true:
-        set {_lore} to "%{SB::lang::flag::%loop-index%d::%{_lang}%}%\n%{SB::config::guispacer}%\n%{SB::lang::flag::currentsetting::%{_lang}%}%%{SB::lang::flag::current%{_boolean}%::%{_lang}%}%\n%{SB::config::guispacer}%\n%{SB::lang::flag::toggleflagstrue::%{_lang}%}%"
+        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagstrue}%"
       else:
-        set {_lore} to "%{SB::lang::flag::%loop-index%d::%{_lang}%}%\n%{SB::config::guispacer}%\n%{SB::lang::flag::currentsetting::%{_lang}%}%%{SB::lang::flag::current%{_boolean}%::%{_lang}%}%\n%{SB::config::guispacer}%\n%{SB::lang::flag::toggleflagsfalse::%{_lang}%}%"
+        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagsfalse}%"
 
       #
       # > Set either green glass panes or red glass panes for true and false and then set the item.
       # > The items have translation text as variable and also execute the "toggleflag" function onn click.
       if {_boolean} is true:
-        setguiitem({_p},{_i},green glass pane,1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
       if {_boolean} is false:
-        setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::flag::%loop-index%t::%{_lang}%}%","&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
       #
       # > Add 1 to {_i} to place the items in the slots in the right order.
 	  # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
@@ -101,9 +107,10 @@ function openflagmenu(p:player,type:text):
         add 1 to {_i}
     #
     # > Set the back item to let the player go back to the previous menu.
-    setguiitem({_p},53,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
+    setguiitem({_p},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
   else:
-    message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("notleader",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
 
 # > Function - toggleflag:
 # > Arguments:

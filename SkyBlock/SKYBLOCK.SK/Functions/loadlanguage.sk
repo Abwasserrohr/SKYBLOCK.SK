@@ -1,0 +1,49 @@
+#
+# ==============
+# loadlanguage.sk
+# ==============
+# loadlanguage.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+import:
+  java.io.File
+
+#
+# > Function - loadlanguage:
+# > Actions:
+# > Loads all languages from the "plugins/Skript/scripts/SkyBlock/lang" folder to the
+# > ram of the server as metadata.
+function loadlanguage():
+  #
+  # > Get a list all files in the folder of the "plugins/Skript/scripts/SkyBlock/lang" folder
+  set {_files::*} to ...new File("plugins/Skript/scripts/SkyBlock/lang").listFiles()
+  #
+  # > Loop trough all the files
+  loop {_files::*}:
+    #
+    # > If the loop-value (file) ends with ".yml", it should continue
+    set {_check} to loop-value.toString().endsWith(".yml")
+    if {_check} is true:
+      set {_fname} to loop-value.getName()
+	  #
+	  # > Split the name in half, that way, we have ["langcode"], ["yml"] as a array.
+      set {_fname::*} to {_fname} split at "."
+    set {_lang::*} to yaml list "language" from "%loop-value%"
+    #
+    # > Loop through the list of entries and save them as language meta to
+    # > get it later back.
+    loop {_lang::*}:
+      set {_loopvalue} to "%loop-value-2%"
+      replace all "{" with "" in {_loopvalue}
+      replace all "}" with "" in {_loopvalue}
+	  #
+	  # > Split the variable and save it to metadata configuration for language.
+      set {_loopvalue::*} to {_loopvalue} split at "="
+      replace all "<nl1>" with " %nl%" in {_loopvalue::2}
+      replace all "<nl>" with "\n" in {_loopvalue::2}
+      replace all "<p1>" with "%{SB::config::color::primary::1}%" in {_loopvalue::2}
+      replace all "<guispacer>" with "%{SB::config::guispacer}%" in {_loopvalue::2}
+      replace all "<p2>" with "%{SB::config::color::primary::2}%" in {_loopvalue::2}
+      replace all "<s1>" with "%{SB::config::color::secondary::2}%" in {_loopvalue::2}
+      replace all "<b1>" with "%{SB::config::color::background::1}%" in {_loopvalue::2}
+      loadconfigobject("lang-%{_loopvalue::1}%-%{_fname::1}%",colored {_loopvalue::2})

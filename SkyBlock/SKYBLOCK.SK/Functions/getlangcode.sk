@@ -6,10 +6,23 @@
 # ==============
 
 # > Function - getlangcode:
-# > Arguments:
+# > Parameters:
 # > <player>the player for which the language code is needed
 # > Actions:
 # > Returns the language code of the player.
 function getlangcode(player:player) :: text:
   set {_uuid} to uuid of {_player}
   return {SK::lang::%{_uuid}%}
+
+#
+# > Function - getlang:
+# > Parameters:
+# > <text>the language index id.
+# > <text>the language code, eg. en.
+# > <text>prefix, which is added before the language text.
+# > <text>suffix, which is added after the language text.
+# > Actions:
+# > Returns the translation for the specified language code if available.
+function getlang(id:text,langcode:text,prefix:text="",suffix:text="") :: text:
+  set {_txt} to getconfigobject("lang-%{_id}%-%{_langcode}%")
+  return "%{_prefix}%%{_txt}%%{_suffix}%"

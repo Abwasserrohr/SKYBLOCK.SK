@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.7
+# oregenerator.sk v0.0.8
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -282,9 +282,14 @@ function generatorinfo(p:player):
   set {_uuid} to uuid of {_p}
   set {_player} to {_p}
   #
+  # > The language and prefix is used frequently, set it as local variable.
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
+  #
   # > If disabled, print the information to the player:
   if {SB::config::oregeneratorleveling} is false:
-    send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::og::disabled::%{SK::lang::%{_uuid}%}%}%" to {_player}
+    set {_msg} to getlang("og_disabled",{_lang})
+    send "%{_prefix}% %{_msg}%" to {_player}
     stop
   #
   # > If the player has no level, give him the level 0
@@ -313,18 +318,17 @@ function generatorinfo(p:player):
       set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregenlevelmultiplyer})
     else:
       stop loop
-  #
-  # > Multible messages are being print below, set a {_prefix} variable to the prefix message
-  set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
   # 
   # > Print a spacer
   send "%{SB::config::spacer}%" to {_player}
   #
   # > Prints the name of the menu, here: ore generator
-  send "%{_prefix}% %{SB::lang::og::name::%{SK::lang::%{_uuid}%}%}%" to {_player}
+  set {_msg} to getlang("og_name",{_lang})
+  send "%{_prefix}% %{_msg}%" to {_player}
   #
   # > Prints the current level
-  send "%{_prefix}% %{SB::lang::og::currentlvl::%{SK::lang::%{_uuid}%}%}% %{_level}%" to {_player}
+  set {_msg} to getlang("og_currentlvl",{_lang})
+  send "%{_prefix}% %{_msg}% %{_level}%" to {_player}
 
   #
   # > This is the percentage bar, it contains out of 100 x | and for each percentage, &7| is getting replaced with &6|&7,
@@ -339,7 +343,8 @@ function generatorinfo(p:player):
   #
   # > Set the progress {_pr} variable to the progress message from the language and replace <c> with current
   # > block amount and <n> with the block amount needed for level up.
-  set {_pr} to {SB::lang::og::progress::%{SK::lang::%{_uuid}%}%}
+  
+  set {_pr} to getlang("og_progress",{_lang})
   replace all "<c>" with "%{SB::ogplayerblocks::%{_uuid}%}%" in {_pr}
   replace all "<n>" with "%{_blocksneeded}%" in {_pr}
   send "%{_prefix}% %{_pr}%" to {_player}
@@ -360,13 +365,15 @@ function orechancesinfo(p:player):
   set {_player} to {_p}
   #
   # > Prints a spacer
-  send "%{SB::config::spacer}%" to {_player}
+  send "%{SB::config::spacer}%" to {_p}
   #
   # > Multible messages are being print below, set a {_prefix} variable to the prefix message
-  set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > Prints the message from language file: Chances for you:
-  send "%{_prefix}% %{SB::lang::og::chancesforyou::%{SK::lang::%{_uuid}%}%}%" to {_player}
+  set {_msg} to getlang("og_chancesforyou",{_lang})
+  send "%{_prefix}% %{_msg}%" to {_player}
   #
   # > Loop trough all available blocks and display the actual chance, either if leveling disabled directly
   # > or by the level of the player.
@@ -386,7 +393,11 @@ function orechancesinfo(p:player):
       # > If the chance is higher, set it to 100, since 100 is always.
       if {_chance} is bigger than 100:
         set {_chance} to 100
-      send "%{_prefix}% %{_chance}%%%: %{SB::oregen::%loop-index%}%" to {_player}
+      #
+      # > Send the text with components to allow translateable block names.
+      set {_msg} to newTextComponent("%{_prefix}% %{_chance}%%%: ")
+      {_msg}.addExtra(getTranslatableComponentFromItem({SB::oregen::%loop-index%}))
+      {_player}.sendMessage({_msg})
   #
   # > Prints a spacer
   send "%{SB::config::spacer}%" to {_player}

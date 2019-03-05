@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.3
+# parkour.sk v0.0.4
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -157,10 +157,10 @@ on dispense of bedrock:
             if metadata value "checkpoint" of loop-player is not {_blocklocation}:
               #
               # > Check for translation, if not available, use fallback.
-              if {SB::lang::parcour::checkpointreached::%{_lang}%} is not set:
+              if getlang("parkour_checkpointreached",{_lang}) is not set:
                 set {_msg} to "{@checkpointreached}"
               else:
-                set {_msg} to {SB::lang::parcour::checkpointreached::%{_lang}%}
+                set {_msg} to getlang("parkour_checkpointreached",{_lang})
               send subtitle "%{_msg}%" to loop-player for 0.5 seconds with fadein 5 tick and fade out 5 tick
             #
             # > Set the new location to the checkpoint metadata of the player.
@@ -170,10 +170,10 @@ on dispense of bedrock:
           else:
             #
             # > Check for translation, if not available, use fallback.
-            if {SB::lang::parcour::checkpointinvalid::%{_lang}%} is not set:
+            if getlang("parkour_checkpointinvalid",{_lang}) is not set:
               set {_msg} to "{@checkpointinvalid}"
             else:
-              set {_msg} to {SB::lang::parcour::checkpointinvalid::%{_lang}%}
+              set {_msg} to getlang("parkour_checkpointinvalid",{_lang})
             send subtitle "%{_msg}%" to loop-player for 0.5 seconds with fadein 5 tick and fade out 5 tick
     #
     # > The block is a parcour start.
@@ -205,14 +205,14 @@ on dispense of bedrock:
             clear loop-player's inventory
             #
             # > Check for translation, if not available, use fallback.
-            if {SB::lang::parcour::itemcheckpointname::%{_lang}%} is not set:
+            if getlang("parkour_itemcheckpointname",{_lang}) is not set:
               set {_name1} to "{@itemcheckpointname}"
               set {_name2} to "{@itemrestartname}"
               set {_name3} to "{@itemexitname}"
             else:
-              set {_name1} to {SB::lang::parcour::itemcheckpointname::%{_lang}%}
-              set {_name2} to {SB::lang::parcour::itemrestartname::%{_lang}%}
-              set {_name3} to {SB::lang::parcour::itemexitname::%{_lang}%}
+              set {_name1} to getlang("parkour_itemcheckpointname",{_lang})
+              set {_name2} to getlang("parkour_itemrestartname",{_lang})
+              set {_name3} to getlang("parkour_itemexitname",{_lang})
             set {_item1} to 1 of {@itemcheckpoint} named "%{_name1}%"
             set {_item2} to 1 of {@itemrestart} named "%{_name2}%"
             set {_item3} to 1 of {@itemexit} named "%{_name3}%"
@@ -249,14 +249,17 @@ on dispense of bedrock:
               #
               # > Check for translation, if not available, use fallback.
               # > Tell the player that this is the goal.
-              if {SB::lang::parcour::finishmsg::%{_lang}%} is not set:
+              if getlang("parkour_finishmsg",{_lang}) is not set:
                 message "{@prefix} {@finishmsg}" to loop-player
                 set {_msg} to "{@prefix} {@yourtime}"
                 set {_subtitle} to "{@finishmsg}"
               else:
-                message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::finishmsg::%{_lang}%}%" to loop-player
-                set {_msg} to "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::yourtime::%{_lang}%}%"
-                set {_subtitle} to "%{SB::lang::parcour::finishmsg::%{_lang}%}%"
+                set {_prefix} to getlang("prefix",{_lang})
+                set {_msg1} to getlang("parkour_finishmsg",{_lang})
+                set {_msg2} to getlang("parkour_yourtime",{_lang})
+                message "%{_prefix}% %{_msg}%" to loop-player
+                set {_msg} to "%{_prefix}% %{_msg2}%"
+                set {_subtitle} to "%{_msg}%"
               set {_start} to metadata value "%{_parcourid}%-start" of loop-player
               set {_diff} to difference between now and {_start}
               #
@@ -272,10 +275,10 @@ on dispense of bedrock:
           else:
             #
             # > Check for translation, if not available, use fallback.
-            if {SB::lang::parcour::finishinvalid::%{_lang}%} is not set:
+            if getlang("parkour_finishinvalid",{_lang}) is not set:
               set {_msg} to "{@finishinvalid}"
             else:
-              set {_msg} to {SB::lang::parcour::finishinvalid::%{_lang}%}
+              set {_msg} to getlang("parkour_finishinvalid",{_lang})
             #
             # > Send the error as a subtitle.
             send subtitle "%{_msg}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
@@ -386,10 +389,12 @@ on unload:
       set {_lang} to getlangcode(loop-player)
       #
       # > Check for translation, if not available, use fallback.
-      if {SB::lang::parcour::parcourunloaded::%{_lang}%} is not set:
+      if getlang("parkour_parcourunloaded",{_lang}) is not set:
         message "{@prefix} {@parcourunloaded}" to loop-player
       else:
-        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::parcourunloaded::%{_lang}%}%" to loop-player
+        set {_prefix} to getlang("parkour_parcourunloaded",{_lang})
+        set {_msg} to getlang("parkour_parcourunloaded",{_lang})
+        message "%{_prefix}% %{_msg}%" to loop-player
       exitparcour(loop-player)
 
 #
@@ -408,10 +413,12 @@ on inventory open:
       set {_lang} to getlangcode(player)
       #
       # > Check for translation, if not available, use fallback.
-      if {SB::lang::parcour::noinventoryinparcour::%{_lang}%} is not set:
+      if getlang("parkour_noinventoryinparcour",{_lang}) is not set:
         message "{@prefix} {@noinventoryinparcour}"
       else:
-        message "%{SB::lang::prefix::%{_lang}%}% %{SB::lang::parcour::noinventoryinparcour::%{_lang}%}%"
+        set {_prefix} to getlang("prefix",{_lang})
+        set {_msg} to getlang("parkour_noinventoryinparcour",{_lang})
+        message "%{_prefix}% %{_msg}%"
       cancel event
   else if slot 0 of event-inventory is bedrock:
     if name of slot 0 of event-inventory is "parcour":
@@ -702,16 +709,16 @@ function openparcourinventory(inventory:inventory,player:player):
   set metadata "targetblock" of {_player} to {_loc}
   #
   # > Check for translation, if not available, use fallback.
-  if {SB::lang::parcour::guiheader::%{_lang}%} is not set:
+  if getlang("parkour_guiheader",{_lang}) is not set:
     set {_msg} to "{@guiheader}"
   else:
-    set {_msg} to {SB::lang::parcour::guiheader::%{_lang}%}
+    set {_msg} to getlang("parkour_guiheader",{_lang})
   #
   # > Open the menu to the player.
   opengui({_player},27,"%{_msg}%")
   #
   # > Check for translation, if not available, use fallback.
-  if {SB::lang::parcour::guiheader::%{_lang}%} is not set:
+  if {SB::lang::parkour::guiheader::%{_lang}%} is not set:
     set {_checkpointitemname} to "{@menucheckpointitemname}"
     set {_menufinishitemname} to "{@menufinishitemname}"
     set {_menuremoveblockname} to "{@menuremoveblockname}"
@@ -719,12 +726,12 @@ function openparcourinventory(inventory:inventory,player:player):
     set {_menufinishitemlore} to "{@menufinishitemlore}"
     set {_menuremoveblocklore} to "{@menuremoveblocklore}"
   else:
-    set {_checkpointitemname} to {SB::lang::parcour::menucheckpointitemname::%{_lang}%}
-    set {_menufinishitemname} to {SB::lang::parcour::menufinishitemname::%{_lang}%}
-    set {_menuremoveblockname} to {SB::lang::parcour::menuremoveblockname::%{_lang}%}
-    set {_menucheckpointitemlore} to {SB::lang::parcour::menucheckpointitemlore::%{_lang}%}
-    set {_menufinishitemlore} to {SB::lang::parcour::menufinishitemlore::%{_lang}%}
-    set {_menuremoveblocklore} to {SB::lang::parcour::menuremoveblocklore::%{_lang}%}
+    set {_checkpointitemname} to getlang("parkour_menucheckpointitemname",{_lang})
+    set {_menufinishitemname} to getlang("parkour_menufinishitemname",{_lang})
+    set {_menuremoveblockname} to getlang("parkour_menuremoveblockname",{_lang})
+    set {_menucheckpointitemlore} to getlang("parkour_menucheckpointitemlore",{_lang})
+    set {_menufinishitemlore} to getlang("parkour_menufinishitemlore",{_lang})
+    set {_menuremoveblocklore} to getlang("parkour_menuremoveblocklore",{_lang})
   #
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
@@ -776,26 +783,26 @@ function getparcourtools(player:player,tool:number,parcourid:text):
   # > Get the language code of the player.
   set {_lang} to getlangcode({_player})
   if {_tool} is 1:
-    if {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%} is not set:
+    if {SB::lang::parkour::parcouritemcheckpoint::%{_lang}%} is not set:
       set {_item} to 1 of {@parcouritem} named "{@parcouritemcheckpoint}"
     else:
-      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemcheckpoint::%{_lang}%}
+      set {_item} to 1 of {@parcouritem} named getlang("parkour_parcouritemcheckpoint",{_lang})
     set {_item} to setnbtvalue({_item},"type","checkpoint")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
   else if {_tool} is 2:
-    if {SB::lang::parcour::parcouritemfinish::%{_lang}%} is not set:
+    if {SB::lang::parkour::parcouritemfinish::%{_lang}%} is not set:
       set {_item} to 1 of {@parcouritem} named "{@parcouritemfinish}"
     else:
-      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemfinish::%{_lang}%}
+      set {_item} to 1 of {@parcouritem} named getlang("parkour_parcouritemfinish",{_lang})
     set {_item} to setnbtvalue({_item},"type","finish")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
   else if {_tool} is 3:
-    if {SB::lang::parcour::parcouritemstart::%{_lang}%} is not set:
+    if {SB::lang::parkour::parcouritemstart::%{_lang}%} is not set:
       set {_item} to 1 of {@parcouritem} named "{@parcouritemstart}"
     else:
-      set {_item} to 1 of {@parcouritem} named {SB::lang::parcour::parcouritemstart::%{_lang}%}
+      set {_item} to 1 of {@parcouritem} named getlang("parkour_parcouritemstart",{_lang})
     set {_item} to setnbtvalue({_item},"type","start")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory

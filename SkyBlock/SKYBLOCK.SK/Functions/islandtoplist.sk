@@ -28,12 +28,13 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   # > Save some variables to local variables.
   set {_pageint} to "%{_pageint}%" parsed as integer
   set {_playeruuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_playeruuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the page is not set, send the player a error and stop here.
   if {_pageint} is not set:
-    message "%{_prefix}% %{SB::lang::notanumber::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("notanumber",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Get the bedrock location to format it into the same format as levels are saved to be
@@ -43,7 +44,8 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   #
   # > If there is no island level set, there is basically no island there to display.
   if {SB::islvl::*} is not set:
-    message "%{_prefix}% %{SB::lang::nois::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("nois",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Loop through all island levels.
@@ -95,8 +97,9 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   #
   # > If the page is not set in the top list, send a error and stop.
   if {_top::%{_pageint}%::*} is not set:
-    set {_msg} to {SB::lang::pagenotfound::%{_lang}%}
+    set {_msg} to getlang("pagenotfound",{_lang})
     replace all "<pages>" with "%{_page}%" in {_msg}
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Create a new book which is going to be used.
@@ -110,10 +113,10 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   set {_book} to new ComponentBuilder({_toplistbook})
   #
   # > The header line of the page.
-  set {_line} to {SB::lang::topheader::%{_lang}%}
+  set {_line} to getlang("topheader",{_lang})
   replace all "<start>" with "%{_pageint}%" in {_line}
   replace all "<end>" with "%{_page}%" in {_line}
-  {_book}.append("%{_line}%%nl%%nl%")
+  {_book}.append("%{_line}%)%nl%%nl%")
   #
   # > Loop through the toplist site, the player has requested.
   loop {_top::%{_pageint}%::*}:
@@ -130,7 +133,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     set {_lp} to "%{SB::island::%loop-value%::leader}%" parsed as offline player
     #
     # > Get translated toplist and replace all placeholders to send it to the player.
-    set {_rank} to {SB::lang::istoplist::%{_lang}%}
+    set {_rank} to getlang("istoplist",{_lang})
     set {_length} to loop-index parsed as number
     set {_length} to "%{_length}+9%"
     #
@@ -148,7 +151,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     {_msg}.setClickEvent({_clickevent})
     #
     # > Prepare and set the on hover event text for the toplist.
-    set {_hovertext} to {SB::lang::toplistbookhover::%{_lang}%}
+    set {_hovertext} to getlang("toplistbookhover",{_lang})
     replace all "<name>" with "%{_lp}%" in {_hovertext}
     replace all "<rank>" with loop-index in {_hovertext}
     replace all "<level>" with "%{_level::%loop-value%}%" in {_hovertext}
@@ -161,14 +164,16 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   # > If this page isn't the first page, add a "back" button.
   set {_msg} to new TextComponent("&l←&r")
   if {_pageint} != 1:
-    set {_lore} to {SB::lang::store::pagebackwardlore::%{_lang}%}
-    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
+    set {_lore} to getlang("store_pagebackwardlore",{_lang})
+    set {_head} to getlang("store_pagebackward",{_lang})
+    set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} - 1%")
   #
   # > If the site is the first one, add the go back to previous menu command.
   else:
-    set {_lore} to {SB::lang::guibacktopreviousmenulore::%{_lang}%}
-    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pagebackward::%{_lang}%}%%nl%%{_lore}%")
+    set {_lore} to getlang("guibacktopreviousmenulore",{_lang})
+    set {_head} to getlang("store_pagebackward",{_lang})
+    set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island")
   {_book}.append({_msg})
   #
@@ -183,8 +188,9 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     # > Add the actual "go forward" text component.
     {_book}.append(new TextComponent({_msg}))
     set {_msg} to new TextComponent("&l→&r")
-    set {_lore} to {SB::lang::store::pageforwardlore::%{_lang}%}
-    set {_msg} to sethovertextevent({_msg},"%{SB::lang::store::pageforward::%{_lang}%}%%nl%%{_lore}%")
+    set {_lore} to getlang("pageforwardlore",{_lang})
+    set {_head} to getlang("store_pageforward",{_lang})
+    set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} + 1%")
     {_book}.append({_msg})
   #

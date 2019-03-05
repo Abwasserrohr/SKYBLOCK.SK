@@ -13,8 +13,8 @@
 # > Deletes the island of the defined player, also offline players are possible
 function deleteisland(p: offline player):
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
 
   #
   # > Get the leader of the island the player is member (or leader) of.
@@ -132,8 +132,8 @@ function deleteisland(p: offline player):
         set {Leave.%{_uuid}%} to true
     #
     # > Print a success message:
-    set {_a} to {SB::lang::deledtedis::%{_lang}%}
-    message "%{_prefix}% %{_a}%" to {_p}
+    set {_msg} to getlang("deledtedis",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     set {Islanddelete.%{_p}%} to true
     set {_size} to size of {deleteisland.1::*}
     add 1 to {_size}
@@ -143,4 +143,4 @@ function deleteisland(p: offline player):
   else:
     #
     # > If the player is not the island leader, print error message in actionbar.
-    actionload({_p}, {SB::lang::notallowed::%{_lang}%})
+    actionload({_p},getlang("notallowed",{_lang}))

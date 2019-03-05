@@ -12,6 +12,12 @@
 # > Tells the player using an action bar that the area is protected.
 function protectionmgs(p:player):
   set {_uuid} to uuid of {_p}
-  set {_prefix} to {SB::lang::prefix::%{SK::lang::%{_uuid}%}%}
-  set {_a} to {SB::lang::protect::%{SK::lang::%{_uuid}%}%}
-  actionload({_p}, {_a})
+  #
+  # > Only tell the player once every 5 seconds.
+  if metadata value "protectionmgs" of {_p} is not set:
+    set metadata value "protectionmgs" of {_p} to 1
+    set {_prefix} to getlang("prefix",getlangcode({_p}))
+    set {_msg} to getlang("protect",getlangcode({_p}))
+    actionload({_p}, {_msg})
+    wait 5 seconds
+    delete metadata value "protectionmgs" of {_p}
