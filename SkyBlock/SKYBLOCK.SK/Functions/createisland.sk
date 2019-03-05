@@ -15,15 +15,17 @@ function createisland(p:player,island:text="1"):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
-  set {_lang} to {SK::lang::%{_uuid}%}
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_lang} to getlangcode({_p})
+  set {_prefix} to getlang("prefix",{_lang})
   if {SB::player::%{_uuid}%::island::bedrock} is set:
-    message "%{_prefix}% %{SB::lang::alreadyis::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("alreadyis",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > If we're already searching for a island for this player, print information and stop.
   if {SB::searchis::%{_p}%} is set:
-    message "%{_prefix}% %{SB::lang::waitis::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("waitis",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Only continue, if the player parameter is online.
@@ -31,7 +33,7 @@ function createisland(p:player,island:text="1"):
     #
     # > If {_island} is "1", there is no island input, display island menu for player.
     if {_island} is "1":
-      opengui({_p},27,"%{SB::lang::islands::%{_lang}%}%")
+      opengui({_p},27,getlang("islands",{_lang}))
       #
       # > Empty slots are displayed with black stained glass panes for better look.
       loop 27 times:
@@ -45,15 +47,16 @@ function createisland(p:player,island:text="1"):
       loop {SB::schematics::schematic::*}:
         set {_price} to {SB::schematics::price::%loop-index%}
         if {_price} is not 0:
-          set {_formatprice} to {SB::lang::bc::shopprice::%{_lang}%}
+          set {_formatprice} to getlang("bc_shopprice",{_lang})
           replace all "<price>" with "%{_price}%" in {_formatprice}
         else:
-          set {_formatprice} to {SB::lang::bc::shopfree::%{_lang}%}
-        setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","%{SB::lang::clicktocreateisland::%{_lang}%}%\n%{SB::config::guispacer}%\n%{_formatprice}%","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
+          set {_formatprice} to getlang("bc_shopfree",{_lang})
+          set {_loremsg} to getlang("clicktocreateisland",{_lang})
+        setguiitem({_p},{_slot},grass,1,"%{SB::schematics::name::%{_lang}%::%loop-index%}%","%{_loremsg}%\n%{SB::config::guispacer}%\n%{_formatprice}%","make ""%{_p}%"" parsed as player execute ""/is create %loop-value%""",false)
         add 1 to {_slot}
       #
       # > This item allows the user to go into the previous menu.
-      setguiitem({_p},26,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+      setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
       stop
     else:
       #
@@ -62,7 +65,8 @@ function createisland(p:player,island:text="1"):
       #
       # > If the balance of the player is smaller than the price:
       if {_p}'s balance < {_price}:
-        message "%{_prefix}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("bc_notenoughmoney",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
         stop
       #
       # > If schematics are configured to be used.
@@ -102,7 +106,8 @@ function createisland(p:player,island:text="1"):
   #
   # > While doing the waiting, the player may got somehow an island, be sure that there is not already an island again.
   if {SB::player::%{_uuid}%::island::bedrock} is set:
-    message "%{_prefix}% %{SB::lang::alreadyis::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("alreadyis",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
   # > Get the center of the world.
@@ -133,7 +138,8 @@ function createisland(p:player,island:text="1"):
       if block at {_loc} is not bedrock:
         #
         # > Print to the player that we found a new island.
-        message "%{_prefix}% %{SB::lang::foundis::%{_lang}%}%" to {_p}
+        set {_msg} to getlang("foundis",{_lang})
+        message "%{_prefix}% %{_msg}%" to {_p}
         add 1 to y-coord of {_loc}
         set {_schematic} to {_island}
         set {_backloc} to {_p}'s location
@@ -198,7 +204,8 @@ function createisland(p:player,island:text="1"):
           if {_titem} is a lava bucket:
             set {_x} to x-coord of {_loc}
             set {_z} to z-coord of {_loc}
-            set lore of {_titem} to "&r%{SB::lang::islandbound::%{_lang}%}%||&7%{_x}%_%{_z}%"
+            set {_msg} to getlang("islandbound",{_lang})
+            set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
           add {_tamount} of {_titem} to {_newchest}'s inventory
         #
         # > We're done with searching and creating, stop the search process to allow others to also create a island.
@@ -216,7 +223,7 @@ function createisland(p:player,island:text="1"):
         delete {_search}
         #
         # > Send success message to the player.
-        actionload({_p},{SB::lang::foundis::%{_lang}%})
+        actionload({_p},getlang("foundis",{_lang}))
         #
         # > Teleport the player to the new island.
         teleport {_p} to {_homeloc}
