@@ -17,11 +17,11 @@ function islandupgrademenu(p:player):
 
   #
   # > Get the language of the player in a local variable.
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_p})
 
   #
   # > Set the prefix for messages into the local variable {_prefix}.
-  set {_prefix} to {SB::lang::prefix::%{_lang}%}
+  set {_prefix} to getlang("prefix",{_lang})
 
   #
   # > Get the bedrock of the player who executed the command.
@@ -35,13 +35,13 @@ function islandupgrademenu(p:player):
   # > Check, if the player who executed the command is also the leader of the island.
   if {SB::island::%{_x}%_%{_y}%_%{_z}%::leader} is {_uuid}:
     set {_slots} to 54
-    opengui({_p},{_slots},"&l%{SB::lang::bc::islandupgrades::%{_lang}%}%")
+    opengui({_p},{_slots},"&l%getlang(""bc_islandupgrades"",{_lang})%")
     loop {_slots} times:
       set slot loop-number - 1 of {_p}'s current inventory to black glass pane named " "
       protectslot({_p},loop-number - 1)
     #
     # > Set back item to get to the previous menu.
-    setguiitem({_p},{_slots}-1,{SB::config::backguiitem},1,"&r%{SB::lang::guibacktopreviousmenu::%{SK::lang::%{_uuid}%}%}%","%{SB::lang::guibacktopreviousmenulore::%{SK::lang::%{_uuid}%}%}%","make ""%{_p}%"" parsed as player execute command ""/is""",true)
+    setguiitem({_p},{_slots}-1,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
 
     #
     # > Set {_i} to 0, to order the items in the menu right.
@@ -74,20 +74,21 @@ function islandupgrademenu(p:player):
         #
         # > Add 1 to the level local variable:
         add 1 to {_lvl}
-        set {_lore1} to "%{SB::lang::bc::islandsizeshop::%{_lang}%}%"
+        set {_lore1} to getlang("bc_islandsizeshop",{_lang})
         #
         # > Calculate the distance for this level (default distance + (level * distance per level))
         replace all "<size>" with "%({_defaultdist} + ({_lvl} * {_distincreaseperlevel}))*2%" in {_lore1}
         #
         # > If the size upgrade is higher or the same as the level, set it to a green glass pane
         if {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} >= {_lvl}:
-          setguiitem({_p},{_i},green glass pane,1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
+          setguiitem({_p},{_i},green glass pane,1,getlang("bc_islandsizetitle",{_lang}),"&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
         #
         # > If the upgrade level is lower, set it to a red glass pane (the player doesn't has this yet).
         else:
-          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          set {_pricemsg} to getlang("bc_shopprice",{_lang})
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%{_pricemsg}%"
           replace all "<price>" with "%{SB::config::sizeupgrade%{_lvl}%}%" in {_lore2}
-          setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::bc::islandsizetitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
+          setguiitem({_p},{_i},red glass pane,1,"&r%getlang(""bc_islandsizetitle"",{_lang})% %{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""size"",{_lvl})",false)
       #
       # > Add 3 to {_i} to create a new row in the inventory menu.
       set {_i} to 3
@@ -121,15 +122,15 @@ function islandupgrademenu(p:player):
       loop 5 times:
         add 9 to {_i}
         add 1 to {_lvl}
-        set {_lore1} to "%{SB::lang::bc::islandhoppershop::%{_lang}%}%"
+        set {_lore1} to getlang("bc_islandhoppershop",{_lang})
         replace all "<size>" with "%({_defaulthopper} + ({_lvl} * {_hopperincreaseperlevel}))%" in {_lore1}
         if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} >= {_lvl}:
-          setguiitem({_p},{_i},green glass pane,1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
+          setguiitem({_p},{_i},green glass pane,1,"&r%getlang(""bc_islandhoppertitle"",{_lang})% %{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
         else:
-          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%getlang(""bc_shopprice"",{_lang})%"
           replace all "<price>" with "%{SB::config::hopperupgrade%{_lvl}%}%" in {_lore2}
 
-          setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::bc::islandhoppertitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
+          setguiitem({_p},{_i},red glass pane,1,"&r%getlang(""bc_islandhoppertitle"",{_lang})% %{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""hopper"",{_lvl})",false)
 
       set {_i} to 5
       set {_lvl} to 0
@@ -157,17 +158,18 @@ function islandupgrademenu(p:player):
       loop 5 times:
         add 9 to {_i}
         add 1 to {_lvl}
-        set {_lore1} to "%{SB::lang::bc::islandhomeshop::%{_lang}%}%"
+        set {_lore1} to getlang("bc_islandhomeshop",{_lang})
         replace all "<size>" with "%({_defaulthomes} + ({_lvl} * {_homeincreaseperlevel}))%" in {_lore1}
         if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} >= {_lvl}:
-          setguiitem({_p},{_i},green glass pane,1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
+          setguiitem({_p},{_i},green glass pane,1,"&r%getlang(""bc_islandhometitle"",{_lang})% %{_lvl}%","&r%{_lore1}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
         else:
-          set {_lore2} to "\n%{SB::config::guispacer}%\n%{SB::lang::bc::shopprice::%{_lang}%}%"
+          set {_lore2} to "\n%{SB::config::guispacer}%\n%getlang(""bc_shopprice"",{_lang})%"
           replace all "<price>" with "%{SB::config::homeupgrade%{_lvl}%}%" in {_lore2}
 
-          setguiitem({_p},{_i},red glass pane,1,"&r%{SB::lang::bc::islandhometitle::%{_lang}%}%%{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
+          setguiitem({_p},{_i},red glass pane,1,"&r%getlang(""bc_islandhometitle"",{_lang})% %{_lvl}%","&r%{_lore1}%%{_lore2}%","buyislandupgrade(""%{_p}%"" parsed as player,""home"",{_lvl})",false)
   else:
-    message "%{_prefix}% %{SB::lang::notleader::%{_lang}%}%" to {_p}
+    set {_msg} to getlang("notleader",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_p}
 
 # > Function - buyislandupgrade:
 # > Arguments:
@@ -180,8 +182,10 @@ function buyislandupgrade(p:player, upgrade:text, level:integer):
     # > Get the uuid of the player and set it to a local variable.
     set {_uuid} to uuid of {_p}
     #
-    # > Get the language because we need it quite often here:
-    set {_lang} to {SK::lang::%{_uuid}%}
+    # > Get local variables which are used quite often.
+    set {_lang} to getlangcode({_p})
+    set {_prefix} to getlang("prefix",{_lang})
+    set {_notenoughmoney} to getlang("bc_notenoughmoney",{_lang})
     #
     # > Get the bedrock of the player who executed the command.
     set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
@@ -201,7 +205,7 @@ function buyislandupgrade(p:player, upgrade:text, level:integer):
           remove {_price} from {_p}'s balance
           set {SB::island::%{_x}%_%{_y}%_%{_z}%::sizeupgrade} to {_buylvl}
         else:
-          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+          message "%{_prefix}% %{_notenoughmoney}%" to {_p}
     if {_upgrade} is "hopper":
       if {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} is not set:
         set {_buylvl} to 1
@@ -213,7 +217,7 @@ function buyislandupgrade(p:player, upgrade:text, level:integer):
           remove {_price} from {_p}'s balance
           set {SB::island::%{_x}%_%{_y}%_%{_z}%::hopperupgrade} to {_buylvl}
         else:
-          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+          message "%{_prefix}% %{_notenoughmoney}%" to {_p}
     if {_upgrade} is "home":
       if {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} is not set:
         set {_buylvl} to 1
@@ -225,7 +229,7 @@ function buyislandupgrade(p:player, upgrade:text, level:integer):
           remove {_price} from {_p}'s balance
           set {SB::island::%{_x}%_%{_y}%_%{_z}%::homeupgrade} to {_buylvl}
         else:
-          message "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::notenoughmoney::%{_lang}%}%" to {_p}
+          message "%{_prefix}% %{_notenoughmoney}%" to {_p}
     #
     # > Reopen the upgrade menu.
     islandupgrademenu({_p})
