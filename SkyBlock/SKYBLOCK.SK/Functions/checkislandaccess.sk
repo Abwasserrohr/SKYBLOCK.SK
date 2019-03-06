@@ -364,3 +364,11 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
     else:
       if {SB::config::defaultisflag::%{_playertype}%::jetboots} is set:
         return {SB::config::defaultisflag::%{_playertype}%::jetboots}
+  #
+  # > This flag is for storage units, it gets triggered if the player opens a storage unit.
+  else if {_event} is "storageunit":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::storageunit} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::storageunit}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::storageunit} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::storageunit}
