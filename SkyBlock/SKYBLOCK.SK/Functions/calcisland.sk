@@ -8,7 +8,7 @@
 #
 # > Function: calcisland
 # > Arguments:
-# > <player>player
+# > <offline player>player
 # > Actions:
 # > Calculates the island level by getting both borders on the island, then looping though all blocks and
 # > calculating all predefined experience bonuses from the configuration together to get a level.
@@ -23,7 +23,18 @@ function calcisland(p:offline player):
   set {_uuid} to uuid of {_p}
   #
   # > Get the location of the bedrock of the island the player is on:
-  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+  set {_bedrock} to block at {SB::player::%{_uuid}%::island::bedrock}
+
+  #
+  # > Prevent chunks from unloading.
+  set metadata value "nochunkunload" of getdummy() to true
+  set {_exp} to 0
+  #
+  # > Calculate, how many blocks have be checked to make a fully working progress bar:
+  set {_l} to {SB::config::distance}*2
+  set {_b} to {SB::config::distance}*2
+  set {_h} to 256
+  set {_size} to {_l}*{_b}*{_h}
   #
   # > Get the border locations of the island to calculate the island level.
   set {_dist} to {SB::config::distance}
@@ -33,14 +44,10 @@ function calcisland(p:offline player):
   add ({_dist} - {SB::config::protect}) to z-coord of {_b1}
   subtract ({_dist} - {SB::config::protect}) from x-coord of {_b2}
   subtract ({_dist} - {SB::config::protect}) from z-coord of {_b2}
-  set y-coordinate of {_b2} to 256
-  set y-coordinate of {_b1} to 0
   #
-  # > Calculate, how many blocks have be checked to make a fully working progress bar:
-  set {_l} to {SB::config::distance}*2
-  set {_b} to {SB::config::distance}*2
-  set {_h} to 256
-  set {_size} to {_l}*{_b}*{_h}
+  # > The first loop only loops the y-coordinate 0.
+  set y-coordinate of {_b2} to 0
+  set y-coordinate of {_b1} to 0
   #
   # > Set the experience per block into a list and convert it to a usable format for us.
   set {_bxp::*} to yaml list "blocks" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
@@ -75,17 +82,29 @@ function calcisland(p:offline player):
         if loop-value-2's location is within {_b1} to {_b2}:
           disablerobot(loop-value-2)
     #
-	# > Loop all blocks within the two borders:
+    # > Loop all blocks within the two borders:
+    loadtempchunks({_b1},{_b2})
     loop blocks within {_b1} to {_b2}:
-      add 1 to {_i}
+      set {_loc} to location of loop-block
+      set {_loc1} to location of loop-block
+      set y-coord of {_loc1} to 256
       #
-      # > Setting the chunk of the current loop block to a local variable to load the chunk
+      # > Load the blocks within the x- and z-coord, from y-coord 0 to 256.
+      loop blocks within {_loc} to {_loc1}:
+        if loop-block-2.isEmpty() is false:
+          set {_tb} to "%loop-block-2.getType()%"
+          if loop-block-2 is a hopper:
+            add 1 to {_hopper}
+          if {_blockexp::%{_tb}%} is set:
+            #
+            # > Add the experience of the block to the local experience variable {_exp}
+            add {_blockexp::%{_tb}%} to {_exp}
+      add 256 to {_i}
+      add 256 to {_blocks}
       #
-      # > Every 1000 blocks, check for new percentages for the progress bar.
-      if {_i} is 5000:
-        add 5000 to {_b}
-        wait 1 tick
-        set {_percent} to ({_b}/{_size})*100
+      # > Update the status every 50000 blocks.
+      if {_i} > 50000:
+        set {_percent} to ({_blocks}/{_size})*100
         #
         # > If the percentage is bigger than the one before, replace one of the | progress bars with a colored one.
         if {_percent} >= {_needed}:
@@ -93,37 +112,21 @@ function calcisland(p:offline player):
           replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
         #
         # > Send the current progress bar to the player.
-        actionbar({_p},"%{_progress}% %{SB::config::color::secondary::2}%[%{_b}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::2}%%{_size}%]")
+        if {_blocks} > {_size}:
+          set {_blocks} to {_size}
+        actionbar({_p},"%{_progress}% %{SB::config::color::secondary::2}%[%{_blocks}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::2}%%{_size}%]")
         #
         # > Set the counter back to 0 to do this again in 5000 blocks.
         set {_i} to 0
-      #
-      # > Count blocks that aren't air and check them.
-      if loop-block.isEmpty() is false:
-        set {_tb} to "%loop-block.getType()%"
-        if loop-block is a hopper:
-          add 1 to {_hopper}
-        if {_blockexp::%{_tb}%} is set:
-          #
-          # > Add the experience of the block to the local experience variable {_exp}
-          add {_blockexp::%{_tb}%} to {_exp}
-          #
-          # > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
-          # > and increase the difficulty to reach the next level.
-          if {_exp} is more than {_xpn}:
-            add 1 to {_level}
-            set {_xpn} to ({_level} * {SB::config::explevel})
-        else:
-          #
-          # > If debug is set, tell everyone that the current material has no value for calculation.
-          if {SB::config::debug} is true:
-            broadcast "[Debug] %{_tb}% has no value for /island calc"
-          #
-          # > If the experience variable {_exp} is higher than the "needed experience" variable {_xpn}, add one level
-          # > and increase the difficulty to reach the next level.
-          if {_exp} is more than {_xpn}:
-            add 1 to {_level}
-            set {_xpn} to ({_level} * {SB::config::explevel})
+  #
+  # > Calculate the island level using a while loop.
+  while {_endfound} is not set:
+    if {_exp} is more than {_xpn}:
+      add 1 to {_level}
+      set {_xpn} to ({_level} * {SB::config::explevel})
+    else:
+      set {_endfound} to true
+  delete {_endfound}
   #
   # > Save the generated level to the island variable.
   set {_x} to x-coord of {_bedrock}
@@ -144,3 +147,29 @@ function calcisland(p:offline player):
   wait 5 ticks
   actionload({_p},"&rLevel: &6&l%{_level}%")
   delete {SB::calcstatus::%{_p}%}
+  delete metadata value "nochunkunload" of getdummy()
+
+#
+# > Event - on chunk unload
+# > Actions:
+# > If the value "nochunkunload" of the metadata of a dummy block is
+# > true, no chunks can unload. This is needed to prevent fast
+# > loading and unloading of chunks while calculating the island.
+on chunk unload:
+  if metadata value "nochunkunload" of getdummy() is true:
+    cancel event
+
+#
+# > Function - loadtempchunks
+# > Parameters:
+# > <location>location 1
+# > <loaction>location 2
+# > Actions:
+# > Loops through all blocks between the two location and loads the chunks,
+# > with chunk unload prevention, these chunks keep being loaded for a fast
+# > island calculation.
+function loadtempchunks(l1:location,l2:location):
+  wait 1 tick
+  loop blocks within {_l1} to {_l2}:
+    set {_chunk} to chunk at loop-block
+  delete {_chunk}
