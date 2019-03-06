@@ -5,6 +5,9 @@
 # configmetaloader.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
+import:
+  java.util.ArrayList
+
 #
 # > Function - loadconfigarray
 # > Parameters:
