@@ -63,6 +63,9 @@ on load:
   set {STORE::categories::ores} to diamond
   set {STORE::catlang::ores::de} to "Erze"
 
+  set {STORE::categories::colorblocks} to red terracotta
+  set {STORE::catlang::colorblocks::de} to "Farbige Blöcke"
+
 
   #
   # > Items for the categories.
@@ -391,7 +394,91 @@ on load:
   add "40" to {STORE::prices::ores::buy::*}
   add "2" to {STORE::prices::ores::sell::*}
   add "0" to {STORE::lvlthreshold::ores::*}
+  
+  add 16 of white terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
 
+  add 16 of orange terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of magenta terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of light blue terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of yellow terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of lime terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of pink terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of gray terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of light gray terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of cyan terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of purple terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of blue terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of brown terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of green terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of red terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of black terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
+
+  add 16 of terracotta to {STORE::items::colorblocks::*}
+  add "120" to {STORE::prices::colorblocks::buy::*}
+  add "5" to {STORE::prices::colorblocks::sell::*}
+  add "0" to {STORE::lvlthreshold::colorblocks::*}
 
 #
 # > Command - /store | /shop
