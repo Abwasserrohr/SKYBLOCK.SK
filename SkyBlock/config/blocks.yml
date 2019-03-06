@@ -6,6 +6,12 @@
 # ==============
 version: x
 #
+# > Calculate inventory of chests. Default: false.
+calcinventory: false
+#
+# > Calculate contents of storage units. Default: false.
+calcstorage: false
+#
 # > You can give the blocks here experience, if a player has the block on
 # > his island, the island level will increase once it is calculated.
 blocks:
