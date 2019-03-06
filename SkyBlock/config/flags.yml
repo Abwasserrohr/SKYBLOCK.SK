@@ -50,6 +50,9 @@ defaultislandflags-foreign:
 #
 # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
 - jetboots: false
+#
+# > Allow others to access to the storage unit. True = allowed, false = denied.
+- storageunit: false
 
 #
 # > Default Flags for player islands (trusted flags):
@@ -91,6 +94,9 @@ defaultislandflags-trusted:
 #
 # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
 - jetboots: true
+#
+# > Allow others to access to the storage unit. True = allowed, false = denied.
+- storageunit: false
 
 #
 # > Default Flags for player islands (member flags):
@@ -132,6 +138,9 @@ defaultislandflags-member:
 #
 # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
 - jetboots: true
+#
+# > Allow others to access to the storage unit. True = allowed, false = denied.
+- storageunit: false
 
 #
 # > Flags for not inhabited islands:
@@ -174,3 +183,6 @@ defaultlobbyflag:
 #
 # > Allow others to use jetboots on the island of the player. True = allowed, false = denied.
 - jetboots: false
+#
+# > Allow others to access to the storage unit. True = allowed, false = denied.
+- storageunit: false

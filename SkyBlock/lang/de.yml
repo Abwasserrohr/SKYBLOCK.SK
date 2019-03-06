@@ -243,6 +243,7 @@ language:
 - flag_entityclickt: "&rEntities"
 - flag_redstonet: "&rRedstone"
 - flag_jetbootst: "&rJetBoots"
+- flag_storageunitt: "&rLagersystem"
 - flag_flagst: "Flags"
 - flag_foreignt: "Flags für Fremde"
 - flag_trustedt: "Flags für Vertraute"
@@ -264,6 +265,7 @@ language:
 - flag_entityclickd: <s1>Erlaubt diesen Spielern,<nl><s1>Entities anzuklicken.
 - flag_redstoned: <s1>Erlaubt diesen Spielern,<nl><s1>Redstone Einstellungen<nl><s1>zu ändern.
 - flag_jetbootsd: <s1>Erlaubt diesen Spielern,<nl><s1>JetBoots zu verwenden.
+- flag_storageunitd: <s1>Erlaubt diesen Spielern,<nl><s1>auf das Lagersystem<nl><s1>zuzugreifen.
 - flag_foreignd: <s1>Erlaube Fremden diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
 - flag_trustedd: <s1>Erlaube Vertrauten diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
 - flag_memberd: <s1>Erlaube Mitgliedern diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
