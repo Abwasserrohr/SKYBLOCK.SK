@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.3
+# store.sk v0.0.4
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -29,456 +29,515 @@ options:
 # > Configure the categories and items of the store below.
 on load:
   #
-  # > Delete old or already set variables. 
-  # > Do not change this.
-  loop {STORE::categories::*}:
-    delete {STORE::items::%loop-index%::*}
-    delete {STORE::prices::%loop-index%::*}
-    delete {STORE::buyreward::%loop-index%::*}
-    delete {STORE::lvlthreshold::%loop-index%::*}
-  delete {STORE::categories::*}
+  # > Categories
+  # > Example for a small configuration:
+  # > add "<any internal category name>" to {_categories::*}
+  # > loadconfigobject("store-config-category-item-<any internal category name>",any item or block)
+  # > loadconfigarray("store-config-categories",{_categories::*})
+  # > Category names are stored in the language file as:
+  # > store_category_<any internal category name>
+  delete {_categories::*}
+  add "blocks" to {_categories::*}
+  add "items" to {_categories::*}
+  add "eggs" to {_categories::*}
+  add "food" to {_categories::*}
+  add "decoration" to {_categories::*}
+  add "ores" to {_categories::*}
+  add "colorblocks" to {_categories::*}
+  loadconfigarray("store-config-categories",{_categories::*})
+  loadconfigobject("store-config-category-item-blocks",grass)
+  loadconfigobject("store-config-category-item-items",stick)
+  loadconfigobject("store-config-category-item-eggs",villager spawn egg)
+  loadconfigobject("store-config-category-item-food",cooked beef)
+  loadconfigobject("store-config-category-item-decoration",poppy)
+  loadconfigobject("store-config-category-item-ores",diamond)
+  loadconfigobject("store-config-category-item-colorblocks",red terracotta)
 
   #
-  # > Categories.
-  # > Example category with placeholders:
-  # > set {STORE::categories::<internal name of your new category>} to <display item>
-  # > set {STORE::catlang::<internal name of your new category>::<langcode>} to "Blöcke"
-  #
-  # > The language code default translations are in the language folder of SKYBLOCK.SK.
-  set {STORE::categories::blocks} to grass
-  set {STORE::catlang::blocks::de} to "Blöcke"
+  # > Items for the categories
+  # > Example of a small configuration:
+  # > add 64 of cobblestone to {_categoryitems::*}
+  # > add "50" to {_categorybuy::*}
+  # > add "5" to {_categorysell::*}
+  # > add "0" to {_categorylvlthreshold::*}
+  # > loadconfigarray("store-config-items-<any internal category name>",{_categoryitems::*})
+  # > loadconfigarray("store-config-items-<any internal category name>-buy",{_categorybuy::*})
+  # > loadconfigarray("store-config-items-<any internal category name>-sell",{_categorysell::*})
+  # > loadconfigarray("store-config-items-<any internal category name>-lvl",{_categorylvlthreshold::*})
+  # > delete {_categoryitems::*}
+  # > delete {_categorybuy::*}
+  # > delete {_categorysell::*}
+  # > delete {_categorylvlthreshold::*}
 
-  set {STORE::categories::items} to stick
-  set {STORE::catlang::items::de} to "Items"
+  add 64 of cobblestone to {_categoryitems::*}
+  add "50" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  set {STORE::categories::eggs} to villager spawn egg
-  set {STORE::catlang::eggs::de} to "Spawneier"
-
-  set {STORE::categories::food} to cooked beef
-  set {STORE::catlang::food::de} to "Lebensmittel"
-
-  set {STORE::categories::decoration} to poppy
-  set {STORE::catlang::decoration::de} to "Dekoartikel"
-
-  set {STORE::categories::ores} to diamond
-  set {STORE::catlang::ores::de} to "Erze"
-
-  set {STORE::categories::colorblocks} to red terracotta
-  set {STORE::catlang::colorblocks::de} to "Farbige Blöcke"
-
-
-  #
-  # > Items for the categories.
-  # > Example for a item configuration with placeholders:
-  # > add 64 of cobblestone to {STORE::items::<replace this with internal category name>::*}
-  # > add "<price>" to {STORE::prices::<replace this with internal category name>::buy::*}
-  # > add "<price>" to {STORE::prices::<replace this with internal category name>::sell::*}
-  # > add "<island level threshold to buy/sell this item>" to {STORE::lvlthreshold::<replace this with internal category name>::*}
-  # > Add a function in, be sure to set it to "none", if the player should get the item.
-  add 64 of cobblestone to {STORE::items::blocks::*}
-  add "50" to {STORE::prices::blocks::buy::*}
-  add "5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 1 of dirt to {_categoryitems::*}
+  add "1000" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 1 of dirt to {STORE::items::blocks::*}
-  add "1000" to {STORE::prices::blocks::buy::*}
-  add "10" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 1 of sand to {_categoryitems::*}
+  add "1000" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 1 of sand to {STORE::items::blocks::*}
-  add "1000" to {STORE::prices::blocks::buy::*}
-  add "2" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 64 of stone to {_categoryitems::*}
+  add "75" to {_categorybuy::*}
+  add "7.5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 64 of stone to {STORE::items::blocks::*}
-  add "75" to {STORE::prices::blocks::buy::*}
-  add "7.5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 1 of obsidian to {_categoryitems::*}
+  add "10000" to {_categorybuy::*}
+  add "1000" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 1 of obsidian to {STORE::items::blocks::*}
-  add "10000" to {STORE::prices::blocks::buy::*}
-  add "1000" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 32 of oak log to {_categoryitems::*}
+  add "100" to {_categorybuy::*}
+  add "30" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 32 of oak log to {STORE::items::blocks::*}
-  add "100" to {STORE::prices::blocks::buy::*}
-  add "30" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 32 of raw diorite to {_categoryitems::*}
+  add "30" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 32 of raw diorite to {STORE::items::blocks::*}
-  add "30" to {STORE::prices::blocks::buy::*}
-  add "5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 32 of raw andesite to {_categoryitems::*}
+  add "30" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 32 of raw andesite to {STORE::items::blocks::*}
-  add "30" to {STORE::prices::blocks::buy::*}
-  add "5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 32 of raw granite to {_categoryitems::*}
+  add "30" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 32 of raw granite to {STORE::items::blocks::*}
-  add "30" to {STORE::prices::blocks::buy::*}
-  add "5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 16 of gravel to {_categoryitems::*}
+  add "100" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 16 of gravel to {STORE::items::blocks::*}
-  add "100" to {STORE::prices::blocks::buy::*}
-  add "10" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 1 of purpur block to {_categoryitems::*}
+  add "20" to {_categorybuy::*}
+  add "0.5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 1 of purpur block to {STORE::items::blocks::*}
-  add "20" to {STORE::prices::blocks::buy::*}
-  add "0.5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
-  
-  add 16 of white wool to {STORE::items::blocks::*}
-  add "100" to {STORE::prices::blocks::buy::*}
-  add "5" to {STORE::prices::blocks::sell::*}
-  add "0" to {STORE::lvlthreshold::blocks::*}
+  add 16 of white wool to {_categoryitems::*}
+  add "100" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+  loadconfigarray("store-config-items-blocks",{_categoryitems::*})
+  loadconfigarray("store-config-items-blocks-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-blocks-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-blocks-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
   
   #
   # > Mob spawn egg category
-  add 1 of villager spawn egg to {STORE::items::eggs::*}
-  add "150000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of villager spawn egg to {_categoryitems::*}
+  add "150000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of pig spawn egg to {STORE::items::eggs::*}
-  add "5000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of pig spawn egg to {_categoryitems::*}
+  add "5000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of cow spawn egg to {STORE::items::eggs::*}
-  add "5000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of cow spawn egg to {_categoryitems::*}
+  add "5000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of chicken spawn egg to {STORE::items::eggs::*}
-  add "2000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of chicken spawn egg to {_categoryitems::*}
+  add "2000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of wolf spawn egg to {STORE::items::eggs::*}
-  add "25000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of wolf spawn egg to {_categoryitems::*}
+  add "25000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of sheep spawn egg to {STORE::items::eggs::*}
-  add "50000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of sheep spawn egg to {_categoryitems::*}
+  add "50000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of mooshroom spawn egg to {STORE::items::eggs::*}
-  add "150000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of mooshroom spawn egg to {_categoryitems::*}
+  add "150000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of donkey spawn egg to {STORE::items::eggs::*}
-  add "30000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of donkey spawn egg to {_categoryitems::*}
+  add "30000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of llama spawn egg to {STORE::items::eggs::*}
-  add "25000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of llama spawn egg to {_categoryitems::*}
+  add "25000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
 
-  add 1 of rabbit spawn egg to {STORE::items::eggs::*}
-  add "5000" to {STORE::prices::eggs::buy::*}
-  add "-1" to {STORE::prices::eggs::sell::*}
-  add "90" to {STORE::lvlthreshold::eggs::*}
+  add 1 of rabbit spawn egg to {_categoryitems::*}
+  add "5000" to {_categorybuy::*}
+  add "-1" to {_categorysell::*}
+  add "90" to {_categorylvlthreshold::*}
+  
+  loadconfigarray("store-config-items-eggs",{_categoryitems::*})
+  loadconfigarray("store-config-items-eggs-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-eggs-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-eggs-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
 
   #
   # > Food category
-  add 16 of steak to {STORE::items::food::*}
-  add "150" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of steak to {_categoryitems::*}
+  add "150" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked porkchop to {STORE::items::food::*}
-  add "150" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked porkchop to {_categoryitems::*}
+  add "150" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked chicken to {STORE::items::food::*}
-  add "120" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked chicken to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked rabbit to {STORE::items::food::*}
-  add "120" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked rabbit to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked mutton to {STORE::items::food::*}
-  add "150" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked mutton to {_categoryitems::*}
+  add "150" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of baked potato to {STORE::items::food::*}
-  add "150" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of baked potato to {_categoryitems::*}
+  add "150" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked cod to {STORE::items::food::*}
-  add "140" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked cod to {_categoryitems::*}
+  add "140" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cooked salmon to {STORE::items::food::*}
-  add "140" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of cooked salmon to {_categoryitems::*}
+  add "140" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of pumpkin pie to {STORE::items::food::*}
-  add "250" to {STORE::prices::food::buy::*}
-  add "5" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of pumpkin pie to {_categoryitems::*}
+  add "250" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of rabbit stew to {STORE::items::food::*}
-  add "25" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add 1 of cake to {STORE::items::food::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 1 of rabbit stew to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add 1 of cake to {_categoryitems::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add "75" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add "75" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 32 of cookie to {STORE::items::food::*}
-  add "50" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 32 of cookie to {_categoryitems::*}
+  add "50" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of carrot to {STORE::items::food::*}
-  add "50" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of carrot to {_categoryitems::*}
+  add "50" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 64 of sugar cane to {STORE::items::food::*}
-  add "25" to {STORE::prices::food::buy::*}
-  add "2" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 64 of sugar cane to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of bread to {STORE::items::food::*}
-  add "95" to {STORE::prices::food::buy::*}
-  add "4" to {STORE::prices::food::sell::*}
-  add "0" to {STORE::lvlthreshold::food::*}
+  add 16 of bread to {_categoryitems::*}
+  add "95" to {_categorybuy::*}
+  add "4" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  loadconfigarray("store-config-items-food",{_categoryitems::*})
+  loadconfigarray("store-config-items-food-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-food-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-food-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
 
   #
   # > Decoration
-  add 1 of dandelion to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of dandelion to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of poppy to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of poppy to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of blue orchid to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of blue orchid to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of allium to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of allium to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of azure bluet to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of azure bluet to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of oxeye daisy to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of oxeye daisy to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of red tulip to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of red tulip to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of orange tulip to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of orange tulip to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of white tulip to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of white tulip to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of pink tulip to {STORE::items::decoration::*}
-  add "25" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of pink tulip to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of fern to {STORE::items::decoration::*}
-  add "75" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of fern to {_categoryitems::*}
+  add "75" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of dead bush to {STORE::items::decoration::*}
-  add "75" to {STORE::prices::decoration::buy::*}
-  add "1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of dead bush to {_categoryitems::*}
+  add "75" to {_categorybuy::*}
+  add "1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of vine to {STORE::items::decoration::*}
-  add "15" to {STORE::prices::decoration::buy::*}
-  add "0.1" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of vine to {_categoryitems::*}
+  add "15" to {_categorybuy::*}
+  add "0.1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of lily pad to {STORE::items::decoration::*}
-  add "50" to {STORE::prices::decoration::buy::*}
-  add "5" to {STORE::prices::decoration::sell::*}
-  add "0" to {STORE::lvlthreshold::decoration::*}
+  add 1 of lily pad to {_categoryitems::*}
+  add "50" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  loadconfigarray("store-config-items-decoration",{_categoryitems::*})
+  loadconfigarray("store-config-items-decoration-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-decoration-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-decoration-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
 
   #
   # > Items
-  add 32 of torch to {STORE::items::items::*}
-  add "25" to {STORE::prices::items::buy::*}
-  add "2" to {STORE::prices::items::sell::*}
-  add "0" to {STORE::lvlthreshold::items::*}
+  add 32 of torch to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of armor stand to {STORE::items::items::*}
-  add "15" to {STORE::prices::items::buy::*}
-  add "0.1" to {STORE::prices::items::sell::*}
-  add "0" to {STORE::lvlthreshold::items::*}
+  add 1 of armor stand to {_categoryitems::*}
+  add "15" to {_categorybuy::*}
+  add "0.1" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of name tag to {STORE::items::items::*}
-  add "55" to {STORE::prices::items::buy::*}
-  add "2" to {STORE::prices::items::sell::*}
-  add "0" to {STORE::lvlthreshold::items::*}
-  
+  add 1 of name tag to {_categoryitems::*}
+  add "55" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  loadconfigarray("store-config-items-items",{_categoryitems::*})
+  loadconfigarray("store-config-items-items-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-items-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-items-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
+
   #
   # > Ores
-  add 1 of iron ingot to {STORE::items::ores::*}
-  add "35" to {STORE::prices::ores::buy::*}
-  add "3" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 1 of iron ingot to {_categoryitems::*}
+  add "35" to {_categorybuy::*}
+  add "3" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
   
-  add 1 of gold ingot to {STORE::items::ores::*}
-  add "35" to {STORE::prices::ores::buy::*}
-  add "3" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 1 of gold ingot to {_categoryitems::*}
+  add "35" to {_categorybuy::*}
+  add "3" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of lapis lazuli to {STORE::items::ores::*}
-  add "125" to {STORE::prices::ores::buy::*}
-  add "5" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 16 of lapis lazuli to {_categoryitems::*}
+  add "125" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of coal to {STORE::items::ores::*}
-  add "25" to {STORE::prices::ores::buy::*}
-  add "2.5" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 16 of coal to {_categoryitems::*}
+  add "25" to {_categorybuy::*}
+  add "2.5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of diamond to {STORE::items::ores::*}
-  add "175" to {STORE::prices::ores::buy::*}
-  add "20" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 1 of diamond to {_categoryitems::*}
+  add "175" to {_categorybuy::*}
+  add "20" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of redstone to {STORE::items::ores::*}
-  add "90" to {STORE::prices::ores::buy::*}
-  add "4" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 16 of redstone to {_categoryitems::*}
+  add "90" to {_categorybuy::*}
+  add "4" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of emerald to {STORE::items::ores::*}
-  add "45" to {STORE::prices::ores::buy::*}
-  add "0.5" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 1 of emerald to {_categoryitems::*}
+  add "45" to {_categorybuy::*}
+  add "0.5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 1 of nether quartz to {STORE::items::ores::*}
-  add "40" to {STORE::prices::ores::buy::*}
-  add "2" to {STORE::prices::ores::sell::*}
-  add "0" to {STORE::lvlthreshold::ores::*}
+  add 1 of nether quartz to {_categoryitems::*}
+  add "40" to {_categorybuy::*}
+  add "2" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  loadconfigarray("store-config-items-ores",{_categoryitems::*})
+  loadconfigarray("store-config-items-ores-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-ores-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-ores-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
+
+  #
+  # > Colorful blocks
   
-  add 16 of white terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of white terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of orange terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of orange terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of magenta terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of magenta terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of light blue terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of light blue terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of yellow terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of yellow terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of lime terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of lime terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of pink terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of pink terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of gray terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of gray terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of light gray terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of light gray terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of cyan terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of cyan terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of purple terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of purple terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of blue terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of blue terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of brown terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of brown terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of green terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of green terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of red terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of red terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of black terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of black terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
 
-  add 16 of terracotta to {STORE::items::colorblocks::*}
-  add "120" to {STORE::prices::colorblocks::buy::*}
-  add "5" to {STORE::prices::colorblocks::sell::*}
-  add "0" to {STORE::lvlthreshold::colorblocks::*}
+  add 16 of terracotta to {_categoryitems::*}
+  add "120" to {_categorybuy::*}
+  add "10" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  loadconfigarray("store-config-items-colorblocks",{_categoryitems::*})
+  loadconfigarray("store-config-items-colorblocks-buy",{_categorybuy::*})
+  loadconfigarray("store-config-items-colorblocks-sell",{_categorysell::*})
+  loadconfigarray("store-config-items-colorblocks-lvl",{_categorylvlthreshold::*})
+  delete {_categoryitems::*}
+  delete {_categorybuy::*}
+  delete {_categorysell::*}
+  delete {_categorylvlthreshold::*}
 
 #
 # > Command - /store | /shop
@@ -557,8 +616,14 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
       set {_item} to getcustomhead("blackbackwards",{_backwardpageheaddata})
       setguiitem({_player},18,{_item},1,getlang("store_pagebackward",{_lang}),getlang("store_pagebackwardlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}-1%)",false)
     #
+    # > Load necessary data from metadata.
+    set {_items::*} to getconfigarray("store-config-items-%{_shop}%")
+    set {_buyprice::*} to getconfigarray("store-config-items-%{_shop}%-buy")
+    set {_sellprice::*} to getconfigarray("store-config-items-%{_shop}%-sell")
+    set {_lvlthreshold::*} to getconfigarray("store-config-items-%{_shop}%-lvl")
+    #
     # > Loop through all items for the selected shop.
-    loop {STORE::items::%{_shop}%::*}:
+    loop {_items::*}:
       #
       # > Count the loops to know which items should be displayed, important if
       # > there are more pages than only one.
@@ -590,22 +655,22 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
           # > of the menu to fit better.
           if {_mode} is "sell":
             set {_lore} to getlang("store_itemselllore",{_lang})
-            set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
+            set {_price} to {_sellprice::%{_loopnum}%}
             replace all "<amount>" with "%{_price}%" in {_lore}
             replace all "<currency>" with "&7%{_currency}%" in {_lore}
             if {_price} is "-1":
               set {_lore} to getlang("store_cantsell",{_lang})
           else if {_mode} is "buy":
             set {_lore} to getlang("store_itembuylore",{_lang})
-            set {_price} to {STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}
-            replace all "<amount>" with "%{STORE::prices::%{_shop}%::%{_mode}%::%{_loopnum}%}%" in {_lore}
+            set {_price} to {_buyprice::%{_loopnum}%}
+            replace all "<amount>" with "%{_price}%" in {_lore}
             replace all "<currency>" with "&7%{_currency}%" in {_lore}
             if {_price} is "-1":
               set {_lore} to getlang("store_cantbuy",{_lang})
           #
           # > If the players island is equal or higher to the threshold, display the item with
           # > prepared lore.
-          if {STORE::lvlthreshold::%{_shop}%::%{_loopnum}%} parsed as number <= {_level}:
+          if {_lvlthreshold::%{_loopnum}%} parsed as number <= {_level}:
             #
             # > Once all the data to display has been prepared, place the item
             # > into the current menu of the player.
@@ -614,8 +679,8 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
           # > If the threshold has not been reached, set a not clickable item into the store
           # > with a lore which describes why.
           else:
-            set {_lore} to {SB::lang::store::lvlthreshold::%{_lang}%}
-            replace all "<level>" with "%{STORE::lvlthreshold::%{_shop}%::%{_loopnum}%}%" in {_lore}
+            set {_lore} to getlang("store_lvlthreshold",{_lang})
+            replace all "<level>" with "%{_lvlthreshold::%{_loopnum}%}%" in {_lore}
             setguiitem({_player},{_storeslot},loop-value,{_number},"","%{_lore}%"," ",false)
           #
           # > The 34th slot gets a forward button which allows the player
@@ -636,8 +701,11 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
   # > This is predefined and should not be changed.
   set {_slot} to 45
   #
+  # > Load the categories from metadata.
+  set {_categories::*} to getconfigarray("store-config-categories")
+  #
   # > Loop through all categories to display the right ones.
-  loop {STORE::categories::*}:
+  loop {_categories::*}:
     #
     # > Count the loops to display the right categories.
     add 1 to {_loopnum}
@@ -659,7 +727,8 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
       # > If the loop number is equal or smaller than the startcategory id + 6, set the category with
       # > the predefined category item.
       if {_loopnum} <= ({_startcategoryid}+6):
-        setguiitem({_player},{_slot},loop-value,1,getlang("store_category_%loop-index%",{_lang}),"","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%loop-index%"",1)",false)
+        set {_item} to getconfigobject("store-config-category-item-%loop-value%")
+        setguiitem({_player},{_slot},{_item},1,getlang("store_category_%loop-value%",{_lang}),"","serverstore_open(""%{_player}%"" parsed as player,""%{_mode}%"",""%{_category}%"",%{_categorysite}%,""%loop-value%"",1)",false)
         add 1 to {_slot}
       #
       # > If the loop number is exactly startcategory id + 7, we have hit the
@@ -692,15 +761,22 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
   set {_prefix} to getlang("prefix",{_lang})
   set {_currency} to getlang("currencyname",{_lang})
   #
+  # > Load necessary data from metadata.
+  set {_items::*} to getconfigarray("store-config-items-%{_shop}%")
+  #
   # > Get the price of the item and parse it as number.
-  set {_price} to {STORE::prices::%{_shop}%::%{_action}%::%{_itemshopid}%} parsed as number
+  if {_action} is "buy":
+    set {_buyprice::*} to getconfigarray("store-config-items-%{_shop}%-buy")
+  else if {_action} is "sell":
+    set {_sellprice::*} to getconfigarray("store-config-items-%{_shop}%-sell")
+  set {_price} to {_%{_action}%price::%{_itemshopid}%} parsed as number
   #
   # > If the price is -1, stop here.
   if {_price} is -1:
     stop
   #
   # > Get the item which should be bought|sold as a local variable.
-  set {_item} to {STORE::items::%{_shop}%::%{_itemshopid}%}
+  set {_item} to {_items::%{_itemshopid}%}
   #
   # > Go through the following part if the player wants to buy.
   if {_action} is "buy":
