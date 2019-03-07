@@ -362,6 +362,7 @@ language:
 - store_soldxitems: "Du hast <ph><ph> für <ph> verkauft."
 - store_boughtxitems: "Du hast <ph><ph> für <ph> gekauft."
 - store_notenoughitem: "Du hast nicht genug <ph>."
+- store_maxsellamountreached: "Du hast das Verkaufslimit von <amount> <currency> erreicht. Komm morgen wieder."
 
   #
   # > Lootbox
@@ -590,3 +591,4 @@ language:
 - store_category_food: "&rLebensmittel"
 - store_category_decoration: "&rDekoartikel"
 - store_category_ores: "&rErze"
+- store_category_colorblocks: "&rFarbige Blöcke"
