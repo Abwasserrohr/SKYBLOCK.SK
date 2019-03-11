@@ -14,6 +14,22 @@ on load:
   set {SB::config::challenges::threshold::3} to 500
   set {SB::config::challenges::threshold::4} to 2500
   set {SB::config::challenges::threshold::5} to 5000
+  
+  #
+  # > Set here the amount in percent, how much the repeats should be increased per level.
+  # > 20 means 20% per defined x. 
+  set {SB::config::challenges::repeatmodifier::repeatincrease} to 20
+  #
+  # > Set the amount of xp needed for a increase of the repeats.
+  set {SB::config::challenges::repeatmodifier::xprepeatincrease} to 100
+  #
+  # > Increase the amount of the needed experience to increase the repeats
+  # > with a predefined difficulty modifier which gets harder every time the
+  # > increasement has happened.
+  set {SB::config::challenges::repeatmodifier::difficulty} to 20
+  #
+  # > Set the item which should appear to display the repeat modifier statistics.
+  set {SB::config::challenges::repeatmodifier::item} to magenta glazed terracotta
 
   #
   # > Define the challenges. Example:
