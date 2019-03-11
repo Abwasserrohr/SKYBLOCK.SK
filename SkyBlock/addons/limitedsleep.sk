@@ -1,0 +1,50 @@
+#
+# ==============
+# limitedsleep.sk v0.0.1
+# ==============
+# > Source: https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/limitedsleep.sk
+# ==============
+# > Allow players to change the time back to day even if not everyone sleeps.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > First use: Place limitedsleep.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Steps for users:
+# > Sleep. There has to be a minimum amount of players to sleep, which can be defined in the options.
+
+options:
+	#
+	# > Set a percentage needed to sleep before it changes instantly to day.
+	startdaypercent: 40
+
+#
+# > Event - on bed enter
+# > Actions:
+# > This event gets called if a player lays into a bed,
+# > it will change the time to day if there are enough
+# > players in the bed.
+on bed enter:
+	#
+	# > Wait a tick, if we don't wait a tick, we can't
+	# > detect the player who layed down with this event.
+	wait 1 tick
+	#
+	# > Loop through all players to count how many are
+	# > sleeping.
+	loop all players:
+		add 1 to {_players}
+		if loop-player is sleeping:
+			add 1 to {_sleepers}
+	#
+	# > Calculate a percentage of how many players are sleeping.
+	set {_sleeppercent} to ({_sleepers} / {_players})*100
+	#
+	# > If the calculated percentage is higher than the
+	# > predefined percentage, change to day.
+	if {_sleeppercent} >= {@startdaypercent}:
+		set time to 08:00
