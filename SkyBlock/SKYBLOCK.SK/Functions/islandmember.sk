@@ -199,14 +199,15 @@ function islandmember(p:player,a:text,target:text="1"):
         set {_target} to {_target} parsed as offline player
         #
         # > If the target is a valid player.
-        if {_target} is a player:
+        if {_target} is a offline player:
           #
           # > Delete the player from the island and use the leaveisland function.
           set {_uuid} to uuid of {_target}
           set {_loc} to {SB::player::%{_uuid}%::island::bedrock}
           set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
           loop {SB::island::%{_bedrockloc}%::member::*}:
-            if loop-value is uuid of {_target}:
+            set {_targetuuid} to uuid of {_target}
+            if loop-value is {_targetuuid}:
               delete {SB::island::%{_bedrockloc}%::member::%loop-index%}
               set {_msg} to getlang("kickmemberleader",{_lang})
               set {_msg1} to getlang("kickmember",{_lang})
@@ -217,12 +218,13 @@ function islandmember(p:player,a:text,target:text="1"):
               leaveisland({_target}, "member")
               stop
           set {_msg} to getlang("plnotfound",{_lang})
-          replace all "<player>" with {_target} in {_msg}
+          replace all "<player>" with "%{_target}%" in {_msg}
           message "%{_prefix}% %{_msg}%" to {_p}
         #
         # > The target is not a valid player.
         else:
-          set {_msg} to getlang("invitetargeterror",{_lang})
+          set {_msg} to getlang("plnotfound",{_lang})
+          replace all "<player>" with "%{_target}%" in {_msg}
           message "%{_prefix}% %{_msg}%" to {_p}
       #
       # > The player is not the leader and not allowed to kick players.
