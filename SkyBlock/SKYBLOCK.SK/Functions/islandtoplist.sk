@@ -26,7 +26,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     wait 2 ticks
   #
   # > Save some variables to local variables.
-  set {_pageint} to "%{_pageint}%" parsed as integer
+  set {_pageint} to "%{_pageint}%" parsed as number
   set {_playeruuid} to uuid of {_p}
   set {_lang} to getlangcode({_p})
   set {_prefix} to getlang("prefix",{_lang})
@@ -101,12 +101,6 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     replace all "<pages>" with "%{_page}%" in {_msg}
     message "%{_prefix}% %{_msg}%" to {_p}
     stop
-  #
-  # > Create a new book which is going to be used.
-  set {_item} to written book
-  set {_bookmeta} to {_item}.getItemMeta()
-  {_bookmeta}.setTitle("Toplist")
-  {_bookmeta}.setAuthor("Immanuel94")
   #
   # > Use the ComponentBuilder to create a text with hover and click events.
   set {_toplistbook} to ""
@@ -188,7 +182,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     # > Add the actual "go forward" text component.
     {_book}.append(new TextComponent({_msg}))
     set {_msg} to new TextComponent("&l→&r")
-    set {_lore} to getlang("pageforwardlore",{_lang})
+    set {_lore} to getlang("store_pageforwardlore",{_lang})
     set {_head} to getlang("store_pageforward",{_lang})
     set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
     set {_msg} to setclickcmdevent({_msg},"/island top %{_pageint} + 1%")
@@ -196,6 +190,14 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   #
   # > Complete the BaseComponent by creating it and adding it to the sites list.
   add {_book}.create() to {_sites::*}
+
+  #
+  # > Create a new book which is going to be used, parse the item here new
+  # > to prevent a ItemMeta caching bug in Skript.
+  set {_item} to "written book" parsed as item
+  set {_bookmeta} to {_item}.getItemMeta()
+  {_bookmeta}.setTitle("Toplist")
+  {_bookmeta}.setAuthor("Immanuel94")
   #
   # > Set the sites to the book and then open it to the player.
   {_bookmeta}.spigot().setPages({_sites::*})
@@ -203,6 +205,6 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   #
   # > Get the item of the player to give it back after the book has been opened.
   set {_tool} to {_p}'s tool
-  set {_p}'s tool to 1 of {_item}
+  set {_p}'s tool to {_item}
   openbook({_p})
   set {_p}'s tool to {_tool}
