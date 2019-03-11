@@ -483,3 +483,35 @@ function changechallengexp(player:offline player,action:text,amount:number) :: n
   else if {_action} is "remove":
     remove {_amount} from {SB::island::%{_x}%_%{_y}%_%{_z}%::challengexp}
     return {_amount}
+
+#
+# > Function - getcurrentrepeats
+# > Parameters:
+# > <number>experience of the player
+# > <number>repeats of the challenge
+# > Actions:
+# > Returns the current repeat amount which the player is allowed to do. This
+# > is not static, since the amount can increase over the time with increasing
+# > challenge experience.
+function getcurrentrepeats(experience:number, repeats:number) :: number:
+  #
+  # > Shorten the long variables to short local variables.
+  set {_neededxp} to {SB::config::challenges::repeatmodifier::xprepeatincrease}
+  set {_repeatincrease} to {SB::config::challenges::repeatmodifier::repeatincrease}
+  set {_diffincrease} to {SB::config::challenges::repeatmodifier::difficulty}
+  #
+  # > While loop as long we're not done.
+  while {_done} is not set:
+    #
+    # > If the experience is equal or bigger than the needed xp,
+    # > increase the repeats and needed xp counter.
+    if {_experience} >= {_neededxp}:
+      set {_neededxp} to (({_neededxp}/100)*{_diffincrease})+{_neededxp}
+	  set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeatincrease}
+    #
+    # > If there is not enough experience, we're done here, return.
+	else:
+      set {_done} to true
+  delete {_done}
+  return {_repeats}
+
