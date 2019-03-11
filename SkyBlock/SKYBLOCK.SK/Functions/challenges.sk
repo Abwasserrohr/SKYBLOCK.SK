@@ -164,6 +164,9 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
   set {_x} to x-coord of {_bedrock}
   set {_y} to y-coord of {_bedrock}
   set {_z} to z-coord of {_bedrock}
+  set {_xp} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challengexp}
+  if {_xp} is not set:
+    set {_xp} to 0
   #
   # > Get island challenge data for repeats.
   set {_islandchallengedata} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challenges}
@@ -260,6 +263,10 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
           # > If the server operator set the repeat amount per day to -1, it is endless.
           if {_max} is -1:
             set {_max} to "∞"
+          #
+          # > If tthe current repeats aren't unlimited, calculate the maximum amount.
+          else:
+            set {_max} to getcurrentrepeats({_xp},{_max})
           replace all "<current>" with "%{_c}%" in {_m}
           replace all "<maxrepeat>" with "%{_max}%" in {_m}
           set {_loreend} to "%{_loreend}%%{_m}%"
@@ -307,6 +314,12 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
   set {_x} to x-coord of {_bedrock}
   set {_y} to y-coord of {_bedrock}
   set {_z} to z-coord of {_bedrock}
+  #
+  # > Get challenge experience and calculate maximum repeats for this challenge.
+  set {_xp} to {SB::island::%{_x}%_%{_y}%_%{_z}%::challengexp}
+  if {_xp} is not set:
+    set {_xp} to 0
+  set {_repeatsperday} to getcurrentrepeats({_xp},{_repeatsperday})
   #
   # > Split the string to a array. (challenge level=1,challenge id=3=repeats 5 amount == 13=5)
   # > Get repeat amount: {_finalchallenges::%{_cid}%}
@@ -507,11 +520,10 @@ function getcurrentrepeats(experience:number, repeats:number) :: number:
     # > increase the repeats and needed xp counter.
     if {_experience} >= {_neededxp}:
       set {_neededxp} to (({_neededxp}/100)*{_diffincrease})+{_neededxp}
-	  set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeatincrease}
+      set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeats}
     #
     # > If there is not enough experience, we're done here, return.
-	else:
+    else:
       set {_done} to true
   delete {_done}
-  return {_repeats}
-
+  return round({_repeats})
