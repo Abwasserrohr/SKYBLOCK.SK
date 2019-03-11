@@ -131,6 +131,12 @@ on load:
   add "100" to {_categorybuy::*}
   add "5" to {_categorysell::*}
   add "0" to {_categorylvlthreshold::*}
+  
+  add 32 of netherrack to {_categoryitems::*}
+  add "40" to {_categorybuy::*}
+  add "15" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
   loadconfigarray("store-config-items-blocks",{_categoryitems::*})
   loadconfigarray("store-config-items-blocks-buy",{_categorybuy::*})
   loadconfigarray("store-config-items-blocks-sell",{_categorysell::*})
