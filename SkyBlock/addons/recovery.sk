@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.3
+# recovery.sk v0.0.4
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -265,7 +265,7 @@ on place of any chest:
         #
         # > Loop trough all saved items and set it into the chest.
         loop {SR::recovery::inv::%{_invid}%::*}:
-          if {_slot} is 28:
+          if {_slot} is 27:
             set {_slot} to 0
             set {_chest} to {_chest1}
           set slot {_slot} of {_chest}'s inventory to loop-value
