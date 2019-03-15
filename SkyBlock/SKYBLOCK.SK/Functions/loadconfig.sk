@@ -252,8 +252,12 @@ function loadconfig():
       else if loop-value-1 is "challenges":
         #
         # > Load text based challenge configuration.
-        if {_value::1} contains "needed" or "reward" or "repeatreward" or "item" or "customfunction" or "customreward":
+        if {_value::1} contains "needed" or "reward" or "repeatreward" or "customfunction" or "customreward":
           loadconfigobject("challenges-config-c-%{_value::1}%",{_value::2})
+        #
+        # > Load item based challenge configuration.
+        if {_value::1} contains "item":
+          loadconfigobject("challenges-config-c-%{_value::1}%",{_value::2} parsed as item)
         #
         # > Load number based challenge configuration.
         else if {_value::1} contains "repeatsperday":
