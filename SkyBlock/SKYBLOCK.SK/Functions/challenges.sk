@@ -138,7 +138,7 @@ function openchallenges(p:player,page:number=0):
     set {_lore} to getlang("challenge_repeatbonuslore",{_lang})
     replace all "<bonus>" with "%{_repeatbonus}%" in {_lore}
     replace all "<progress>" with "%{_progress}%" in {_lore}
-    setguiitem({_p},24,magenta glazed terracotta,1,getlang("challenge_repeatbonustitle",{_lang}),{_lore}," ",false)
+    setguiitem({_p},24,{SB::config::challenges::repeatmodifier::item},1,getlang("challenge_repeatbonustitle",{_lang}),{_lore}," ",false)
   else:
     set {_item} to getcustomhead("blackexclamation", "%{_lvlhead::exclamation}%")
     setguiitem({_p},45,{_item},1,"&r%{_name}%","&r%{_lore}%","openchallenges(""%{_p}%"" parsed as player,0)",false)
