@@ -36,7 +36,7 @@ function openchallenges(p:player,page:number=0):
   set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the challenges are disabled, print error and stop here.
-  if {SB::config::usechallenges} is not true:
+  if {SB::config::usechallenges} is false:
     set {_msg} to getlang("challenge_disabled",{_lang})
     message "%{_prefix}% %{_msg}%" to {_p}
     stop
