@@ -572,6 +572,5 @@ function getcurrentrepeats(experience:number, repeats:number) :: number:
     # > If there is not enough experience, we're done here, return.
     else:
       set {_done} to true
-  add {_startrepeats} to {_repeats}
   delete {_done}
   return round({_repeats})
