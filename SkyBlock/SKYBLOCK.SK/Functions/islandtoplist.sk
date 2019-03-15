@@ -13,7 +13,10 @@ import:
   net.md_5.bungee.api.chat.HoverEvent
   net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
   net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
+  org.bukkit.inventory.ItemStack
+  org.bukkit.Material
 
+	
 # > Function - islandtoplist:
 # > Arguments:
 # > <player>player, <text>pageint
@@ -110,7 +113,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   set {_line} to getlang("topheader",{_lang})
   replace all "<start>" with "%{_pageint}%" in {_line}
   replace all "<end>" with "%{_page}%" in {_line}
-  {_book}.append("%{_line}%)%nl%%nl%")
+  {_book}.append(newTextComponent("%{_line}%%nl%%nl%"))
   #
   # > Loop through the toplist site, the player has requested.
   loop {_top::%{_pageint}%::*}:
@@ -140,9 +143,8 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     #
     # > Replace the name placeholder with the rank holder.
     replace all "<name>" with "%{_lp}%" in {_rank}
-    set {_msg} to new TextComponent("%{_rank}%%nl%")
+    set {_msg} to newTextComponent("%{_rank}%%nl%")
     set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}%")
-    {_msg}.setClickEvent({_clickevent})
     #
     # > Prepare and set the on hover event text for the toplist.
     set {_hovertext} to getlang("toplistbookhover",{_lang})
@@ -153,10 +155,10 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     {_book}.append({_msg})
   #
   # > Append a new line.
-  {_book}.append(new TextComponent(" %nl%"))
+  {_book}.append(newTextComponent(" %nl%"))
   #
   # > If this page isn't the first page, add a "back" button.
-  set {_msg} to new TextComponent("&l←&r")
+  set {_msg} to newTextComponent("&l←&r")
   if {_pageint} != 1:
     set {_lore} to getlang("store_pagebackwardlore",{_lang})
     set {_head} to getlang("store_pagebackward",{_lang})
@@ -176,12 +178,12 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   if {_pageint} < {_page}:
     #
     # > Add some space between the "go backwards" text component.
-    set {_msg} to new TextComponent("                        ")
+    set {_msg} to newTextComponent("                        ")
     set {_msg} to overwritecomponentevents({_msg})
     #
     # > Add the actual "go forward" text component.
-    {_book}.append(new TextComponent({_msg}))
-    set {_msg} to new TextComponent("&l→&r")
+    {_book}.append({_msg})
+    set {_msg} to newTextComponent("&l→&r")
     set {_lore} to getlang("store_pageforwardlore",{_lang})
     set {_head} to getlang("store_pageforward",{_lang})
     set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
@@ -192,15 +194,16 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   add {_book}.create() to {_sites::*}
 
   #
-  # > Create a new book which is going to be used, parse the item here new
-  # > to prevent a ItemMeta caching bug in Skript.
-  set {_item} to "written book" parsed as item
+  # > Create a new book which is going to be used, create it as Bukkit ItemStack to prevent
+  # > Skript side bugs.
+  set {_item} to new ItemStack(Material.WRITTEN_BOOK!, 1)
   set {_bookmeta} to {_item}.getItemMeta()
   {_bookmeta}.setTitle("Toplist")
   {_bookmeta}.setAuthor("Immanuel94")
   #
   # > Set the sites to the book and then open it to the player.
   {_bookmeta}.spigot().setPages({_sites::*})
+
   {_item}.setItemMeta({_bookmeta})
   #
   # > Get the item of the player to give it back after the book has been opened.
