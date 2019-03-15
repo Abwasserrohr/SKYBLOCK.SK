@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.4
+# openbook.sk v0.0.5
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -107,7 +107,6 @@ function getTranslatableComponentFromItem(item:item) :: object:
     set {_vname} to "block.%{_vname}%"
   else:
     set {_vname} to "item.%{_vname}%"
-  set {_item} to new TranslatableComponent({_vname})
   return new TranslatableComponent({_vname})
 
 #
