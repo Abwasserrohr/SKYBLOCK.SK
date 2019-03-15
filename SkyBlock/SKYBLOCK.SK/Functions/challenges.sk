@@ -108,6 +108,37 @@ function openchallenges(p:player,page:number=0):
     set {_xplang} to getlang("challenge_xp",{_lang})
     replace all "<amount>" with "%{_xp}%" in {_xplang}
     setguiitem({_p},22,{_p}'s skull,1,"&r%{SB::robot::stats::%{_lang}%}%","%{_xplang}%"," ",false)
+    set {_repeatbonus} to getcurrentrepeats({_xp},100)
+    remove 100 from {_repeatbonus}
+    #
+    # > Calculate repeat statistic.
+    set {_neededxp} to {SB::config::challenges::repeatmodifier::xprepeatincrease}
+    set {_repeatincrease} to {SB::config::challenges::repeatmodifier::repeatincrease}
+    set {_diffincrease} to {SB::config::challenges::repeatmodifier::difficulty}
+    set {_startrepeats} to 100
+    #
+    # > While loop as long we're not done.
+    while {_done} is not set:
+      #
+      # > If the experience is equal or bigger than the needed xp,
+      # > increase the repeats and needed xp counter.
+      if {_xp} >= {_neededxp}:
+        set {_neededxp} to (({_neededxp}/100)*{_diffincrease})+{_neededxp}
+        set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeats}
+      #
+      # > If there is not enough experience, we're done here, return.
+      else:
+        set {_done} to true
+    #
+    # > Calculate the progress in percent until the new repeat bonus is hit.
+    set {_progress} to ({_xp}/{_neededxp})*100
+    #
+    # > Display the repeat bonus statistic item.
+    getlang("challenge_repeatbonustitle",{_lang})
+    set {_lore} to getlang("challenge_repeatbonuslore",{_lang})
+    replace all "<bonus>" with "%{_repeatbonus}%" in {_lore}
+    replace all "<progress>" with "%{_progress}%" in {_lore}
+    setguiitem({_p},24,magenta glazed terracotta,1,getlang("challenge_repeatbonustitle",{_lang}),{_lore}," ",false)
   else:
     set {_item} to getcustomhead("blackexclamation", "%{_lvlhead::exclamation}%")
     setguiitem({_p},45,{_item},1,"&r%{_name}%","&r%{_lore}%","openchallenges(""%{_p}%"" parsed as player,0)",false)
@@ -512,6 +543,7 @@ function getcurrentrepeats(experience:number, repeats:number) :: number:
   set {_neededxp} to {SB::config::challenges::repeatmodifier::xprepeatincrease}
   set {_repeatincrease} to {SB::config::challenges::repeatmodifier::repeatincrease}
   set {_diffincrease} to {SB::config::challenges::repeatmodifier::difficulty}
+  set {_startrepeats} to {_repeats}
   #
   # > While loop as long we're not done.
   while {_done} is not set:
@@ -525,5 +557,6 @@ function getcurrentrepeats(experience:number, repeats:number) :: number:
     # > If there is not enough experience, we're done here, return.
     else:
       set {_done} to true
+  add {_startrepeats} to {_repeats}
   delete {_done}
   return round({_repeats})
