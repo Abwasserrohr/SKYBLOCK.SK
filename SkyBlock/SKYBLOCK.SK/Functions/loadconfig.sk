@@ -210,3 +210,55 @@ function loadconfig():
   #
   # > Load explevel
   set {SB::config::explevel} to loadymlparsenumber("explevel",{_corefile})
+
+  #
+  # > Load challenge configuration:
+
+  #
+  # > Load lists "threshold", "repeatmodifier" and "challenges" from challenges.yml.
+  delete {_load::*}
+  add "threshold", "repeatmodifier", "challenges" to {_load::*}
+  loop {_load::*}:
+    #
+    # > Get a list of the ones defined above.
+    set {_check::*} to yaml list "%loop-value%" from "plugins/Skript/scripts/SkyBlock/config/challenges.yml"
+    #
+    # > Loop through the list and parse the data.
+    loop {_check::*}:
+      set {_value::*} to parseymllistpart("%loop-value-2%")
+	  #
+	  # > Load the threshold configuration.
+      if loop-value-1 is "threshold":
+        #
+        # > Load number based challenge configuration.
+        loadconfigobject("challenges-config-threshold-%{_value::1}%",{_value::2} parsed as number)
+	  #
+	  # > Load the repeatmodifier configuration.
+      else if loop-value-1 is "repeatmodifier":
+        #
+        # > Load boolean based challenge configuration.
+        if {_value::1} is "enabled":
+          loadconfigobject("challenges-config-repeatmodifier-%{_value::1}%",{_value::2} parsed as boolean)
+	    #
+        # > Load text based challenge configuration.
+        else if {_value::1} is "repeatincrease" or "xprepeatincrease" or "difficulty":
+          loadconfigobject("challenges-config-repeatmodifier-%{_value::1}%",{_value::2} parsed as number)
+	    #
+        # > Load item based challenge configuration.
+        else if {_value::1} is "item":
+          loadconfigobject("challenges-config-repeatmodifier-%{_value::1}%",{_value::2} parsed as item)
+	  #
+	  # > Load the challenges.
+      else if loop-value-1 is "challenges":
+	    #
+        # > Load text based challenge configuration.
+        if {_value::1} contains "needed" or "reward" or "repeatreward" or "item" or "customfunction" or "customreward":
+          loadconfigobject("challenges-config-c-%{_value::1}%",{_value::2})
+	    #
+        # > Load number based challenge configuration.
+        else if {_value::1} contains "repeatsperday":
+          loadconfigobject("challenges-config-c-%{_value::1}%",{_value::2} parsed as number)
+	    #
+        # > Load boolean based challenge configuration.
+        else if {_value::1} contains "repeat":
+          loadconfigobject("challenges-config-c-%{_value::1}%",{_value::2} parsed as boolean)
