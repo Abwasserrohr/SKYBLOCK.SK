@@ -1,0 +1,26 @@
+#
+# ==============
+# reportfalsedirectory.sk
+# ==============
+# reportfalsedirectory.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+import:
+  java.io.File
+
+#
+# > Event - on load
+# > Actions:
+# > Detects if this file is not in the right folder and reports it to the chat of
+# > the server to inform the server operator about it. Repeating the error every
+# > 10 seconds until the file is at the right spot, which stops the while loop.
+on load:
+  while new File("plugins/Skript/scripts/SkyBlock/SKYBLOCK.SK/Functions/reportfalsedirectory.sk").exists() is false:
+    broadcast "[SKYBLOCK.SK] Error occured: Files aren't at the supported location."
+    broadcast "[SKYBLOCK.SK] Put the SkyBlock folder into the supported directory:"
+    broadcast "[SKYBLOCK.SK] plugins/Skript/scripts/SkyBlock/SKYBLOCK.SK/..."
+    broadcast "[SKYBLOCK.SK] plugins/Skript/scripts/SkyBlock/lang/..."
+    broadcast "[SKYBLOCK.SK] plugins/Skript/scripts/SkyBlock/islands/..."
+    broadcast "[SKYBLOCK.SK] plugins/Skript/scripts/SkyBlock/config/..."
+    broadcast "[SKYBLOCK.SK] plugins/Skript/scripts/SkyBlock/addons/..."
+    wait 10 seconds
