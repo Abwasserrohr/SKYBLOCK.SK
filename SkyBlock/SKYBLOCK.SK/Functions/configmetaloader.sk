@@ -63,5 +63,5 @@ function getconfigarray(id:text) :: objects:
 # > Returns a block as a dummy for metadata storage.
 function getdummy() :: block:
   if {SB::dummy} is not a block:
-    set {SB::dummy} to block at location at 0.0, 0.0, 0.0 in "dummy" parsed as world
+    set {SB::dummy} to block at location at 0.0, 0.0, 0.0 in "%{SB::config::world}%" parsed as world
   return {SB::dummy}
