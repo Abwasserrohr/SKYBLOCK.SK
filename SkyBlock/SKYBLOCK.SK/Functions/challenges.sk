@@ -36,12 +36,12 @@ function openchallenges(p:player,page:number=0):
   set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the challenges are disabled, print error and stop here.
-  if {SB::config::usechallenges} is not true:
+  if {SB::config::usechallenges} is false:
     set {_msg} to getlang("challenge_disabled",{_lang})
     message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
-  # > Get the date and check, if the day is over. If the day is over,
+  # > Get the date and check, if the day is over,
   # > reset repeat counters.
   set {_date} to new Date()
   set {_d} to new SimpleDateFormat("yyyy-MM-dd").format({_date})
@@ -68,7 +68,7 @@ function openchallenges(p:player,page:number=0):
   #
   # > Get the current level.
   loop 5 times:
-    if {_xp} >= {SB::config::challenges::threshold::%{_challengelvl}%}:
+    if {_xp} >= getconfigobject("challenges-config-threshold-%{_challengelvl}%"): 
       set {_currentlevel} to {_challengelvl}
     add 1 to {_challengelvl}
   set {_challengelvl} to 1
@@ -107,38 +107,41 @@ function openchallenges(p:player,page:number=0):
     setguiitem({_p},45,{_item},1,"&r%{_name}%","&r%{_lore}%"," ",false)
     set {_xplang} to getlang("challenge_xp",{_lang})
     replace all "<amount>" with "%{_xp}%" in {_xplang}
-    setguiitem({_p},22,{_p}'s skull,1,"&r%{SB::robot::stats::%{_lang}%}%","%{_xplang}%"," ",false)
+    setguiitem({_p},22,{_p}'s skull,1,getlang("robot_stats",{_lang},"&r"),"%{_xplang}%"," ",false)
     set {_repeatbonus} to getcurrentrepeats({_xp},100)
     remove 100 from {_repeatbonus}
     #
-    # > Calculate repeat statistic.
-    set {_neededxp} to {SB::config::challenges::repeatmodifier::xprepeatincrease}
-    set {_repeatincrease} to {SB::config::challenges::repeatmodifier::repeatincrease}
-    set {_diffincrease} to {SB::config::challenges::repeatmodifier::difficulty}
-    set {_startrepeats} to 100
-    #
-    # > While loop as long we're not done.
-    while {_done} is not set:
+    # > Calculate repeat statistic, if enabled.
+    set {_repeatbonusenabled} to getconfigobject("challenges-config-repeatmodifier-enabled")
+    if {_repeatbonusenabled} is true:
+      set {_neededxp} to getconfigobject("challenges-config-repeatmodifier-xprepeatincrease")
+      set {_repeatincrease} to getconfigobject("challenges-config-repeatmodifier-repeatincrease")
+      set {_diffincrease} to getconfigobject("challenges-config-repeatmodifier-difficulty")
+      set {_repeatmodifieritem} to getconfigobject("challenges-config-repeatmodifier-item")
+      set {_startrepeats} to 100
       #
-      # > If the experience is equal or bigger than the needed xp,
-      # > increase the repeats and needed xp counter.
-      if {_xp} >= {_neededxp}:
-        set {_neededxp} to (({_neededxp}/100)*{_diffincrease})+{_neededxp}
-        set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeats}
+      # > While loop as long we're not done.
+      while {_done} is not set:
+        #
+        # > If the experience is equal or bigger than the needed xp,
+        # > increase the repeats and needed xp counter.
+        if {_xp} >= {_neededxp}:
+          set {_neededxp} to (({_neededxp}/100)*{_diffincrease})+{_neededxp}
+          set {_repeats} to (({_repeats}/100)*{_repeatincrease})+{_repeats}
+        #
+        # > If there is not enough experience, we're done here, return.
+        else:
+          set {_done} to true
       #
-      # > If there is not enough experience, we're done here, return.
-      else:
-        set {_done} to true
-    #
-    # > Calculate the progress in percent until the new repeat bonus is hit.
-    set {_progress} to ({_xp}/{_neededxp})*100
-    #
-    # > Display the repeat bonus statistic item.
-    getlang("challenge_repeatbonustitle",{_lang})
-    set {_lore} to getlang("challenge_repeatbonuslore",{_lang})
-    replace all "<bonus>" with "%{_repeatbonus}%" in {_lore}
-    replace all "<progress>" with "%{_progress}%" in {_lore}
-    setguiitem({_p},24,{SB::config::challenges::repeatmodifier::item},1,getlang("challenge_repeatbonustitle",{_lang}),{_lore}," ",false)
+      # > Calculate the progress in percent until the new repeat bonus is hit.
+      set {_progress} to ({_xp}/{_neededxp})*100
+      #
+      # > Display the repeat bonus statistic item.
+      getlang("challenge_repeatbonustitle",{_lang})
+      set {_lore} to getlang("challenge_repeatbonuslore",{_lang})
+      replace all "<bonus>" with "%{_repeatbonus}%" in {_lore}
+      replace all "<progress>" with "%{_progress}%" in {_lore}
+      setguiitem({_p},24,{_repeatmodifieritem},1,getlang("challenge_repeatbonustitle",{_lang}),{_lore}," ",false)
   else:
     set {_item} to getcustomhead("blackexclamation", "%{_lvlhead::exclamation}%")
     setguiitem({_p},45,{_item},1,"&r%{_name}%","&r%{_lore}%","openchallenges(""%{_p}%"" parsed as player,0)",false)
@@ -172,7 +175,8 @@ function openchallenges(p:player,page:number=0):
         # > The level has to be unlocked first, add a specific lore for that and make it unclickable.
         set {_lore1} to getlang("challenge_xpneeded",{_lang})
         set {_lore2} to getlang("challenge_xpionlywclvl",{_lang})
-        set {_lore} to "%{_lore1}%||%{SB::config::guispacer}%||&r%{_xp}%/%{SB::config::challenges::threshold::%loop-number%}%||%{SB::config::guispacer}%||%{_lore2}%"
+        set {_thresholdamount} to getconfigobject("challenges-config-threshold-%loop-number%")
+        set {_lore} to "%{_lore1}%||%{SB::config::guispacer}%||&r%{_xp}%/%{_thresholdamount}%||%{SB::config::guispacer}%||%{_lore2}%"
         replace all "||" with "\n" in {_lore}
         setguiitem({_p},{_slot},{_item},1,"&r%{_lvltranslation}%","&r%{_lore}%"," ",false)
   #
@@ -217,15 +221,15 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
     if {_loops} is 8:
       set {_loops} to 1
       add 2 to {_slot}
-    if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::item} is set:
-      set {_item} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::item}
+    if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_item") is set:
+      set {_item} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_item")
     #
     # > If the display item isn't set, stop rendering here.
     else:
       stop loop
     #
     # > Extract needed items for this challenge:
-    set {_needed} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::needed}
+    set {_needed} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_needed")
     set {_needed::*} to {_needed} split at ","
     #
     # > Loop trough all needed items and create a lore compatible text:
@@ -249,12 +253,12 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
       set {_finalchallenges::*} to metadata value "finalchallenges" of {_player}
       if {_finalchallenges::%{_page}%%{_challangelvlpart}%} is set:
         set {_done} to true
-        set {_reward} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeatreward}
+        set {_reward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatreward")
       #
       # > The challenge has not been done, display first rewards.
       else:
         set {_done} to false
-        set {_reward} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::reward}
+        set {_reward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_reward")
       #
       # > Split the rewards string to get a list of rewards.
       set {_reward::*} to {_reward} split at ","
@@ -262,9 +266,10 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
       set {_lorereward} to "\n%{_msg}%"
       #
       # > Add custom reward text to reward lore.
-      if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::customreward} is set:
-        if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::customreward} is not "":
-          set {_lorereward} to "%{_lorereward}%\n%{SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::customreward}%"
+      if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is set:
+        if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is not "":
+          set {_customreward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward")
+          set {_lorereward} to "%{_lorereward}%\n%{_customreward}%"
       #
       # > Loop through the reward list.
       loop {_reward::*}:
@@ -285,11 +290,11 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         #
         # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
         set {_loreend} to "\n%{SB::config::guispacer}%\n"
-        if {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeat} is true:
+        if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat") is true:
           set {_m} to getlang("challenge_repeatable",{_lang})
           set {_c} to 0
           set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
-          set {_max} to {SB::config::challenges::c::%{_page}%::%{_challangelvlpart}%::repeatsperday}
+          set {_max} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
           #
           # > If the server operator set the repeat amount per day to -1, it is endless.
           if {_max} is -1:
@@ -330,12 +335,17 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
 # > the challange menu. If successfull, remove items, add xp and items to player's inventory.
 function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=false):
   #
+  # > Convert challenge format to page and challenge level page part.
+  set {_challengesplit::*} to {_challenge} split at "::"
+  #set {_page} to {_challengesplit::1}
+  set {_challangelvlpart} to {_challengesplit::2}
+  #
   # > Set needed local variables.
-  set {_needed} to {SB::config::challenges::c::%{_challenge}%::needed}
-  set {_reward} to {SB::config::challenges::c::%{_challenge}%::reward}
-  set {_repeatreward} to {SB::config::challenges::c::%{_challenge}%::repeatreward}
-  set {_repeat} to {SB::config::challenges::c::%{_challenge}%::repeat}
-  set {_repeatsperday} to {SB::config::challenges::c::%{_challenge}%::repeatsperday}
+  set {_needed} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_needed")
+  set {_reward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_reward")
+  set {_repeatreward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatreward")
+  set {_repeat} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat")
+  set {_repeatsperday} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
   set {_cid} to {_challenge}
   replace all "::" with "" in {_cid}
   set {_uuid} to uuid of {_p}
@@ -465,9 +475,9 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
 
   #
   # > If there is a custom function set for this challenge, execute it with evaluate.
-  if {SB::config::challenges::c::%{_challenge}%::customfunction} is set:
-    if {SB::config::challenges::c::%{_challenge}%::customfunction} is not "":
-      set {_exec} to {SB::config::challenges::c::%{_challenge}%::customfunction}
+  if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customfunction") is set:
+    if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customfunction") is not "":
+      set {_exec} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customfunction")
       replace all "<player>" with "%{_p}%" in {_exec}
       evaluate "%{_exec}%"
   #
@@ -539,10 +549,15 @@ function changechallengexp(player:offline player,action:text,amount:number) :: n
 # > challenge experience.
 function getcurrentrepeats(experience:number, repeats:number) :: number:
   #
+  # > If the repeat bonus is disabled, return the default repeat amount.
+  set {_repeatbonusenabled} to getconfigobject("challenges-config-repeatmodifier-enabled")
+  if {_repeatbonusenabled} is false:
+    return {_repeats}
+  #
   # > Shorten the long variables to short local variables.
-  set {_neededxp} to {SB::config::challenges::repeatmodifier::xprepeatincrease}
-  set {_repeatincrease} to {SB::config::challenges::repeatmodifier::repeatincrease}
-  set {_diffincrease} to {SB::config::challenges::repeatmodifier::difficulty}
+  set {_neededxp} to getconfigobject("challenges-config-repeatmodifier-xprepeatincrease")
+  set {_repeatincrease} to getconfigobject("challenges-config-repeatmodifier-repeatincrease")
+  set {_diffincrease} to getconfigobject("challenges-config-repeatmodifier-difficulty")
   set {_startrepeats} to {_repeats}
   #
   # > While loop as long we're not done.
@@ -557,6 +572,5 @@ function getcurrentrepeats(experience:number, repeats:number) :: number:
     # > If there is not enough experience, we're done here, return.
     else:
       set {_done} to true
-  add {_startrepeats} to {_repeats}
   delete {_done}
   return round({_repeats})
