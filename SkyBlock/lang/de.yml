@@ -538,6 +538,8 @@ language:
 - challenge_notrepeatable: "&7Nicht wiederholbar."
 - challenge_xp: "&7XP: <amount>"
 - challenge_statssitelore: "&7Erhalte deine aktuelle<nl>&7Herausforderungsstatistik."
+- challenge_repeatbonustitle: "&rWiederholungsbonus"
+- challenge_repeatbonuslore: "&r&7Aktueller Bonus: <bonus>%<nl>&7Bonusfortschritt: <progress>%"
 
   #
   # > Challenge names
