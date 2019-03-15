@@ -123,7 +123,7 @@ function loadconfig():
   set {_corefile} to "plugins/Skript/scripts/SkyBlock/config/core.yml"
   set {SB::config::world} to yaml value "world" from {_corefile}
   set {SB::config::netherworld} to yaml value "netherworld" from {_corefile}
-  set {SB::config::isstorage} to yaml value "Structure" from {_corefile}
+  set {SB::config::isstorage} to yaml value "isstorage" from {_corefile}
   #
   # > Load the spawn and parse it as valid location.
   set {_spawnloc} to yaml value "spawn" from {_corefile}
