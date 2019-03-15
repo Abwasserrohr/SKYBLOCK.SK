@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.5
+# storage.sk v0.0.6
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -183,6 +183,7 @@ on place of hopper:
 # > the allowed amount of hoppers.
 import:
   org.bukkit.event.inventory.InventoryMoveItemEvent
+
 #
 # > Event - on InventoryMoveItemEvent
 # > Triggered if a item is moved in any inventory on the server.
@@ -246,9 +247,48 @@ on InventoryMoveItemEvent:
         set slot 26 of {_inv} to 1 of {_itemdata}
       #
       # > If the hopper tries to move a item into the storage unit which
-      # > doesn't match with the storage item, cancel the event.
+      # > doesn't match with the storage item, check, if there are any
+      # > other matching items in the hopper.
       else:
+        #
+        # > Cancel the event here, if there is a valid item,
+        # > remove it manually out of the hopper.
         cancel event
+        #
+        # > Get the hopper as a variable.
+        set {_hopper} to event.getSource().getHolder()
+        #
+        # > Prevent item glich bugs by waiting 1 tick.
+        wait 1 tick
+        loop all items in {_hopper}'s inventory:
+          if 1 of loop-item is 1 of {_item}:
+            #
+            # > Remove 1 of the item out of the hopper.
+            remove 1 of {_item} from {_hopper}'s inventory
+            #
+            # > Get the current storage amount.
+            set {_savedamount} to line 1 of lore of {_itemdata}
+            set {_savedamount} to {_savedamount} parsed as integer
+            #
+            # > Add 1 to the storage amount.
+            add 1 to {_savedamount}
+            #
+            # > Save the new value back to the lore
+            set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+            #
+            # > Get the location of the chest to update the storage sign.
+            set {_loc} to event.getDestination().getHolder().getLocation()
+            storagesignupdater({_loc},{_item},{_savedamount})
+            #
+            # > Set the new item lore to the storage unit.
+            set slot 26 of {_inv} to 1 of {_itemdata}
+            #
+            # > Stop the loop if one valid item has been found.
+            stop loop
+        #
+        # > Delete the hopper and stop this event execution here.
+        delete {_hopper}
+        stop
   else:
     #
     # > If the storage unit is the source of the item.
