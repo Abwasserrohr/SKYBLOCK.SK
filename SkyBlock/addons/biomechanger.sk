@@ -1,6 +1,6 @@
 #
 # ==============
-# biomechanger.sk v0.0.5
+# biomechanger.sk v0.0.6
 # ==============
 # Adds biome changing capability to SKYBLOCK.SK
 # ==============
@@ -65,10 +65,8 @@ function changebiome(player:offline player,biome:text,title:text):
   # > Set {_changebiome} to the {_biome} parsed as biome, since the function accepts biomes as string (text)
   set {_changebiome} to {_biome} parsed as biome
   #
-  # > Loop trough all blocks within the two locations
-  set {_blocks::*} to blocks within {_b1} to {_b2}
-  set {_size} to size of {_blocks::*}
-  delete {_blocks::*}
+  # > Get the amount of blocks, which are going to be looped.
+  set {_size} to size of blocks within {_b1} to {_b2}
   #
   # > Inform player about biome change
   set {_a} to {SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}
@@ -78,6 +76,8 @@ function changebiome(player:offline player,biome:text,title:text):
   # > A progress bar to show how long it takes until it's done
   set {_needed} to 0
   set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
+  #
+  # > Loop trough all blocks within the two locations
   loop blocks within {_b1} to {_b2}:
     set {_chunk} to chunk at loop-block
     add 1 to {_i}
