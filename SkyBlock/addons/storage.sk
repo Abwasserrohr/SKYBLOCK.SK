@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.6
+# storage.sk v0.0.7
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -362,6 +362,27 @@ on inventory open:
         if {_allowed} is true:
           openstoragemenu(player,event-inventory,{_loc})
         cancel event
+
+#
+# > Event - on rightclick on sign
+# > Triggered once a player clicks on a sign
+# > Actions:
+# > If the player wants to open a storage unit using the storage status sign, open the storage menu if allowed.
+on rightclick on sign:
+  if line 1 of event-block is "&l[Storage]":
+    #
+    # > Get the location of the clicked block and then get the inventory of the
+    # > block below, only go forward, if the block below is a valid storage unit.
+    set {_storageloc} to location of event-block
+    remove 1 from y-coord of {_storageloc}
+    set {_storageinv} to inventory of block at {_storageloc}
+    if slot 26 of {_storageinv} is clay:
+      if line 2 of lore of slot 26 of {_storageinv} is "STORAGE":
+        set {_allowed} to checkislandaccess(player,{_storageloc},"storageunit",block at {_storageloc})
+        if {_allowed} is true:
+          openstoragemenu(player,{_storageinv},{_storageloc})
+        cancel event
+
 #
 # > Function - storagesignupdater
 # > Parameter: <location>location of the storage unit,<item>storage unit item, <integer>current amount of items stored
@@ -405,6 +426,7 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     opengui({_p},5,getlang("storage_menutitle",{_lang}),hopper inventory)
   else:
     opengui({_p},5,"{@menutitle}",hopper inventory)
+
   #
   # > If the storage unit is empty, open the "fill it" menu.
   if {_savedamount} is 0:
@@ -469,6 +491,10 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
   #
   # > The storage unit has something in it to show.
   else:
+    #
+    # > Prevent any items from being moved into the slots of the storage unit.
+    loop 5 times:
+      setguiitem({_p},loop-number - 1,light gray glass pane,1," ",""," ",false)
     #
     # > Get the maximum stack size of the current item stored.
     set {_max} to {_item}.getMaxStackSize()
