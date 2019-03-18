@@ -206,47 +206,95 @@ import:
 # > storage unit fill and empty events, which allow minecarts to
 # > either fill or empty the storage units with a minecart.
 on VehicleMoveEvent:
+  #
+  # > The server operator can disable the minecart storage unit triggers,
+  # > check if it has been disabled.
   if {@minecartactions} is not true:
     stop
-  set {_loc} to event.getTo()
-  remove 1 from y-coord of {_loc}
-  set {_loc} to location of block at {_loc}
-  if block at {_loc} is {@minecarttriggerevent}:
-    remove 1 from y-coord of {_loc}
+  #
+  # > Check if the block below the minecarts destination is a predefined trigger
+  # > for the fill and empty event of the storage units.
+  if block 1 below event.getTo() is {@minecarttriggerevent}:
+    #
+    # > Get the location of the block which is 2 blocks below the minecart where it is going to move.
+	# > This will be the sign of the storage unit.
+    set {_loc} to location of block 2 below event.getTo()
+    #
+    # > Only go forward, if the sign is a valid storage sign.
     if line 1 of block at {_loc} is "&l{@signtext}":
+      #
+      # > Only go forward, if the sign has a mode set to it, which is either FILL or EMPTY (predefined in options).
       if line 4 of block at {_loc} is "{@signfilltext}" or "{@signemptytext}":
+        #
+        # > Set the mode to a variable, since it is needed later.
         set {_mode} to line 4 of block at {_loc}
+        #
+        # > Remove 1 of the y-coordinate from the {_loc} variable, which then has the
+        # > location of the storage unit, if there is one.
         remove 1 from y-coord of {_loc}
+        #
+        # > Check, if there is actually a storage unit.
         if slot 26 of block at {_loc}'s inventory is clay:
           if line 2 of lore of slot 26 of block at {_loc}'s inventory is "STORAGE":
+            #
+            # > Prevent the minecart from interacting with the same storage unit
+            # > twice in a row by checking if the metadata value "lastblock" of the
+            # > vehicle is the same as the location of the block.
             if metadata value "lastblock" of event.getVehicle() is not {_loc}:
+              #
+              # > If this storage unit is unique, set the locaction of it 
+              # > to the metadata value "lastblock" of the vehicle.
               set metadata value "lastblock" of event.getVehicle() to {_loc}
+              #
+              # > Get the item which is currently in the storage unit as variable.
               set {_item} to slot 0 of block at {_loc}'s inventory
-              if {_mode} is "{@signfilltext}":
-                loop all items in event.getVehicle()'s inventory:
-                  if 1 of loop-item is 1 of {_item}:
-                    set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
-                    set {_savedamount} to {_savedamount} parsed as integer
+              #
+              # > Only try check for transfers if the item isn't air.
+              if {_item} is not air:
+                #
+                # > If the mode of the storage unit is set to get filled by minecarts.
+                if {_mode} is "{@signfilltext}":
+                  #
+                  # > Loop the inventory of the minecart for matching items.
+                  loop all items in event.getVehicle()'s inventory:
                     #
-                    # > Add the amount to the storage amount.
-                    add number of loop-item in event.getVehicle()'s inventory to {_savedamount}
-                    #
-                    # > Remove all of the loop items from the vehicle.
-                    remove all loop-item from event.getVehicle()'s inventory
-                    #
-                    # > Set the update variable to true to later update the storage and sign.
-                    set {_update} to true
-              else if {_mode} is "{@signemptytext}":
-                if {_item} is not air:
+                    # > If one of the looped items is the same as the one stored, go forward.
+                    if 1 of loop-item is 1 of {_item}:
+                      #
+                      # > Get the currently stored amount of the storage unit to update it properly.
+                      set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
+                      set {_savedamount} to {_savedamount} parsed as integer
+                      #
+                      # > Add the amount to the storage amount.
+                      add number of loop-item in event.getVehicle()'s inventory to {_savedamount}
+                      #
+                      # > Remove all of the loop items from the vehicle.
+                      remove all loop-item from event.getVehicle()'s inventory
+                      #
+                      # > Set the update variable to true to later update the storage and sign.
+                      set {_update} to true
+			    #
+			    # > If the mode of the storage unit is set to get emptied by minecarts.
+                else if {_mode} is "{@signemptytext}":
+                  #
+                  # > Get the amount of air left in the minecart, which can be filled with stuff.
                   set {_amount} to number of air in event.getVehicle()'s inventory
+                  #
+                  # > If the amount is bigger than 0, multiply it by the amount of the maximum stack size of the item.
                   if {_amount} > 0:
                     set {_amount} to {_item}.getMaxStackSize() * {_amount}
+                  #
+                  # > Get the currently saved amount of the storage unit and parse it as integer.
                   set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
                   set {_savedamount} to {_savedamount} parsed as integer
+                  #
+                  # > If there is more saved in the storage unit than the minecart can hold.
                   if {_savedamount} > {_amount}:
                     #
                     # > Remove the amount from the storage amount.
                     remove {_amount} from {_savedamount}
+                  #
+                  # > If there is not enough in the storage unit to fill up the minecart.
                   else:
                     #
                     # > Leave 1 item in the storage unit to keep the item type.
@@ -260,19 +308,22 @@ on VehicleMoveEvent:
                   #
                   # > Set the update variable to true to later update the storage and sign.
                   set {_update} to true
-              if {_update} is true:
                 #
-                # > Save the storage amount back to the item lore.
-                set line 1 of lore of slot 26 of block at {_loc}'s inventory to "%{_savedamount}%"
-                #
-                # > Get the location of the chest to update the storage sign.
-                storagesignupdater({_loc},{_item},{_savedamount})
-                #
-                # > Delete variables which are no longer needed.
-                delete {_update}
+                # > If something has changed, update the storage unit and the storage sign.
+                if {_update} is true:
+                  #
+                  # > Save the storage amount back to the item lore.
+                  set line 1 of lore of slot 26 of block at {_loc}'s inventory to "%{_savedamount}%"
+                  #
+                  # > Get the location of the chest to update the storage sign.
+                  storagesignupdater({_loc},{_item},{_savedamount})
+                  #
+                  # > Delete variables which are no longer needed.
+                  delete {_update}
               delete {_item}
         delete {_mode}
-  delete {_loc}
+    delete {_loc}
+
 #
 # > Event - on InventoryMoveItemEvent
 # > Triggered if a item is moved in any inventory on the server.
