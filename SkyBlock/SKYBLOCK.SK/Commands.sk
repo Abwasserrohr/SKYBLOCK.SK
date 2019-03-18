@@ -301,7 +301,7 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Actions:
     # > Calls the islandinfo function with the player and second argument as parameter.
     else if arg-1 is "info" or "level" or "lvl":
-      islandinfo(player,arg-2)
+      islandinfo(player,arg-2,arg-3)
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
     # > If a player types in /island generator, his current generator level is displayed

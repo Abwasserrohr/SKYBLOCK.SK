@@ -5,6 +5,10 @@
 # islandinfo.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
+import:
+  org.bukkit.inventory.ItemStack
+  org.bukkit.Material
+
 #
 # > Function - islandinfo
 # > Parameters - <player>player, <text>searched player
@@ -12,7 +16,10 @@
 # > Sends island info to the first player parameter. If the second parameter is empty or "1",
 # > the island on which the first player is standing is used as information. If the second player
 # > is defined, the information is about the other island.
-function islandinfo(p2:player,p:text="1"):
+function islandinfo(p2:player,p:text="1",previousmenu:text="none"):
+  #
+  # > Prevent client side gliches or instant close by waiting 2 ticks.
+  wait 2 ticks
   #
   # > Set local variables to frequently used variables.
   set {_p} to {_p} parsed as offline player
@@ -40,12 +47,23 @@ function islandinfo(p2:player,p:text="1"):
   # > Get all needed variables into shorter local variables.
   set {_bedrockloc} to "%x-coord of {_bedrock}%_%y-coord of {_bedrock}%_%z-coord of {_bedrock}%"
   set {_uuid} to {SB::island::%{_bedrockloc}%::leader} parsed as offline player
-  set {_biome} to biome at {_bedrock}
+  set {_biome} to "%biome at {_bedrock}%"
   set {_realuuid} to {SB::island::%{_bedrockloc}%::leader}
   set {_level} to {SB::island::%{_bedrockloc}%::level}
   set {_exp} to {SB::island::%{_bedrockloc}%::exp}
-  set {_created} to {SB::island::%{_bedrockloc}%::created}
-  set {_lastactive} to {SB::island::%{_bedrockloc}%::lastactive}
+  set {_created} to "%{SB::island::%{_bedrockloc}%::created}%"
+  #
+  # > Sometimes, the created variable is not set, recreate it here:
+  if {SB::island::%{_bedrockloc}%::created} is not set:
+    set {SB::island::%{_bedrockloc}%::created} to now
+  set {_lastactive} to "%{SB::island::%{_bedrockloc}%::lastactive}%"
+  set {_created::*} to {_created} split at " "
+  set {_lastactive::*} to {_lastactive} split at " "
+  #
+  # > Get the currently active hoppers on the island, if they're not set, set it to 0.
+  set {_activehoppers} to {SB::island::%{_bedrockloc}%::hoppercount}
+  if {_activehoppers} is not set:
+    set {_activehoppers} to 0
   set {_hopperlevel} to {SB::island::%{_bedrockloc}%::hopperupgrade}
   set {_sizelevel} to {SB::island::%{_bedrockloc}%::sizeupgrade}
   set {_homelevel} to {SB::island::%{_bedrockloc}%::homeupgrade}
@@ -57,7 +75,6 @@ function islandinfo(p2:player,p:text="1"):
     set {_sizelevel} to 0
   if {_homelevel} is not set:
     set {_homelevel} to 0
-  
   #
   # > Go trough all members and add them as a player to a new array.
   loop {SB::island::%{_bedrockloc}%::member::*}:
@@ -66,40 +83,101 @@ function islandinfo(p2:player,p:text="1"):
   # > Go trough all trusted players and add them as a player to a new array.
   loop {SB::island::%{_bedrockloc}%::trust::*}:
     add "%loop-value%" parsed as offline player to {_trusted::*} 
-
   #
-  # > Prints the defined spacer:
-  message "%{SB::config::spacer}%" to {_p2}
+  # > Create a new ComponentBuilder:
+  set {_book} to newComponentBuilder()
   #
-  # > Prints the header:
-  message "%{_prefix}% %getlang(""isinfo"",{_lang})%" to {_p2}
+  # > Prints the leader of the island and the header:
+  {_book}.append(newTextComponent("&l%{_uuid}%&r's Insel%nl%-------------------%nl%"))
   #
-  # > Prints the leader of the island:
-  message "%{_prefix}% %getlang(""isleader"",{_lang})% %{_uuid}%" to {_p2}
+  # > Prints the members:
+  set {_msg} to newTextComponent("%getlang(""ismember"",{_lang})% %size of {_member::*}%%nl%")
   #
-  # > Prints the members, if there is at least one member:
-  if size of {_member::*} is not 0:
-    message "%{_prefix}% %getlang(""ismember"",{_lang})% %{_member::*}%" to {_p2}
+  # > Add a detailed hover effect with all players, if there are more than 0:
+  if size of {_member::*} > 0:
+    set {_hover} to getlang("ismember",{_lang})
+    loop {_member::*}:
+      set {_hover} to "%{_hover}%%nl%&7%loop-value%"
+    set {_msg} to sethovertextevent({_msg},{_hover})
+  {_book}.append({_msg})
   #
-  # > Prints the trusted player, if there is at least one trusted player:
-  if size of {_trusted::*} is not 0:
-    message "%{_prefix}% %getlang(""istrusted"",{_lang})% %{_trusted::*}%" to {_p2}
+  # > Prints the trusted player:
+  set {_msg} to newTextComponent("%getlang(""istrusted"",{_lang})% %size of {_trusted::*}%%nl%")
+  set {_msg} to overwritecomponentevents({_msg})
+  #
+  # > Add a detailed hover effect with all players, if there are more than 0:
+  if size of {_trusted::*} > 0:
+    set {_hover} to getlang("istrusted",{_lang})
+    loop {_trusted::*}:
+      set {_hover} to "%{_hover}%%nl%&7%loop-value%"
+    set {_msg} to sethovertextevent({_msg},{_hover})
+  {_book}.append({_msg})
+  #
+  # > Overwrite the hover- and click events from above and add a spacer:
+  set {_msg} to newTextComponent("-------------------%nl%")
+  set {_msg} to overwritecomponentevents({_msg})
+  {_book}.append({_msg})
   #
   # > Prints the island level:
-  message "%{_prefix}% %getlang(""isinfolevel"",{_lang})% %{_level}%" to {_p2}
+  {_book}.append(newTextComponent("%getlang(""isinfolevel"",{_lang})% %{_level}%%nl%"))
   #
   # > Prints the biome:
-  message "%{_prefix}% %getlang(""isinfobiome"",{_lang})% %{_biome}%" to {_p2}
-  #
-  # > Prints the creation date of the island:
-  message "%{_prefix}% %getlang(""iscreated"",{_lang})% %{_created}%" to {_p2}
-  #
-  # > Prints the last active date of the island:
-  message "%{_prefix}% %getlang(""islastactive"",{_lang})% %{_lastactive}%" to {_p2}
+  replace all " " with "_" in {_biome}
+  {_book}.append(newTextComponent("%getlang(""isinfobiome"",{_lang})% "))
+  {_book}.append(newTranslatableComponent("biome.minecraft.%{_biome}%"))
+  {_book}.append(newTextComponent("%nl%-------------------%nl%"))
   #
   # > Prints island upgrades
-  message "%{_prefix}% %getlang(""isupgrades"",{_lang})%" to {_p2}
-  message "%{_prefix}% | %getlang(""bc_islandhometitle"",{_lang})%%{_homelevel}% | %getlang(""bc_islandhoppertitle"",{_lang})%%{_hopperlevel}% | %getlang(""bc_islandsizetitle"",{_lang})%%{_sizelevel}% |" to {_p2}
+  {_book}.append(newTextComponent("%getlang(""isupgrades"",{_lang})%%nl%"))
+  {_book}.append(newTextComponent("[%{_homelevel}%/5] %getlang(""bc_islandhometitle"",{_lang})%%nl%"))
+  {_book}.append(newTextComponent("[%{_hopperlevel}%/5] %getlang(""bc_islandhoppertitle"",{_lang})%%nl%"))
+  {_book}.append(newTextComponent("[%{_sizelevel}%/5] %getlang(""bc_islandsizetitle"",{_lang})%"))
+
+  {_book}.append(newTextComponent("%nl%-------------------%nl%"))
+
   #
-  # > Prints the defined spacer:
-  message "%{SB::config::spacer}%" to {_p2}
+  # > Go back to previous menu link:
+  if {_previousmenu} is set:
+    if {_previousmenu} is not "none":
+      set {_msg} to newTextComponent("&l←&r")
+      set {_lore} to getlang("store_pagebackwardlore",{_lang})
+      set {_head} to getlang("store_pagebackward",{_lang})
+      set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
+      set {_msg} to setclickcmdevent({_msg},"/%{_previousmenu}%")
+      {_book}.append({_msg})
+  #
+  # > Create the book site with the ComponentBuilder and add it to the sites.
+  add {_book}.create() to {_sites::*}
+  set {_book} to newComponentBuilder()
+  {_book}.append(newTextComponent("&l%{_uuid}%&r's Insel%nl%-------------------%nl%"))
+  #
+  # > Prints the creation date of the island:
+  {_book}.append(newTextComponent("%getlang(""iscreated"",{_lang})% %{_created::1}%%nl%"))
+  #
+  # > Prints the last active date of the island:
+  {_book}.append(newTextComponent("%getlang(""islastactive"",{_lang})% %{_lastactive::1}%"))
+  {_book}.append(newTextComponent("%nl%-------------------%nl%"))
+  {_book}.append(newTextComponent("%getlang(""activehoppers"",{_lang})% %{_activehoppers}%"))
+  {_book}.append(newTextComponent("%nl%-------------------%nl%"))
+  #
+  # > Create the book site with the ComponentBuilder and add it to the sites.
+  add {_book}.create() to {_sites::*}
+  #
+  # > Create a new book which is going to be used, create it as Bukkit ItemStack to prevent
+  # > Skript side bugs.
+  set {_item} to new ItemStack(Material.WRITTEN_BOOK!, 1)
+  set {_bookmeta} to {_item}.getItemMeta()
+  {_bookmeta}.setTitle("Toplist")
+  {_bookmeta}.setAuthor("Immanuel94")
+  #
+  # > Set the sites to the book.
+  {_bookmeta}.spigot().setPages({_sites::*})
+  #
+  # > Set the ItemMeta to the ItemStack.
+  {_item}.setItemMeta({_bookmeta})
+  #
+  # > Get the item of the player to give it back after the book has been opened.
+  set {_tool} to {_p2}'s tool
+  set {_p2}'s tool to {_item}
+  openbook({_p2})
+  set {_p2}'s tool to {_tool}

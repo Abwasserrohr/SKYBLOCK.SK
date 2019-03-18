@@ -144,7 +144,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     # > Replace the name placeholder with the rank holder.
     replace all "<name>" with "%{_lp}%" in {_rank}
     set {_msg} to newTextComponent("%{_rank}%%nl%")
-    set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}%")
+    set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}% island top %{_pageint}%")
     #
     # > Prepare and set the on hover event text for the toplist.
     set {_hovertext} to getlang("toplistbookhover",{_lang})
