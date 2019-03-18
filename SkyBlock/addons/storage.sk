@@ -49,6 +49,15 @@ options:
   # > which enables players to set up efficient item sorting machines.
   minecartactions: true
   #
+  # > Set a text which has to be placed on the 4th line of a storage sign to interact with
+  # > minecarts above the sign. One for the "fill" and one for the "empty" action.
+  signfilltext: FILL
+  signemptytext: EMPTY
+  #
+  # > Set an item which should trigger the storage unit fill and empty event. The minecart
+  # > has to roll over this defined block to trigger a fill or empty event.
+  minecarttriggerevent: gold block
+  #
   # > Hook into hoppers. This may take many resources, disable this if you experience too much
   # > lag by the InventoryMoveItemEvent event, disable Hook into hoppers to reduce the lag.
   # > Please communicate with your players that you're going to disable the hopper hook, since
@@ -189,16 +198,23 @@ import:
   org.bukkit.event.inventory.InventoryMoveItemEvent
   org.bukkit.event.vehicle.VehicleMoveEvent
 
+#
+# > Event - VehicleMoveEvent
+# > Triggered if a minecart moves.
+# > Actions:
+# > If the minecartt moves over a predefined block, trigger the
+# > storage unit fill and empty events, which allow minecarts to
+# > either fill or empty the storage units with a minecart.
 on VehicleMoveEvent:
   if {@minecartactions} is not true:
     stop
   set {_loc} to event.getTo()
   remove 1 from y-coord of {_loc}
   set {_loc} to location of block at {_loc}
-  if block at {_loc} is gold block:
+  if block at {_loc} is {@minecarttriggerevent}:
     remove 1 from y-coord of {_loc}
     if line 1 of block at {_loc} is "&l{@signtext}":
-      if line 4 of block at {_loc} is "FILL" or "EMPTY":
+      if line 4 of block at {_loc} is "{@signfilltext}" or "{@signemptytext}":
         set {_mode} to line 4 of block at {_loc}
         remove 1 from y-coord of {_loc}
         if slot 26 of block at {_loc}'s inventory is clay:
@@ -206,7 +222,7 @@ on VehicleMoveEvent:
             if metadata value "lastblock" of event.getVehicle() is not {_loc}:
               set metadata value "lastblock" of event.getVehicle() to {_loc}
               set {_item} to slot 0 of block at {_loc}'s inventory
-              if {_mode} is "FILL":
+              if {_mode} is "{@signfilltext}":
                 loop all items in event.getVehicle()'s inventory:
                   if 1 of loop-item is 1 of {_item}:
                     set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
@@ -220,7 +236,7 @@ on VehicleMoveEvent:
                     #
                     # > Set the update variable to true to later update the storage and sign.
                     set {_update} to true
-              else if {_mode} is "EMPTY":
+              else if {_mode} is "{@signemptytext}":
                 if {_item} is not air:
                   set {_amount} to number of air in event.getVehicle()'s inventory
                   if {_amount} > 0:
