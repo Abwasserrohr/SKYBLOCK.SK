@@ -45,6 +45,10 @@ options:
   # > storage unit, which displays the item type and amount of stored items. Should be unique.
   signtext: [Storage]
   #
+  # > Defines if Minecarts with inventory can be used to fill and empty storage units,
+  # > which enables players to set up efficient item sorting machines.
+  minecartactions: true
+  #
   # > Hook into hoppers. This may take many resources, disable this if you experience too much
   # > lag by the InventoryMoveItemEvent event, disable Hook into hoppers to reduce the lag.
   # > Please communicate with your players that you're going to disable the hopper hook, since
@@ -183,7 +187,76 @@ on place of hopper:
 # > the allowed amount of hoppers.
 import:
   org.bukkit.event.inventory.InventoryMoveItemEvent
+  org.bukkit.event.vehicle.VehicleMoveEvent
 
+on VehicleMoveEvent:
+  if {@minecartactions} is not true:
+    stop
+  set {_loc} to event.getTo()
+  remove 1 from y-coord of {_loc}
+  set {_loc} to location of block at {_loc}
+  if block at {_loc} is gold block:
+    remove 1 from y-coord of {_loc}
+    if line 1 of block at {_loc} is "&l{@signtext}":
+      if line 4 of block at {_loc} is "FILL" or "EMPTY":
+        set {_mode} to line 4 of block at {_loc}
+        remove 1 from y-coord of {_loc}
+        if slot 26 of block at {_loc}'s inventory is clay:
+          if line 2 of lore of slot 26 of block at {_loc}'s inventory is "STORAGE":
+            if metadata value "lastblock" of event.getVehicle() is not {_loc}:
+              set metadata value "lastblock" of event.getVehicle() to {_loc}
+              set {_item} to slot 0 of block at {_loc}'s inventory
+              if {_mode} is "FILL":
+                loop all items in event.getVehicle()'s inventory:
+                  if 1 of loop-item is 1 of {_item}:
+                    set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
+                    set {_savedamount} to {_savedamount} parsed as integer
+                    #
+                    # > Add the amount to the storage amount.
+                    add number of loop-item in event.getVehicle()'s inventory to {_savedamount}
+                    #
+                    # > Remove all of the loop items from the vehicle.
+                    remove all loop-item from event.getVehicle()'s inventory
+                    #
+                    # > Set the update variable to true to later update the storage and sign.
+                    set {_update} to true
+              else if {_mode} is "EMPTY":
+                if {_item} is not air:
+                  set {_amount} to number of air in event.getVehicle()'s inventory
+                  if {_amount} > 0:
+                    set {_amount} to {_item}.getMaxStackSize() * {_amount}
+                  set {_savedamount} to line 1 of lore of slot 26 of block at {_loc}'s inventory
+                  set {_savedamount} to {_savedamount} parsed as integer
+                  if {_savedamount} > {_amount}:
+                    #
+                    # > Remove the amount from the storage amount.
+                    remove {_amount} from {_savedamount}
+                  else:
+                    #
+                    # > Leave 1 item in the storage unit to keep the item type.
+                    set {_amount} to {_savedamount}-1
+                    #
+                    # > Remove the amount from the storage amount.
+                    remove {_amount} from {_savedamount}
+                  #
+                  # > Add the items to the inventory of the vehicle.
+                  add {_amount} of {_item} to event.getVehicle()'s inventory
+                  #
+                  # > Set the update variable to true to later update the storage and sign.
+                  set {_update} to true
+              if {_update} is true:
+                #
+                # > Save the storage amount back to the item lore.
+                set line 1 of lore of slot 26 of block at {_loc}'s inventory to "%{_savedamount}%"
+                #
+                # > Get the location of the chest to update the storage sign.
+                storagesignupdater({_loc},{_item},{_savedamount})
+                #
+                # > Delete variables which are no longer needed.
+                delete {_update}
+              delete {_item}
+        delete {_mode}
+  delete {_loc}
 #
 # > Event - on InventoryMoveItemEvent
 # > Triggered if a item is moved in any inventory on the server.
