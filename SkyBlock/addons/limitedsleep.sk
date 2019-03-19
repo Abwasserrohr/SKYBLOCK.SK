@@ -18,9 +18,9 @@
 # > Sleep. There has to be a minimum amount of players to sleep, which can be defined in the options.
 
 options:
-	#
-	# > Set a percentage needed to sleep before it changes instantly to day.
-	startdaypercent: 40
+  #
+  # > Set a percentage needed to sleep before it changes instantly to day.
+  startdaypercent: 40
 
 #
 # > Event - on bed enter
@@ -29,22 +29,22 @@ options:
 # > it will change the time to day if there are enough
 # > players in the bed.
 on bed enter:
-	#
-	# > Wait a tick, if we don't wait a tick, we can't
-	# > detect the player who layed down with this event.
-	wait 1 tick
-	#
-	# > Loop through all players to count how many are
-	# > sleeping.
-	loop all players:
-		add 1 to {_players}
-		if loop-player is sleeping:
-			add 1 to {_sleepers}
-	#
-	# > Calculate a percentage of how many players are sleeping.
-	set {_sleeppercent} to ({_sleepers} / {_players})*100
-	#
-	# > If the calculated percentage is higher than the
-	# > predefined percentage, change to day.
-	if {_sleeppercent} >= {@startdaypercent}:
-		set time to 08:00
+  #
+  # > Wait a tick, if we don't wait a tick, we can't
+  # > detect the player who layed down with this event.
+  wait 1 tick
+  #
+  # > Loop through all players to count how many are
+  # > sleeping.
+  loop all players:
+    add 1 to {_players}
+    if loop-player is sleeping:
+      add 1 to {_sleepers}
+  #
+  # > Calculate a percentage of how many players are sleeping.
+  set {_sleeppercent} to ({_sleepers} / {_players})*100
+  #
+  # > If the calculated percentage is higher than the
+  # > predefined percentage, change to day.
+  if {_sleeppercent} >= {@startdaypercent}:
+    set time to 08:00
