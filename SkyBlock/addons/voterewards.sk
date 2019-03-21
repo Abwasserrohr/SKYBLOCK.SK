@@ -38,7 +38,7 @@ options:
   votingsite: https://www.mctools.org
   #
   # > Next day reward increase.
-  daytimespan: 20 hours
+  daytimespan: 12 hours
   #
   # > Set how long the loyalty bonus is active once it runs out again.
   loyaltybonusthreshold: 48 hours
@@ -94,6 +94,7 @@ on load:
 import:
   com.vexsoftware.votifier.model.VotifierEvent
   java.util.ArrayList
+  java.time.Instant
 
 #
 # > Event - VotifierEvent (depends on Votifier)
@@ -113,7 +114,7 @@ on VotifierEvent:
       log "%event.getVote().getUsername()% - %event.getVote().getServiceName()%" to "votes.log"
   #
   # > Get the servicename and the user parsed as valid offline player.
-  set {_servicename} to event.getVote().getServiceName()
+  set {_servicename} to "%event.getVote().getServiceName()%"
   set {_player} to "%event.getVote().getUsername()%" parsed as offline player
   #
   # > Get the offline player as a string seperate.
@@ -136,7 +137,7 @@ on VotifierEvent:
   set {_voterewards::*} to ...{{@variableprefix}::%{_uuid}%}
   #
   # > Get the current time as a local variable.
-  set {_now} to now
+  set {_now} to Instant.now().getEpochSecond()
   #
   # If there is no vote reward set yet, add the current time to the reward variable.
   if {_voterewards::*} is not set:
@@ -149,7 +150,7 @@ on VotifierEvent:
   loop {_voterewards::*}:
     if loop-value contains "%{_servicename}%||":
       set {_tempservice::*} to loop-value split at "||"
-      set {_servicestats::%{_servicename}%} to {_tempservice::1} parsed as number
+      set {_servicestats::%{_tempservice::1}%} to {_tempservice::2} parsed as number
   #
   # > Go through the rewards for the service, if rewards are enabled.
   if getconfigobject("vr-service-%{_servicename}%") is true:
@@ -160,8 +161,8 @@ on VotifierEvent:
     #
     # > If the timespan between the last vote is at least a predefined timespan,
     # > and also not above a specific timespan, then increase the loyalty bonus.
-    else if difference between {_voterewards::1} and {_now} > {@daytimespan}:
-      if difference between {_voterewards::1} and {_now} < {@loyaltybonusthreshold}:
+    else if gettimespanunix({_voterewards::1}) > {@daytimespan}:
+      if gettimespanunix({_voterewards::1}) < {@loyaltybonusthreshold}:
         #
         # > If the bonus is already on the 7th day, don't increase it further.
         if {_servicestats::%{_servicename}%} < 7:
@@ -241,6 +242,16 @@ function getdayrewards(day:number,lang:text) :: text:
   return {_text}
 
 #
+# > Function - gettimespanunix
+# > Parameters:
+# > <number> unix timestamp
+# > Actions:
+# > Retuns a valid timespan between unix timestamp and now which can be used by skript.
+function gettimespanunix(then:object) :: timespan:
+  set {_now} to Instant.now().getEpochSecond()
+  return "%difference between {_then} and {_now}% seconds" parsed as timespan
+
+#
 # > Command - /votelink
 # > Actions:
 # > Opens the voting link to the player.
@@ -279,7 +290,7 @@ command /vote:
       set {_item} to getconfigobject("vr-heads-getvotingsite")
       setguiitem(player,30,{_item},1,getlang("vr_getvotelinktitle",{_lang}),getlang("vr_getvotelinklore",{_lang}),"getvotelink(""%player%"" parsed as player)",false)
       set {_item} to getconfigobject("vr-heads-claimreward")
-      setguiitem(player,32,{_item},1,getlang("vr_claimrewardtitle",{_lang}),getlang("vr_claimrewardlore",{_lang}),"",false)
+      setguiitem(player,32,{_item},1,getlang("vr_claimrewardtitle",{_lang}),getlang("vr_claimrewardlore",{_lang}),"claimvoterewards(""%player%"" parsed as player)",false)
     #
     # > Add back item to allow the player to go back to the previous menu.
     # > Only display this item, if the item to display it is actually set.
@@ -301,7 +312,7 @@ function getvotelink(player:player):
   # > split at the <votelink> placeholder.
   set {_msg} to getlang("vr_votelinkmessage",{_lang})
   set {_msg::*} to {_msg} split at "<votelink>"
-  set {_prefix} to getlang("prefix",{_lang})
+  set {_prefix} to getlang("prefix",{_lang},""," ")
   #
   # > Create a new ComponentBuilder to create Chat Component based
   # > messages, which are clickable on the client side.
@@ -317,7 +328,7 @@ function getvotelink(player:player):
     #
     # > If we hit the placeholder text part, add the votelink trigger in.
     if {_id} is 2:
-      set {_clickmsg} to newTextComponent(getlang("vr_votelinktext",{_lang}))
+      set {_clickmsg} to newTextComponent(getlang("vr_votelinktext",{_lang},"","&r"))
       set {_clickmsg} to setclickopenurlevent({_clickmsg},"{@votingsite}")
       set {_clickmsg} to sethovertextevent({_clickmsg},getlang("vr_votelinkhovertext",{_lang}))
       {_chatmsg}.append({_clickmsg})
@@ -329,8 +340,73 @@ function getvotelink(player:player):
 #
 # > Function - claimvoterewards
 # > Parameters:
-# > <player> the player who should claim the rewards
+# > <offline player> the player who should claim the rewards
 # > Actions:
 # > Claims the reward for the player.
 function claimvoterewards(player:offline player):
-  give 1 of cooked beef to {_player}
+  #
+  # > Get the uuid and the language code of the player.
+  set {_uuid} to uuid of {_player}
+  set {_lang} to getlangcode({_player})
+  #
+  # > Get the saved ArrayList parsed as list.
+  set {_voterewards::*} to ...{{@variableprefix}::%{_uuid}%}
+  #
+  # > Loop through the votewards list.
+  loop {_voterewards::*}:
+    #
+    # > Split all list entries at "=", all valid rewards have a "=", where
+    # > they can be split to a reward type and a reward.
+    set {_reward::*} to loop-value split at "="
+    #
+    # > If the reward is money, add the amount to a variable and give the whole amount at the end.
+    if {_reward::1} is "money":
+      add {_reward::2} parsed as number to {_votemoneyreward}
+      delete {_voterewards::%loop-index%}
+    #
+    # > If the reward is a command, replace the <player> placeholder and execute the command.
+    if {_reward::1} is "command":
+      replace all "<player>" with "%{_player}%" in {_reward::2}
+      execute console command "%{_reward::2}%"
+      add 1 to {_rewardnumber}
+      delete {_voterewards::%loop-index%}
+    #
+    # > If the reward is a function, replace the <player> placeholder and execute the function.
+    if {_reward::1} is "function":
+      replace all "<player>" with "%{_player}%" in {_reward::2}
+      evaluate "%{_reward::2}%"
+      add 1 to {_rewardnumber}
+      delete {_voterewards::%loop-index%}
+  #
+  # > Create a new ArrayList without the rewards.
+  set {{@variableprefix}::%{_uuid}%} to new ArrayList()
+  #
+  # > Add statistic back to the ArrayList.
+  loop {_voterewards::*}:
+    {{@variableprefix}::%{_uuid}%}.add(loop-value)
+  #
+  # > Give money to the player.
+  add {_votemoneyreward} to {_player}'s balance
+  #
+  # > Send feedback messages to the player, replace placeholders.
+  set {_prefix} to getlang("prefix",{_lang})
+  if {_votemoneyreward} OR {_rewardnumber} is set:
+    set {_msg} to getlang("vr_claimedreward",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_player}
+  else:
+    set {_msg} to getlang("vr_nothingtoclaim",{_lang})
+    message "%{_prefix}% %{_msg}%" to {_player}
+    getvotelink({_player})
+  if {_votemoneyreward} is set:
+    set {_msg} to getlang("vr_claimedmoney",{_lang})
+    replace all "<amount>" with "%{_votemoneyreward}%" in {_msg}
+    replace all "<currency>" with getlang("currencyname",{_lang}) in {_msg}
+    message "%{_prefix}% %{_msg}%" to {_player}
+  if {_rewardnumber} is set:
+    set {_msg} to getlang("vr_claimedmoney",{_lang})
+    replace all "<amount>" with "%{_rewardnumber}%" in {_msg}
+    message "%{_prefix}% %{_msg}%" to {_player}
+  #
+  # > Delete local variables to prevent any left over data.
+  delete {_votemoneyreward}
+  delete {_rewardnumber}
