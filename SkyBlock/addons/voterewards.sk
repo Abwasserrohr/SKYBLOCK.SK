@@ -1,0 +1,336 @@
+#
+# ==============
+# voterewards.sk v0.0.1
+# ==============
+# Gives your players predefined rewards which increase if they're loyal to you and vote every day.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > Votifier - https://github.com/vexsoftware/votifier
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > Add voterewards.sk to your "plugins/Skript/scripts" folder and then reload.
+# --------------
+
+#
+# > Configuration, set everything as you like.
+# > You can also change messages in the language files of SKYBLOCK.SK.
+options:
+  #
+  # > Log the votes to a file. [true=on|false=off]
+  logvotes: true
+  #
+  # > Log the ip address of the user to a file. [true=on|false=off]
+  logipaddress: false
+  #
+  # > Vote rewards variable prefix
+  variableprefix: vr
+  #
+  # > Vote claiming. If disabled,the player gets the reward automatically. [true=on|false=off]
+  claimvotes: true
+  #
+  # > Votingsite url, set this to the url where the player should go.
+  votingsite: https://www.mctools.org
+  #
+  # > Next day reward increase.
+  daytimespan: 20 hours
+  #
+  # > Set how long the loyalty bonus is active once it runs out again.
+  loyaltybonusthreshold: 48 hours
+  #
+  # > Broadcast votes if somebody votes. [true=on|false=off]
+  broadcastvotes: true
+
+#
+# > Service configuration is loaded on skript load, change it here below,
+# > feel free to add as many services and rewards as you want.
+on load:
+  #
+  # > Define all services which should give a reward.
+  loadconfigobject("vr-service-MCTools.org", true)
+  loadconfigobject("vr-service-service.xyz", false)
+  loadconfigobject("vr-services", ["MCTools.org","service.xyz"])
+  #
+  # > Define the reward per day, once the player voted 7 days a row,
+  # > it will keep on the 7th day until there is a 48 hours gap between.
+  #
+  # > If you're adding not money as an reward but a function or a command which
+  # > gets executed, you can add language based translations which get added into
+  # > the voting menu. Split multiple rewards using "||". Use <player> as placeholder.
+  # > loadconfigobject("lang-vr-MCTools.org-day-1-custom-en", "1 Tier 1 Lootbox")
+  # > loadconfigobject("lang-vr-MCTools.org-day-2-custom-en", "1 Tier 1 Lootbox\n1 Tier 2 Lootbox")
+  # > loadconfigobject("vr-service-MCTools.org-day-1","money=50||command=givelootbox 1 <player> 1 true")
+  # > loadconfigobject("vr-service-MCTools.org-day-2","money=100||command=givelootbox 1 <player> 1 true||command=givelootbox 2 <player> 1 true")
+  loadconfigobject("vr-service-MCTools.org-day-1","money=50")
+  loadconfigobject("vr-service-MCTools.org-day-2","money=100")
+  loadconfigobject("vr-service-MCTools.org-day-3","money=150")
+  loadconfigobject("vr-service-MCTools.org-day-4","money=200")
+  loadconfigobject("vr-service-MCTools.org-day-5","money=250")
+  loadconfigobject("vr-service-MCTools.org-day-6","money=300")
+  loadconfigobject("vr-service-MCTools.org-day-7","money=350")
+
+  #
+  # > Add base64 encoded texture urls
+  loadconfigobject("vr-heads-claimreward",1 of getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0="))
+  loadconfigobject("vr-heads-getvotingsite",1 of getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEzYjhmNjgxZGFhZDhiZjQzNmNhZThkYTNmZTgxMzFmNjJhMTYyYWI4MWFmNjM5YzNlMDY0NGFhNmFiYWMyZiJ9fX0="))
+  loadconfigobject("vr-heads-day-1",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzFiYzJiY2ZiMmJkMzc1OWU2YjFlODZmYzdhNzk1ODVlMTEyN2RkMzU3ZmMyMDI4OTNmOWRlMjQxYmM5ZTUzMCJ9fX0="))
+  loadconfigobject("vr-heads-day-2",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNkOWVlZWU4ODM0Njg4ODFkODM4NDhhNDZiZjMwMTI0ODVjMjNmNzU3NTNiOGZiZTg0ODczNDE0MTk4NDcifX19"))
+  loadconfigobject("vr-heads-day-3",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQ0ZWFlMTM5MzM4NjBhNmRmNWU4ZTk1NTY5M2I5NWE4YzNiMTVjMzZiOGI1ODc1MzJhYzA5OTZiYzM3ZTUifX19"))
+  loadconfigobject("vr-heads-day-4",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDJlNzhmYjIyNDI0MjMyZGMyN2I4MWZiY2I0N2ZkMjRjMWFjZjc2MDk4NzUzZjJkOWMyODU5ODI4N2RiNSJ9fX0="))
+  loadconfigobject("vr-heads-day-5",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ1N2UzYmM4OGE2NTczMGUzMWExNGUzZjQxZTAzOGE1ZWNmMDg5MWE2YzI0MzY0M2I4ZTU0NzZhZTIifX19"))
+  loadconfigobject("vr-heads-day-6",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM0YjM2ZGU3ZDY3OWI4YmJjNzI1NDk5YWRhZWYyNGRjNTE4ZjVhZTIzZTcxNjk4MWUxZGNjNmIyNzIwYWIifX19"))
+  loadconfigobject("vr-heads-day-7",getcustomhead("head", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmRiNmViMjVkMWZhYWJlMzBjZjQ0NGRjNjMzYjU4MzI0NzVlMzgwOTZiN2UyNDAyYTNlYzQ3NmRkN2I5In19fQ=="))
+
+  #
+  # > The configuration ends here. If you want to modify voterewards.sk even more, feel free to do.
+
+#
+# > Import the event from Votifier to trigger votes.
+import:
+  com.vexsoftware.votifier.model.VotifierEvent
+  java.util.ArrayList
+
+#
+# > Event - VotifierEvent (depends on Votifier)
+# > This event is triggered if a user votes on a serverlist.
+# > Actions:
+# > Adds the predefined rewards for this player for the service and loyalty day
+# > to the player, which then can be claimed later.
+on VotifierEvent:
+  #
+  # > If logging is enabled, log the vote to file.
+  if {@logvotes} is true:
+    #
+    # > If logging of ip addresses is enabled, log it to file too.
+    if {@logipaddress} is true:
+      log "%event.getVote().getAddress()% - %event.getVote().getUsername()% - %event.getVote().getServiceName()%" to "votes.log"
+    else:
+      log "%event.getVote().getUsername()% - %event.getVote().getServiceName()%" to "votes.log"
+  #
+  # > Get the servicename and the user parsed as valid offline player.
+  set {_servicename} to event.getVote().getServiceName()
+  set {_player} to "%event.getVote().getUsername()%" parsed as offline player
+  #
+  # > Get the offline player as a string seperate.
+  set {_playername} to "%{_player}%"
+  #
+  # > Tell everyone on the server that the player has voted and got a reward
+  # > in the language of each player.
+  if {@broadcastvotes} is true:
+    loop all players:
+      set {_lang} to getlangcode(loop-player)
+      set {_prefix} to getlang("prefix",{_lang})
+      set {_msg} to getlang("vr_votebroadcast",{_lang})
+      replace all "<player>" with {_playername} in {_msg}
+      message "%{_prefix}% %{_msg}%" to loop-player
+  #
+  # > Get the uuid of the player to load and save the rewards.
+  set {_uuid} to uuid of {_player}
+  #
+  # > Load the current rewards from variable and parse it as list.
+  set {_voterewards::*} to ...{{@variableprefix}::%{_uuid}%}
+  #
+  # > Get the current time as a local variable.
+  set {_now} to now
+  #
+  # If there is no vote reward set yet, add the current time to the reward variable.
+  if {_voterewards::*} is not set:
+    add {_now} to {_voterewards::*}
+  #
+  # > Loop through the vote rewards, here, the status for each voting site service
+  # > is seperated. Some servers might be on multiple server lists.
+  # > The statistics are important to know how many times the player voted for the
+  # > server on the specific voting site already within the loyalty bonus range.
+  loop {_voterewards::*}:
+    if loop-value contains "%{_servicename}%||":
+      set {_tempservice::*} to loop-value split at "||"
+      set {_servicestats::%{_servicename}%} to {_tempservice::1} parsed as number
+  #
+  # > Go through the rewards for the service, if rewards are enabled.
+  if getconfigobject("vr-service-%{_servicename}%") is true:
+    #
+    # > If the player hasn't votet yet with the service, set it to 1.
+    if {_servicestats::%{_servicename}%} is not set:
+      set {_servicestats::%{_servicename}%} to 1
+    #
+    # > If the timespan between the last vote is at least a predefined timespan,
+    # > and also not above a specific timespan, then increase the loyalty bonus.
+    else if difference between {_voterewards::1} and {_now} > {@daytimespan}:
+      if difference between {_voterewards::1} and {_now} < {@loyaltybonusthreshold}:
+        #
+        # > If the bonus is already on the 7th day, don't increase it further.
+        if {_servicestats::%{_servicename}%} < 7:
+          add 1 to {_servicestats::%{_servicename}%}
+      else:
+        set {_servicestats::%{_servicename}%} to 1
+    #
+    # > Get the reward for the current loyalty day bonus and the service.
+    set {_reward} to getconfigobject("vr-service-%{_servicename}%-day-%{_servicestats::%{_servicename}%}%")
+    #
+    # > Split all the rewards into a list.
+    set {_reward::*} to {_reward} split at "||"
+    #
+    # > Set the first entry (which is always the last timestamp of the vote),
+    # > to the currentt timestamp.
+    set {_voterewards::1} to {_now}
+    #
+    # > Create a new ArrayList in which all the vote rewards are going to be added.
+    set {_voterewards} to new ArrayList()
+    #
+    # > Loop through the vote reward list and add all the rewards to the ArrayList.
+    loop {_voterewards::*}:
+      if loop-value contains "%{_servicename}%||":
+        set {_updated} to true
+        {_voterewards}.add("%{_servicename}%||%{_servicestats::%{_servicename}%}%")
+      else:
+        {_voterewards}.add(loop-value)
+    #
+    # > Loop through all the rewards and add them to the ArrayList defined above.
+    loop {_reward::*}:
+      {_voterewards}.add(loop-value)
+    #
+    # > If there haven't been any update, don't add a service based reward statistic.
+    if {_updated} is not true:
+      {_voterewards}.add("%{_servicename}%||%{_servicestats::%{_servicename}%}%")
+    #
+    # > Save the created ArrayList as a variable.
+    set {{@variableprefix}::%{_uuid}%} to {_voterewards}
+  #
+  # > If vote claiming is disabled, claim the rewards for the player
+  # > instantly by calling the claimvoterewards function.
+  if {@claimvotes} is false:
+    claimvoterewards({_player})
+
+#
+# > Function - getdayrewards
+# > Parameters:
+# > <number> the loyalty bonus day
+# > <text> language code for translations
+# > Actions:
+# > Returns the rewards for the specified days.
+function getdayrewards(day:number,lang:text) :: text:
+  #
+  # > Get all predefined services, which should give rewards.
+  set {_services::*} to ...getconfigobject("vr-services")
+  set {_text} to "&7"
+  #
+  # > Loop through all services and create a text which lists all rewards for each
+  # > service within the text.
+  loop {_services::*}:
+    if getconfigobject("vr-service-%loop-value%") is true:
+      set {_text} to "%{_text}%%loop-value%:"
+      set {_servicereward} to getconfigobject("vr-service-%loop-value%-day-%{_day}%")
+      set {_servicereward::*} to {_servicereward} split at "||"
+      loop {_servicereward::*}:
+        if loop-value-2 contains "money=":
+          set {_money::*} to loop-value-2 split at "="
+          set {_moneylore} to getlang("vr_currencylore",{_lang})
+          replace all "<money>" with {_money::2} in {_moneylore}
+          replace all "<currency>" with getlang("currencyname",{_lang}) in {_moneylore}
+          set {_text} to "%{_text}%\n%{_moneylore}%"
+        #
+        # > If a custom reward text is defined, add it to the text.
+        set {_customlang} to getconfigobject("lang-vr-%loop-value-1%-day-%{_day}%-custom-%{_lang}%")
+        if {_customlang} is set:
+          set {_text} to "%{_text}%\n%{_customlang}%"
+  return {_text}
+
+#
+# > Command - /votelink
+# > Actions:
+# > Opens the voting link to the player.
+command /votelink:
+  trigger:
+    getvotelink(player)
+
+#
+# > Command - /vote | /voting | /votes | /claimvote
+# > Actions:
+# > Opens the voting menu which displays all the rewards, allows to claim
+# > the rewards and also can open the votelink to the player.
+command /vote:
+  aliases: /voting, /votes, /claimvote
+  trigger:
+    #
+	# > Get the language code of the player and open the menu.
+    set {_lang} to getlangcode(player)
+    opengui(player,45,getlang("vr_menu_header",{_lang}))
+    #
+    # > Fill the Inventory with empty glass panes.
+    loop 45 times:
+      set slot loop-number - 1 of player's current inventory to black stained glass pane named " "
+      protectslot(player,loop-number - 1)
+    #
+    # > Loop all the loyalty bonus days through and att the title and lore to them.
+    loop 7 times:
+      set {_lasthead} to {_nexthead}
+      #
+      # > Get the translation for the loyalty day bonus by using the getdayrewards function.
+      set {_lore} to getlang("vr_dayheadlore",{_lang})
+      replace all "<rewards>" with getdayrewards(loop-number,{_lang}) in {_lore}
+      set {_item} to getconfigobject("vr-heads-day-%loop-number%")
+      setguiitem(player,9 + loop-number,{_item},1,getlang("vr_day%loop-number%title",{_lang},"&r"),{_lore},"",false)
+	  
+      set {_item} to getconfigobject("vr-heads-getvotingsite")
+      setguiitem(player,30,{_item},1,getlang("vr_getvotelinktitle",{_lang}),getlang("vr_getvotelinklore",{_lang}),"getvotelink(""%player%"" parsed as player)",false)
+      set {_item} to getconfigobject("vr-heads-claimreward")
+      setguiitem(player,32,{_item},1,getlang("vr_claimrewardtitle",{_lang}),getlang("vr_claimrewardlore",{_lang}),"",false)
+    #
+    # > Add back item to allow the player to go back to the previous menu.
+    # > Only display this item, if the item to display it is actually set.
+    if {SB::config::backguiitem} is set:
+      setguiitem(player,44,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%player%"" parsed as player execute command ""/is""",true)
+
+#
+# > Function - getvotelink
+# > Parameters:
+# > <player> the player who should get the votelink
+# > Actions:
+# > Sends a vote link to the player, which is clickable.
+function getvotelink(player:player):
+  #
+  # > Get the language code of the player.
+  set {_lang} to getlangcode({_player})
+  #
+  # > Get the vote link message, which then gets
+  # > split at the <votelink> placeholder.
+  set {_msg} to getlang("vr_votelinkmessage",{_lang})
+  set {_msg::*} to {_msg} split at "<votelink>"
+  set {_prefix} to getlang("prefix",{_lang})
+  #
+  # > Create a new ComponentBuilder to create Chat Component based
+  # > messages, which are clickable on the client side.
+  set {_chatmsg} to newComponentBuilder()
+  #
+  # > Add the prefix to the newly creatted ComponentBuilder by
+  # > appending a new TextComponent whith the prefix as text (string).
+  {_chatmsg}.append(newTextComponent({_prefix}))
+  #
+  # > Loop through the message.
+  loop {_msg::*}:
+    add 1 to {_id}
+    #
+    # > If we hit the placeholder text part, add the votelink trigger in.
+    if {_id} is 2:
+      set {_clickmsg} to newTextComponent(getlang("vr_votelinktext",{_lang}))
+      set {_clickmsg} to setclickopenurlevent({_clickmsg},"{@votingsite}")
+      set {_clickmsg} to sethovertextevent({_clickmsg},getlang("vr_votelinkhovertext",{_lang}))
+      {_chatmsg}.append({_clickmsg})
+    {_chatmsg}.append(newTextComponent(loop-value))
+  #
+  # > Create the Chat Component and send it to the player.
+  {_player}.sendMessage({_chatmsg}.create())
+
+#
+# > Function - claimvoterewards
+# > Parameters:
+# > <player> the player who should claim the rewards
+# > Actions:
+# > Claims the reward for the player.
+function claimvoterewards(player:offline player):
+  give 1 of cooked beef to {_player}
