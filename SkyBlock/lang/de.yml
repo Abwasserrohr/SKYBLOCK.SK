@@ -401,9 +401,14 @@ language:
 - vr_claimrewardtitle: "&rBelohnungen abholen"
 - vr_claimrewardlore: "<s1>Klicke hier, um deine<nl><s1>Votebelohnungen<nl><s1>abzuholen."
 - vr_votelinkmessage: "Hier ist dein Votelink: <votelink>."
-- vr_votelinktext: "Hier klicken"
+- vr_votelinktext: "&b&oHier klicken"
 - vr_votelinkhovertext: "<s1>Klicke hier, um<nl><s1>die Voteseite<nl><s1>zu öffnen."
 - vr_recievedrewards: "<s1>Du hast <amount> Belohnungen abgeholt."
+- vr_votebroadcast: "<player> hat gevotet und Belohnungen erhalten, vote auch mit /vote."
+- vr_claimedreward: "Du hast folgende Votebelohnungen erhalten:"
+- vr_claimedmoney: "> <amount> <currency>"
+- vr_claimedother: "> <amount> sonstige Belohnungen"
+- vr_nothingtoclaim: "Für dich stehen keine Belohnungen bereit."
 
   #
   # > Parcours
