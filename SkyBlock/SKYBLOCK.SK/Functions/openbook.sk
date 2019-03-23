@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.6
+# openbook.sk v0.0.7
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -90,6 +90,17 @@ function sethovertextevent(msg:object,text:object) :: object:
 # > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
 function setclickcmdevent(msg:object,cmd:object) :: object:
   {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
+  return {_msg}
+
+#
+# > Function - setclickopenurlevent
+# > Paremeters:
+# > <TextComponent>the text component which should get the events overwritten.
+# > Actions:
+# > Sets the click event to this text component and then returns it.
+# > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
+function setclickopenurlevent(msg:object,url:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL!,{_url} ))
   return {_msg}
 
 #

@@ -67,7 +67,7 @@ language:
 - sethomeoverwritten: Zuhause erfolgreich überschrieben.
 - homedeleted: Zuhause <home> wurde entfernt.
 - cantdeletehome: <home> kann nicht entfernt werden.
-- sethomelmitreached: Du hast das Limit für noch mehr Zuhase erreicht.
+- sethomelmitreached: Du hast das Limit für noch mehr Zuhause erreicht.
 
   #
   # > /island reload
@@ -95,6 +95,7 @@ language:
 - islastactive: "Zuletzt aktiv:"
 - isupgrades: "Inselverbesserungen:"
 - isinfonotfound: Insel konnte nicht gefunden werden.
+- activehoppers: "Aktive Trichter:"
 
   #
   # > /island trust:
@@ -382,6 +383,32 @@ language:
 - afkcheck_notafk: Du bist nicht afk. Danke für deine Mitteilung.
 - afkcheck_onlyifasked: Schreibe diesen Befehl nur, wenn du danach gefragt wirst.
 - afkcheck_playernotafk: <player> hat nach <time> Sekunden geantwortet.
+
+  #
+  # > Votingrewards
+- vr_menu_header: "&lVotebelohnungen"
+- vr_day1title: "Tag 1"
+- vr_day2title: "Tag 2"
+- vr_day3title: "Tag 3"
+- vr_day4title: "Tag 4"
+- vr_day5title: "Tag 5"
+- vr_day6title: "Tag 6"
+- vr_day7title: "Tag 7"
+- vr_dayheadlore: "<s1>Belohnungen<nl><guispacer><nl><rewards><nl><guispacer>"
+- vr_currencylore: "<s1><money> <currency>"
+- vr_getvotelinktitle: "&rVotelink erhalten"
+- vr_getvotelinklore: "<s1>Klicke hier, um<nl><s1>deinen Votelink zu<nl><s1>erhalten, mit dem du<nl><s1>voten kannst."
+- vr_claimrewardtitle: "&rBelohnungen abholen"
+- vr_claimrewardlore: "<s1>Klicke hier, um deine<nl><s1>Votebelohnungen<nl><s1>abzuholen."
+- vr_votelinkmessage: "Hier ist dein Votelink: <votelink>."
+- vr_votelinktext: "&b&oHier klicken"
+- vr_votelinkhovertext: "<s1>Klicke hier, um<nl><s1>die Voteseite<nl><s1>zu öffnen."
+- vr_recievedrewards: "<s1>Du hast <amount> Belohnungen abgeholt."
+- vr_votebroadcast: "<player> hat gevotet und Belohnungen erhalten, vote auch mit /vote."
+- vr_claimedreward: "Du hast folgende Votebelohnungen erhalten:"
+- vr_claimedmoney: "> <amount> <currency>"
+- vr_claimedother: "> <amount> sonstige Belohnungen"
+- vr_nothingtoclaim: "Für dich stehen keine Belohnungen bereit."
 
   #
   # > Parcours
