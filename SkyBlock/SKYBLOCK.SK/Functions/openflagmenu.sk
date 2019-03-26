@@ -70,41 +70,42 @@ function openflagmenu(p:player,type:text):
     # > Set {_i} to 10, to order the items in the menu right.
     set {_i} to 10
     loop {SB::config::defaultisflag::%{_type}%::*}:
-
-      #
-      # If the custom flag is set, set it to a local variable, if not, take the default configuration.
-      if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%} is set:
-        set {_boolean} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%}
-      else:
-        set {_boolean} to loop-value
-      #
-      # > Set a lore which is added to the menu item.
-      set {_loremsg1} to getlang("flag_%loop-index%d",{_lang})
-      set {_currentstate} to getlang("flag_current%{_boolean}%",{_lang})
-      set {_currentsetting} to getlang("flag_currentsetting",{_lang})
-      set {_toggleflagstrue} to getlang("flag_toggleflagstrue",{_lang})
-      set {_toggleflagsfalse} to getlang("flag_toggleflagsfalse",{_lang})
-      if {SB::config::toggleflags} is true:
-        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagstrue}%"
-      else:
-        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagsfalse}%"
-
-      #
-      # > Set either green glass panes or red glass panes for true and false and then set the item.
-      # > The items have translation text as variable and also execute the "toggleflag" function onn click.
-      if {_boolean} is true:
-        setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
-      if {_boolean} is false:
-        setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
-      #
-      # > Add 1 to {_i} to place the items in the slots in the right order.
-	  # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
-      add 1 to {_loopamount}
-      if {_loopamount} is 7:
-        set {_loopamount} to 0
-        add 3 to {_i}
-      else:
-        add 1 to {_i}
+      if loop-index doesn't contain "toggle-":
+        #
+        # If the custom flag is set, set it to a local variable, if not, take the default configuration.
+        if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%} is set:
+          set {_boolean} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%}
+        else:
+          set {_boolean} to loop-value
+        #
+        # > Set a lore which is added to the menu item.
+        set {_loremsg1} to getlang("flag_%loop-index%d",{_lang})
+        set {_currentstate} to getlang("flag_current%{_boolean}%",{_lang})
+        set {_currentsetting} to getlang("flag_currentsetting",{_lang})
+        set {_toggleflagstrue} to getlang("flag_toggleflagstrue",{_lang})
+        set {_toggleflagsfalse} to getlang("flag_toggleflagsfalse",{_lang})
+        #
+        # > If it is allowed to toggle the flag, set the lore of the item depending on the setting.
+        if getconfigobject("toggleflags") and {SB::config::defaultisflag::%{_type}%::toggle-%loop-index%} is true:
+          set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagstrue}%"
+        else:
+          set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagsfalse}%"
+        #
+        # > Set either green glass panes or red glass panes for true and false and then set the item.
+        # > The items have translation text as variable and also execute the "toggleflag" function onn click.
+        if {_boolean} is true:
+          setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        if {_boolean} is false:
+          setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        #
+        # > Add 1 to {_i} to place the items in the slots in the right order.
+	    # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
+        add 1 to {_loopamount}
+        if {_loopamount} is 7:
+          set {_loopamount} to 0
+          add 3 to {_i}
+        else:
+          add 1 to {_i}
     #
     # > Set the back item to let the player go back to the previous menu.
     setguiitem({_p},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
