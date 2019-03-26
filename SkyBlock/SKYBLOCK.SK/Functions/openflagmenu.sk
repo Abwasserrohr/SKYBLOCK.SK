@@ -118,33 +118,36 @@ function openflagmenu(p:player,type:text):
 # > Actions:
 # > Toggles a flagg for the specific type of player.
 function toggleflag(p:player, flag:text, type:text):
-  if {SB::config::toggleflags} is true:
+  #
+  # > Check if the flags can be toggled.
+  if getconfigobject("toggleflags") is true:
     #
-    # > Get the uuid of the player and set it to a local variable.
-    set {_uuid} to uuid of {_p}
-    #
-    # > Get the bedrock of the player who executed the command.
-    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-    #
-    # > Get the x, y and z-coordinates of the bedrock to use the variables.
-    set {_x} to x-coordinate of {_bedrock}
-    set {_y} to y-coordinate of {_bedrock}
-    set {_z} to z-coordinate of {_bedrock}
-
-    #
-    # > Get the current flag setting.
-    set {_flagsetting} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%}
-    
-    #
-    # > If the flag setting is not set, use the default setting.
-    if {_flagsetting} is not set:
-      set {_flagsetting} to {SB::config::defaultisflag::%{_type}%::%{_flag}%}
-    #
-    # > Toggle the setting.
-    if {_flagsetting} is true:
-      set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to false
-    if {_flagsetting} is false:
-      set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to true
+	# > Only allow to toggle this flag if it has been enabled for it.
+    if {SB::config::defaultisflag::%{_type}%::toggle-%{_flag}%} is true:
+      #
+      # > Get the uuid of the player and set it to a local variable.
+      set {_uuid} to uuid of {_p}
+      #
+      # > Get the bedrock of the player who executed the command.
+      set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+      #
+      # > Get the x, y and z-coordinates of the bedrock to use the variables.
+      set {_x} to x-coordinate of {_bedrock}
+      set {_y} to y-coordinate of {_bedrock}
+      set {_z} to z-coordinate of {_bedrock}
+      #
+      # > Get the current flag setting.
+      set {_flagsetting} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%}
+      #
+      # > If the flag setting is not set, use the default setting.
+      if {_flagsetting} is not set:
+        set {_flagsetting} to {SB::config::defaultisflag::%{_type}%::%{_flag}%}
+      #
+      # > Toggle the setting.
+      if {_flagsetting} is true:
+        set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to false
+      if {_flagsetting} is false:
+        set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to true
   #
   # > Reopen the flag menu.
   openflagmenu({_p},{_type})
