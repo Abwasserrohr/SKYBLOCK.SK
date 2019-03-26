@@ -29,10 +29,8 @@ function loadymlparsenumber(value:text,file:text) :: number:
 # > Actions:
 # > If we have a boolean as text, convert it to a real one with this function.
 function parseasboolean(value:text) :: boolean:
-  if {_value} is "true":
-    return true
-  else if {_value} is "false":
-    return false
+  set {_value} to {_value} parsed as boolean
+  return {_value}
 
 #
 # > Function - loadymlparseboolean
@@ -40,7 +38,8 @@ function parseasboolean(value:text) :: boolean:
 # > Loads a yml value and returns it as a parsed boolean.
 function loadymlparseboolean(value:text,file:text) :: boolean:
   set {_tmpvalue} to yaml value {_value} from {_file}
-  return parseasboolean({_tmpvalue})
+  set {_tmpvalue} to {_tmpvalue} parsed as boolean
+  return {_tmpvalue}
 
 #
 # > Function - loadymlparsetimespan
@@ -163,7 +162,7 @@ function loadconfig():
   set {SB::config::maxhomes} to loadymlparsenumber("maxhomes",{_corefile})
   #
   # > Load islandupgrades boolean
-  set {SB::config::maxhomes} to loadymlparseboolean("islandupgrades",{_corefile})
+  loadconfigobject("islandupgrades",loadymlparseboolean("islandupgrades",{_corefile}))
   #
   # > Load usechallenges boolean
   set {SB::config::usechallenges} to loadymlparseboolean("usechallenges",{_corefile})
