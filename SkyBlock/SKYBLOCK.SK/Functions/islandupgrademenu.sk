@@ -177,7 +177,7 @@ function islandupgrademenu(p:player):
 # > Actions:
 # > Buys an island upgrade for a player.
 function buyislandupgrade(p:player, upgrade:text, level:integer):
-  if {SB::config::islandupgrades} is true:
+  if getconfigobject("islandupgrades") is true:
     #
     # > Get the uuid of the player and set it to a local variable.
     set {_uuid} to uuid of {_p}

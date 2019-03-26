@@ -29,10 +29,11 @@ function openflagmenu(p:player,type:text):
     loop 27 times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
       protectslot({_p},loop-number - 1)
-
-    setguiitem({_p},11,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},13,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},15,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    set {_flintandsteel} to flint and steel
+    setguiitem({_p},10,{_flintandsteel},1,getlang("flag_generalt",{_lang},"&r"),getlang("flag_generald",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""general"")",false)
+    setguiitem({_p},12,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},14,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},16,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
     #
     # > This item allows the user to go into the previous menu.
     setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
@@ -70,41 +71,42 @@ function openflagmenu(p:player,type:text):
     # > Set {_i} to 10, to order the items in the menu right.
     set {_i} to 10
     loop {SB::config::defaultisflag::%{_type}%::*}:
-
-      #
-      # If the custom flag is set, set it to a local variable, if not, take the default configuration.
-      if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%} is set:
-        set {_boolean} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%}
-      else:
-        set {_boolean} to loop-value
-      #
-      # > Set a lore which is added to the menu item.
-      set {_loremsg1} to getlang("flag_%loop-index%d",{_lang})
-      set {_currentstate} to getlang("flag_current%{_boolean}%",{_lang})
-      set {_currentsetting} to getlang("flag_currentsetting",{_lang})
-      set {_toggleflagstrue} to getlang("flag_toggleflagstrue",{_lang})
-      set {_toggleflagsfalse} to getlang("flag_toggleflagsfalse",{_lang})
-      if {SB::config::toggleflags} is true:
-        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagstrue}%"
-      else:
-        set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagsfalse}%"
-
-      #
-      # > Set either green glass panes or red glass panes for true and false and then set the item.
-      # > The items have translation text as variable and also execute the "toggleflag" function onn click.
-      if {_boolean} is true:
-        setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
-      if {_boolean} is false:
-        setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
-      #
-      # > Add 1 to {_i} to place the items in the slots in the right order.
-	  # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
-      add 1 to {_loopamount}
-      if {_loopamount} is 7:
-        set {_loopamount} to 0
-        add 3 to {_i}
-      else:
-        add 1 to {_i}
+      if loop-index doesn't contain "toggle-":
+        #
+        # If the custom flag is set, set it to a local variable, if not, take the default configuration.
+        if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%} is set:
+          set {_boolean} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%loop-index%}
+        else:
+          set {_boolean} to loop-value
+        #
+        # > Set a lore which is added to the menu item.
+        set {_loremsg1} to getlang("flag_%loop-index%d",{_lang})
+        set {_currentstate} to getlang("flag_current%{_boolean}%",{_lang})
+        set {_currentsetting} to getlang("flag_currentsetting",{_lang})
+        set {_toggleflagstrue} to getlang("flag_toggleflagstrue",{_lang})
+        set {_toggleflagsfalse} to getlang("flag_toggleflagsfalse",{_lang})
+        #
+        # > If it is allowed to toggle the flag, set the lore of the item depending on the setting.
+        if getconfigobject("toggleflags") and {SB::config::defaultisflag::%{_type}%::toggle-%loop-index%} is true:
+          set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagstrue}%"
+        else:
+          set {_lore} to "%{_loremsg1}%\n%{SB::config::guispacer}%\n%{_currentsetting}%%{_currentstate}%\n%{SB::config::guispacer}%\n%{_toggleflagsfalse}%"
+        #
+        # > Set either green glass panes or red glass panes for true and false and then set the item.
+        # > The items have translation text as variable and also execute the "toggleflag" function onn click.
+        if {_boolean} is true:
+          setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang},"&r"),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        if {_boolean} is false:
+          setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang},"&r"),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+        #
+        # > Add 1 to {_i} to place the items in the slots in the right order.
+	    # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
+        add 1 to {_loopamount}
+        if {_loopamount} is 7:
+          set {_loopamount} to 0
+          add 3 to {_i}
+        else:
+          add 1 to {_i}
     #
     # > Set the back item to let the player go back to the previous menu.
     setguiitem({_p},53,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is flags""",true)
@@ -118,33 +120,36 @@ function openflagmenu(p:player,type:text):
 # > Actions:
 # > Toggles a flagg for the specific type of player.
 function toggleflag(p:player, flag:text, type:text):
-  if {SB::config::toggleflags} is true:
+  #
+  # > Check if the flags can be toggled.
+  if getconfigobject("toggleflags") is true:
     #
-    # > Get the uuid of the player and set it to a local variable.
-    set {_uuid} to uuid of {_p}
-    #
-    # > Get the bedrock of the player who executed the command.
-    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-    #
-    # > Get the x, y and z-coordinates of the bedrock to use the variables.
-    set {_x} to x-coordinate of {_bedrock}
-    set {_y} to y-coordinate of {_bedrock}
-    set {_z} to z-coordinate of {_bedrock}
-
-    #
-    # > Get the current flag setting.
-    set {_flagsetting} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%}
-    
-    #
-    # > If the flag setting is not set, use the default setting.
-    if {_flagsetting} is not set:
-      set {_flagsetting} to {SB::config::defaultisflag::%{_type}%::%{_flag}%}
-    #
-    # > Toggle the setting.
-    if {_flagsetting} is true:
-      set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to false
-    if {_flagsetting} is false:
-      set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to true
+	# > Only allow to toggle this flag if it has been enabled for it.
+    if {SB::config::defaultisflag::%{_type}%::toggle-%{_flag}%} is true:
+      #
+      # > Get the uuid of the player and set it to a local variable.
+      set {_uuid} to uuid of {_p}
+      #
+      # > Get the bedrock of the player who executed the command.
+      set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+      #
+      # > Get the x, y and z-coordinates of the bedrock to use the variables.
+      set {_x} to x-coordinate of {_bedrock}
+      set {_y} to y-coordinate of {_bedrock}
+      set {_z} to z-coordinate of {_bedrock}
+      #
+      # > Get the current flag setting.
+      set {_flagsetting} to {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%}
+      #
+      # > If the flag setting is not set, use the default setting.
+      if {_flagsetting} is not set:
+        set {_flagsetting} to {SB::config::defaultisflag::%{_type}%::%{_flag}%}
+      #
+      # > Toggle the setting.
+      if {_flagsetting} is true:
+        set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to false
+      if {_flagsetting} is false:
+        set {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_type}%::%{_flag}%} to true
   #
   # > Reopen the flag menu.
   openflagmenu({_p},{_type})

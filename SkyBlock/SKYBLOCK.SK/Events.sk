@@ -318,11 +318,40 @@ on damage:
 #
 # > Event: on ignition
 # > Actions:
-# > Triggered if something catches fire, if fire spreading is disabled in config.sk, cancel event.
+# > Triggered if something catches fire, calls the handlegeneralflagevent to check the flag
+# > on the island and cancel it.
 on ignition:
+  #
+  # > Allow players to ignire blocks, even if the flag is set to disallow this.
   if player is set:
     stop
-  if {SB::config::firespread} is true:
+  handlegeneralflagevent(event,false,event-location,"fire-spread")
+
+#
+# > Event: on spawn of a monster
+# > Actions:
+# > If a monster spawns, check if the event should get cancelled.
+on spawn of a monster:
+  handlegeneralflagevent(event,false,event-location,"mob-spawning")
+
+#
+# > Event: on toggling gliding
+# > Actions:
+# > If someone wants to glide with elytra while being on an island
+# > where it is disabled, the gliding toggle is cancelled.
+on toggling gliding:
+  if gliding of player is false:
+    set {_allowed} to checkislandaccess(player,location of player,"elytra")
+    if {_allowed} is false:
+      cancel event
+
+#
+# > Event: on shoot
+# > Actions:
+# > If the shooter shoots something, check if it is allowed. If not, cancel the event.
+on shoot: 
+  set {_allowed} to checkislandaccess(shooter,location of shooter,"shoot")
+  if {_allowed} is false:
     cancel event
 #
 # > Event: on explode
