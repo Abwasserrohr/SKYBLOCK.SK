@@ -29,8 +29,8 @@ function islandinfo(p2:player,p:text="1",previousmenu:text="none"):
   # > If the player parameter is not valid, take the island the player is currently on.
   if {_p} is "1":
     #
-    # > Set the {_bedrock} variable to the current temporary location of the bedrock.
-    set {_bedrock} to getcurrentbedrock({_p2}, location of {_p2})
+    # > Set the {_bedrock} variable to the current location of the bedrock.
+    set {_bedrock} to getcurrentbedrockmain(location of {_p2})
     if y-coordinate of {_bedrock} is -5:
       #
       # > Prints the defined spacers and a message that the island could not be found:
