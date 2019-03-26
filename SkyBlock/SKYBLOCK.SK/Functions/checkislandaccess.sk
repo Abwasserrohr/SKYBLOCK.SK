@@ -348,14 +348,6 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
       if {SB::config::defaultisflag::%{_playertype}%::publichome} is set:
         return {SB::config::defaultisflag::%{_playertype}%::publichome}
   #
-  # > This flag is for building on the island.
-  else if {_event} is "build":
-    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build} is set:
-      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::build}
-    else:
-      if {SB::config::defaultisflag::%{_playertype}%::build} is set:
-        return {SB::config::defaultisflag::%{_playertype}%::build}
-  #
   # > This flag is for clicks on entities, like villagers.
   else if {_event} is "entity-click":
     if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::entityclick} is set:
@@ -364,26 +356,10 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
       if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
         return {SB::config::defaultisflag::%{_playertype}%::entityclick}
   #
-  # > This flag is for JetBoots, it gets triggered if the player wants to fly on other islands.
-  else if {_event} is "jetboots":
-    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::jetboots} is set:
-      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::jetboots}
+  # > If no of the other one events is the one, get the variables directly to check.
+  else:
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::%{_event}%} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::%{_event}%}
     else:
-      if {SB::config::defaultisflag::%{_playertype}%::jetboots} is set:
-        return {SB::config::defaultisflag::%{_playertype}%::jetboots}
-  #
-  # > This flag is for storage units, it gets triggered if the player opens a storage unit.
-  else if {_event} is "storageunit":
-    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::storageunit} is set:
-      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::storageunit}
-    else:
-      if {SB::config::defaultisflag::%{_playertype}%::storageunit} is set:
-        return {SB::config::defaultisflag::%{_playertype}%::storageunit}
-  #
-  # > This flag is for storage units, it gets triggered if the player opens a storage unit.
-  else if {_event} is "fire-spread":
-    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::fire-spread} is set:
-      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::fire-spread}
-    else:
-      if {SB::config::defaultisflag::%{_playertype}%::fire-spread} is set:
-        return {SB::config::defaultisflag::%{_playertype}%::fire-spread}
+      if {SB::config::defaultisflag::%{_playertype}%::%{_event}%} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::%{_event}%}
