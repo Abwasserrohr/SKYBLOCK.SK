@@ -107,29 +107,74 @@ language:
 
   #
   # > /island help
-- iscreate: <p2>&lInsel erstellen <s1>- <p1>/is create
-- isdelete: <p2>&lInsel löschen <s1>- <p1>/is delete
-- isteleport: <p2>&lZur Insel teleportieren <s1>- <p1>/is home
-- issethome: <p2>&lInsel Zuhause ändern <s1>- <p1>/is sethome
-- isteleportgo: <p2>&lZum Grundstein teleportieren <s1>- <p1>/is go
-- islevel: <p1>&l> <p2>&lInsel Level <s1>- <p1>/is level
-- istop: <p1>&l> <p2>&lTop 10 <s1>- <p1>/is top <Seite>
-- isinvite: <p1>&l> <p2>&lSpieler einladen <s1>- <p1>/is invite <Spieler>
-- iskick: <p1>&l> <p2>&lSpieler rauswerfen <s1>- <p1>/is kick <Spieler>
-- isjoin: <p1>&l> <p2>&lEinladung annehmen <s1>- <p1>/is join <Spieler>
-- isleave: <p1>&l> <p2>&lInsel verlassen <s1>- <p1>/is leave
-- isgui: <p1>&l> <p2>&lSkyblock Menü <s1>- <p1>/is
-- isspawn: <p1>&l> <p2>&lZur Lobby <s1>- <p1>/is spawn
-- isore: <p1>&l> <p2>&lErz Chancen <s1>- <p1>/is ore
-- isgen: <p1>&l> <p2>&lGenerator Level <s1>- <p1>/is gen
-- trustadd: <p1>&l> <p2>&lVertraue einem Spieler <s1>- <p1>/is trust add <player>
-- trustremove: <p1>&l> <p2>&lTraue dem Spieler nicht länger <s1>- <p1>/is trust remove <player>
-- trustlist: <p1>&l> <p2>&lListe aller vertrauten Spieler <s1>- <p1>/is trust list
-- flaglist: <p1>&l> <p2>&lÖffnet das Flag menü <s1>- <p1>/is flags
-- helpwarp: <p1>&l> <p2>&lTeleportiert zum Warp <s1>- <p1>/is warp <Spieler>
-- helpsetwarp: <p1>&l> <p2>&lSetzt deinen Inselwarp <s1>- <p1>/is setwarp
-- helpdelwarp: <p1>&l> <p2>&lLöscht deinen Inselwarp <s1>- <p1>/is delwarp
-- helps2: Seite
+- help-title-iscreate: <p1>&lInsel erstellen
+- help-desc-iscreate: <s1>Erstellt eine Insel
+- help-cmd-iscreate: /is create
+- help-title-isdelete: <p1>&lInsel löschen
+- help-desc-isdelete: <s1>löscht deine Insel
+- help-cmd-isdelete: /is delete
+- help-title-isteleport: <p2>&lZum Zuhause teleportiere <s1>- <p1>/is home
+- help-desc-isteleport: <p2>Teleportiert dich zum Zuhause der Insel
+- help-cmd-isteleport: /is home
+- help-title-issethome: <p2>Zuhause setzen
+- help-desc-issethome: <p2>Setzt ein Zuhause an dem aktuellen Standort.
+- help-cmd-issethome: /is sethome
+- help-title-isteleportgo: <p2>&lZum Grundstein teleportieren <s1>- <p1>/is go
+- help-desc-isteleportgo: <p2>Teleportiert dich zum Grundstein deiner Insel.
+- help-cmd-isteleportgo: /is go
+- help-title-islevel: <p1>Insel Level
+- help-desc-islevel: Zeigt dein aktuelles Insellevel an.
+- help-cmd-islevel: /is level
+- help-title-istop: <p1>Bestenliste
+- help-desc-istop: <p1>Zeigt eine Bestenliste an, auf der die Inseln mit den höchsten Leveln angezeigt werden.
+- help-cmd-istop: /is top
+- help-title-isinvite: <p1>Spieler einladen
+- help-desc-isinvite: <p1>Lädt einen Spieler auf deine Insel ein.
+- help-cmd-isinvite: /is invite 
+- help-title-iskick: <p1>Spieler rauswerfen
+- help-desc-iskick: <p1>Wirft einen Spieler von deiner Insel.
+- help-cmd-iskick: /is kick 
+- help-title-isjoin: <p1>Einladung annehmen
+- help-desc-isjoin: <p1>Nimmt eine Einladung an.
+- help-cmd-isjoin: /is join 
+- help-title-isleave: <p1>Insel verlassen
+- help-desc-isleave: <p1>Verlässt eine Insel auf der du gerade Mitglied bist.
+- help-cmd-isleave: /is leave
+- help-title-isgui: <p1>SkyBlock Menü
+- help-desc-isgui: <p1>Öffnet das SkyBlock Menü, von hier kannst du fast alle wichtigen Befehle über ein Menü erreichen.
+- help-cmd-isgui: /is
+- help-title-isspawn: <p1>Server Lobby
+- help-desc-isspawn: <p1>Teleportiert dich zur Lobby des Servers
+- help-cmd-isspawn: /is spawn
+- help-title-isore: <p1>Erzgenerator Chancen
+- help-desc-isore: <p1>Zeigt dir die Chancen auf die Erze an, die du mit dem Erzgenerator derzeit hast.
+- help-cmd-isore: /is ore
+- help-title-isgen: <p1>Erzgenerator Status
+- help-desc-isgen: <p1>Zeigt dir den aktuellen Status deines Erzgenerators an.
+- help-cmd-isgen: /is gen
+- help-title-trustadd: <p1>Spielern vertrauen
+- help-desc-trustadd: <p1>Vertraue einem Spieler, für vertraute Spieler können eigene Flaggruppen erstellt werden.
+- help-cmd-trustadd: /is trust add <player>
+- help-title-trustremove: <p1>Entferne vertrauten Spieler
+- help-desc-trustremove: <p1>Traue dem Spieler nicht länger.
+- help-cmd-trustremove: /is trust remove <player>
+- help-title-trustlist: <p1>Aktuell vertraute Spieler
+- help-desc-trustlist: <p1>Zeigt dir eine Liste mit von dir aktuell vertrauten Spielern an.
+- help-cmd-trustlist: /is trust list
+- help-title-flaglist: <p1>Flags ändern
+- help-desc-flaglist: <p1>Öffnet ein Menü in dem die Flags für die Insel geändert werden können.
+- help-cmd-flaglist: /is flags
+- help-title-helpwarp: <p1>Inselwarps
+- help-desc-helpwarp: <p1>Teleportiert dich zu einem Warp des definierten Spielers.
+- help-cmd-helpwarp: /is warp <Spieler>
+- help-title-helpsetwarp: <p1>Inselwarp setzen
+- help-desc-helpsetwarp: <p1>Settzt einen Inselwarp an deinem aktuellen Standort. Daraufhin kann dich jeder besuchen.
+- help-cmd-helpsetwarp: /is setwarp
+- help-title-helpdelwarp: <p1>Inselwarp löschen
+- help-desc-helpdelwarp: <p1>Löscht deinen Inselwarp, daraufhin kann dich niemand mehr über deinen Inselwarp besuchen.
+- help-cmd-helpdelwarp: /is delwarp
+- help-title-helps2: Seite
+
 
   #
   # > /island - Errors
