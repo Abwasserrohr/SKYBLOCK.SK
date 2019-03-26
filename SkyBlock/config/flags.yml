@@ -72,7 +72,7 @@ defaultislandflags-foreign:
 - toggle-elytra: true
 #
 # > Allow others to shoot things around. True = allowed, false = denied.
-- shoot: true
+- shoot: false
 - toggle-shoot: true
 
 #
