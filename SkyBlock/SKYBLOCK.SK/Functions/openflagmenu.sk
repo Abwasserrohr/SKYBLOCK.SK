@@ -29,10 +29,11 @@ function openflagmenu(p:player,type:text):
     loop 27 times:
       set slot loop-number - 1 of {_p}'s current inventory to black stained glass pane named " "
       protectslot({_p},loop-number - 1)
-
-    setguiitem({_p},11,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
-    setguiitem({_p},13,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
-    setguiitem({_p},15,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
+    set {_flintandsteel} to flint and steel
+    setguiitem({_p},10,{_flintandsteel},1,getlang("flag_generalt",{_lang},"&r"),getlang("flag_generald",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""general"")",false)
+    setguiitem({_p},12,farmland,1,getlang("flag_foreignt",{_lang},"&r"),getlang("flag_foreignd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""foreign"")",false)
+    setguiitem({_p},14,grass path,1,getlang("flag_trustedt",{_lang},"&r"),getlang("flag_trustedd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""trusted"")",false)
+    setguiitem({_p},16,grass,1,getlang("flag_membert",{_lang},"&r"),getlang("flag_memberd",{_lang}),"openflagmenu(""%{_p}%"" parsed as player,""member"")",false)
     #
     # > This item allows the user to go into the previous menu.
     setguiitem({_p},26,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%{_p}%"" parsed as player execute command ""/is""",true)
@@ -94,9 +95,9 @@ function openflagmenu(p:player,type:text):
         # > Set either green glass panes or red glass panes for true and false and then set the item.
         # > The items have translation text as variable and also execute the "toggleflag" function onn click.
         if {_boolean} is true:
-          setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+          setguiitem({_p},{_i},green glass pane,1,getlang("flag_%loop-index%t",{_lang},"&r"),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
         if {_boolean} is false:
-          setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang}),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
+          setguiitem({_p},{_i},red glass pane,1,getlang("flag_%loop-index%t",{_lang},"&r"),"&r%{_lore}%","toggleflag(""%{_p}%"" parsed as player,""%loop-index%"",""%{_type}%"")",false)
         #
         # > Add 1 to {_i} to place the items in the slots in the right order.
 	    # > If the loop amount is over 7, add 2 to {_i} and set tthe loop amount back to 0.
