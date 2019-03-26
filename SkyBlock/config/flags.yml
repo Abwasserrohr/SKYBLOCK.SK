@@ -66,6 +66,14 @@ defaultislandflags-foreign:
 # > Allow others to access to the storage unit. True = allowed, false = denied.
 - storageunit: false
 - toggle-storageunit: true
+#
+# > Allow others to toggle the elytra fly mode on. True = allowed, false = denied.
+- elytra: false
+- toggle-elytra: true
+#
+# > Allow others to shoot things around. True = allowed, false = denied.
+- shoot: true
+- toggle-shoot: true
 
 #
 # > Default Flags for player islands (trusted flags):
@@ -123,6 +131,14 @@ defaultislandflags-trusted:
 # > Allow others to access to the storage unit. True = allowed, false = denied.
 - storageunit: false
 - toggle-storageunit: true
+#
+# > Allow others to toggle the elytra fly mode on. True = allowed, false = denied.
+- elytra: true
+- toggle-elytra: true
+#
+# > Allow others to shoot things around. True = allowed, false = denied.
+- shoot: true
+- toggle-shoot: true
 
 #
 # > Default Flags for player islands (member flags):
@@ -180,6 +196,14 @@ defaultislandflags-member:
 # > Allow others to access to the storage unit. True = allowed, false = denied.
 - storageunit: false
 - toggle-storageunit: true
+#
+# > Allow others to toggle the elytra fly mode on. True = allowed, false = denied.
+- elytra: true
+- toggle-elytra: true
+#
+# > Allow others to shoot things around. True = allowed, false = denied.
+- shoot: true
+- toggle-shoot: true
 
 #
 # > Default Flags for player islands (member flags):
@@ -238,3 +262,9 @@ defaultlobbyflag:
 #
 # > Allow others to access to the storage unit. True = allowed, false = denied.
 - storageunit: false
+#
+# > Allow others to toggle the elytra fly mode on. True = allowed, false = denied.
+- elytra: false
+#
+# > Allow others to shoot things around. True = allowed, false = denied.
+- shoot: false
