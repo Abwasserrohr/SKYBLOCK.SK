@@ -356,7 +356,7 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
       if {SB::config::defaultisflag::%{_playertype}%::entityclick} is set:
         return {SB::config::defaultisflag::%{_playertype}%::entityclick}
   #
-  # > If no of the other one events is the one, get the variables directly to check.
+  # > There seems to be no predefined flag hardcoded into this file, check variables.
   else:
     if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::%{_event}%} is set:
       return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::%{_event}%}
