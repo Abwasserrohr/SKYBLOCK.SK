@@ -94,7 +94,9 @@ function loadconfig():
 
   #
   # > Load toggleflags
-  set {SB::config::toggleflags} to loadymlparseboolean("toggleflags","plugins/Skript/scripts/SkyBlock/config/flags.yml")
+  set {_toggleflags} to yaml value "toggleflags" from "plugins/Skript/scripts/SkyBlock/config/flags.yml"
+  set {_toggleflags} to {_toggleflags} parsed as boolean
+  loadconfigobject("toggleflags",{_toggleflags})
 
   #
   # > Load lists "defaultislandflags-foreign", "defaultislandflags-trusted" and "defaultislandflags-member" from flags.yml.
