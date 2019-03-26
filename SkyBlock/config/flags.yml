@@ -185,9 +185,13 @@ defaultislandflags-member:
 # > Default Flags for player islands (member flags):
 defaultislandflags-general:
 #
-# > Explosions. True = allowed, false = denied.
-- explosion: false
-- toggle-explosion: true
+# > Fire spread. True = allowed, false = denied.
+- fire-spread: false
+- toggle-fire-spread: true
+#
+# > Fire spread. True = allowed, false = denied.
+- mob-spawning: true
+- toggle-mob-spawning: true
 
 
 #
