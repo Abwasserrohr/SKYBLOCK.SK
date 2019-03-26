@@ -100,7 +100,7 @@ function loadconfig():
 
   #
   # > Load lists "defaultislandflags-foreign", "defaultislandflags-trusted" and "defaultislandflags-member" from flags.yml.
-  add "defaultislandflags-foreign", "defaultislandflags-trusted", "defaultislandflags-member" to {_load::*}
+  add "defaultislandflags-foreign", "defaultislandflags-trusted", "defaultislandflags-member", "defaultislandflags-general" to {_load::*}
   loop {_load::*}:
     #
     # > Get the type, eg. foreign, trusted or member into {_type::2}.
