@@ -229,34 +229,41 @@ function getcurrentbedrock(p:player, l:location) :: location:
       delete metadata value "TEMPLOCb1" of {_p}
       delete metadata value "TEMPLOCb2" of {_p}
       return getcurrentbedrock({_p},{_l})
+#
+# > Function - handlegeneralflagevent:
+# > Arguments:
+# > <event>the event
+# > <boolean>the boolean required to cancel the event
+# > <location>location
+# > <text>flag
+# > <item>the trigger block
+# > Actions:
+# > Checks the general flag of an island and cancels it if it meets the required state.
+function handlegeneralflagevent(event:object,cancel:boolean,l:location,flag:text,block:item=air):
+  set {_bedrock} to getcurrentbedrockmain({_l})
+  set {_flag} to checkflagevent(x-coord of {_bedrock},y-coord of {_bedrock},z-coord of {_bedrock},"%{_flag}%","general",{_block})
+  if {_flag} is {_cancel}:
+    {_event}.setCancelled(true)
 
+#
 # > Function - getcurrentbedrockmain:
 # > Arguments:
 # > <location>location
 # > Actions:
-# > Gets the bedrock of the location parameter and returns the location.
+# > Gets the bedrock location of the location parameter and returns the location.
 function getcurrentbedrockmain(l:location) :: location:
   #
-  # > Search 100 blocks around the player for the bedrock.
-  set {_pl::1} to {_l}
-  set {_pl::2} to {_l}
-  set {_dist} to {SB::config::distance}
-  add ({_dist} - {SB::config::protect}) to x-coord of {_pl::1}
-  add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
-  subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
-  subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
+  # > Calculate the location of the bedrock and return it.
+  # > Formular: x of island center: x of event location / (distance*2)*distance*2+0.5
+  set {_d2} to {SB::config::distance}*2
+  set {_x} to (round((x-coord of {_l}) / ({_d2}))*{_d2})
+  set {_z} to (round((z-coord of {_l}) / ({_d2}))*{_d2})
   #
-  # > Set the y-coordinate only to the height we need, the bedrock y-coordinate.
-  set y-coordinate of {_pl::1} to {SB::config::height}
-  set y-coordinate of {_pl::2} to {SB::config::height}
-  #
-  # > Loop trough all blocks between the two locations, if there is a bedrock, set it
-  # > to the {_bedrock} variable, once it is done, return the location of the bedrock variable.
-  loop blocks within {_pl::1} to {_pl::2}:
-    if loop-block is bedrock:
-      set {_bedrock} to loop-block
-  return location of {_bedrock}
+  # > Set and return the valid bedrock location, which is used by SKYBLOCK.SK.
+  set {_loc} to location of block at location at {_x}, {SB::config::height}, {_z} in "%{_l}'s world%" parsed as world
+  return {_loc}
 
+#
 # > Function - checkflagevent:
 # > Arguments:
 # > <text>x coordinate of island,<text>y coordinate of island,<text>z coordinate of island,<text>event,<text>flag,<item>block
@@ -372,3 +379,11 @@ function checkflagevent(x:number,y:number,z:number,event:text,playertype:text,bl
     else:
       if {SB::config::defaultisflag::%{_playertype}%::storageunit} is set:
         return {SB::config::defaultisflag::%{_playertype}%::storageunit}
+  #
+  # > This flag is for storage units, it gets triggered if the player opens a storage unit.
+  else if {_event} is "fire-spread":
+    if {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::fire-spread} is set:
+      return {SB::island::%{_x}%_%{_y}%_%{_z}%::flag::%{_playertype}%::fire-spread}
+    else:
+      if {SB::config::defaultisflag::%{_playertype}%::fire-spread} is set:
+        return {SB::config::defaultisflag::%{_playertype}%::fire-spread}
