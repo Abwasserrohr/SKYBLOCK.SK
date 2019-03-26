@@ -318,12 +318,15 @@ on damage:
 #
 # > Event: on ignition
 # > Actions:
-# > Triggered if something catches fire, if fire spreading is disabled in config.sk, cancel event.
+# > Triggered if something catches fire, calls the handlegeneralflagevent to check the flag
+# > on the island and cancel it.
 on ignition:
+  #
+  # > Allow players to ignire blocks, even if the flag is set to disallow this.
   if player is set:
     stop
-  if {SB::config::firespread} is true:
-    cancel event
+  handlegeneralflagevent(event,false,event-location,"fire-spread")
+
 #
 # > Event: on explode
 # > Actions:
