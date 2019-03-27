@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.5
+# store.sk v0.0.6
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -363,6 +363,11 @@ on load:
   add 1 of lily pad to {_categoryitems::*}
   add "50" to {_categorybuy::*}
   add "5" to {_categorysell::*}
+  add "0" to {_categorylvlthreshold::*}
+
+  add 1 of chorus flower to {_categoryitems::*}
+  add "45" to {_categorybuy::*}
+  add "1.5" to {_categorysell::*}
   add "0" to {_categorylvlthreshold::*}
 
   loadconfigarray("store-config-items-decoration",{_categoryitems::*})
