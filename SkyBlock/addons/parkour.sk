@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.4
+# parkour.sk v0.0.5
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -80,6 +80,8 @@ options:
   
 import:
   java.util.UUID
+  java.util.HashMap
+  java.util.Date
 
 #
 # > Commands
@@ -257,15 +259,16 @@ on dispense of bedrock:
                 set {_prefix} to getlang("prefix",{_lang})
                 set {_msg1} to getlang("parkour_finishmsg",{_lang})
                 set {_msg2} to getlang("parkour_yourtime",{_lang})
-                message "%{_prefix}% %{_msg}%" to loop-player
+                message "%{_prefix}% %{_msg1}%" to loop-player
                 set {_msg} to "%{_prefix}% %{_msg2}%"
                 set {_subtitle} to "%{_msg}%"
               set {_start} to metadata value "%{_parcourid}%-start" of loop-player
-              set {_diff} to difference between now and {_start}
+              set {_diff} to getcurrentdifference({_start}, new Date())
               #
               # > Send the player the time it took to get to the goal.
-              send subtitle "%{_subtitle}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
               replace all "<time>" with "%{_diff}%" in {_msg}
+              replace all "<time>" with "%{_diff}%" in {_subtitle}
+              send subtitle "%{_subtitle}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
               message "%{_msg}%" to loop-player
               set metadata "checkpoint" of loop-player to "finish"
               delete metadata "%{_parcourid}%-start" of {_player}
@@ -531,55 +534,29 @@ function startparcourtimer(player:player,parcourid:text):
   #
   # > Save the start time within a local variable and as metadata
   # > tag for the current parcour id.
-  set {_start} to now
+  set {_start} to new Date()
   set metadata "%{_parcourid}%-start" of {_player} to {_start}
   #
   # > Do a while loop as long as the run id doesn't change.
   while metadata value "runid" of {_player} is {_runid}:
     #
     # > Display the difference between now and the start time in the actionbar.
-    set {_difference} to "%difference between now and {_start}%"
-    replace all " seconds" with "" in {_difference}
-    replace all " second" with "" in {_difference}
-    replace all "." with ":" in {_difference}
-    replace all " minutes and " with ":" in {_difference}
-    replace all " minute and " with ":" in {_difference}
+    set {_difference} to getcurrentdifference({_start}, new Date())
     #
     # > If the difference is higher than 1 hour, stop it,
     # > there is no reason to keep a timer running.
     if difference between now and {_start} > 1 hour:
       stop
     #
-    # > As long as there is a minute or less, add "00:" to the
-    # > timer in the actionbar.
-    if difference between now and {_start} <= 1 minutes:
-      set {_difference} to "00:%{_difference}%"
-    #
-    # > Split the generated time and make it consistent.
-    set {_time::*} to {_difference} split at ":"
-    loop {_time::*}:
-      #
-      # > If the lenght of a time is only 1, eg. "5", change it to "05".
-      if length of loop-value is 1:
-        set {_time::%loop-index%} to "0%loop-value%"
-    #
-    # > If there is a section of the timer empty, set it to "00".
-    if {_time::3} is not set:
-      set {_time::3} to "00"
-    if {_time::2} is not set:
-      set {_time::2} to "00"
-    if {_time::1} is not set:
-      set {_time::1} to "00"
-    #
     # > Display the time to the player in the actionbar.
-    actionbar({_player},"%{_time::1}%:%{_time::2}%:%{_time::3}%")
+    actionbar({_player},"%{_difference}%")
     #
     # > Stop the loop if the player is no longer online.
     if {_player} is offline:
       stop
     #
-    # > Repeat the loop every 2 ticks.
-    wait 2 ticks
+    # > Repeat the loop every 1 tick.
+    wait 1 tick
 
 #
 # > Function - exitparcour
@@ -806,3 +783,57 @@ function getparcourtools(player:player,tool:number,parcourid:text):
     set {_item} to setnbtvalue({_item},"type","start")
     set {_item} to setnbtvalue({_item},"id",{_parcourid})
     add 1 of {_item} to {_player}'s inventory
+
+#
+# > Function - getcurrentdifference
+# > Parameters:
+# > <Date>the current date
+# > <Date>a date from the past
+# > Actions:
+# > Creates a string (text) which looks like a stopwatch and returns it.
+# > Example: 00:00.000
+function getcurrentdifference(now:object,past:object) :: text:
+  #
+  # > Get the time difference in milliseconds.
+  set {_diff} to ({_past}.getTime()) - ({_now}.getTime())
+  #
+  # > Get the time difference in milliseconds as a text.
+  set {_difft} to "%{_diff}%"
+  #
+  # > Get the length of the text to format the stopwatch.
+  set {_length} to length of {_difft}
+  #
+  # > Split everything into a list.
+  set {_difft::*} to {_difft} split at ""
+  #
+  # > Set the timer which later gets returned.
+  set {_timer} to ""
+  #
+  # > This defines how long the stopwatch timer should be,
+  # > 7 allows to display 7 digits.
+  set {_loops} to 7
+  #
+  # > Loop and create the stopwatch like timer.
+  while {_done} is not set:
+    #
+    # > As long as the loops are equal or smaller than the length of the text based
+    # > time difference, display a 0.
+    if {_loops} <= {_length}:
+      add 1 to {_i}
+      set {_timer} to "%{_timer}%%{_difft::%{_i}%}%"
+    else:
+      set {_timer} to "%{_timer}%0"
+    #
+    # > Depending on the loops, add a ":" or a ".".
+    if {_loops} is 6:
+      set {_timer} to "%{_timer}%:"
+    if {_loops} is 4:
+      set {_timer} to "%{_timer}%."
+    #
+	# > Remove 1 from the loops and stop this while loop once we reached 0 loops.
+    remove 1 from {_loops}
+    if {_loops} < 1:
+      set {_done} to true
+  #
+  # > Return the stopwatch like timer as a text.
+  return {_timer}
