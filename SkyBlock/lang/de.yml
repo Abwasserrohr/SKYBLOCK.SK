@@ -107,7 +107,7 @@ language:
 
   #
   # > /island help
-- help-header: <p1>&lHilfe
+- help-header: "&l> <p1>&lHilfe"
 - help-title-iscreate: <p1>Insel erstellen
 - help-desc-iscreate: <s1>Erstellt eine Insel
 - help-cmd-iscreate: /is create
