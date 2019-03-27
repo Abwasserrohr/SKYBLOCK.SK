@@ -1,0 +1,67 @@
+#
+# ==============
+# publicchest.sk v0.0.1
+# ==============
+# Allow your players to make public chests which can be accessed by
+# predefined players on a sign above a chest.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > First use: Place publicchest.sk into your "plugins/Skript/scripts/" folder and restart. Subfolders are possible too.
+# > Steps for users:
+# > Place a sign with [Open] on the first line and up to 3 names below which should have access to this
+# > chest, other protections should be bypassed.
+
+#
+# > Set here, how the public chest signs should look like.
+options:
+  signhead: [Open]
+  signheadactive: &l[Open]
+
+#
+# > Event - on sign change
+# > Actions:
+# > Once a new sign is created and it has the predefined signhead
+# > text on the first line, trigger to make the sign a active one,
+# > if the player who set it is the island owner.
+on sign change:
+  if line 1 is "{@signhead}":
+    #
+    # > Check if the player is the island owner.
+    set {_leader} to getleader(player)
+    if {_leader} is uuid of player:
+      #
+      # > The player is the island owner, format the sign to get active.
+      set line 1 of event-block to "{@signheadactive}"
+      loop 4 times:
+        if loop-number is not 1:
+          if line loop-number is not "":
+            set line loop-number of event-block to "%line loop-number parsed as offline player%"
+    #
+    # > If the player is not the island owner, send a error.
+    else:
+      set {_lang} to getlangcode(player)
+      set {_prefix} to getlang("prefix",{_lang})
+      set {_msg} to getlang("notleader",{_lang})
+      message "%{_prefix}% %{_msg}%" to player
+
+#
+# > Event - on click on sign
+# > Actions:
+# > Once somebody clicks on a sign and the first line is the predefined
+# > signheadactive option, check if the player who clicked on the sign
+# > is also defined on the sign, if the player is defined there, open
+# > the chest or trapped chest and bypass protections.
+on click on sign:
+  if line 1 of event-block is "{@signheadactive}":
+    loop 4 times:
+      if loop-number is not 1:
+        if line loop-number is "%player%":
+          if block 1 below event-block is chest or trapped chest:
+            open the inventory of block 1 below event-block to the player
