@@ -107,74 +107,74 @@ language:
 
   #
   # > /island help
-- help-title-iscreate: <p1>&lInsel erstellen
+- help-header: <p1>&lHilfe
+- help-title-iscreate: <p1>Insel erstellen
 - help-desc-iscreate: <s1>Erstellt eine Insel
 - help-cmd-iscreate: /is create
-- help-title-isdelete: <p1>&lInsel löschen
-- help-desc-isdelete: <s1>löscht deine Insel
+- help-title-isdelete: <p1>Insel löschen
+- help-desc-isdelete: <s1>Löscht deine Insel
 - help-cmd-isdelete: /is delete
-- help-title-isteleport: <p2>&lZum Zuhause teleportiere <s1>- <p1>/is home
-- help-desc-isteleport: <p2>Teleportiert dich zum Zuhause der Insel
-- help-cmd-isteleport: /is home
-- help-title-issethome: <p2>Zuhause setzen
-- help-desc-issethome: <p2>Setzt ein Zuhause an dem aktuellen Standort.
-- help-cmd-issethome: /is sethome
-- help-title-isteleportgo: <p2>&lZum Grundstein teleportieren <s1>- <p1>/is go
-- help-desc-isteleportgo: <p2>Teleportiert dich zum Grundstein deiner Insel.
+- help-title-isteleport: <p1>Teleport nachhause
+- help-desc-isteleport: <s1>Teleportiert dich<nl><s1>zum Zuhause der Insel
+- help-cmd-isteleport: /is home [<Name>]
+- help-title-issethome: <p1>Zuhause setzen
+- help-desc-issethome: <s1>Setzt ein Zuhause an<nl><s1>dem aktuellen Standort.
+- help-cmd-issethome: /is sethome [<Name>]
+- help-title-isteleportgo: <p1>Zum Grundstein
+- help-desc-isteleportgo: <s1>Teleportiert dich zum<nl><s1>Grundstein deiner Insel.
 - help-cmd-isteleportgo: /is go
 - help-title-islevel: <p1>Insel Level
-- help-desc-islevel: Zeigt dein aktuelles Insellevel an.
+- help-desc-islevel: <s1>Zeigt dein aktuelles Insellevel an.
 - help-cmd-islevel: /is level
 - help-title-istop: <p1>Bestenliste
-- help-desc-istop: <p1>Zeigt eine Bestenliste an, auf der die Inseln mit den höchsten Leveln angezeigt werden.
+- help-desc-istop: <s1>Zeigt eine Bestenliste an,<nl><s1>auf der die Inseln mit den<nl><s1>höchsten Leveln angezeigt<nl><s1>werden.
 - help-cmd-istop: /is top
 - help-title-isinvite: <p1>Spieler einladen
-- help-desc-isinvite: <p1>Lädt einen Spieler auf deine Insel ein.
-- help-cmd-isinvite: /is invite 
+- help-desc-isinvite: <s1>Lädt einen Spieler auf deine Insel ein.
+- help-cmd-isinvite: /is invite <Spieler>
 - help-title-iskick: <p1>Spieler rauswerfen
-- help-desc-iskick: <p1>Wirft einen Spieler von deiner Insel.
-- help-cmd-iskick: /is kick 
+- help-desc-iskick: <s1>Wirft einen Spieler von deiner Insel.
+- help-cmd-iskick: /is kick <Spieler>
 - help-title-isjoin: <p1>Einladung annehmen
-- help-desc-isjoin: <p1>Nimmt eine Einladung an.
+- help-desc-isjoin: <s1>Nimmt eine Einladung an.
 - help-cmd-isjoin: /is join 
 - help-title-isleave: <p1>Insel verlassen
-- help-desc-isleave: <p1>Verlässt eine Insel auf der du gerade Mitglied bist.
+- help-desc-isleave: <s1>Verlässt eine Insel auf der<nl><s1>du gerade Mitglied bist.
 - help-cmd-isleave: /is leave
 - help-title-isgui: <p1>SkyBlock Menü
-- help-desc-isgui: <p1>Öffnet das SkyBlock Menü, von hier kannst du fast alle wichtigen Befehle über ein Menü erreichen.
+- help-desc-isgui: <s1>Öffnet das SkyBlock Menü,<nl><s1>von hier kannst du fast alle<nl><s1>wichtigen Befehle über ein<nl><s1>Menü erreichen.
 - help-cmd-isgui: /is
 - help-title-isspawn: <p1>Server Lobby
-- help-desc-isspawn: <p1>Teleportiert dich zur Lobby des Servers
+- help-desc-isspawn: <s1>Teleportiert dich zur Lobby des Servers
 - help-cmd-isspawn: /is spawn
 - help-title-isore: <p1>Erzgenerator Chancen
-- help-desc-isore: <p1>Zeigt dir die Chancen auf die Erze an, die du mit dem Erzgenerator derzeit hast.
+- help-desc-isore: <s1>Zeigt dir die Chancen auf<nl><s1>die Erze an, die du mit<nl><s1>dem Erzgenerator derzeit hast.
 - help-cmd-isore: /is ore
 - help-title-isgen: <p1>Erzgenerator Status
-- help-desc-isgen: <p1>Zeigt dir den aktuellen Status deines Erzgenerators an.
+- help-desc-isgen: <s1>Zeigt dir den aktuellen<nl><s1>Status deines Erzgenerators an.
 - help-cmd-isgen: /is gen
 - help-title-trustadd: <p1>Spielern vertrauen
-- help-desc-trustadd: <p1>Vertraue einem Spieler, für vertraute Spieler können eigene Flaggruppen erstellt werden.
-- help-cmd-trustadd: /is trust add <player>
+- help-desc-trustadd: <s1>Vertraue einem Spieler,<nl><s1>für vertraute Spieler können<nl><s1>eigene Flaggruppen erstellt werden.
+- help-cmd-trustadd: /is trust add <Spieler>
 - help-title-trustremove: <p1>Entferne vertrauten Spieler
-- help-desc-trustremove: <p1>Traue dem Spieler nicht länger.
-- help-cmd-trustremove: /is trust remove <player>
+- help-desc-trustremove: <s1>Traue dem Spieler nicht länger.
+- help-cmd-trustremove: /is trust remove <Spieler>
 - help-title-trustlist: <p1>Aktuell vertraute Spieler
-- help-desc-trustlist: <p1>Zeigt dir eine Liste mit von dir aktuell vertrauten Spielern an.
+- help-desc-trustlist: <s1>Zeigt dir eine Liste mit von<nl><s1>dir aktuell vertrauten Spielern an.
 - help-cmd-trustlist: /is trust list
 - help-title-flaglist: <p1>Flags ändern
-- help-desc-flaglist: <p1>Öffnet ein Menü in dem die Flags für die Insel geändert werden können.
+- help-desc-flaglist: <s1>Öffnet ein Menü in dem<nl><s1>die Flags für die Insel<nl><s1>geändert werden können.
 - help-cmd-flaglist: /is flags
 - help-title-helpwarp: <p1>Inselwarps
-- help-desc-helpwarp: <p1>Teleportiert dich zu einem Warp des definierten Spielers.
+- help-desc-helpwarp: <s1>Teleportiert dich zu<nl><s1>einem Warp des definierten<nl><s1>Spielers.
 - help-cmd-helpwarp: /is warp <Spieler>
 - help-title-helpsetwarp: <p1>Inselwarp setzen
-- help-desc-helpsetwarp: <p1>Settzt einen Inselwarp an deinem aktuellen Standort. Daraufhin kann dich jeder besuchen.
+- help-desc-helpsetwarp: <s1>Setzt einen Inselwarp<nl><s1>an deinem aktuellen Standort.<nl><s1>Daraufhin kann dich jeder besuchen.
 - help-cmd-helpsetwarp: /is setwarp
 - help-title-helpdelwarp: <p1>Inselwarp löschen
-- help-desc-helpdelwarp: <p1>Löscht deinen Inselwarp, daraufhin kann dich niemand mehr über deinen Inselwarp besuchen.
+- help-desc-helpdelwarp: <s1>Löscht deinen Inselwarp,<nl><s1>daraufhin kann dich niemand mehr<nl><s1>über deinen Inselwarp besuchen.
 - help-cmd-helpdelwarp: /is delwarp
 - help-title-helps2: Seite
-
 
   #
   # > /island - Errors
