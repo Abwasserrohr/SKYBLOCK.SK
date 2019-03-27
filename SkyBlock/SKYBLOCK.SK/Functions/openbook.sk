@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.7
+# openbook.sk v0.0.8
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -84,12 +84,25 @@ function sethovertextevent(msg:object,text:object) :: object:
 #
 # > Function - setclickcmdevent
 # > Paremeters:
-# > <TextComponent>the text component which should get the events overwritten.
+# > <TextComponent>the TextComponen which should get a click event
+# > <text>a text which should be executed from the client of the player
 # > Actions:
 # > Sets the click event to this text component and then returns it.
 # > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
 function setclickcmdevent(msg:object,cmd:object) :: object:
   {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
+  return {_msg}
+
+#
+# > Function - setsuggestcmdevent
+# > Paremeters:
+# > <TextComponent>the TextComponen which should get a click event
+# > <text>a text which should be suggested into the client of the player
+# > Actions:
+# > Sets the suggest command event to this text component and then returns it.
+# > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
+function setsuggestcmdevent(msg:object,cmd:object) :: object:
+  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.SUGGEST_COMMAND!,{_cmd}))
   return {_msg}
 
 #
