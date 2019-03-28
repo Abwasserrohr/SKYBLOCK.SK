@@ -27,6 +27,9 @@
 # > You can also change the skript itself to work as you want.
 options:
   #
+  # > Maximum amount of speedrun times saved for each parkour before the slowest gets deleted.
+  maxruntimes: 100
+  #
   # > This item will be given to the players when they get a parcour
   # > set through the /giveparcour <player> command.
   parcouritem: sticky piston
@@ -44,6 +47,7 @@ options:
   #
   # > Define the parcour inventory items for the player.
   itemcheckpoint: floor sign
+  itemtoplist: book
   itemrestart: eye of ender
   itemexit: barrier
   #
@@ -64,6 +68,7 @@ options:
   itemcheckpointname: &rCheckpoint
   itemrestartname: &rRestart
   itemexitname: &rExit
+  itemtoplistname: &rToplist
   parcourunloaded: The parcour has been unloaded. Thank you for playing.
   finishmsg: Congratulations! You have reached the finish.
   yourtime: Your time: <time>
@@ -82,7 +87,7 @@ import:
   java.util.UUID
   java.util.HashMap
   java.util.Date
-
+  java.util.ArrayList
 #
 # > Commands
 
@@ -190,6 +195,8 @@ on dispense of bedrock:
         # > player to prevent cheating later.
         set metadata "parcourid" of loop-player to {_parcourid}
         set metadata "runid" of loop-player to UUID.randomUUID()
+        set metadata value "%{_parcourid}%-start" of loop-player to new Date()
+
         #
         # > Get the language code of the player
         set {_lang} to getlangcode(loop-player)
@@ -202,6 +209,7 @@ on dispense of bedrock:
         if metadata value "checkpoint" of loop-player is not {_blocklocation}:
           set metadata "checkpoint" of loop-player to {_blocklocation}
           set metadata "startpoint" of loop-player to {_blocklocation}
+          set metadata "parkourblock" of loop-player to event-block
           if metadata value "parcour" of loop-player is not "ingame":
             saveinventory(loop-player)
             clear loop-player's inventory
@@ -211,17 +219,21 @@ on dispense of bedrock:
               set {_name1} to "{@itemcheckpointname}"
               set {_name2} to "{@itemrestartname}"
               set {_name3} to "{@itemexitname}"
+              set {_name4} to "{@itemtoplistname}"
             else:
               set {_name1} to getlang("parkour_itemcheckpointname",{_lang})
               set {_name2} to getlang("parkour_itemrestartname",{_lang})
               set {_name3} to getlang("parkour_itemexitname",{_lang})
+              set {_name4} to getlang("parkour_toplist_item",{_lang})
             set {_item1} to 1 of {@itemcheckpoint} named "%{_name1}%"
             set {_item2} to 1 of {@itemrestart} named "%{_name2}%"
             set {_item3} to 1 of {@itemexit} named "%{_name3}%"
+            set {_item4} to 1 of {@itemtoplist} named "%{_name4}%"
             #
             # > Give the player a parcour item inventory to use.
             set slot 0 of loop-player's inventory to {_item1}
-            set slot 4 of loop-player's inventory to {_item2}
+            set slot 2 of loop-player's inventory to {_item2}
+            set slot 6 of loop-player's inventory to {_item4}
             set slot 8 of loop-player's inventory to {_item3}
           #
           # > Mark the player as parcour player and also set the
@@ -254,22 +266,19 @@ on dispense of bedrock:
               if getlang("parkour_finishmsg",{_lang}) is not set:
                 message "{@prefix} {@finishmsg}" to loop-player
                 set {_msg} to "{@prefix} {@yourtime}"
-                set {_subtitle} to "{@finishmsg}"
-              else:
-                set {_prefix} to getlang("prefix",{_lang})
-                set {_msg1} to getlang("parkour_finishmsg",{_lang})
-                set {_msg2} to getlang("parkour_yourtime",{_lang})
-                message "%{_prefix}% %{_msg1}%" to loop-player
-                set {_msg} to "%{_prefix}% %{_msg2}%"
-                set {_subtitle} to "%{_msg}%"
-              set {_start} to metadata value "%{_parcourid}%-start" of loop-player
-              set {_diff} to getcurrentdifference({_start}, new Date())
+                replace all "<time>" with getcurrentdifference({_start}, new Date()) in {_msg}
+                message {_msg} to loop-player
               #
-              # > Send the player the time it took to get to the goal.
-              replace all "<time>" with "%{_diff}%" in {_msg}
-              replace all "<time>" with "%{_diff}%" in {_subtitle}
-              send subtitle "%{_subtitle}%" to loop-player for 2 seconds with fadein 5 tick and fade out 5 tick
-              message "%{_msg}%" to loop-player
+              # > Get the start date, the current date and calculate the difference in milliseconds.
+              set {_start} to metadata value "%{_parcourid}%-start" of loop-player
+              set {_now} to new Date()
+              set {_diff} to ({_now}.getTime()) - ({_start}.getTime())
+              set {_parkourblock} to metadata "parkourblock" of loop-player
+              #
+              # > parkourtoplist is going to message the player and creates an
+              # > toplist entry, if a new personal best time has been made.
+              parkourtoplist(loop-player,"newentry",{_parkourblock},{_diff})
+
               set metadata "checkpoint" of loop-player to "finish"
               delete metadata "%{_parcourid}%-start" of {_player}
               exitparcour(loop-player)
@@ -319,6 +328,18 @@ on rightclick holding {@itemcheckpoint}:
     if metadata value "parcour" of player is "ingame":
       cancel event
       parcourcheckpoint(player)
+
+#
+# > Event - on rightclick holding the predefined checkpoint item
+# > Actions:
+# > If a player is within the parcour, cancel the event and teleport
+# > the player back to the checkpoint using the parcourcheckpoint function.
+on rightclick holding {@itemtoplist}:
+  if player's gamemode is adventure:
+    if metadata value "parcour" of player is "ingame":
+      cancel event
+      set {_parkourblock} to metadata "parkourblock" of player
+      parkourtoplist(player,"toplist",{_parkourblock})
 
 #
 # > Event - on rightclick holding the predefined restart item
@@ -836,4 +857,202 @@ function getcurrentdifference(now:object,past:object) :: text:
       set {_done} to true
   #
   # > Return the stopwatch like timer as a text.
+  return {_timer}
+
+#
+# > Function - parkourtoplist
+# > Parameters:
+# > <player>the player who wants to open or create a new entry for the toplist.
+# > <text>the action which should be done, either "newentry" or "toplist".
+# > <block>the start block of the parkour.
+# > <number>the time in milliseconds the player needed.
+# > Actions:
+# > Either opens a toplist or creates a new entry in the toplist, which is stored within
+# > a item nbt serialized.
+function parkourtoplist(player:player,action:text,parkourblock:block,diff:number=9999999):
+  #
+  # > Get the language code and prefix for the player.
+  set {_lang} to getlangcode({_player})
+  set {_prefix} to getlang("prefix",{_lang})
+  #
+  # > Get the serialized toplist from the parkour block.
+  delete {_times}
+  set {_times} to getnbtvalue(slot 0 of {_parkourblock}'s inventory,"timings")
+  #
+  # > If the toplist exists, then deserialize it, if not, create a new HashMap.
+  if {_times} is not false or "" or " ":
+    set {_times} to deserialize({_times})
+  else:
+    set {_times} to new HashMap()
+  #
+  # > We need the uuid of the player quite often.
+  set {_uuid} to uuid of {_player}
+  #
+  # > If a new entry should be created.
+  if {_action} is "newentry":
+    #
+    # > If the player already is on the toplist.
+    if {_times}.get({_uuid}) is set: 
+      #
+      # > If the old personal best time is slower than the new one,
+      # > overwrite the old one and set it to the new time.
+      if {_times}.get({_uuid}) > {_diff}:
+        set {_oldpb} to {_times}.get({_uuid})
+        {_times}.put("%{_uuid}%",{_diff})
+        set {_newpb} to true
+    #
+    # > If the player isn't already on the toplist, simply put the player on there.
+    else:
+      {_times}.put("%{_uuid}%",{_diff})
+      set {_newpb} to true
+    #
+    # > If a new personal best happened, save it into the parkour block.
+    if {_newpb} is true:
+      set {_storetimes} to serialize({_times})
+      set slot 0 of {_parkourblock}'s inventory to setnbtvalue(slot 0 of {_parkourblock}'s inventory,"timings",{_storetimes})
+  #
+  # > Create a new list which contains all the keys of the toplist HashMap.
+  set {_arraylist::*} to ...new ArrayList({_times}.keySet())
+  #
+  # > Create a list which can be looped in Skript.
+  loop {_arraylist::*}:
+    set {_timings::%loop-value%} to {_times}.get(loop-value)
+  #
+  # > Start sorting the timings list: low to high.
+  loop {_timings::*}:
+    add 1 to {_size}
+    if {_l2h::%loop-value%} is not set:
+      set {_l2h::%loop-value%} to loop-index
+    else:
+      set {_n} to 0
+      loop {_size} times:
+        add 1 to {_n}
+        if {_l2h::%loop-value-1%.%{_n}%} is not set:
+          set {_l2h::%loop-value-1%.%{_n}%} to loop-index
+          stop loop
+  #
+  # > Go through the low to high list and create a speedrun toplist.
+  loop {_l2h::*}:
+    add 1 to {_rank}
+    set {_top::%{_rank}%} to loop-value
+    if loop-value is {_uuid}:
+      set {_playerrank} to {_rank}
+  #
+  # > If the action is "newentry", tell the player about the new entry with messages.
+  if {_action} is "newentry":
+    message "%{SB::config::spacer}%" to {_player}
+    message "%{_prefix}% %getlang(""parkour_finishmsg"",{_lang})%" to {_player}
+    if {_newpb} is true:
+      message "%{_prefix}% %getlang(""parkour_personalbest"",{_lang})%" to {_player}
+      set {_pbtime} to getlang("parkour_personalbesttime",{_lang})
+      set {_oldpbtime} to getlang("parkour_pastpersonalbest",{_lang})
+      set {_crank} to getlang("parkour_currentrank",{_lang})
+      replace all "<time>" with createstopwatchtimer({_diff}) in {_pbtime}
+      replace all "<time>" with createstopwatchtimer({_oldpb}) in {_oldpbtime}
+      replace all "<rank>" with "%{_playerrank}%" in {_crank}
+      message "%{_prefix}% %{_pbtime}%" to {_player}
+      if {_oldpb} is set:
+        message "%{_prefix}% %{_oldpbtime}%" to {_player}
+      message "%{_prefix}% %{_crank}%" to {_player}
+    else:
+      set {_pbtime} to getlang("parkour_personalbesttime",{_lang})
+      set {_runtime} to getlang("parkour_thisruntime",{_lang})
+      set {_crank} to getlang("parkour_currentrank",{_lang})
+      replace all "<time>" with createstopwatchtimer({_times}.get({_uuid})) in {_pbtime}
+      replace all "<time>" with createstopwatchtimer({_diff}) in {_runtime}
+      replace all "<rank>" with "%{_playerrank}%" in {_crank}
+      message "%{_prefix}% %getlang(""parkour_nopersonalbest"",{_lang})%" to {_player}
+      message "%{_prefix}% %{_runtime}%" to {_player}
+      message "%{_prefix}% %{_pbtime}%" to {_player}
+      message "%{_prefix}% %{_crank}%" to {_player}
+    message "%{SB::config::spacer}%" to {_player}
+    #
+    # > Loop through the toplist, if it is longer than the predefined
+    # > maximum amount of speedrun times, remove the ones which exeed
+    # > and are the slowest by deleting the last ranks.
+    loop {_top::*}:
+      set {_ranking} to loop-index parsed as number
+      if {_ranking} > {@maxruntimes}:
+        {_times}.remove(loop-value)
+        set {_storetimes} to serialize({_times})
+        set slot 0 of {_parkourblock}'s inventory to setnbtvalue(slot 0 of {_parkourblock}'s inventory,"timings",{_storetimes})
+  #
+  # > If the player wants to view the toplist, create a book and open it.
+  if {_action} is "toplist":
+    #
+    # > To create valid books, ComponentBuilder is the fastest way.
+    set {_book} to newComponentBuilder()
+    #
+    # > {_i} is the page counter for the toplist, each page should have 4 entries.
+    set {_i} to 0
+    #
+    # > Loop through the toplist and create the book.
+    loop {_top::*}:
+      #
+      # > On every new site, add the site header.
+      if {_i} is 0:
+        {_book}.append(newTextComponent(getlang("parkour_toplist_header",{_lang},""," %nl%")))
+        {_book}.append(newTextComponent("%{SB::config::bookspacer}%%nl%"))
+      #
+      # > Convert the times in milliseconds to a better readable format: 00:00.000
+      set {_time} to createstopwatchtimer({_timings::%loop-value%})
+      {_book}.append(newTextComponent("&l%loop-index%&r | %loop-value parsed as offline player% %nl%>> %{_time}%"))
+      {_book}.append(newTextComponent("%{SB::config::bookspacer}%%nl%"))
+      add 1 to {_i}
+      #
+      # > In the case there are not 4 but 5 entries,
+      # > {_added} will be checked for that reason
+      # > to add the last page, if necessary.
+      set {_added} to true
+      if {_i} >= 4:
+        delete {_added}
+        add {_book}.create() to {_sites::*}
+        set {_book} to newComponentBuilder()
+        set {_i} to 0
+    #
+    # > If there is one more site needed, add it here.
+    if {_added} is true:
+      delete {_added}
+      add {_book}.create() to {_sites::*}
+    #
+    # > Create and open the book with the sites using the createopenbook function.
+    createopenbook({_player},{_sites::*})
+
+#
+# > Function - createstopwatchtimer
+# > Parameters:
+# > <number>a number as milliseconds
+# > Actions:
+# > Formats the number into a timer, which should then look like on a stopwatch.
+function createstopwatchtimer(diff:number) :: text:
+  set {_difft} to "%{_diff}%"
+  set {_length} to length of {_difft}
+  set {_difft::*} to {_difft} split at ""
+  set {_timer} to ""
+  set {_loops} to 7
+  while {_done} is not set:
+    if {_loops} <= {_length}:
+      add 1 to {_i}
+      set {_timer} to "%{_timer}%%{_difft::%{_i}%}%"
+    else:
+      set {_timer} to "%{_timer}%0"
+    if {_loops} is 6:
+      set {_timer} to "%{_timer}%:"
+    if {_loops} is 4:
+      set {_timer} to "%{_timer}%."
+    remove 1 from {_loops}
+    if {_loops} < 1:
+      set {_done} to true
+  return {_timer}
+
+#
+# > Function - getcurrentdifference
+# > Parameters:
+# > <date>the current time (or the one which is in the future of the other one)
+# > <date>the past time, which is before the current time.
+# > Actions:
+# > Returns a stopwatch timer with the calculated time difference between the two dates.
+function getcurrentdifference(now:object,past:object) :: text:
+  set {_diff} to ({_past}.getTime()) - ({_now}.getTime())
+  set {_timer} to createstopwatchtimer({_diff})
   return {_timer}
