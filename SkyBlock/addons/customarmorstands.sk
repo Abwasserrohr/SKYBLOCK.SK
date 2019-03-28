@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.6
+# customarmorstands.sk v0.0.7
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -94,7 +94,7 @@ options:
   zcoord: &rChange &bZ&r Coordinate
   placeitemslot: &7Place here the item\n&7you want for this slot.
   copytoolname: &rCopy Stick
-  copytoollore: &7This tool only copies\n&7the armor stand temporary,\n&7do not use it to\n&7store for long term.
+  copytoollore: &7This tool stores the\n&7armor stand for long term,\n&7you can store it in a chest.
   togglesize: &rSize
   togglesizelore: &7Toggle the size\n&7between big and small.
   togglevisibility: &rVisibility
@@ -117,6 +117,15 @@ options:
   #
   # > Please note: You may want to change the function "checkarmorstandplacepermission" below to fit
   # > it into your protections system. It should return true if the player is allowed to change the armor stand.
+
+#
+# > Import a Java class from bukkit to catch the PlayerInteractAtEntityEvent event.
+import:
+  org.bukkit.event.player.PlayerInteractAtEntityEvent
+  java.util.UUID
+  java.util.HashMap
+  org.bukkit.inventory.ItemStack
+  org.bukkit.util.EulerAngle
 
 #
 # > Function - checkarmorstandplacepermission
@@ -167,35 +176,39 @@ on rightclick holding {@copytool}:
     add 0.5 to y-coordinate of {_loc}
     if checkarmorstandplacepermission(player,{_loc}) is not true:
       stop
-    set {_target} to metadata value "%{_copytool}%" of player
     if player's gamemode is not creative:
       remove 1 of player's tool from player's inventory
+    #
+    # > De-serialize the HashMap from the tool.
+    set {_standdata} to deserialize({_copytool})
+    #
+    # > Get the yaw of the copied armor stand and modify the location
+    # > to spawn the armor stand with the right yaw.
+    set {_loc}'s yaw to {_standdata}.get("yaw")
     spawn 1 armor stand at {_loc}
-    set {_stand} to last spawned entity
-    {_stand}.setGravity(false)
-    {_stand}.setBasePlate({_target}.hasBasePlate())
-    {_stand}.setCanPickupItems(false)
-    {_stand}.setCustomName({_target}.getCustomName())
-    {_stand}.setCustomNameVisible({_target}.isCustomNameVisible())
-    {_stand}.setVisible({_target}.isVisible())
-    {_stand}.setSmall({_target}.isSmall())
-    {_stand}.setArms({_target}.hasArms())
-    {_stand}.setInvulnerable(true)
-    {_stand}.setGlowing({_target}.isGlowing())
-    
-    {_stand}.setHelmet({_target}.getHelmet())
-    {_stand}.setChestplate({_target}.getChestplate())
-    {_stand}.setLeggings({_target}.getLeggings())
-    {_stand}.setBoots({_target}.getBoots())
-    set {_stand}'s offhand tool to {_target}'s offhand tool
-    set {_stand}'s tool to {_target}'s tool
-    
-    {_stand}.setHeadPose({_target}.getHeadPose())
-    {_stand}.setBodyPose({_target}.getBodyPose())
-    {_stand}.setRightArmPose({_target}.getRightArmPose())
-    {_stand}.setLeftArmPose({_target}.getLeftArmPose())
-    {_stand}.setRightLegPose({_target}.getRightLegPose())
-    {_stand}.setLeftLegPose({_target}.getLeftLegPose())
+    #
+    # > Get the spawned armor stand from above and configure
+    # > the armor stand with the data of the HashMap.
+    set {_target} to last spawned entity
+    {_target}.setGravity(false)
+    {_target}.setBodyPose(text2pose({_standdata}.get("BodyPose")))
+    {_target}.setHeadPose(text2pose({_standdata}.get("HeadPose")))
+    {_target}.setLeftArmPose(text2pose({_standdata}.get("LeftArmPose")))
+    {_target}.setLeftLegPose(text2pose({_standdata}.get("LeftLegPose")))
+    {_target}.setRightArmPose(text2pose({_standdata}.get("RightArmPose")))
+    {_target}.setLegPose(text2pose({_standdata}.get("LegPose")))
+    {_target}.setBoots(ItemStack.deserialize({_standdata}.get("Boots")))
+    {_target}.setChestplate(ItemStack.deserialize({_standdata}.get("Chestplate")))
+    {_target}.setHelmet(ItemStack.deserialize({_standdata}.get("Helmet")))
+    set {_target}'s offhand tool to ItemStack.deserialize({_standdata}.get("ItemInLeftHand"))
+    set {_target}'s tool to ItemStack.deserialize({_standdata}.get("ItemInRightHand"))
+    {_target}.setLeggings(ItemStack.deserialize({_standdata}.get("Leggings")))
+    {_target}.setArms({_standdata}.get("Arms"))
+    {_target}.setBasePlate({_standdata}.get("BasePlate"))
+    {_target}.setMarker({_standdata}.get("Marker"))
+    {_target}.setSmall({_standdata}.get("Small"))
+    {_target}.setCustomNameVisible({_standdata}.get("CustomNameVisible"))
+    {_target}.setCustomName({_standdata}.get("CustomName"))
 
 #
 # > On rightclick holding an armor stand
@@ -211,12 +224,6 @@ on spawn of a armor stand:
   {_stand}.setCanPickupItems(false)
   {_stand}.setVisible(true)
   {_stand}.setInvulnerable(true)
-
-#
-# > Import a Java class from bukkit to catch the PlayerInteractAtEntityEvent event.
-import:
-  org.bukkit.event.player.PlayerInteractAtEntityEvent
-  java.util.UUID
 
 #
 # > Event - PlayerInteractAtEntityEvent
@@ -486,12 +493,12 @@ function copycustomstand(player:player):
   # > Get the translation for the tool as local variable.
   set {_uuid} to uuid of {_player}
   set {_lang} to {SK::lang::%{_uuid}%}
-  if {SB::lang::cs::copytoolname::%{_lang}%} is not set:
+  if getlang("cs_copytoollore",{_lang}) is not set:
     set {_copytoolnamelang} to "{@copytoolname}"
     set {_copytoollorelang} to "{@copytoollore}"
   else:
-    set {_copytoolnamelang} to {SB::lang::cs::copytoolname::%{_lang}%}
-    set {_copytoollorelang} to {SB::lang::cs::copytoollore::%{_lang}%}
+    set {_copytoolnamelang} to getlang("cs_copytoolname",{_lang})
+    set {_copytoollorelang} to getlang("cs_copytoollore",{_lang})
   #
   # > Get the target from the metadata of the player.
   set {_target} to metadata value "customarmorstand-target" of {_player}
@@ -511,14 +518,63 @@ function copycustomstand(player:player):
   #
   # > Sets the armor stand object to the metadata value named
   # > after the new random uuid to the player.
-  set metadata "%{_newuuid}%" of {_player} to {_target}  
+  set metadata "%{_newuuid}%" of {_player} to {_target}
   #
-  # > Save the random uuid to the nbt tag "customstand" to get the
-  # > armor stand object later back, if the player uses the tool.
-  set {_item} to setnbtvalue({_item},"customstand","%{_newuuid}%")
+  # > Save the entire armor stand into a hashmap and serialize it.
+  set {_standdata} to new HashMap()
+  set {_tool} to {_target}'s tool
+  set {_offhandtool} to {_target}'s offhand tool
+  {_standdata}.put("BodyPose",pose2text({_target}.getBodyPose()))
+  {_standdata}.put("Boots",{_target}.getBoots().serialize())
+  {_standdata}.put("Chestplate",{_target}.getChestplate().serialize())
+  {_standdata}.put("HeadPose",pose2text({_target}.getHeadPose()))
+  {_standdata}.put("Helmet",{_target}.getHelmet().serialize())
+  {_standdata}.put("ItemInRightHand",{_tool}.serialize())
+  {_standdata}.put("ItemInLeftHand",{_offhandtool}.serialize())
+  {_standdata}.put("LeftArmPose",pose2text({_target}.getLeftArmPose()))
+  {_standdata}.put("LeftLegPose",pose2text({_target}.getLeftLegPose()))
+  {_standdata}.put("RightArmPose",pose2text({_target}.getRightArmPose()))
+  {_standdata}.put("RightLegPose",pose2text({_target}.getRightLegPose()))
+  {_standdata}.put("Leggings",{_target}.getLeggings().serialize())
+  {_standdata}.put("Arms",{_target}.hasArms())
+  {_standdata}.put("BasePlate",{_target}.hasBasePlate())
+  {_standdata}.put("Marker",{_target}.isMarker())
+  {_standdata}.put("Small",{_target}.isSmall())
+  {_standdata}.put("Visible",{_target}.isVisible())
+  {_standdata}.put("CustomNameVisible",{_target}.isCustomNameVisible())
+  {_standdata}.put("CustomName",{_target}'s name)
+  {_standdata}.put("yaw",{_target}'s yaw)
+  #
+  # > Set the serialized hashmap as nbt value into the item.
+  set {_item} to setnbtvalue({_item},"customstand",serialize({_standdata}))
   #
   # > Give the player one of the copy tool.
   give 1 of {_item} to {_player}
+
+#
+# > Function - pose2text
+# > Parameters:
+# > <EulerAngle>the EulerAngle of a pose.
+# > Actions:
+# > Parses the EulerAngle to a text.
+function pose2text(pose:object) :: text:
+  return "%{_pose}.getX()%|%{_pose}.getY()%|%{_pose}.getZ()%"
+
+#
+# > Function - text2pose
+# > Parameters:
+# > <textt>a text which has been parsed to text by pose2text
+# > Actions:
+# > Parses text from pose2text to a EulerAngle.
+function text2pose(text:text) :: object:
+  set {_p::*} to {_text} split at "|"
+  loop {_p::*}:
+    set {_p::%loop-index%} to {_p::%loop-index%} parsed as number
+  set {_pose} to new EulerAngle(0, 0, 0)
+  set {_pose} to {_pose}.setX({_p::1})
+  set {_pose} to {_pose}.setY({_p::2})
+  set {_pose} to {_pose}.setZ({_p::3})
+  return {_pose}
 
 #
 # > Function - changecustomstandslot
