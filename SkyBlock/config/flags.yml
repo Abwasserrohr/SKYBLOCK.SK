@@ -74,6 +74,10 @@ defaultislandflags-foreign:
 # > Allow others to shoot things around. True = allowed, false = denied.
 - shoot: false
 - toggle-shoot: true
+#
+# > Allow others to drop things on the island. True = allowed, false = denied.
+- drop: true
+- toggle-drop: true
 
 #
 # > Default Flags for player islands (trusted flags):
@@ -139,6 +143,10 @@ defaultislandflags-trusted:
 # > Allow others to shoot things around. True = allowed, false = denied.
 - shoot: true
 - toggle-shoot: true
+#
+# > Allow others to drop things on the island. True = allowed, false = denied.
+- drop: true
+- toggle-drop: true
 
 #
 # > Default Flags for player islands (member flags):
@@ -204,6 +212,10 @@ defaultislandflags-member:
 # > Allow others to shoot things around. True = allowed, false = denied.
 - shoot: true
 - toggle-shoot: true
+#
+# > Allow others to drop things on the island. True = allowed, false = denied.
+- drop: true
+- toggle-drop: true
 
 #
 # > Default Flags for player islands (member flags):
@@ -268,3 +280,6 @@ defaultlobbyflag:
 #
 # > Allow others to shoot things around. True = allowed, false = denied.
 - shoot: false
+#
+# > Allow others to drop things on the island. True = allowed, false = denied.
+- drop: true

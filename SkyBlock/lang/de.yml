@@ -294,6 +294,7 @@ language:
 - flag_fire-spreadt: "&rFeuer Ausbreitung"
 - flag_elytrat: "&rElytra"
 - flag_shoott: "&rProjektile werfen"
+- flag_dropt: "&rItems fallen lassen"
 - flag_flagst: "Flags"
 - flag_generalt: "Allgemeine Flags"
 - flag_foreignt: "Flags für Fremde"
@@ -320,6 +321,7 @@ language:
 - flag_fire-spreadd: "<s1>Erlaubt die Ausbreitung<nl><s1>von Feuer auf der Insel."
 - flag_elytrad: "<s1>Erlaubt diesen Spielern,<nl><s1>mit Elytra zu fliegen."
 - flag_shootd: "<s1>Erlaubt diesen Spielern,<nl><s1>Projektile zu werfen."
+- flag_dropd: "<s1>Erlaubt diesen Spielern,<nl><s1>Items fallen zu lassen."
 - flag_generald: "<s1>Verändere hier Einstellungen,<nl><s1>die deine Insel allgemein<nl><s1>betreffen."
 - flag_foreignd: <s1>Erlaube Fremden diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
 - flag_trustedd: <s1>Erlaube Vertrauten diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
