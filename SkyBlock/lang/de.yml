@@ -529,7 +529,7 @@ language:
 - cs_removearmorstand: "&rEntfernen"
 - cs_removearmorstandlore: "&7Entferne diesen<nl>&7Rüstungsständer und<nl>&7erhalte eine Kopie<nl>&7davon zum platzieren."
 - cs_copytoolname: "&rKopierstab"
-- cs_copytoollore: "&7Dieses Werkzeug kopiert<nl>&7den Rüstungsständer temporär,<nl>&7verwende es nicht,<nl>&7zum lagern."
+- cs_copytoollore: "&7Dieses Werkzeug kopiert den<nl>&7Rüstungsständer dauerhaft,<nl>&7du kannst es lagern."
 - cs_lookatstand: "Schaue den Rüstungsständer an, um ihn zu bearbeiten. [<number>/50]"
 
   #
