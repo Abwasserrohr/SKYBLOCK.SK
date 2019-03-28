@@ -57,6 +57,16 @@ on bucket fill:
       binditem(event-location, player,lava bucket)
 
 #
+# > Event - drop
+# > Triggered once a player drops something
+# > Actions:
+# > Checks if the player is allowed to drop something at the location.
+on drop:
+  set {_allowed} to checkislandaccess(player,event-location,"drop")
+  if {_allowed} is false:
+    cancel event
+
+#
 # > Event - bucket fill
 # > Once, a player empties a bucket, this event is triggered
 # > Actions:
