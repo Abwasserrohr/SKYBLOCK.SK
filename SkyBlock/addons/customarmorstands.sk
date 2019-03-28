@@ -179,19 +179,18 @@ on rightclick holding {@copytool}:
     if player's gamemode is not creative:
       remove 1 of player's tool from player's inventory
     #
-	# > De-serialize the HashMap from the tool.
+    # > De-serialize the HashMap from the tool.
     set {_standdata} to deserialize({_copytool})
-	#
-	# > Get the yaw of the copied armor stand and modify the location
-	# > to spawn the armor stand with the right yaw.
+    #
+    # > Get the yaw of the copied armor stand and modify the location
+    # > to spawn the armor stand with the right yaw.
     set {_loc}'s yaw to {_standdata}.get("yaw")
     spawn 1 armor stand at {_loc}
-	#
-	# > Get the spawned armor stand from above and configure
+    #
+    # > Get the spawned armor stand from above and configure
     # > the armor stand with the data of the HashMap.
     set {_target} to last spawned entity
     {_target}.setGravity(false)
-
     {_target}.setBodyPose(text2pose({_standdata}.get("BodyPose")))
     {_target}.setHeadPose(text2pose({_standdata}.get("HeadPose")))
     {_target}.setLeftArmPose(text2pose({_standdata}.get("LeftArmPose")))
