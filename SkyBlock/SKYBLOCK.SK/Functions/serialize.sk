@@ -1,0 +1,38 @@
+#
+# ==============
+# serialize.sk
+# ==============
+# serialize.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+import:
+  java.io.ObjectOutputStream
+  java.io.ByteArrayOutputStream
+  java.io.ByteArrayInputStream
+  java.io.ObjectInputStream
+
+#
+# > Function - serialize
+# > Parameters:
+# > <object> the object which should get serialized.
+# > Actions:
+# > Serializes the object to a string and returns it.
+function serialize(object:object) :: text:
+  set {_byteOut} to new ByteArrayOutputStream()
+  set {_outStream} to new ObjectOutputStream({_byteOut})
+  {_outStream}.writeObject({_object})
+  {_outStream}.flush()
+  return {_byteOut}.toString()
+
+#
+# > Function - serialize
+# > Parameters:
+# > <text> a serialized object which should get deserialized.
+# > Actions:
+# > De-serializes the string back to a object and returns it.
+function deserialize(object:text) :: object:
+  set {_bytes} to {_object}.getBytes()
+  set {_byteinputstream} to new ByteArrayInputStream({_bytes})
+  set {_objectinputstream} to new ObjectInputStream({_byteinputstream})
+  set {_object} to {_objectinputstream}.readObject()
+  return {_object}
