@@ -467,6 +467,14 @@ language:
   #
   # > Parcours
 - parkour_guiheader: "&lParkour"
+- parkour_toplist_header: "&lBestenliste:"
+- parkour_toplist_item: "&rBestenliste"
+- parkour_personalbest: "Du hast deine Bestzeit verbessert."
+- parkour_nopersonalbest: "Du hast deine Bestzeit nicht geschlagen."
+- parkour_personalbesttime: "Bestzeit: <p2>&l<time>"
+- parkour_thisruntime: "Dieser Lauf: <p2>&l<time>"
+- parkour_pastpersonalbest: "Bisherige Bestzeit: <p2>&l<time>"
+- parkour_currentrank: "Aktueller Rang: <rank>"
 - parkour_checkpointreached: Checkpoint erreicht
 - parkour_checkpointinvalid: Ungültiger Checkpoint
 - parkour_finishinvalid: Ungültiges Ziel
