@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.8
+# openbook.sk v0.0.9
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -40,6 +40,8 @@ import:
   net.md_5.bungee.api.chat.HoverEvent$Action as HoverEventAction
   net.md_5.bungee.api.chat.ClickEvent$Action as ClickEventAction
   net.md_5.bungee.api.chat.TranslatableComponent
+  org.bukkit.inventory.ItemStack
+  org.bukkit.Material
 
 #
 # > Function - openbook
@@ -57,6 +59,35 @@ function openbook(player:player):
     {_buffer}.writerIndex(1)
     set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
     {_player}.getHandle().playerConnection!.sendPacket({_packet})
+
+#
+# > Function - createopenbook
+# > Parameters:
+# > <player>the player who should get the created book opened.
+# > <list of ComponentBuilder>the sites which should be added to the book.
+# > Actions:
+# > Creates a book out of sites and opens it to the player.
+function createopenbook(player:player,sites::*:object):
+  #
+  # > Create a new book which is going to be used, create it as Bukkit ItemStack to prevent
+  # > Skript side bugs.
+  set {_item} to new ItemStack(Material.WRITTEN_BOOK!, 1)
+  set {_bookmeta} to {_item}.getItemMeta()
+  #
+  # > Set the title and the author, this is not displayed but
+  # > needed to function.
+  {_bookmeta}.setTitle("Help")
+  {_bookmeta}.setAuthor("Immanuel94")
+  #
+  # > Set the sites to the book and then open it to the player.
+  {_bookmeta}.spigot().setPages({_sites::*})
+  {_item}.setItemMeta({_bookmeta})
+  #
+  # > Get the item of the player to give it back after the book has been opened.
+  set {_tool} to {_player}'s tool
+  set {_player}'s tool to {_item}
+  openbook({_player})
+  set {_player}'s tool to {_tool}
 
 #
 # > Function - overwritecomponentevents
@@ -84,7 +115,7 @@ function sethovertextevent(msg:object,text:object) :: object:
 #
 # > Function - setclickcmdevent
 # > Paremeters:
-# > <TextComponent>the TextComponen which should get a click event
+# > <TextComponent>the TextComponent which should get a click event
 # > <text>a text which should be executed from the client of the player
 # > Actions:
 # > Sets the click event to this text component and then returns it.
@@ -96,7 +127,7 @@ function setclickcmdevent(msg:object,cmd:object) :: object:
 #
 # > Function - setsuggestcmdevent
 # > Paremeters:
-# > <TextComponent>the TextComponen which should get a click event
+# > <TextComponent>the TextComponent which should get a click event
 # > <text>a text which should be suggested into the client of the player
 # > Actions:
 # > Sets the suggest command event to this text component and then returns it.
