@@ -67,7 +67,7 @@ function openbook(player:player):
 # > <list of ComponentBuilder>the sites which should be added to the book.
 # > Actions:
 # > Creates a book out of sites and opens it to the player.
-function createopenbook(player:player,sites::*:object):
+function createopenbook(player:player,sites::*:objects):
   #
   # > Create a new book which is going to be used, create it as Bukkit ItemStack to prevent
   # > Skript side bugs.
