@@ -300,3 +300,17 @@ challenges:
 - 5_7_item: "dragon head"
 - 5_7_repeat: true
 - 5_7_repeatsperday: 1
+
+- 5_8_needed: "96-string"
+- 5_8_reward: "25-xp,1-cobweb"
+- 5_8_repeatreward: "5-xp,1-cobweb"
+- 5_8_item: "cobweb"
+- 5_8_repeat: true
+- 5_8_repeatsperday: 10
+
+- 5_9_needed: "64-spider eye"
+- 5_9_reward: "10-xp,32-rotten flesh"
+- 5_9_repeatreward: "2-xp,32-rotten flesh"
+- 5_9_item: "rotten flesh"
+- 5_9_repeat: true
+- 5_9_repeatsperday: 25
