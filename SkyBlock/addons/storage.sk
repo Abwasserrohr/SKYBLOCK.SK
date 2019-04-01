@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.9
+# storage.sk v0.0.10
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -172,8 +172,7 @@ on break of {@item}:
         # > If the storage unit is not empty (because line 1 of the clay has not been parsed as integer 1),
         # > send a error and cancel the event.
         if {_savedamount} is not 0:
-          set {_uuid} to uuid of {_p}
-          set {_lang} to getlangcode({_p})
+          set {_lang} to getlangcode(player)
           if getlang("storage_onlybreakempty",{_lang}) is set:
             set {_msg} to getlang("storage_onlybreakempty",{_lang})
             set {_prefix} to getlang("prefix",{_lang})
