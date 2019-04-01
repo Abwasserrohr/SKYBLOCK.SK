@@ -15,6 +15,7 @@ SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your
 ### Useful extensions 
 - [AdvancedAchievements](https://github.com/PyvesB/AdvancedAchievements)
 - [ChestShop](https://github.com/ChestShop-authors/ChestShop-3)
+- [GraviTree](https://github.com/ShaneBeee/GraviTree/releases)
 
 ### Why SKYBLOCK.SK
 SKYBLOCK.SK allows server operators to open the files plain in any editor of their choice, like Notepad++ and saving it directly into the server folder. Then reload the server and it can be used.
