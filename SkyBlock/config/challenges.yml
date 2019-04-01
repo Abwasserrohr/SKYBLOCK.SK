@@ -189,7 +189,7 @@ challenges:
 - 3_7_repeat: true
 - 3_7_repeatsperday: 2
 
-- 4_1_needed: "256-gold ingot"
+- 4_1_needed: "512-gold ingot"
 - 4_1_reward: "150-xp,4-blaze rod"
 - 4_1_repeatreward: "25-xp,1-blaze rod"
 - 4_1_item: "blaze rod"
