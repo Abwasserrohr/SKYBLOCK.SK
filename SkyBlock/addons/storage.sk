@@ -563,7 +563,7 @@ function getformattedamount(number:number) :: text:
   #
   # > Set a DecimalFormat depending on the stored amount.
   if {_number} < 1000:
-    set {_format} to new DecimalFormat("000")
+    set {_format} to new DecimalFormat("0")
   else if {_number} >= 1000:
     set {_format} to new DecimalFormat("0,000")
   else if {_number} >= 1000000:
