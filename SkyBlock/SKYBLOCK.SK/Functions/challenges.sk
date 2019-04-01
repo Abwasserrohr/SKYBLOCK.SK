@@ -425,16 +425,20 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
       set {_amount} to number of {_tmp::2} in {_p}'s inventory
       set {_msg} to getlang("challenge_amountofitem",{_lang})
       #
-      # > Replace the amount of the item, which is already in the inventory and
-      # > the amount, that is needed to complete (solve) this challange.
+      # > Make a Component Builder to create a translateable message.
+      set {_sendmsg} to newComponentBuilder()
+      #
+      # > Split the message and replace <item> with a client side
+      # > translateable Component.
       replace all "<amount>" with "%{_tmp::1} - {_amount}%" in {_msg}
-      if {SB::lang::item::%{_tmp::3}%::%{_lang}%} is not set:
-        replace all "<item>" with "%{_tmp::3}%" in {_msg}
-      else:
-        replace all "<item>" with "%{SB::lang::item::%{_tmp::3}%::%{_lang}%}%" in {_msg}
+      set {_msg::*} to {_msg} split at "<item>"
+      {_sendmsg}.append("%{_prefix}% ")
+      {_sendmsg}.append({_msg::1})
+      {_sendmsg}.append(getTranslatableComponentFromItem({_tmp::2}))
+      {_sendmsg}.append({_msg::2})
       #
       # > Print error to player that there is something missing to complete this challenge.
-      message "%{_prefix}% %{_msg}%" to {_p}
+      {_p}.sendMessage({_sendmsg}.create())
       set {_incomplete} to true
   #
   # > If the player does not have everything in the inventory, stop here.
