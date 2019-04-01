@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.7
+# storage.sk v0.0.8
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -68,7 +68,8 @@ options:
   # > Prevent hoppers below storage units. This is useful since hoppers below storage units will try
   # > to pull out the storage clay out of the storage unit. This generates lag even if there are no
   # > items transported. It is suggested to turn this feature off but you can enable it to allow some
-  # > fancy storage systems.
+  # > fancy storage systems. Beware that this can cause problems if hoppers are handled asynchronous
+  # > if set to false. Storage units could get corrupted.
   preventhopperbelow: true
   #
   # > Fallback translations, if there is no translation available, use this:
@@ -82,6 +83,15 @@ options:
   getoutmenu: &7Get <max> out of||&7the storage unit.||&7--------||&7Supply: <supply>
 
 #
+# > Import the Java class to detectt the inventory move event. This is used very often and
+# > causes lag. Server operators who experience lags should avoid this type of events or reduce
+# > the allowed amount of hoppers.
+import:
+  org.bukkit.event.inventory.InventoryMoveItemEvent
+  org.bukkit.event.vehicle.VehicleMoveEvent
+  org.bukkit.Bukkit
+
+#
 # > Event - on load
 # > Action:
 # > After loading this skript, the recipe to create storage units is registered.
@@ -91,14 +101,24 @@ on load:
   register new shaped recipe for {_item} using diamond, diamond, diamond, diamond, chest, diamond, diamond, diamond, diamond
 
 #
+# > Event - on dispense of option (item)
+# > Triggered if a dispenser places the predefined storage item.
+# > Actions:
+# > Checks if the dispensed item is a valid storage unit, if it is,
+# > the event gets cancelled. Storage units have to be placed by hand.
+on dispense of {@item}:
+  if storageitemcheck(event-item) is true:
+    cancel event
+
+#
 # > Event - on place of option (item)
 # > Triggered if the player places the predefined storage item.
 # > Actions:
 # > If the player is allowed to build at the island, create a storage unit.
 on place of {@item}:
   #
-  # > Sets the lore to the item identifier, this is visible to the players.
-  if line 1 of lore of player's tool is "{@itemidentfier}":
+  # > Only check for hoppers if this item is a valid storage unit.
+  if storageitemcheck(player's tool) is true:
     #
     # Check, if the player is allowed to place the storage unit.
     set {_allowed} to checkislandaccess(player,location of event-block,"build")
@@ -109,8 +129,7 @@ on place of {@item}:
       if block below event-location is hopper:
         if {@preventhopperbelow} is true:
           cancel event
-          set {_uuid} to uuid of {_p}
-          set {_lang} to getlangcode({_p})
+          set {_lang} to getlangcode(player)
           if getlang("storage_hopperbelowdisabled",{_lang}) is set:
             set {_msg} to getlang("storage_hopperbelowdisabled",{_lang})
             set {_prefix} to getlang("prefix",{_lang})
@@ -127,6 +146,7 @@ on place of {@item}:
       set slot 26 of {_inv} to 1 of clay
       set line 1 of lore of slot 26 of {_inv} to "0"
       set line 2 of lore of slot 26 of {_inv} to "STORAGE"
+
 #
 # > Event - on break of option (item)
 # > Triggered if the player breaks a storage unit.
@@ -190,13 +210,6 @@ on place of hopper:
           message "%{_prefix}% %{_msg}%"
         else:
           message "{@prefix} {@hopperbelowdisabled}"
-#
-# > Import the Java class to detectt the inventory move event. This is used very often and
-# > causes lag. Server operators who experience lags should avoid this type of events or reduce
-# > the allowed amount of hoppers.
-import:
-  org.bukkit.event.inventory.InventoryMoveItemEvent
-  org.bukkit.event.vehicle.VehicleMoveEvent
 
 #
 # > Event - VehicleMoveEvent
@@ -837,3 +850,41 @@ function storestorageitem(p:player,x:number,y:number,z:number):
       #
       # > Reopen the storage unit menu to update the menu.
       openstoragemenu({_p},{_inv},{_loc})
+
+#
+# > Function - storageitemcheck
+# > Parameters: 
+# > <item>the item which should be checked for a storage unit
+# > Actions:
+# > Checks the given block, if it is a storage unit, this function returns true.
+function storageitemcheck(item:item) :: boolean:
+  #
+  # > Check if there is a visible item identifier for a storage unit.
+  if line 1 of lore of {_item} is "{@itemidentfier}":
+    return true
+  #
+  # > If it seems that this isn't a storage unit, check the inventory of it.
+  else:
+    #
+    # > If the metadata of this item is set.
+    if {_item}.getItemMeta() is set:
+      #
+	  # > Set the metadata to a variable and check if it has a blockstate.
+      set {_meta} to {_item}.getItemMeta()
+      if {_meta}.getBlockState() is set:
+        #
+        # > Get the BlockState of the item to check the inventory of the block.
+        set {_shulker} to {_meta}.getBlockState()
+        set {_inv} to Bukkit.createInventory(null, 27, "1")
+        {_inv}.setContents({_shulker}.getInventory().getContents())
+        delete {_shulker}
+        #
+        # > If the 26th slot has clay balls, check if the 2nd line is "STORAGE",
+        # > if it is, then this is a storage unit.
+        if {_inv}.getItem(26) is clay balls:
+          set {_item} to {_inv}.getItem(26)
+          if 2nd line of {_item}'s lore is "STORAGE":
+            return true
+        delete {_inv}
+      delete {_meta}
+  delete {_item}
