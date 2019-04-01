@@ -118,7 +118,7 @@ on dispense of {@item}:
 on place of {@item}:
   #
   # > Only check for hoppers if this item is a valid storage unit.
-  if storageitemcheck(event-item) is true:
+  if storageitemcheck(player's tool) is true:
     #
     # Check, if the player is allowed to place the storage unit.
     set {_allowed} to checkislandaccess(player,location of event-block,"build")
