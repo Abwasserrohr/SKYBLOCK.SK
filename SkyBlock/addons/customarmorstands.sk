@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.7
+# customarmorstands.sk v0.0.8
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -271,10 +271,10 @@ function opencustomstandmenu(player:player):
   #
   # > Get the translation for the menu.
   set {_uuid} to uuid of {_player}
-  set {_lang} to {SK::lang::%{_uuid}%}
+  set {_lang} to getlangcode({_player})
   #
   # > If the translation isn't set, use the fallback one.
-  if {SB::lang::cs::guiheader::%{_lang}%} is not set:
+  if getlang("cs_guiheader",{_lang}) is not set:
     set {_headerlang} to "{@guiheader}"
     set {_headlang} to "{@head}"
     set {_bodylang} to "{@body}"
