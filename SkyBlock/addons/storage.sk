@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.8
+# storage.sk v0.0.9
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -90,6 +90,7 @@ import:
   org.bukkit.event.inventory.InventoryMoveItemEvent
   org.bukkit.event.vehicle.VehicleMoveEvent
   org.bukkit.Bukkit
+  java.text.DecimalFormat
 
 #
 # > Event - on load
@@ -550,7 +551,29 @@ function storagesignupdater(loc:location,item:item,amount:integer):
       if {_amount} is 0:
         set {_item} to "---"
       set line 2 of block above {_loc} to "%{_item}%"
-      set line 3 of block above {_loc} to "&l%{_amount}%"
+      set line 3 of block above {_loc} to "&l%getformattedamount({_amount})%"
+
+#
+# > Function - getformattedamount
+# > Parameters:
+# > <number>the number which should be formatted
+# > Actions:
+# > Formats a number and returns it as text for display purposes.
+function getformattedamount(number:number) :: text:
+  #
+  # > Set a DecimalFormat depending on the stored amount.
+  if {_number} < 1000:
+    set {_format} to new DecimalFormat("000")
+  else if {_number} >= 1000:
+    set {_format} to new DecimalFormat("0,000")
+  else if {_number} >= 1000000:
+    set {_format} to new DecimalFormat("0,000,000")
+  else if {_number} >= 1000000000:
+    set {_format} to new DecimalFormat("0,000,000,000")
+  #
+  # > Return the formatted number as text.
+  return {_format}.format({_number})
+
 #
 # > Function - openstoragemenu
 # > Parameter: <player>the player to who the menu should open,<inventory>storage unit inventory, <location>location of the storage unit
@@ -677,7 +700,7 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     else:
       set {_lore} to "{@getoutmenu}"
     replace all "<max>" with "%{_max}%" in {_lore}
-    replace all "<supply>" with "%{_savedamount}%" in {_lore}
+    replace all "<supply>" with getformattedamount({_savedamount}) in {_lore}
     set lore of {_item} to {_lore}
     #
     # > Set the cloned item with the new lore to the newly opened inventory of the player.
@@ -716,7 +739,7 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
         else:
           set {_lore} to "{@getoutmenu}"
         replace all "<max>" with "%{_max}%" in {_lore}
-        replace all "<supply>" with "%{_startcheck}%" in {_lore}
+        replace all "<supply>" with getformattedamount({_startcheck}) in {_lore}
         set {_item} to slot 1 of {_p}'s current inventory
         set lore of {_item} to {_lore}
         set slot 1 of {_p}'s current inventory to {_item}
