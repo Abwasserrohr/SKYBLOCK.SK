@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.10
+# storage.sk v0.0.11
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -119,7 +119,7 @@ on dispense of {@item}:
 on place of {@item}:
   #
   # > Only check for hoppers if this item is a valid storage unit.
-  if storageitemcheck(player's tool) is true:
+  if line 1 of lore of player's tool is "{@itemidentfier}":
     #
     # Check, if the player is allowed to place the storage unit.
     set {_allowed} to checkislandaccess(player,location of event-block,"build")
