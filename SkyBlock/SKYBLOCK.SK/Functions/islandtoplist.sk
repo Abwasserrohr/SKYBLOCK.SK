@@ -22,11 +22,15 @@ import:
 # > <player>player, <text>pageint
 # > Actions:
 # > The islandtoplist sends a toplist into the chat of the player.
-function islandtoplist(p:player,pageint:text,gui:boolean=false):
+function islandtoplist(p:player,pageint:text,gui:boolean=false,sorted:text="island"):
   #
   # > Wait a short time to prevent client side bugs
   if {_gui} is true:
     wait 2 ticks
+  #
+  # > Check if the sorted variable is valid:
+  if {_sorted} is not "island" or "challenge" or "visitors":
+    set {_sorted} to "island"
   #
   # > Save some variables to local variables.
   set {_pageint} to "%{_pageint}%" parsed as number
@@ -51,15 +55,38 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     message "%{_prefix}% %{_msg}%" to {_p}
     stop
   #
-  # > Loop through all island levels.
-  loop {SB::islvl::*}:
+  # > Go trough this if we want the island toplist.
+  if {_sorted} is "island":
     #
-    # > If there is already a level set for this island, delete the list entry.
-    if {_level::%loop-index%} is set:
-      delete {SB::islvl::%loop-index%}
+    # > Get the island levels as local variable.
+    loop {SB::islvl::*}:
+      #
+      # > If there is already a level set for this island, delete the list entry.
+      if {_level::%loop-index%} is set:
+        delete {SB::islvl::%loop-index%}
+      #
+      # > Set the entries to a new list to sort it, do not mess with the list saved on disk.
+      set {_level::%loop-index%} to loop-value
+  #
+  # > Go through this part if the challenge toplist is wanted.
+  else if {_sorted} is "challenge":
     #
-    # > Set the entries to a new list to sort it, do not mess with the list saved on disk.
-    set {_level::%loop-index%} to loop-value
+    # > Get the challenge experience as local variable.
+    loop {SB::islvl::*}:
+      if {SB::island::%loop-index%::challengexp} is 0:
+        set {_level::%loop-index%} to 0
+      else:
+        set {_level::%loop-index%} to {SB::island::%loop-index%::challengexp}
+  #
+  # > Go through this part if the visitors toplist is wanted.
+  else if {_sorted} is "visitors":
+    #
+    # > Get the visitors as local variable.
+    loop {SB::islvl::*}:
+      if {SB::visits::%loop-index%} is 0:
+        set {_level::%loop-index%} to 0
+      else:
+        set {_level::%loop-index%} to {SB::visits::%loop-index%}
   #
   # > Revert the list from random to low to high. {_l2h::*} -> l2h means low to high.
   loop {_level::*}:
@@ -113,7 +140,35 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
   set {_line} to getlang("topheader",{_lang})
   replace all "<start>" with "%{_pageint}%" in {_line}
   replace all "<end>" with "%{_page}%" in {_line}
-  {_book}.append(newTextComponent("%{_line}%%nl%%nl%"))
+  {_book}.append(newTextComponent("%{_line}%%nl%"))
+  {_book}.append(newTextComponent(getlang("islandtoplist_sortby",{_lang})))
+  if {_sorted} is "island":
+    set {_prefix} to "&l"
+  else:
+    set {_prefix} to "&r"
+  set {_msg} to newTextComponent(getlang("islandtoplist_island",{_lang},{_prefix}))
+  set {_msg} to setclickcmdevent({_msg},"/island top 1")
+  set {_msg} to sethovertextevent({_msg},getlang("islandtoplist_island_hover",{_lang}))
+  {_book}.append({_msg})
+  if {_sorted} is "challenge":
+    set {_prefix} to "&l"
+  else:
+    set {_prefix} to "&r"
+  set {_msg} to newTextComponent(getlang("islandtoplist_challenge",{_lang},{_prefix}))
+  set {_msg} to setclickcmdevent({_msg},"/island top 1 challenge")
+  set {_msg} to sethovertextevent({_msg},getlang("islandtoplist_challenge_hover",{_lang}))
+  {_book}.append({_msg})
+  if {_sorted} is "visitors":
+    set {_prefix} to "&l"
+  else:
+    set {_prefix} to "&r"
+	
+  set {_msg} to newTextComponent(getlang("islandtoplist_visitors",{_lang},{_prefix}))
+  set {_msg} to setclickcmdevent({_msg},"/island top 1 visitors")
+  set {_msg} to sethovertextevent({_msg},getlang("islandtoplist_visitors_hover",{_lang}))
+  {_book}.append({_msg})
+  set {_msg} to overwritecomponentevents(newTextComponent(" %nl%"))
+  {_book}.append({_msg})
   #
   # > Loop through the toplist site, the player has requested.
   loop {_top::%{_pageint}%::*}:
@@ -144,13 +199,19 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false):
     # > Replace the name placeholder with the rank holder.
     replace all "<name>" with "%{_lp}%" in {_rank}
     set {_msg} to newTextComponent("%{_rank}%%nl%")
-    set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}% island top %{_pageint}%")
+    set {_msg} to setclickcmdevent({_msg},"/island info %{_lp}% island top %{_pageint}% %{_sorted}%")
     #
     # > Prepare and set the on hover event text for the toplist.
     set {_hovertext} to getlang("toplistbookhover",{_lang})
     replace all "<name>" with "%{_lp}%" in {_hovertext}
     replace all "<rank>" with loop-index in {_hovertext}
-    replace all "<level>" with "%{_level::%loop-value%}%" in {_hovertext}
+    replace all "<level>" with "%{SB::islvl::%loop-value%}%" in {_hovertext}
+    replace all "<challengexp>" with "%{SB::island::%loop-value%::challengexp}%" in {_hovertext}
+    if {SB::visits::%loop-value%} is not set:
+      set {_visits} to 0
+    else:
+      set {_visits} to {SB::visits::%loop-value%}
+    replace all "<visitors>" with "%{_visits}%" in {_hovertext}
     set {_msg} to sethovertextevent({_msg},{_hovertext})
     {_book}.append({_msg})
   #

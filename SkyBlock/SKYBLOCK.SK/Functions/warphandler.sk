@@ -56,13 +56,20 @@ function warphandler(p:player,action:text,arg1:text="1",arg2:text="1"):
 		# > Prevent increasing visits through warping to own warps.
         if {_p} is not {_target}:
           #
-          # > Add 1 to the visits counter of the island.
-          add 1 to {SB::visits::%{_x}%_%{_y}%_%{_z}%}
+          # > Count only once per server session for each unique user.
+          if metadata value "sb-visited-%{_x}%_%{_y}%_%{_z}%" of {_p} is not set:
+            #
+            # > Add 1 to the visits counter of the island.
+            add 1 to {SB::visits::%{_x}%_%{_y}%_%{_z}%}
+            #
+            # > Set a metadata value to prevent counting one user multiple times.
+            set metadata value "sb-visited-%{_x}%_%{_y}%_%{_z}%" of {_p} to true
       else:
         #
-        # > There is no warp, print error message.
+        # > There is no such warp, print error message and open warp toplist.
         set {_msg} to getlang("warpnotfound",{_lang})
         message "%{_prefix}% %{_msg}%" to {_p}
+        islandtoplist({_p},"1",false,"visitors")
     else:
       #
       # > There is no such player, print error message.
@@ -146,42 +153,8 @@ import:
 # > Arguments:
 # > <player>player, <text>site
 # > Actions:
-# > The warptoplist prints a toplist of the most visited warps to the player.
+# > The warptoplist callse the islandtoplist function to open a toplist sorted by visitors.
 function warptoplist(p:player,site:text):
   #
-  # > Get the uuid of the player, the current language code and also the chat prefix:
-  set {_uuid} to uuid of {_p}
-  set {_lang} to getlangcode({_p})
-  set {_prefix} to getlang("prefix",{_lang})
-  #
-  # > Get the current site which should be displayed.
-  set {_site} to {_site} parsed as number
-  if {_site} is not set:
-    set {_site} to 1
-  #
-  # > Sort the visits variable using the Java utility Arrays.
-  Arrays.sort({SB::visits::*})
-  #
-  # > Send header of the toplist to the player
-  set {_msg} to getlang("warptop",{_lang})
-  message "%{_prefix}% %{_msg}%" to {_p}
-  #
-  # > If the site is not 1, multiply it by 10 to make it compatible to the loop.
-  set {_rankdisplay} to 1
-  if {_site} is not 1:
-    set {_rankdisplay} to {_site} * 10
-  #
-  # > Loop through the toplist and display the right site.
-  loop {SB::visits::*}:
-    add 1 to {_rank}
-    if {_rank} >= {_rankdisplay}:
-      if {_rank} <= {_rankdisplay}+10:
-        set {_msg} to getlang("warptoplist",{_lang})
-        replace all "<rank>" with "%{_rank}%" in {_msg}
-        replace all "<leader>" with "%{SB::island::%loop-index%::leader} parsed as offline player%" in {_msg}
-        replace all "<visits>" with "%loop-value%" in {_msg}
-        message "%{_prefix}% %{_msg}%" to {_p}
-  #
-  # > Help the player on how to visit an island.
-  set {_msg} to getlang("warptoisland",{_lang})
-  message "%{_prefix}% %{_msg}%" to {_p}
+  # > Call the island toplist sorted by visitors.
+  islandtoplist({_p},{_site},false,"visitors")

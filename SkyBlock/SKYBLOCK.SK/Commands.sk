@@ -256,7 +256,7 @@ command /island [<text>] [<text=1>] [<text>]:
     # > If a player types in /island with the first argument "top",
     # > the top list gets shown to the player using the islandtoplist function.
     else if arg-1 is "top":
-      islandtoplist(player,arg-2)
+      islandtoplist(player,arg-2,false,arg-3)
     #
     # > Argument: "spawn" or "lobby"
     # > Actions:

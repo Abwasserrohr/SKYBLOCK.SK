@@ -197,7 +197,14 @@ language:
   # > /island top
 - istopheader: "&eTop 10 &6&l(<currentpage>/<allpages>)"
 - istoplist: "&7&l<rank>&8 | &8<name>"
-- toplistbookhover: "<name><nl1><guispacer><nl1>&r&7Rang: <rank><nl1>Insellevel: <level><nl1><guispacer>"
+- toplistbookhover: "<name><nl1><guispacer><nl1>&r&7Rang: <rank><nl1>Insellevel: <level><nl1>Erfahrung durch<nl1>Herausforderungen: <challengexp><nl1>Besucher: <visitors><nl1><guispacer>"
+- islandtoplist_sortby: "Sortierung: "
+- islandtoplist_island: "[L]"
+- islandtoplist_challenge: " [C] "
+- islandtoplist_visitors: "[B]"
+- islandtoplist_island_hover: "Sortierung nach Insellevel<nl1><s1>Zeigt die Bestenliste<nl1>sortiert nach dem<nl1>Insellevel an."
+- islandtoplist_challenge_hover: "Sortierung nach Herausforderungen<nl1><s1>Zeigt die Bestenliste<nl1>sortiert nach der<nl1>Herausforderungserfahrung an."
+- islandtoplist_visitors_hover: "Sortierung nach Besuchern<nl1><s1>Zeigt die Bestenliste<nl1>sortiert nach den<nl1>Besuchern an."
 
   #
   # > /isadmin - command feedback
@@ -251,7 +258,7 @@ language:
   
   #
   # > Chat headers
-- topheader: "&lBestenliste (<start>/<end>"
+- topheader: "&lBestenliste"
 - levelheader: <p2>Insel Level <s1>&l- <p1>
 - votereward: "&bVote für Belohnungen: "
 - rewardwoods: <p1>Holzkiste
