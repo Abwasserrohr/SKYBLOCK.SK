@@ -1,6 +1,6 @@
 #
 # ==============
-# voterewards.sk v0.0.1
+# voterewards.sk v0.0.2
 # ==============
 # Gives your players predefined rewards which increase if they're loyal to you and vote every day.
 # ==============
@@ -373,7 +373,7 @@ function claimvoterewards(player:offline player):
     #
     # > If the reward is a function, replace the <player> placeholder and execute the function.
     if {_reward::1} is "function":
-      replace all "<player>" with "%{_player}%" in {_reward::2}
+      replace all "<player>" with "%{_player}% parsed as player" in {_reward::2}
       evaluate "%{_reward::2}%"
       add 1 to {_rewardnumber}
       delete {_voterewards::%loop-index%}
