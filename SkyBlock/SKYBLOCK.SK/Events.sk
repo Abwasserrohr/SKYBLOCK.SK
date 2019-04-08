@@ -325,7 +325,8 @@ on damage:
   if victim is a player:
     if {SB::invincible::%victim%} is set:
       cancel event
-    handlegeneralflagevent(event,false,location of victim,"pvp")
+    if attacker is a player:
+      handlegeneralflagevent(event,false,location of victim,"pvp")
 
 #
 # > Event: on ignition
