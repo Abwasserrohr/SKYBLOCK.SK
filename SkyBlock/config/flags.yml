@@ -232,11 +232,6 @@ defaultislandflags-general:
 # > Slime spawning. True = allowed, false = disabled.
 - slime-spawning: true
 - toggle-slime-spawning: true
-
-#
-# > Player collision. True = enabled, false = disabled.
-- playercollision: true
-- toggle-playercollision: true
 #
 # > Player vs player. True = ennabled, false = disabled.
 - pvp: false
@@ -295,9 +290,6 @@ defaultlobbyflag:
 #
 # > Allow others to drop things on the island. True = allowed, false = denied.
 - drop: true
-#
-# Allow players to collide in each other. True = allowed, false = disabled.
-- playercollision: false
 #
 # > Allow players to damage each other. True = allowed, false = denied.
 - pvp: false
