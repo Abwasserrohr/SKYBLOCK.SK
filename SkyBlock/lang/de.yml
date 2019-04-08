@@ -348,7 +348,11 @@ language:
 - flag_currenttrue: "&2An"
 - flag_currentfalse: "&4Aus"
 - flag_errorfalse: Der Besitzer hat diese Funktion abgeschaltet.
-  
+  #
+  # > Island access messages
+- islandaccess_welcome: "Willkommen auf <leader>s Insel!"
+- islandaccess_welcome_abandoned: "Willkommen auf einer verlassenen Insel!"
+- islandaccess_noaccess: "Diese Insel ist für dich nicht zugänglich."
   #
   # > Ore generator add-on
 - og_name: "Erz Generator:"
@@ -365,8 +369,6 @@ language:
 - bc_shopprice: "Preis: <price>"
 - bc_shopfree: Kostenlos
 - bc_notenoughmoney: Du hast nicht genug Geld dafür.
-
-
   #
   # > Island upgrades
 - bc_islandsizeshop: Vergrößert deine Insel<nl>auf <size>x<size> Blöcke.
