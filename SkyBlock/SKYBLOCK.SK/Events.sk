@@ -44,6 +44,16 @@ on rightclick:
       cancel event
 
 #
+# > Event: on any move
+# > Action:
+# > Once a player moves, the checkislandvisit function gets called
+# > within a thread. This is going to handle events if a player
+# > is visiting a new island to for example deny access to an island.
+on any move:
+  $ thread
+  checkislandvisit(player)
+
+#
 # > Event - bucket fill
 # > Once, a player fills a bucket, this event is triggered
 # > Actions:
@@ -301,30 +311,23 @@ on respawn:
   if {SB::config::preventhungerreset} is true:
     set hunger of player to {SB::hunger::%player%}
 
+#
+# > Event: on damage
+# > Actions:
+# > Checks if the player is invincible and cancels the event if that's the case.
+# > Then, it is also checked if the pvp flag for the island is enabled, if it is
+# > disabled, the event also gets canceled again.
 on damage:
   set {_prefix} to getlang("prefix",getlangcode(attacker))
   set {_a} to getlang("nopvp",getlangcode(attacker))
+  #
+  # > Only check for invinciblity or pvp flag it the victim is a player.
   if victim is a player:
     if {SB::invincible::%victim%} is set:
       cancel event
-  if attacker has permission "%{SB::config::buildpermission}%":
-    stop
-  if {SB::config::pvp} is false:
     if attacker is a player:
-      if victim is a player:
-        actionload(attacker, {_a})
-        cancel event
-      stop
-  #todo double check this part, something doesnt work right here:
-  else:
-    if {SB::player::%uuid of attacker%::island::bedrock} is not set:
-      cancel event
-      actionload(attacker, {_a})
-    else:
-      set {_allowed} to checkislandaccess(attacker,location of attacker)
-      if {_allowed} is false:
-        cancel event
-        actionload(attacker, {_a})
+      handlegeneralflagevent(event,false,location of victim,"pvp")
+
 #
 # > Event: on ignition
 # > Actions:
@@ -343,6 +346,13 @@ on ignition:
 # > If a monster spawns, check if the event should get cancelled.
 on spawn of a monster:
   handlegeneralflagevent(event,false,event-location,"mob-spawning")
+
+#
+# > Event: on spawn of a slime
+# > Actions:
+# > If a slime spawns, check if the event should get cancelled.
+on spawn of a slime:
+  handlegeneralflagevent(event,false,event-location,"slime-spawning")
 
 #
 # > Event: on toggling gliding
