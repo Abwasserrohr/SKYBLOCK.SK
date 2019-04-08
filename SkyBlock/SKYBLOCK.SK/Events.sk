@@ -44,6 +44,16 @@ on rightclick:
       cancel event
 
 #
+# > Event: on any move
+# > Action:
+# > Once a player moves, the checkislandvisit function gets called
+# > within a thread. This is going to handle events if a player
+# > is visiting a new island to for example deny access to an island.
+on any move:
+  $ thread
+  checkislandvisit(player)
+
+#
 # > Event - bucket fill
 # > Once, a player fills a bucket, this event is triggered
 # > Actions:
