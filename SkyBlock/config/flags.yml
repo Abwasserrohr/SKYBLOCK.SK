@@ -78,6 +78,10 @@ defaultislandflags-foreign:
 # > Allow others to drop things on the island. True = allowed, false = denied.
 - drop: true
 - toggle-drop: true
+#
+# > Allow others to enter the island. True = allowed, false = denied.
+- access: true
+- toggle-access: true
 
 #
 # > Default Flags for player islands (trusted flags):
@@ -147,6 +151,10 @@ defaultislandflags-trusted:
 # > Allow others to drop things on the island. True = allowed, false = denied.
 - drop: true
 - toggle-drop: true
+#
+# > Allow others to enter the island. True = allowed, false = denied.
+- access: true
+- toggle-access: false
 
 #
 # > Default Flags for player islands (member flags):
@@ -216,6 +224,10 @@ defaultislandflags-member:
 # > Allow others to drop things on the island. True = allowed, false = denied.
 - drop: true
 - toggle-drop: true
+#
+# > Allow others to enter the island. True = allowed, false = denied.
+- access: true
+- toggle-access: false
 
 #
 # > Default Flags for player islands (member flags):
@@ -296,3 +308,6 @@ defaultlobbyflag:
 #
 # > Allows slimes to spawn. True = enabled, false = disabled.
 - slime-spawning: false
+#
+# > Allow others to enter the island. True = allowed, false = denied.
+- access: true
