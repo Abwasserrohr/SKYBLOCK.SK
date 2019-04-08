@@ -350,8 +350,7 @@ language:
 - flag_errorfalse: Der Besitzer hat diese Funktion abgeschaltet.
   #
   # > Island access messages
-- islandaccess_welcome: "Willkommen auf <leader>s Insel!"
-- islandaccess_welcome_abandoned: "Willkommen auf einer verlassenen Insel!"
+- islandaccess_welcome: "Willkommen der Insel von <leader>!"
 - islandaccess_noaccess: "Diese Insel ist für dich nicht zugänglich."
   #
   # > Ore generator add-on
