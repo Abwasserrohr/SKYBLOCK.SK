@@ -1,6 +1,6 @@
 #
 # ==============
-# afkcheck.sk v0.0.2
+# afkcheck.sk v0.0.3
 # ==============
 # Check your players for being afk without using the chat.
 # ==============
@@ -31,7 +31,7 @@ options:
   # > Fallback translations
   prefix: &7[&6AFK&7] &8>>&7
   title: AFK Check
-  subtitle: Please write &6&l/afkok
+  subtitle: Please write &6&l/afkok <random>
   noresponse: <player> didn't respond.
   notafk: You're not afk. Thank you for letting us know.
   onlyifasked: Only type in this comment if you get asked to do it.
@@ -42,6 +42,13 @@ options:
   primarycolor: &6
   warncolor: &4
   background: &8
+  #
+  # > Random integer minimum which has to typed into the chat.
+  randommin: 1
+  #
+  # > Random integer maximum which has to typed into the chat.
+  randommax: 9
+
 #
 # > Command - afkcheck
 # > Arguments:
@@ -86,6 +93,12 @@ command /afkcheck <player>:
       set {_warn} to "{@warncolor}"
     else:
       set {_warn} to {SB::config::color::warn::1}
+    #
+    # > Creates a random number as a string which has to be typed in by
+    # > the player to prevent bypass using automated clients.
+    set {_random} to "%random integer between 1 and 9%"
+    set metadata value "afkchecknumber" of {_player} to {_random}
+    replace all "<random>" with "%{_random}%" in {_subtitle}
     #
     # > If the player goes offline, stop the while loop.
     while {_player} is online:
@@ -132,7 +145,7 @@ command /afkcheck <player>:
 # > The command should be used by a player who has been
 # > specified with /afkcheck <player> and can confirm
 # > here that the defined player isn't afk.
-command /afkok:
+command /afkok [<text>]:
   trigger:
     #
     # > Set frequently used data into local variables.
@@ -149,6 +162,13 @@ command /afkok:
     # > If a afk check is active, delete it and inform the
     # > player that the command was successful.
     if {TMP::afkcheck::%player%} is set:
+      #
+      # > If the player entered an incorrect number (string), then the
+      # > player gets a message that it isn't correct.
+      if metadata value "afkchecknumber" of player is not arg-1:
+        set {_notafk} to getlang("afkcheck_incorrectnumber",{_lang})
+        message "%{_prefix}% %{_notafk}%"
+        stop
       delete {TMP::afkcheck::%player%}
       if getlang("afkcheck_notafk",{_lang}) is not set:
         set {_notafk} to "{@notafk}"
