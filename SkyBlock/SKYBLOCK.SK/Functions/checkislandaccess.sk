@@ -202,8 +202,8 @@ function getcurrentbedrock(p:player, l:location) :: location:
     add ({_dist} - {SB::config::protect}) to z-coord of {_pl::1}
     subtract ({_dist} - {SB::config::protect}) from x-coord of {_pl::2}
     subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
-    set y-coordinate of {_pl::2} to 256
-    set y-coordinate of {_pl::1} to 0
+    set y-coordinate of {_pl::2} to 5000
+    set y-coordinate of {_pl::1} to -5000
     
     #
     # > Set border 1 location
