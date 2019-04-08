@@ -448,11 +448,12 @@ language:
   #
   # > AFK Check
 - afkcheck_title: AFK Check
-- afkcheck_subtitle: Bitte schreibe &6&l/afkok
+- afkcheck_subtitle: Bitte schreibe &6&l/afkok <random>
 - afkcheck_noresponse: <player> hat nicht geantwortet.
 - afkcheck_notafk: Du bist nicht afk. Danke für deine Mitteilung.
 - afkcheck_onlyifasked: Schreibe diesen Befehl nur, wenn du danach gefragt wirst.
 - afkcheck_playernotafk: <player> hat nach <time> Sekunden geantwortet.
+- afkcheck_incorrectnumber: Bitte füge die korrekte Nummer mit an.
 
   #
   # > Votingrewards
