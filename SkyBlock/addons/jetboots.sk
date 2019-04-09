@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.6
+# jetboots.sk v0.0.7
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -8,7 +8,6 @@
 # ==============
 # > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
-# > actionbar.sk - https://github.com/Abwasserrohr/SKYBLOCK.SK/raw/master/SkyBlock/SKYBLOCK.SK/Functions/actionbar.sk
 # > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
 # ==============
 # How to use it:
@@ -33,8 +32,9 @@ options:
   # > Defines how the item should be named:
   item_name: "&eJetBoots"
   #
-  # > Defines, how much the fuel should fill up the boots, every second, 20 fuel gets used.
-  fuelworth: 20
+  # > Fuel items, set all items which should be usable as a fuel, separate with "or".
+  # > Set the fuel efficiency of each fuel type below at the on load event.
+  fuelitems: coal or charcoal
   #
   # > Defines the speed of the boots.
   flyspeed: 0.04
@@ -44,6 +44,10 @@ options:
   emptyinfo: "Your &eJetBoots&r are empty!"
   loadedinfo: "Your &eJetBoots&r have been filled up."
   actionbar: &8[&6&lJetBoots&8] &8>> [&r<fuel>&8]
+  #
+  # > Set a number once the player should get a warn color on the fuel,
+  # > which tells the player that the jetboots are going to be empty soon.
+  fuelwarn: 500
 
 #
 # > Event - on load
@@ -51,6 +55,12 @@ options:
 # > Once this file is loaded by skript, the JetBoots get registered as a crafting recipe.
 # > Also, if there is a old jetboots list left, delete it.
 on load:
+  #
+  # > Sets the efficiency for coal.
+  loadconfigobject("JB-fuelefficiency-coal",20)
+  #
+  # > Sets the efficiency for coal.
+  loadconfigobject("JB-fuelefficiency-charcoal",5)
   set {_item} to diamond boots of mending
   set name of {_item} to {@item_name}
   set line 1 of lore of {_item} to {@item_name}
@@ -64,10 +74,10 @@ on load:
 # > in the first line of the lore, give the player information on how to fill them.
 on craft:
   if line 1 of lore of event-item is {@item_name}:
-    set {_lang} to {SK::lang::%uuid of player%}
+    set {_lang} to getlangcode(player)
     #
     # > Print predefined message, if no translation is available.
-    if {SB::lang::jetboots::fi::%{_lang}%} is not set:
+    if getlang("jetboots_fi",{_lang}) is not set:
       message {@fillinfo}
     else:
       set {_prefix} to getlang("prefix",{_lang})
@@ -176,17 +186,18 @@ function jetboots(player:player):
     if {_player} is flying:
       set {_lore} to line 2 of lore of {_player}'s boots
       replace all "&r" with "" in {_lore}
+      replace all "&4" with "" in {_lore}
       set {_lore} to {_lore} parsed as integer
-      if {_lore} > 500:
+      if {_lore} > {@fuelwarn}:
         set {_display} to "{@actionbar}"
         replace all "<fuel>" with "%{_lore}%" in {_display}
-        actionbar({_player},"%{_display}%")
+        send action bar {_display} to {_player}
       #
-      # > Make the actionbar colored red and fat, if it is below 500.
+      # > Make the actionbar colored red and fat, if it is below the predefined number.
       else:
         set {_display} to "{@actionbar}"
         replace all "<fuel>" with "&4&l%{_lore}%" in {_display}
-        actionbar({_player},"%{_display}%")
+        send action bar {_display} to {_player}
       if {_lore} <= 0:
         #
         # > If the lore is 0 or lower, print info to the player and stop flying.
@@ -197,7 +208,7 @@ function jetboots(player:player):
         else:
           set {_msg} to getlang("jetboots_ei",{_lang})
           message "%{_prefix}% %{_msg}%" to {_player}
-        if {SB::lang::jetboots::fi::%{_lang}%} is not set:
+        if getlang("jetboots_fi",{_lang}) is not set:
           message {@fillinfo} to {_player}
         else:
           set {_msg} to getlang("jetboots_fi",{_lang})
@@ -222,14 +233,17 @@ function jetboots(player:player):
         set {_lang} to {SK::lang::%{_uuid}%}
         set {_msg} to getlang("flag_errorfalse",{_lang})
         message "%{_prefix}% %{_msg}%" to {_player}
-        actionbar({_player},"&4%{_msg}%")
+        send action bar "&4%{_msg}%" to {_player}
         wait 1 tick
         set {_player}'s flight mode to true
       #
       # > Spawn some jet particles using the jetparticle function.
       jetparticle({_player})
       remove 1 from {_lore}
-      set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
+      if {_lore} < {@fuelwarn}:
+        set line 2 of lore of {_player}'s boots to "&4%{_lore}%"
+      else:
+        set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
   #
   # > If the while loop ends, disable flying for player,
   # > this happens, if the player takes the JetBoots off while
@@ -256,18 +270,35 @@ function jetparticle(p:player):
 # > Actions:
 # > If the player is rightclicking while holding coal and the player is wearing JetBoots,
 # > the coal gets removed from the inventory of the player and added as fuel to the JetBoots.
-on rightclick holding coal:
+on rightclick holding {@fuelitems}:
   if player's boots is set:
     if line 1 of lore of player's boots is {@item_name}:
       set {_lore} to line 2 of lore of player's boots
+      #
+      # > Replace all the formatting for the lore.
       replace all "&r" with "" in {_lore}
+      replace all "&4" with "" in {_lore}
+      #
+      # > Parse the string to an integer.
       set {_lore} to {_lore} parsed as integer
-      set {_fuel} to number of coal in player's inventory
-      remove {_fuel} of coal from player's inventory
-      set {_fuelbonus} to {_fuel} * {@fuelworth}
+      #
+      # > Get the tool to check for the size of the ItemStack the player
+      # > is currently holding.
+      set {_tool} to player's tool
+      set {_amount} to {_tool}.getAmount()
+      #
+      # > Removes the fuel by replacing it with air.
+      set player's tool to air
+      #
+      # > Get the fuel efficiency for the current fuel.
+      set {_fuelefficiency} to getconfigobject("JB-fuelefficiency-%1 of {_tool}%")
+      set {_fuelbonus} to {_amount} * {_fuelefficiency}
       add {_fuelbonus} to {_lore}
-      set line 2 of lore of player's boots to "&r%{_lore}%"
-      set {_lang} to {SK::lang::%uuid of player%}
+      if {_lore} < {@fuelwarn}:
+        set line 2 of lore of player's boots to "&4%{_lore}%"
+      else:
+        set line 2 of lore of player's boots to "&r%{_lore}%"
+      set {_lang} to getlangcode(player)
       #
       # > Print predefined message, if no translation is available.
       if getlang("jetboots_li",{_lang}) is not set:
