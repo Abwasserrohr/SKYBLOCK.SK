@@ -6,6 +6,8 @@ import:
   org.bukkit.event.vehicle.VehicleDamageEvent
   org.bukkit.Location
   org.bukkit.event.player.PlayerInteractEvent
+  org.bukkit.event.player.PlayerInteractEntityEvent
+  org.bukkit.event.hanging.HangingBreakByEntityEvent
 
 #
 # > Events (Triggers) for protection purposes
@@ -89,6 +91,7 @@ on bucket empty:
       set {_allowed} to bindcheck(player's tool, player)
       if {_allowed} is false:
         cancel event
+
 #
 # > Event - EntityDamageByEntityEvent
 # > If a entity gets damage by a entity, this event is called.
@@ -141,6 +144,20 @@ on EntityDamageByEntityEvent:
         cancel event
         stop
 
+#
+# > Event: HangingBreakByEntityEvent
+# > Triggered if a player tries to break a hanging entity.
+# > Actions:
+# > Cancel the event if the player isn't allowed to do it.
+on HangingBreakByEntityEvent:
+  set {_player} to event.getRemover()
+  if {_player} is a player:
+    set {_l} to event.getEntity().getLocation()
+    set {_allowed} to checkislandaccess({_player},event.getEntity().getLocation(),"entity-click")
+    if {_allowed} is false:
+      event.setCancelled(true)
+
+#
 # > Event: VehicleDamageEvent
 # > Triggered if a vehicle is damaged, this could be a minecart or a boat.
 # > Actions:
@@ -283,6 +300,16 @@ on rightclick on entity:
     set {_allowed} to checkislandaccess(player,location of event-entity,"vehicle-click")
   else:
     set {_allowed} to checkislandaccess(player,location of event-entity,"entity-click")
+  if {_allowed} is false:
+    cancel event
+
+#
+# > Event - PlayerInteractEntityEvent
+# > Triggered once a player interacts with a entity.
+# > Actions:
+# > Cancels the event if the player isn't allowed to interact.
+on PlayerInteractEntityEvent:
+  set {_allowed} to checkislandaccess(event.getPlayer(),event.getRightClicked().getLocation(),"entity-click")
   if {_allowed} is false:
     cancel event
 
