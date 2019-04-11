@@ -1,6 +1,6 @@
 #
 # ==============
-# afkcheck.sk v0.0.3
+# afkcheck.sk v0.0.4
 # ==============
 # Check your players for being afk without using the chat.
 # ==============
@@ -48,6 +48,15 @@ options:
   #
   # > Random integer maximum which has to typed into the chat.
   randommax: 9
+  #
+  # > Should be a sound played to the afk player?
+  playsound: true
+  #
+  # > Sound name, which is played at the afk player.
+  playsoundname: block.note_block.pling
+  #
+  # > Sould volume, which is played at the afk player.
+  playsoundvolume: 0.3
 
 #
 # > Command - afkcheck
@@ -112,6 +121,10 @@ command /afkcheck <player>:
       else:
         send title "%{_title}% %{_primary}%[%{_timer}%]" with subtitle "%{_subtitle}%" to {_player} for 2 seconds with fadein 0 ticks and fadeout 0 ticks
         send action bar "%{_background}%&l%{_title}% | %{_player}% | [%{_timer}%]" to player
+      #
+      # > Plays a predefined sound to the afk player, if it is enabled in the options.
+      if {@playsound} is true:
+        play sound "{@playsoundname}" with volume {@playsoundvolume} at {_player}
       remove 1 from {_timer}
       #
       # > If the timer variable is lower than 0, stop the while loop here.
