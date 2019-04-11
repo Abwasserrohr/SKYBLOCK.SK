@@ -1,0 +1,266 @@
+#
+# ==============
+# antiafk.sk v0.0.1
+# ==============
+# Prevents players from being afk, active players are granted to stand a while afk, if they
+# have been active before being afk.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > This script doesn't need any setup on server side.
+# > Put this file into the scripts folder of Skript and reload.
+
+#
+# > Configurable options, change these your liking.
+options:
+  #
+  # > Set the start activity.
+  startactivity: 2000
+  #
+  # > Set the amount of ticks how long the data of offline players should be hold.
+  holdofflinedata: 6000
+  #
+  # > Activity increase. Every time, the location of the player changes, the activity
+  # > is increased by this amount.
+  activityincrease: 5
+  #
+  # > Activity decrease. Every time the player isn't moving, the activity gets decreased
+  # > by this amount.
+  activitydecrease: 1
+  #
+  # > Activity decrease while riding. Every time the player isnt looking into a new direction,
+  # > the activity gets decreased by this amount.
+  rideactivitydecrease: 1
+  #
+  # > Decrease activity after the predefined amount of complelty same coordinates
+  # > have been detected. The x, y, z, yaw and pitch have to be the same to trigger this.
+  samecoorddecrease: 20
+  #
+  # > Maximum coordinate storage size per player. The higher this is set, the better will be
+  # > the afk machine detection.
+  maxcoordstorage: 3000
+  #
+  # > Clear coordinates out of player coordinates which have only occured the defined
+  # > amount. The removal of coordinates only happens if the maximum coordinate storage
+  # > size of the player is hit.
+  softclearcoordstorage: 2
+  #
+  # > Set a maximum amount which should be left over after a coordinate clear at maximum,
+  # > if the threshold is exceeded, the coordinate storage gets cleared hard by a
+  # > higher occur amount.
+  maxcoordstorageafterclear: 500
+  #
+  # > Clear coordinates out of player coordinates which have only occured the defined
+  # > amount. The removal of coordinates only happens if the maximum coordinate storage
+  # > size of the player is hit.  
+  hardclearcoordstorage: 10
+  #
+  # > Set how many ticks should be waited until the next check should happen.
+  # > The smaller this amount, the better will be the effectivity, while higher
+  # > numbers will increase the performance.
+  afkcheckspeed: 1
+  #
+  # > Action once the activity drops below zero. This can be any skript code.
+  # > Replace the player with loop-value.
+  zeroaction1: message getlang("antiafk_kickreason",getlangcode(loop-value),getlang("prefix",getlangcode(loop-value),""," ")) to loop-value
+  zeroaction2: kick loop-value due to getlang("antiafk_kickreason",getlangcode(loop-value))
+  #
+  # > Here ends the configuration section. You can change this script further more below.
+  # > If you improved a part, feel free to also submit your change to the SKYBLOCK.SK
+  # > repository on GitHub.
+
+#
+# > Event - on load
+# > Triggered once this file loads
+# > Actions:
+# > Runs the antiafk function in a thread.
+on load:
+  $ thread
+  antiafk()
+
+#
+# > Event - on unload
+# > Triggered once this file unloads
+# > Actions:
+# > Since the while loop doesn't stop, even if this
+# > file is unloaded, it has to be stopped. By changing
+# > the antiafk runid, the while loop gets stopped instantly.
+on unload:
+  loadconfigobject("antiafk-runid",false)
+
+#
+# > Function - antiafk
+# > Actions:
+# > This function is meant to be run in a thread. It is going to check
+# > for players who are standing afk and kick them after their activity
+# > runs below zero. The activity counter either increases if the player
+# > is active or decreases, if the player is inactive.
+function antiafk():
+  #
+  # > Get a random integer, which is going to be the unique run id for this
+  # > process, this is not going to be changed in this function run. But if
+  # > this function is runned multiple times, older function threads will
+  # > automatically stop to prevent multiple threads running.
+  set {_runid} to random integer between 1000 and 9999
+  loadconfigobject("antiafk-runid",{_runid})
+  #
+  # > Run this loop as long as the antiafk runid is the same as defined above.
+  while getconfigobject("antiafk-runid") is {_runid}:
+    #
+    # > Loop through all players to be sure to leave nobody without
+    # > anti afk protection.
+    loop all players:
+      if {_players::%loop-player%} is not set:
+        set {_players::%loop-player%} to loop-player
+        #
+        # > Give the player the predefined start activity, if the player
+        # > recently joined the game.
+        set {_activity::%loop-player%} to {@startactivity}
+    #
+    # > Loop through all active players, which are handled by anti afk.
+    loop {_players::*}:
+      #
+      # > If the looped player is offline, count a delete counter up until the
+      # > player gets finally deleted after a predefined amount of time.
+      if loop-value is offline:
+        add 1 to {_delwait::%loop-value%}
+        #
+        # > If the player has less activity than there is start activity, delete
+        # > the activity immediately, just increasing the counter so much that it
+        # > is guaranteed to be deleted.
+        if {_activity::%loop-value%} < {@startactivity}:
+          add {@holdofflinedata} to {_delwait::%loop-value%}
+        #
+        # > If the delete counter exeeds the predefined threshold for holding offline
+        # > players for a certain time, delete the data.
+        if {_delwait::%loop-value%} > {@holdofflinedata}:
+          delete {_players::%loop-value%}
+          delete {_activity::%loop-value%}
+          delete {_lastloc::%loop-value%}
+          delete {_delwait::%loop-value%}
+          delete {_uniqueloc::%loop-value%::*}
+          delete {_uniqueloc::%loop-value%}
+      #
+      # > If the player is not offline.
+      else:
+        #
+        # > If there is a delete counter set for this player, delete it.
+        if {_delwait::%loop-value%} is set: 
+          delete {_delwait::%loop-value%}
+        #
+        # > If the location of the player changed since the last loop.
+        if {_lastloc::%loop-value%} is not loop-value's location:
+          #
+          # > If the player is within water or riding, only the view of the player is checked,
+          # > since the player could go afk in water or while riding.
+          if block at loop-value is water:
+            set {_checkview} to true
+          if loop-value is riding:
+            set {_checkview} to true
+          #
+          # > If the player isn't in water or riding, increase the activity.
+          else:
+            set {_checkview} to false
+            add {@activityincrease} to {_activity::%loop-value%}
+          if {_checkview} is true:
+            set {_ok} to false
+            #
+            # > Check if either the pitch or yaw has changed.
+            if {_lastpitch::%loop-value%} is not loop-value's pitch:
+              set {_ok} to true
+            if {_lastyaw::%loop-value%} is not loop-value's yaw:
+              set {_ok} to true
+            #
+            # > If pitch or yaw have changed, add activity.
+            if {_ok} is true:
+              add {@activityincrease} to {_activity::%loop-value%}
+            #
+            # > If pitch and yaw have nnot been changed, remove activity.
+            else:
+              remove {@rideactivitydecrease} from {_activity::%loop-value%}
+          #
+          # > Get the location of the player as a variable and create a string
+          # > for a unique location string, which can be used as a variable name.
+          set {_loc} to loop-value's location
+          set {_uloc} to "%x-coord of {_loc}%|%y-coord of {_loc}%|%z-coord of {_loc}%|%{_loc}'s yaw%|%{_loc}'s pitch%"
+          #
+          # > Increase the variable named after the unique location by one.
+          add 1 to {_uniqueloc::%loop-value%::%{_uloc}%}
+          #
+          # > If this unique location has been seen already for more times than "allowed",
+          # > remove the activity from the player. This is very unlikely to be triggered by
+          # > an real, not afking player, since even slightly changes mean a new unique location.
+          if {_uniqueloc::%loop-value%::%{_uloc}%} > {@samecoorddecrease}:
+            remove {@activityincrease} from {_activity::%loop-value%}
+            remove {@activitydecrease} from {_activity::%loop-value%}
+          #
+          # > To prevent the anti afk from overflowing the ram, the unique coordinates have to
+          # > cleared out sometimes, this happens every time the predefined maximum amount is hit.
+          if size of {_uniqueloc::%loop-value%::*} > {@maxcoordstorage}:
+            loop {_uniqueloc::%loop-value%::*}:
+              #
+              # > Delete all unique locations which haven't been visited that often, this
+              # > is changeable in the options.
+              if loop-value-2 <= {@softclearcoordstorage}:
+                delete {_uniqueloc::%loop-value-1%::%loop-index-2%}
+            #
+            # > If there are still so many coordinates after the clear that a hard clear is needed
+            # > to prevent the soft clear from clearing all the time, the hard clear will also
+            # > delete more often visited unique locations from the player.
+            if size of {_uniqueloc::%loop-value%::*} > {@maxcoordstorageafterclear}:
+              loop {_uniqueloc::%loop-value%::*}:
+                if loop-value-2 <= {@hardclearcoordstorage}:
+                  delete {_uniqueloc::%loop-value-1%::%loop-index-2%}
+          #
+          # > Set the last location, pitch and yaw from the player to check it in the
+          # > next loop passage.
+          set {_lastloc::%loop-value%} to loop-value's location
+          set {_lastpitch::%loop-value%} to loop-value's pitch
+          set {_lastyaw::%loop-value%} to loop-value's yaw
+        #
+        # > If the location of the player didn't change, just remove the activity from the player.
+        else:
+          remove {@activitydecrease} from {_activity::%loop-value%}
+        #
+        # > If the activity of the player drops below zero, the
+        # > predefined "zeroaction1" and "zeroaction2" will happen.
+        if {_activity::%loop-value%} < 0:
+          {@zeroaction1}
+          {@zeroaction2}
+      #
+      # > If the player toggled to view the activity, it gets displayed to the player here.
+      if metadata value "activiyshow" of loop-value is true:
+        set {_lang} to getlangcode(loop-value)
+        set {_msg} to getlang("antiafk_actionbar",{_lang})
+        replace all "<activity>" with "%{_activity::%loop-value%}%" in {_msg}
+        send action bar {_msg} to loop-value
+    #
+    # > To prevent too fast loops, wait here for a predefined amount of time.
+    wait {@afkcheckspeed} tick
+
+#
+# > Command - /toggleactivity
+# > Actions:
+# > Toggles the activity view mode of anti afk.
+command /toggleactivity:
+  trigger:
+    #
+    # > Translations are used here, get the language code of the player.
+    set {_lang} to getlangcode(player)
+    #
+    # > If the anti afk view mode is on, turn it off.
+    if metadata value "activiyshow" of player is true:
+      message getlang("antiafk_hideactivity",{_lang},getlang("prefix",{_lang},""," "))
+      send action bar " " to player
+      delete metadata value "activiyshow" of player
+    #
+    # > If the anti afk view mode is not on, turn it on.
+    else:
+      message getlang("antiafk_showactivity",{_lang},getlang("prefix",{_lang},""," "))
+      set metadata value "activiyshow" of player to true
