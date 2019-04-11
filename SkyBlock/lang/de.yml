@@ -456,6 +456,13 @@ language:
 - afkcheck_incorrectnumber: Bitte füge die korrekte Nummer mit an.
 
   #
+  # > Anti AFK
+- antiafk_showactivity: "Aktivität wird nun angezeigt."
+- antiafk_hideactivity: "Aktivität wird nun ausgeblendet."
+- antiafk_kickreason: "Du hast dich zu lange nicht bewegt. Bewege dich mehr, damit deine Aktivität steigt."
+- antiafk_actionbar: "Aktivität: <activity>"
+
+  #
   # > Votingrewards
 - vr_menu_header: "&lVotebelohnungen"
 - vr_day1title: "Tag 1"
