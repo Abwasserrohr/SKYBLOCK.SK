@@ -457,10 +457,16 @@ language:
 
   #
   # > Anti AFK
-- antiafk_showactivity: "Aktivität wird nun angezeigt."
-- antiafk_hideactivity: "Aktivität wird nun ausgeblendet."
-- antiafk_kickreason: "Du hast dich zu lange nicht bewegt. Bewege dich mehr, damit deine Aktivität steigt."
-- antiafk_actionbar: "Aktivität: <activity>"
+- antiafk_showactivity: "<s1>Aktivität wird nun angezeigt."
+- antiafk_hideactivity: "<s1>Aktivität wird nun ausgeblendet."
+- antiafk_kickreason: "<s1>Du hast dich zu lange nicht bewegt. Bewege dich mehr, damit deine Aktivität steigt."
+- antiafk_actionbar: "<s1>Aktivität: <activity>"
+
+  #
+  # > Deathback
+- deathback_nolocation: "<s1>Dieser Befehl funktioniert nur nachdem du gestorben bist."
+- deathback_backcmd: "<s1>Du kannst zu dem Todesort mit <p1>/back<s1> zurückkehren."
+- deathback_teleported: "<s1>Du wurdest zu deinem Todesort teleportiert."
 
   #
   # > Votingrewards
