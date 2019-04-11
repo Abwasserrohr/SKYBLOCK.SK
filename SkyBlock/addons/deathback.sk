@@ -1,0 +1,38 @@
+#
+# ==============
+# deathback.sk v0.0.1
+# ==============
+# Allows players to get back to their death position.
+# ==============
+# Dependencies
+# ==============
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# ==============
+# How to use it:
+# ==============
+# > This script doesn't need any setup on server side.
+# > Put this file into the scripts folder of Skript and reload.
+
+#
+# > Event - on death of player
+# > Actions:
+# > If a player dies, set the death location to metadata of the player
+# > to get it later. Also send a message that explains that there is a
+# > /back command.
+on death of player:
+  set metadata value "deathback-location" of victim to location of victim
+  message getlang("deathback_backcmd",{_lang},getlang("prefix",{_lang},""," ")) to victim
+
+#
+# > Command - /back
+# > Actions:
+# > Teleports the player back to his death location, if one is set.
+command /back:
+  trigger:
+    set {_lang} to getlangcode(player)
+    if metadata value "deathback-location" of player is set:
+      teleport player to metadata value "deathback-location" of player
+      message getlang("deathback_teleported",{_lang},getlang("prefix",{_lang},""," "))
+    else:
+      message getlang("deathback_nolocation",{_lang},getlang("prefix",{_lang},""," "))
