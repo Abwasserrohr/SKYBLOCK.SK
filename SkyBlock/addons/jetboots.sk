@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.7
+# jetboots.sk v0.0.8
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -65,7 +65,8 @@ on load:
   set name of {_item} to {@item_name}
   set line 1 of lore of {_item} to {@item_name}
   set line 2 of lore of {_item} to "&r0"
-  register new shaped recipe for {_item} using air, air, air, diamond block, feather, diamond block, diamond block, feather, diamond block
+  wait 20 seconds
+  addShapedRecipe({_item},air, air, air, diamond block, feather, diamond block, diamond block, feather, diamond block)
 
 #
 # > Event - on craft
