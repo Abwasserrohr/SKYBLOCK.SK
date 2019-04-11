@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.6
+# store.sk v0.0.7
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -144,6 +144,10 @@ on load:
   add "1" to {_categorysell::*}
   add "0" to {_categorylvlthreshold::*}
   
+  add 16 of glowstone block to {_categoryitems::*}
+  add "125" to {_categorybuy::*}
+  add "5" to {_categorysell::*}
+  add "25" to {_categorylvlthreshold::*}
 
   loadconfigarray("store-config-items-blocks",{_categoryitems::*})
   loadconfigarray("store-config-items-blocks-buy",{_categorybuy::*})
@@ -620,9 +624,9 @@ function serverstore_open(player:player,mode:text="none",category:text="selectmo
     #
     # > Depending on the current mode, set a toggle mode item into slot 8 of the menu.
     if {_mode} is "sell":
-      setguiitem({_player},8,{@sellitem},1,getlang("store_sellmodeitem",{_lang}),getlang("store_sellmodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""buy"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+      setguiitem({_player},8,{@buyitem},1,getlang("store_buymodeitem",{_lang}),getlang("store_buymodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""buy"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
     else if {_mode} is "buy":
-      setguiitem({_player},8,{@buyitem},1,getlang("store_buymodeitem",{_lang}),getlang("store_buymodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""sell"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
+      setguiitem({_player},8,{@sellitem},1,getlang("store_sellmodeitem",{_lang}),getlang("store_sellmodeitemlore",{_lang}),"serverstore_open(""%{_player}%"" parsed as player,""sell"",""%{_category}%"",%{_categorysite}%,""%{_shop}%"",%{_shopsite}%)",false)
 
   #
   # > Set the slot where the store is starting from.
