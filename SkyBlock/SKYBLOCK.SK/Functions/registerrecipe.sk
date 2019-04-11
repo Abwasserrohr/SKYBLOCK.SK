@@ -36,9 +36,10 @@ import:
 function addShapedRecipe(result:item,i1:item=air,i2:item=air,i3:item=air,i4:item=air,i5:item=air,i6:item=air,i7:item=air,i8:item=air,i9:item=air):
   #
   # Create a new shaped recipe of the result item with the NameSpacedKey of Skript with the key "registerrecipe".
-  set {_key} to "%{_result}%-%{_i1}%-%{_i2}%-%{_i3}%-%{_i4}%-%{_i5}%-%{_i6}%-%{_i7}%-%{_i8}%-%{_i9}%"
+  set {_key} to "%{_result}.getType()%-%{_i1}.getType()%-%{_i2}.getType()%-%{_i3}.getType()%-%{_i4}.getType()%-%{_i5}.getType()%-%{_i6}.getType()%-%{_i7}.getType()%-%{_i8}.getType()%-%{_i9}.getType()%"
   replace all " " with "" in {_key}
-  set {_recipe} to new ShapedRecipe(new NamespacedKey(Bukkit.getServer().getPluginManager().getPlugin("Skript"), "registerrecipe-%{_key}%"), 1 of {_result})
+  set {_namespacedKey} to new NamespacedKey(Bukkit.getServer().getPluginManager().getPlugin("Skript"), "registerrecipe-%{_key}%")
+  set {_recipe} to new ShapedRecipe({_namespacedKey}, 1 of {_result})
   #
   # > Create a shape for the recipe.
   {_recipe}.shape("123","456","789")
@@ -69,9 +70,10 @@ function addShapedRecipe(result:item,i1:item=air,i2:item=air,i3:item=air,i4:item
 function addShapelessRecipe(result:item,i1:item=air,i2:item=air,i3:item=air,i4:item=air,i5:item=air,i6:item=air,i7:item=air,i8:item=air,i9:item=air):
   #
   # Create a new shapedless recipe of the result item with the NameSpacedKey of Skript with the key "registerrecipe".
-  set {_key} to "%{_result}%-%{_i1}%-%{_i2}%-%{_i3}%-%{_i4}%-%{_i5}%-%{_i6}%-%{_i7}%-%{_i8}%-%{_i9}%"
+  set {_key} to "%{_result}.getType()%-%{_i1}.getType()%-%{_i2}.getType()%-%{_i3}.getType()%-%{_i4}.getType()%-%{_i5}.getType()%-%{_i6}.getType()%-%{_i7}.getType()%-%{_i8}.getType()%-%{_i9}.getType()%"
   replace all " " with "" in {_key}
-  set {_recipe} to new ShapelessRecipe(new NamespacedKey(Bukkit.getServer().getPluginManager().getPlugin("Skript"), "registerrecipe-%{_key}%"), 1 of {_result})
+  set {_namespacedKey} to new NamespacedKey(Bukkit.getServer().getPluginManager().getPlugin("Skript"), "registerrecipe-%{_key}%")
+  set {_recipe} to new ShapelessRecipe({_namespacedKey}, 1 of {_result})
   #
   # > Loop through all ingredients and add them to the recipe.
   loop 9 times:
