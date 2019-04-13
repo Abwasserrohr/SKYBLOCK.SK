@@ -1,6 +1,6 @@
 #
 # ==============
-# antiafk.sk v0.0.1
+# antiafk.sk v0.0.2
 # ==============
 # Prevents players from being afk, active players are granted to stand a while afk, if they
 # have been active before being afk.
@@ -24,7 +24,7 @@ options:
   startactivity: 2000
   #
   # > Set the amount of ticks how long the data of offline players should be hold.
-  holdofflinedata: 6000
+  holdofflinedata: 12000
   #
   # > Activity increase. Every time, the location of the player changes, the activity
   # > is increased by this amount.
