@@ -69,30 +69,8 @@ function createisland(p:player,island:text="1"):
         message "%{_prefix}% %{_msg}%" to {_p}
         stop
       #
-      # > If schematics are configured to be used.
-      # > Currently not supported.
-      if {SB::config::isstorage} is "Schematic":
-        if file "plugins/WorldEdit/schematics/%{_island}%" exists:
-          #
-          # > Check, if the schematic is actually in the configuration.
-          set {_ok} to false
-          loop {SB::schematics::schematic::*}:
-            if loop-value is {_island}:
-              set {_ok} to true
-          #
-          # > If the schematic is not within the configuration, send error and stop.
-          if {_ok} is "false":
-            message "%{_prefix}% Error: Island not found." to {_p}
-            stop
-        #
-        # > If the Schematic file doesn't exist, send error and stop.
-        else:
-          message "%{_prefix}% Error: Schematic not found." to {_p}
-          stop
-      #
-      # > If structure files are used, check is done later while creating the island.
-      else:
-        set {_ok} to true
+      # > Structure file check will be later on, set {_ok} to true for now.
+      set {_ok} to true
   #
   # > Start a loading bar using the actionload function.
   actionload({_p},"start")
