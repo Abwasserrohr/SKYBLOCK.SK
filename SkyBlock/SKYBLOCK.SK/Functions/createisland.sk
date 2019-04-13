@@ -163,28 +163,29 @@ function createisland(p:player,island:text="1"):
         set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
         #
         # > Get the new chest location out of the configuration.
-        set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
-        loop {_tc::*}:
-          set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
-        set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
-        set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
-        set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
-        set block at {_chestloc} to north facing chest
-        set {_newchest} to block at {_chestloc}
-        #
-        # > Set all configurated items into the created chest.
-        loop {SB::schematics::chest::%{_schematic}%::*}:
-          set {_item::*} to loop-value-2 split at ","
-          set {_titem} to "%{_item::2}%" parsed as item
-          set {_tamount} to {_item::1} parsed as integer
+        if {SB::schematics::loc::%{_schematic}%::chest} is set:
+          set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
+          loop {_tc::*}:
+            set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
+          set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
+          set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
+          set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
+          set block at {_chestloc} to north facing chest
+          set {_newchest} to block at {_chestloc}
           #
-          # > If the item is a lava bucket, bind it to the island by applying a lore.
-          if {_titem} is a lava bucket:
-            set {_x} to x-coord of {_loc}
-            set {_z} to z-coord of {_loc}
-            set {_msg} to getlang("islandbound",{_lang})
-            set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
-          add {_tamount} of {_titem} to {_newchest}'s inventory
+          # > Set all configurated items into the created chest.
+          loop {SB::schematics::chest::%{_schematic}%::*}:
+            set {_item::*} to loop-value-2 split at ","
+            set {_titem} to "%{_item::2}%" parsed as item
+            set {_tamount} to {_item::1} parsed as integer
+            #
+            # > If the item is a lava bucket, bind it to the island by applying a lore.
+            if {_titem} is a lava bucket:
+              set {_x} to x-coord of {_loc}
+              set {_z} to z-coord of {_loc}
+              set {_msg} to getlang("islandbound",{_lang})
+              set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
+            add {_tamount} of {_titem} to {_newchest}'s inventory
         #
         # > We're done with searching and creating, stop the search process to allow others to also create a island.
         set {SB::searchprocess} to false
@@ -195,6 +196,7 @@ function createisland(p:player,island:text="1"):
         if block at {_loc} is not bedrock:
           teleport {_p} to {_backloc}
           message "%{_prefix}% /is create" to {_p}
+          broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
           stop
         #
         # > Delete the {_search} variable to prevent the while loop from repeating.
