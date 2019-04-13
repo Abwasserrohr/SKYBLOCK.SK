@@ -1,0 +1,44 @@
+#
+# ==============
+# isWithinArea.sk
+# ==============
+# isWithinArea.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+import:
+  org.bukkit.util.Vector
+  java.lang.Math
+
+#
+# > Function - isWithinArea
+# > Parameters:
+# > <location>the location which should be checked
+# > <location>point a of the area
+# > <location>point b of the area
+# > Actions:
+# > Creates a vector and returns if the first location is within a and b.
+function isWithinArea(loc:location,a:location,b:location) :: boolean:
+  #
+  # > If the world doesn't match, return false.
+  if {_loc}'s world is not {_a}'s world:
+    return false
+  if {_loc}'s world is not {_b}'s world:
+    return false
+  #
+  # > Converts the location to a vector.
+  set {_vloc} to {_loc}.toVector()
+  #
+  # > Get the nnumbers of the a and b locations.
+  set {_xa} to x-coord of {_a}
+  set {_xb} to x-coord of {_b}
+  set {_ya} to y-coord of {_a}
+  set {_yb} to y-coord of {_b}
+  set {_za} to z-coord of {_a}
+  set {_zb} to z-coord of {_b}
+  #
+  # > Creates a vector for a and b with the each minimum and maximum number.
+  set {_va} to new Vector(Math.min({_xa}, {_xb}), Math.min({_ya}, {_yb}), Math.min({_za}, {_zb}))
+  set {_vb} to new Vector(Math.max({_xa}, {_xb}), Math.max({_ya}, {_yb}), Math.max({_za}, {_zb}))
+  #
+  # > Returns the retun of org.bukkit.util.Vector.isInAABB(min,max).
+  return {_vloc}.isInAABB({_va},{_vb})
