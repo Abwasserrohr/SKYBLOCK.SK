@@ -6,7 +6,6 @@
 # ==============
 
 import:
-  org.bukkit.util.Vector
   java.lang.Math
 
 #
@@ -16,7 +15,7 @@ import:
 # > <location>point a of the area
 # > <location>point b of the area
 # > Actions:
-# > Creates a vector and returns if the first location is within a and b.
+# > Returns if the first location is within a and b.
 function isWithinArea(loc:location,a:location,b:location) :: boolean:
   #
   # > If the world doesn't match, return false.
@@ -25,20 +24,34 @@ function isWithinArea(loc:location,a:location,b:location) :: boolean:
   if {_loc}'s world is not {_b}'s world:
     return false
   #
-  # > Converts the location to a vector.
-  set {_vloc} to {_loc}.toVector()
+  # > Get the coordinates separate.
+  set {_x} to x-coord of {_loc}
+  set {_y} to y-coord of {_loc}
+  set {_z} to z-coord of {_loc}
   #
-  # > Get the nnumbers of the a and b locations.
-  set {_xa} to x-coord of {_a}
-  set {_xb} to x-coord of {_b}
-  set {_ya} to y-coord of {_a}
-  set {_yb} to y-coord of {_b}
-  set {_za} to z-coord of {_a}
-  set {_zb} to z-coord of {_b}
+  # > Calculate the min and max coordinates
+  set {_x1} to Math.min(x-coord of {_a}, x-coord of {_b})
+  set {_x2} to Math.max(x-coord of {_a}, x-coord of {_b})
+  set {_y1} to Math.min(y-coord of {_a}, y-coord of {_b})
+  set {_y2} to Math.max(y-coord of {_a}, y-coord of {_b})
+  set {_z1} to Math.min(z-coord of {_a}, z-coord of {_b})
+
   #
-  # > Creates a vector for a and b with the each minimum and maximum number.
-  set {_va} to new Vector(Math.min({_xa}, {_xb}), Math.min({_ya}, {_yb}), Math.min({_za}, {_zb}))
-  set {_vb} to new Vector(Math.max({_xa}, {_xb}), Math.max({_ya}, {_yb}), Math.max({_za}, {_zb}))
+  # > Add or remove 0.9 to prevent problems which
+  # > are caused by x0.5 and z0.5 coordinates.
+  if {_z1} < 0:
+    set {_z1} to {_z1} - 0.9
+  else:
+    set {_z1} to {_z1} + 0.9
+  set {_z2} to Math.max(z-coord of {_a}, z-coord of {_b})
+
   #
-  # > Returns the retun of org.bukkit.util.Vector.isInAABB(min,max).
-  return {_vloc}.isInAABB({_va},{_vb})
+  # > Check if the location is within the area.
+  if {_x1} < {_x}:
+    if {_x2} > {_x}:
+      if {_y1} < {_y}:
+        if {_y2} > {_y}:
+          if {_z1} < {_z}:
+            if {_z2} > {_z}:
+              return true
+  return false
