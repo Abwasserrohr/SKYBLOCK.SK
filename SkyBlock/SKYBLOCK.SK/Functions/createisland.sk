@@ -146,6 +146,11 @@ function createisland(p:player,island:text="1"):
         set block 1 west {_loc} to barrier block
         set block 1 east {_loc} to barrier block
         wait 1 second
+        set block 1 below {_loc} to air
+        set block 1 north {_loc} to air
+        set block 1 south {_loc} to air
+        set block 1 west {_loc} to air
+        set block 1 east {_loc} to air
         #
         # > If structure files are defined as format, set a structure_block to load the file.
         if {SB::config::isstorage} is "Structure":
