@@ -1,0 +1,77 @@
+#
+# ==============
+# isWithinArea.sk
+# ==============
+# isWithinArea.sk is part of the SKYBLOCK.SK functions.
+# ==============
+
+#
+# > Function - isWithinArea
+# > Parameters:
+# > <location>the location which should be checked
+# > <location>point a of the area
+# > <location>point b of the area
+# > Actions:
+# > Returns if the first location is within a and b.
+function isWithinArea(loc:location,a:location,b:location) :: boolean:
+  #
+  # > If the world doesn't match, return false.
+  if {_loc}'s world is not {_a}'s world:
+    return false
+  if {_loc}'s world is not {_b}'s world:
+    return false
+  set {_loc} to location of block at {_loc}
+  #
+  # > Get the coordinates separate.
+  set {_x} to x-coord of {_loc}
+  set {_y} to y-coord of {_loc}
+  set {_z} to z-coord of {_loc}
+  #
+  # > Set the lowest number to {_x1} and the highest to {_x2} for all
+  # > coordinates.
+  set {_x1} to getmin(x-coord of block at {_a}, x-coord of block at {_b})
+  set {_x2} to getmax(x-coord of block at {_a}, x-coord of block at {_b})
+  set {_y1} to getmin(y-coord of block at {_a}, y-coord of block at {_b})
+  set {_y2} to getmax(y-coord of block at {_a}, y-coord of block at {_b})
+  set {_z1} to getmin(z-coord of block at {_a}, z-coord of block at {_b})
+  set {_z2} to getmax(z-coord of block at {_a}, z-coord of block at {_b})
+  #
+  # > Check if the location is within the area.
+  if {_x1} <= {_x}:
+    if {_x2} >= {_x}:
+      if {_y1} < {_y}:
+        if {_y2} > {_y}:
+          if {_z1} <= {_z}:
+            if {_z2} >= {_z}:
+              #
+              # > Location is within the area, return true.
+              return true
+  #
+  # > Location is not within the area, return false.
+  return false
+
+#
+# > Function - getmin
+# > Parameters:
+# > <number/integer> any number
+# > <number/integer> any number
+# > Actions:
+# > Returns the smaller number/integer from the two.
+function getmin(a:object,b:object) :: object:
+  if {_a} > {_b}:
+    return {_b}
+  else:
+    return {_a}
+
+#
+# > Function - getmax
+# > Parameters:
+# > <number/integer> any number
+# > <number/integer> any number
+# > Actions:
+# > Returns the bigger number/integer from the two.
+function getmax(a:object,b:object) :: object:
+  if {_a} > {_b}:
+    return {_a}
+  else:
+    return {_b}

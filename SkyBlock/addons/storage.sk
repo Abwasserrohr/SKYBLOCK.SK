@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.11
+# storage.sk v0.0.12
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -99,7 +99,8 @@ import:
 on load:
   set {_item} to {@item}
   set line 1 of lore of {_item} to "{@itemidentfier}"
-  register new shaped recipe for {_item} using diamond, diamond, diamond, diamond, chest, diamond, diamond, diamond, diamond
+  wait 20 seconds
+  addShapedRecipe({_item}, diamond, diamond, diamond, diamond, chest, diamond, diamond, diamond, diamond)
 
 #
 # > Event - on dispense of option (item)

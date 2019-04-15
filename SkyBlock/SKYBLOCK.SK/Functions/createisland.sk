@@ -69,30 +69,8 @@ function createisland(p:player,island:text="1"):
         message "%{_prefix}% %{_msg}%" to {_p}
         stop
       #
-      # > If schematics are configured to be used.
-      # > Currently not supported.
-      if {SB::config::isstorage} is "Schematic":
-        if file "plugins/WorldEdit/schematics/%{_island}%" exists:
-          #
-          # > Check, if the schematic is actually in the configuration.
-          set {_ok} to false
-          loop {SB::schematics::schematic::*}:
-            if loop-value is {_island}:
-              set {_ok} to true
-          #
-          # > If the schematic is not within the configuration, send error and stop.
-          if {_ok} is "false":
-            message "%{_prefix}% Error: Island not found." to {_p}
-            stop
-        #
-        # > If the Schematic file doesn't exist, send error and stop.
-        else:
-          message "%{_prefix}% Error: Schematic not found." to {_p}
-          stop
-      #
-      # > If structure files are used, check is done later while creating the island.
-      else:
-        set {_ok} to true
+      # > Structure file check will be later on, set {_ok} to true for now.
+      set {_ok} to true
   #
   # > Start a loading bar using the actionload function.
   actionload({_p},"start")
@@ -161,6 +139,18 @@ function createisland(p:player,island:text="1"):
           set {_loccz} to {_loccz}-1
         set {_chestloc} to {_loc}
         set {_homeloc} to {_loc}
+        teleport {_p} to {_loc}
+        set block 1 below {_loc} to barrier block
+        set block 1 north {_loc} to barrier block
+        set block 1 south {_loc} to barrier block
+        set block 1 west {_loc} to barrier block
+        set block 1 east {_loc} to barrier block
+        wait 1 second
+        set block 1 below {_loc} to air
+        set block 1 north {_loc} to air
+        set block 1 south {_loc} to air
+        set block 1 west {_loc} to air
+        set block 1 east {_loc} to air
         #
         # > If structure files are defined as format, set a structure_block to load the file.
         if {SB::config::isstorage} is "Structure":
@@ -185,28 +175,29 @@ function createisland(p:player,island:text="1"):
         set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
         #
         # > Get the new chest location out of the configuration.
-        set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
-        loop {_tc::*}:
-          set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
-        set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
-        set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
-        set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
-        set block at {_chestloc} to north facing chest
-        set {_newchest} to block at {_chestloc}
-        #
-        # > Set all configurated items into the created chest.
-        loop {SB::schematics::chest::%{_schematic}%::*}:
-          set {_item::*} to loop-value-2 split at ","
-          set {_titem} to "%{_item::2}%" parsed as item
-          set {_tamount} to {_item::1} parsed as integer
+        if {SB::schematics::loc::%{_schematic}%::chest} is set:
+          set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
+          loop {_tc::*}:
+            set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
+          set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
+          set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
+          set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
+          set block at {_chestloc} to north facing chest
+          set {_newchest} to block at {_chestloc}
           #
-          # > If the item is a lava bucket, bind it to the island by applying a lore.
-          if {_titem} is a lava bucket:
-            set {_x} to x-coord of {_loc}
-            set {_z} to z-coord of {_loc}
-            set {_msg} to getlang("islandbound",{_lang})
-            set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
-          add {_tamount} of {_titem} to {_newchest}'s inventory
+          # > Set all configurated items into the created chest.
+          loop {SB::schematics::chest::%{_schematic}%::*}:
+            set {_item::*} to loop-value-2 split at ","
+            set {_titem} to "%{_item::2}%" parsed as item
+            set {_tamount} to {_item::1} parsed as integer
+            #
+            # > If the item is a lava bucket, bind it to the island by applying a lore.
+            if {_titem} is a lava bucket:
+              set {_x} to x-coord of {_loc}
+              set {_z} to z-coord of {_loc}
+              set {_msg} to getlang("islandbound",{_lang})
+              set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
+            add {_tamount} of {_titem} to {_newchest}'s inventory
         #
         # > We're done with searching and creating, stop the search process to allow others to also create a island.
         set {SB::searchprocess} to false
@@ -217,6 +208,7 @@ function createisland(p:player,island:text="1"):
         if block at {_loc} is not bedrock:
           teleport {_p} to {_backloc}
           message "%{_prefix}% /is create" to {_p}
+          broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
           stop
         #
         # > Delete the {_search} variable to prevent the while loop from repeating.
