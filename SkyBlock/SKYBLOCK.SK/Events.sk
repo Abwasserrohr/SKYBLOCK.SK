@@ -1,5 +1,10 @@
 #
-# > Import some Java classes which are needed to fire some triggers.
+# ==============
+# Events.sk
+# ==============
+# Events.sk is part of the SKYBLOCK.SK events.
+# ==============
+
 import:
   org.bukkit.event.player.PlayerArmorStandManipulateEvent
   org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -8,9 +13,6 @@ import:
   org.bukkit.event.player.PlayerInteractEvent
   org.bukkit.event.player.PlayerInteractEntityEvent
   org.bukkit.event.hanging.HangingBreakByEntityEvent
-
-#
-# > Events (Triggers) for protection purposes
 
 #
 # > Event - PlayerArmorStandManipulateEvent
@@ -505,7 +507,7 @@ on script load:
               wait 1 tick
               delete {_i}
               #
-              # > Save the game resularly to disk while deleting.
+              # > Save the game regularly to disk while deleting.
               execute console command "/save-all"
     delete {deleteisland.1::%loop-index%}
     delete {deleteisland.2::%loop-index%}
