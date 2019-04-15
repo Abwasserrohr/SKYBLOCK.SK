@@ -94,20 +94,16 @@ function changebiome(player:offline player,biome:text,title:text):
     set {_z} to {_z1}
     while {_z} < {_z2}:
       add 1 to {_z}
-      #set {_l1} to location at {_x}, 0, {_z} in "%{_b1}'s world%" parsed as world
-      #set {_chunk} to chunk at block at {_l1}
       add 1 to {_i}
-      if {_i} is 800:
-        add 800 to {_b}
+      if {_i} is 400:
+        add 400 to {_b}
         wait 1 tick
         set {_p} to ({_b}/{_size})*100
         if {_p} >= {_needed}:
           add 1 to {_needed}
           replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
-          actionbar({_player},{_progress})
+          send action bar {_progress} to {_player}
         set {_i} to 0
-      #set {_x} to (location of loop-block).getBlockX()
-      #set {_z} to (location of loop-block).getBlockZ()
       {_world}.setBiome({_x}, {_z}, {_changebiome})
   #
   # > Print to the player that we're done with changing the biome
