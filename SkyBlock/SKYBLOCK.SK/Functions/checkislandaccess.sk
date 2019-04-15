@@ -19,6 +19,11 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
   # > to the current border and also returns the bedrock location.
   set {_bedrock} to getcurrentbedrock({_p},{_l})
   #
+  # > If the bedrock is at the island center, remove the bedrock to handle it as lobby.
+  if x-coord of {_bedrock} is 0.5:
+    if z-coord of {_bedrock} is 0.5:
+      delete {_bedrock}
+  #
   # > If this is not a valid island, check trough default lobby flags:
   if {_bedrock} is not set:
     if {_event} is "Explode":
@@ -38,7 +43,8 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
       return {SB::config::defaultlobbyflag::interact-vehicle}
     else if {_event} is "jetboots":
       return {SB::config::defaultlobbyflag::jetboots}
-
+    else:
+      return {SB::config::defaultlobbyflag::%{_event}%}
 
   #
   # > The getcurrentbedrock function created some global temporary variables we can now check,
