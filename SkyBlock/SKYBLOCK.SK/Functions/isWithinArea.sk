@@ -43,8 +43,11 @@ function isWithinArea(loc:location,a:location,b:location) :: boolean:
         if {_y2} > {_y}:
           if {_z1} <= {_z}:
             if {_z2} >= {_z}:
-              send action bar "ok - %{_loc}%" to "Immanuel94" parsed as player
+              #
+              # > Location is within the area, return true.
               return true
+  #
+  # > Location is not within the area, return false.
   return false
 
 #
