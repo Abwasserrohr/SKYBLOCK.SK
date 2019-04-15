@@ -5,9 +5,6 @@
 # isWithinArea.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
-import:
-  java.lang.Math
-
 #
 # > Function - isWithinArea
 # > Parameters:
@@ -23,35 +20,56 @@ function isWithinArea(loc:location,a:location,b:location) :: boolean:
     return false
   if {_loc}'s world is not {_b}'s world:
     return false
+  set {_loc} to location of block at {_loc}
   #
   # > Get the coordinates separate.
   set {_x} to x-coord of {_loc}
   set {_y} to y-coord of {_loc}
   set {_z} to z-coord of {_loc}
   #
-  # > Calculate the min and max coordinates
-  set {_x1} to Math.min(x-coord of {_a}, x-coord of {_b})
-  set {_x2} to Math.max(x-coord of {_a}, x-coord of {_b})
-  set {_y1} to Math.min(y-coord of {_a}, y-coord of {_b})
-  set {_y2} to Math.max(y-coord of {_a}, y-coord of {_b})
-  set {_z1} to Math.min(z-coord of {_a}, z-coord of {_b})
-
-  #
-  # > Add or remove 0.9 to prevent problems which
-  # > are caused by x0.5 and z0.5 coordinates.
-  if {_z1} < 0:
-    set {_z1} to {_z1} - 0.9
-  else:
-    set {_z1} to {_z1} + 0.9
-  set {_z2} to Math.max(z-coord of {_a}, z-coord of {_b})
-
+  # > Calculate the coordinates and add or remove 0.9 to prevent problems which
+  # > are caused by x0.5 and z0.5 coordinates. This works at -x and +z.
+  #set {_x1} to Math.min(x-coord of {_a}, x-coord of {_b}) - 0.9
+  set {_x1} to getmin(x-coord of block at {_a}, x-coord of block at {_b})
+  set {_x2} to getmax(x-coord of block at {_a}, x-coord of block at {_b})
+  set {_y1} to getmin(y-coord of block at {_a}, y-coord of block at {_b})
+  set {_y2} to getmax(y-coord of block at {_a}, y-coord of block at {_b})
+  set {_z1} to getmin(z-coord of block at {_a}, z-coord of block at {_b})
+  set {_z2} to getmax(z-coord of {_a}, z-coord of {_b})
   #
   # > Check if the location is within the area.
-  if {_x1} < {_x}:
-    if {_x2} > {_x}:
+  if {_x1} <= {_x}:
+    if {_x2} >= {_x}:
       if {_y1} < {_y}:
         if {_y2} > {_y}:
-          if {_z1} < {_z}:
-            if {_z2} > {_z}:
+          if {_z1} <= {_z}:
+            if {_z2} >= {_z}:
+              send action bar "ok - %{_loc}%" to "Immanuel94" parsed as player
               return true
   return false
+
+#
+# > Function - getmin
+# > Parameters:
+# > <number/integer> any number
+# > <number/integer> any number
+# > Actions:
+# > Returns the smaller number/integer from the two.
+function getmin(a:object,b:object) :: object:
+  if {_a} > {_b}:
+    return {_b}
+  else:
+    return {_a}
+
+#
+# > Function - getmax
+# > Parameters:
+# > <number/integer> any number
+# > <number/integer> any number
+# > Actions:
+# > Returns the bigger number/integer from the two.
+function getmax(a:object,b:object) :: object:
+  if {_a} > {_b}:
+    return {_a}
+  else:
+    return {_b}
