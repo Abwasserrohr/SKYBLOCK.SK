@@ -245,9 +245,13 @@ defaultislandflags-general:
 - slime-spawning: true
 - toggle-slime-spawning: true
 #
-# > Player vs player. True = ennabled, false = disabled.
+# > Player vs player. True = enabled, false = disabled.
 - pvp: false
 - toggle-pvp: false
+#
+# > Tree branches. True = enabled, false = disabled.
+- tree-branches: true
+- toggle-tree-branches: true
 
 #
 # > Flags for not inhabited islands:
