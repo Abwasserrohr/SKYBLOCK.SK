@@ -92,7 +92,7 @@ function bindcheck(i:item, p:player) :: boolean:
   #
   # > If the lore is not empty, it has to be the bindcheck. Since dirt doesn't
   # > have any lore by default.
-  if lore of {_i} is not "":
+  if 1st line of lore of {_i} is set:
     #
     # > Get the x- and z-coordinate to check if the lore contains them.
     set {_x} to x-coord of {_bedrock}
