@@ -426,6 +426,12 @@ on script load:
   delete {SB::hunger::*}
   delete {SB::calcstatus::*}
   delete {SB::actionload::*}
+  if {deleteisland.1::*} is set:
+    #
+    # > If there are islands to delete, wait 20 seconds until important functions are loaded
+    # > and then delete the islands.
+    send "There are islands to delete. Deleting islands now, please do not stop the server." to console
+    wait 20 seconds
   #
   # > Loop through all island which have to be deleted.
   loop {deleteisland.1::*}:
@@ -506,9 +512,9 @@ on script load:
             if {_i} is 500:
               wait 1 tick
               delete {_i}
-              #
-              # > Save the game regularly to disk while deleting.
-              execute console command "/save-all"
+    #
+    # > Save the game regularly to disk while deleting.
+    execute console command "/save-all"
     delete {deleteisland.1::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
