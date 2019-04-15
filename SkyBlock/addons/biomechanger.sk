@@ -1,6 +1,6 @@
 #
 # ==============
-# biomechanger.sk v0.0.6
+# biomechanger.sk v0.0.7
 # ==============
 # Adds biome changing capability to SKYBLOCK.SK
 # ==============
@@ -66,36 +66,49 @@ function changebiome(player:offline player,biome:text,title:text):
   set {_changebiome} to {_biome} parsed as biome
   #
   # > Get the amount of blocks, which are going to be looped.
-  set {_size} to size of blocks within {_b1} to {_b2}
+  set {_size} to {_dist}*{_dist}
   #
   # > Inform player about biome change
-  set {_a} to {SB::lang::bc::changing::%{SK::lang::%{_uuid}%}%}
-  replace all "<biome>" with "%{_title}%" in {_a}
-  send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{_a}%" to {_player}
+  set {_lang} to getlangcode({_player})
+  set {_msg} to getlang("bc_changing",{_lang},getlang("prefix",{_lang},""," "))
+  replace all "<biome>" with "%{_title}%" in {_msg}
+  send {_msg} to {_player}
   #
   # > A progress bar to show how long it takes until it's done
   set {_needed} to 0
   set {_progress} to "%{SB::config::color::secondary::2}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
   #
-  # > Loop trough all blocks within the two locations
-  loop blocks within {_b1} to {_b2}:
-    set {_chunk} to chunk at loop-block
-    add 1 to {_i}
-    if {_i} is 400:
-      add 400 to {_b}
-      wait 1 tick
-      set {_p} to ({_b}/{_size})*100
-      if {_p} >= {_needed}:
-        add 1 to {_needed}
-        replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
-        actionbar({_player},{_progress})
-      set {_i} to 0
-    set {_x} to (location of loop-block).getBlockX()
-    set {_z} to (location of loop-block).getBlockZ()
-    {_world}.setBiome({_x}, {_z}, {_changebiome})
+  # > Get the minimum and maximum coordinate for each x-, y- and z-coord.
+  set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
+  set {_x2} to getmax(x-coord of block at {_b1}, x-coord of block at {_b2})
+  set {_y1} to getmin(y-coord of block at {_b1}, y-coord of block at {_b2})
+  set {_y2} to getmax(y-coord of block at {_b1}, y-coord of block at {_b2})
+  set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
+  set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
+  #
+  # > Loop through the island by going through every x- and z-coord and
+  # > changing the biome of the coordinate.
+  set {_x} to {_x1}
+  while {_x} < {_x2}:
+    add 1 to {_x}
+    set {_z} to {_z1}
+    while {_z} < {_z2}:
+      add 1 to {_z}
+      add 1 to {_i}
+      if {_i} is 400:
+        add 400 to {_b}
+        wait 1 tick
+        set {_p} to ({_b}/{_size})*100
+        if {_p} >= {_needed}:
+          add 1 to {_needed}
+          replace all "%{SB::config::color::secondary::2}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::2}%" in {_progress}
+          send action bar {_progress} to {_player}
+        set {_i} to 0
+      {_world}.setBiome({_x}, {_z}, {_changebiome})
   #
   # > Print to the player that we're done with changing the biome
-  send "%{SB::lang::prefix::%{SK::lang::%{_uuid}%}%}% %{SB::lang::bc::done::%{SK::lang::%{_uuid}%}%}%" to {_player}
+  set {_msg} to getlang("bc_done",{_lang},getlang("prefix",{_lang},""," "))
+  send {_msg} to {_player}
   #
   # > Renew the player's chunks by teleporting the player to the lobby and then back:
   set {_tloc} to {_player}'s location

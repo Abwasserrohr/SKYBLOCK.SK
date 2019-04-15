@@ -34,13 +34,13 @@ function calcisland(p:offline player):
   set {_exp} to 0
   #
   # > Calculate, how many blocks have be checked to make a fully working progress bar:
-  set {_l} to {SB::config::distance}*2
-  set {_b} to {SB::config::distance}*2
+  set {_dist} to {SB::config::distance}
+  set {_l} to {_dist}*2
+  set {_b} to {_dist}*2
   set {_h} to 256
   set {_size} to {_l}*{_b}*{_h}
   #
   # > Get the border locations of the island to calculate the island level.
-  set {_dist} to {SB::config::distance}
   set {_b1} to location of {_bedrock}
   set {_b2} to location of {_bedrock}
   add ({_dist} - {SB::config::protect}) to x-coord of {_b1}
@@ -68,7 +68,7 @@ function calcisland(p:offline player):
   else:
     set {_loops} to 1
   set {_needed} to 0
-  set {_progress} to "%{SB::config::color::background::1}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
+  set {_progress} to "%{SB::config::color::secondary::1}%||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||&r"
   #
   # > If the nether islands are enabled, this function has to loop two times through the two islands (normal and nether).
   loop {_loops} times:
@@ -82,80 +82,96 @@ function calcisland(p:offline player):
     set {_robotsize} to size of {TMP::activerobo::*}
     if {_robotsize} >= 1:
       loop {TMP::activerobo::*}:
-        if loop-value-2's location is within {_b1} to {_b2}:
+        if isWithinArea(loop-value-2's location,{_b1},{_b2}) is true:
           disablerobot(loop-value-2)
     #
-    # > Loop all blocks within the two borders:
-    loadtempchunks({_b1},{_b2})
-    loop blocks within {_b1} to {_b2}:
-      set {_loc} to location of loop-block
-      set {_loc1} to location of loop-block
-      set y-coord of {_loc1} to 256
-      #
-      # > Load the blocks within the x- and z-coord, from y-coord 0 to 256.
-      loop blocks within {_loc} to {_loc1}:
-        if loop-block-2.isEmpty() is false:
-          set {_tb} to "%loop-block-2.getType()%"
-          if loop-block-2 is a hopper:
-            add 1 to {_hopper}
-          #
-          # > If the looped block as a inventory, check if it is a
-          # > storage unit or a normal inventory block.
-          if loop-block-2's inventory is set:
-            set {_storage} to false
+    # > Loop all chunks within the two borders and keep them loaded until finished:
+    loadtempchunks({_p})
+	#
+	# > Get the minimum and maximum coordinate for each x-, y- and z-coord.
+    set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
+    set {_x2} to getmax(x-coord of block at {_b1}, x-coord of block at {_b2})
+    set {_y1} to getmin(y-coord of block at {_b1}, y-coord of block at {_b2})
+    set {_y2} to getmax(y-coord of block at {_b1}, y-coord of block at {_b2})
+    set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
+    set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
+    #
+    # > Loop through the island by going through every x- and z-coord and then
+    # > looping the y-coordinate trough.
+    set {_x} to {_x1}
+    while {_x} < {_x2}:
+      add 1 to {_x}
+      set {_z} to {_z1}
+      while {_z} < {_z2}:
+        add 1 to {_z}
+        add 1 to {_i}
+        set {_l1} to location at {_x}, 256, {_z} in "%{_b1}'s world%" parsed as world
+        set {_l2} to {_l1}
+        set y-coord of {_l2} to 0
+        loop all blocks from block at {_l1} to block at {_l2}:
+          if loop-block.isEmpty() is false:
+            set {_tb} to "%loop-block.getType()%"
+            if loop-block is a hopper:
+              add 1 to {_hopper}
             #
-            # > If the slot 26 of the inventory is clay and has "STORAGE" on the
-            # > 2nd line of the clay item, it is a storage unit.
-            if slot 26 of loop-block-2's inventory is clay:
-              if line 2 of lore of slot 26 of loop-block-2's inventory is "STORAGE":
-                set {_storage} to true
-                #
-                # > If storage calculation is enabled, add the contents experience
-                # > values to the island experience.
-                if {_calculatestorage} is true:
-                  set {_itemdata} to slot 26 of loop-block-2's inventory
-                  set {_savedamount} to line 1 of lore of {_itemdata} parsed as number
-                  set {_storeditem} to slot 0 of loop-block-2's inventory
-                  set {_tbi} to "%{_storeditem}.getType()%"
-                  set {_add} to {_blockexp::%{_tbi}%} * {_savedamount}
-                  add {_add} to {_exp}
-            #
-            # > If it isn't a storage unit and chest calculation is enabled,
-            # > loop through the inventory and add the experience values of the
-            # > items to the island experience.
-            if {_storage} is false:
-              if {_calculatechest} is true:
-                loop all items in loop-block-2's inventory:
-                  set {_item} to loop-item
-                  set {_tbi} to "%{_item}.getType()%"
-                  if {_blockexp::%{_tbi}%} is set:
-                    set {_add} to {_blockexp::%{_tbi}%} * "%{_item}.getAmount()%" parsed as number
+            # > If the looped block as a inventory, check if it is a
+            # > storage unit or a normal inventory block.
+            if loop-block's inventory is set:
+              set {_storage} to false
+              #
+              # > If the slot 26 of the inventory is clay and has "STORAGE" on the
+              # > 2nd line of the clay item, it is a storage unit.
+              if slot 26 of loop-block's inventory is clay:
+                if line 2 of lore of slot 26 of loop-block's inventory is "STORAGE":
+                  set {_storage} to true
+                  #
+                  # > If storage calculation is enabled, add the contents experience
+                  # > values to the island experience.
+                  if {_calculatestorage} is true:
+                    set {_itemdata} to slot 26 of loop-block's inventory
+                    set {_savedamount} to line 1 of lore of {_itemdata} parsed as number
+                    set {_storeditem} to slot 0 of loop-block's inventory
+                    set {_tbi} to "%{_storeditem}.getType()%"
+                    set {_add} to {_blockexp::%{_tbi}%} * {_savedamount}
                     add {_add} to {_exp}
-          #
-          # > If there is experience set for this block, add it to the island experience.
-          if {_blockexp::%{_tb}%} is set:
+              #
+              # > If it isn't a storage unit and chest calculation is enabled,
+              # > loop through the inventory and add the experience values of the
+              # > items to the island experience.
+              if {_storage} is false:
+                if {_calculatechest} is true:
+                  loop all items in loop-block's inventory:
+                    set {_item} to loop-item
+                    set {_tbi} to "%{_item}.getType()%"
+                    if {_blockexp::%{_tbi}%} is set:
+                      set {_add} to {_blockexp::%{_tbi}%} * "%{_item}.getAmount()%" parsed as number
+                      add {_add} to {_exp}
             #
-            # > Add the experience of the block to the local experience variable {_exp}
-            add {_blockexp::%{_tb}%} to {_exp}
-      add 256 to {_i}
-      add 256 to {_blocks}
-      #
-      # > Update the status every 50000 blocks.
-      if {_i} > 50000:
-        set {_percent} to ({_blocks}/{_size})*100
+            # > If there is experience set for this block, add it to the island experience.
+            if {_blockexp::%{_tb}%} is set:
+              #
+              # > Add the experience of the block to the local experience variable {_exp}
+              add {_blockexp::%{_tb}%} to {_exp}
+        add 256 to {_i}
+        add 256 to {_blocks}
         #
-        # > If the percentage is bigger than the one before, replace one of the | progress bars with a colored one.
-        if {_percent} >= {_needed}:
-          add 1 to {_needed}
-          replace all "%{SB::config::color::background::1}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::background::1}%" in {_progress}
-        #
-        # > Send the current progress bar to the player.
-        if {_blocks} > {_size}:
-          set {_blocks} to {_size}
-        actionbar({_p},"%{_progress}% %{SB::config::color::background::1}%[%{_blocks}%%{SB::config::color::primary::1}%/%{SB::config::color::background::1}%%{_size}%]")
-        #
-        # > Set the counter back to 0 to do this again in 5000 blocks.
-        set {_i} to 0
+        # > Update the status every 50000 blocks.
+        if {_i} > 50000:
+          set {_percent} to ({_blocks}/{_size})*100
+          #
+          # > If the percentage is bigger than the one before, replace one of the | progress bars with a colored one.
+          if {_percent} >= {_needed}:
+            add 1 to {_needed}
+            replace all "%{SB::config::color::secondary::1}%|" with "%{SB::config::color::primary::1}%|%{SB::config::color::secondary::1}%" in {_progress}
+          #
+          # > Send the current progress bar to the player.
+          if {_blocks} > {_size}:
+            set {_blocks} to {_size}
+          actionbar({_p},"%{_progress}% %{SB::config::color::secondary::1}%[%{_blocks}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::1}%%{_size}%]")
+          #
+          # > Set the counter back to 0 to do this again in 5000 blocks.
+          set {_i} to 0
+
   #
   # > Calculate the island level using a while loop.
   while {_endfound} is not set:
@@ -206,8 +222,36 @@ on chunk unload:
 # > Loops through all blocks between the two location and loads the chunks,
 # > with chunk unload prevention, these chunks keep being loaded for a fast
 # > island calculation.
-function loadtempchunks(l1:location,l2:location):
+function loadtempchunks(p:offline player):
+  #
+  # > Wait a tick, that way, threaded functions do not have to wait
+  # > but can work async.
   wait 1 tick
-  loop blocks within {_l1} to {_l2}:
-    set {_chunk} to chunk at loop-block
+  #
+  # > Calculate the borders which should be calculated.
+  set {_b1} to location of {_bedrock}
+  set {_b2} to location of {_bedrock}
+  add ({_dist} - {SB::config::protect}) to x-coord of {_b1}
+  add ({_dist} - {SB::config::protect}) to z-coord of {_b1}
+  subtract ({_dist} - {SB::config::protect}) from x-coord of {_b2}
+  subtract ({_dist} - {SB::config::protect}) from z-coord of {_b2}
+  #
+  # > Get the minimum and maximum of each x-,y- and z-coord.
+  set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
+  set {_x2} to getmax(x-coord of block at {_b1}, x-coord of block at {_b2})
+  set {_y1} to getmin(y-coord of block at {_b1}, y-coord of block at {_b2})
+  set {_y2} to getmax(y-coord of block at {_b1}, y-coord of block at {_b2})
+  set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
+  set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
+  #
+  # > Loop through the whole island and load the chunks by setting them
+  # > into a local variable.
+  set {_x} to {_x1}
+  while {_x} < {_x2}:
+    add 1 to {_x}
+    set {_z} to {_z1}
+    while {_z} < {_z2}:
+      add 1 to {_z}
+      set {_l1} to location at {_x}, 1, {_z} in "%{_b1}'s world%" parsed as world
+      set {_chunk} to chunk at block at {_l1}
   delete {_chunk}
