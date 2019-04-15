@@ -43,7 +43,9 @@ function checkislandaccess(p:player,l: location, event:text=1, block:item=air, t
   #
   # > The getcurrentbedrock function created some global temporary variables we can now check,
   # > if the location parameter is within the temporary variables, we can use them.
-  if {_l} is within metadata value "TEMPLOCb1" of {_p} to metadata value "TEMPLOCb2" of {_p}:
+  set {_l1} to metadata value "TEMPLOCb1" of {_p} 
+  set {_l2} to metadata value "TEMPLOCb2" of {_p}
+  if isWithinArea({_l},{_l1},{_l2}) is true:
     set {_uuid} to uuid of {_p}
     set {_x} to x-coord of {_bedrock}
     set {_y} to y-coord of {_bedrock}
@@ -153,29 +155,33 @@ function checkforupgrades(player:player,bedrock:location):
 # > Generatres temporary variables which store the current borders of the player,
 # > if the temporary variables are set, it returns them if everything is ok.
 function getcurrentbedrock(p:player, l:location) :: location:
+  #
+  # > If one of the temporary locations isn't set, generate new locations.
   if metadata value "TEMPLOC" of {_p} is not set:
     set {_new} to true
   if metadata value "TEMPLOCb1" of {_p} is not set:
     set {_new} to true
   if metadata value "TEMPLOCb2" of {_p} is not set:
     set {_new} to true
+  #
+  # > If the temporary bedrock location isn't the current bedrock location, generate
+  # > new locations to prevent mistakes in the island determination.
+  if metadata value "TEMPLOC" of {_p} is not getcurrentbedrockmain({_l}):
+    set {_new} to true
   if {_new} is true:
     #
     # > Get the current bedrock of the player,
     # > this takes around 0.02 seconds, thats why we use caching here.
     set {_bedrock} to getcurrentbedrockmain({_l})
-
     #
     # > Generate the new borders of the current bedrock
     set {_pl::1} to location of {_bedrock}
     set {_pl::2} to location of {_bedrock}
-    
     #
     # > Calculate the upgradeable border:
     set {_defaultdist} to {SB::config::defaultsize}
     set {_maxdist} to {SB::config::distance}
     set {_dist} to {SB::config::distance}
-    
     #
     # > Only calculate, if there needs to be a upgradeable border calculation:
     if {_maxdist} is not {_defaultdist}:
@@ -204,7 +210,6 @@ function getcurrentbedrock(p:player, l:location) :: location:
     subtract ({_dist} - {SB::config::protect}) from z-coord of {_pl::2}
     set y-coordinate of {_pl::2} to 5000
     set y-coordinate of {_pl::1} to -5000
-    
     #
     # > Set border 1 location
     set metadata value "TEMPLOCb1" of {_p} to {_pl::1}
@@ -220,7 +225,9 @@ function getcurrentbedrock(p:player, l:location) :: location:
   else:
     #
     # > If the temporary location is usable and within the location, return it
-    if {_l} is within metadata value "TEMPLOCb1" of {_p} to metadata value "TEMPLOCb2" of {_p}:
+    set {_l1} to metadata value "TEMPLOCb1" of {_p} 
+    set {_l2} to metadata value "TEMPLOCb2" of {_p}
+    if isWithinArea({_l},{_l1},{_l2}) is true:
       return metadata value "TEMPLOC" of {_p}
     #
     # > If the temporary location seems outdated, delete it and repeat.
@@ -256,8 +263,8 @@ function getcurrentbedrockmain(l:location) :: location:
   # > Calculate the location of the bedrock and return it.
   # > Formular: x of island center: x of event location / (distance*2)*distance*2+0.5
   set {_d2} to {SB::config::distance}*2
-  set {_x} to (round((x-coord of {_l}) / ({_d2}))*{_d2})
-  set {_z} to (round((z-coord of {_l}) / ({_d2}))*{_d2})
+  set {_x} to (round((x-coord of block at {_l}) / ({_d2}))*{_d2})
+  set {_z} to (round((z-coord of block at {_l}) / ({_d2}))*{_d2})
   #
   # > Set and return the valid bedrock location, which is used by SKYBLOCK.SK.
   set {_loc} to location of block at location at {_x}, {SB::config::height}, {_z} in "%{_l}'s world%" parsed as world
