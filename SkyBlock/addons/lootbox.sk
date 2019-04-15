@@ -1,6 +1,6 @@
 #
 # ==============
-# lootbox.sk v0.0.5
+# lootbox.sk v0.0.6
 # ==============
 # Create custom lootboxes with three different tiers and animations.
 # ==============
@@ -377,7 +377,7 @@ function openlootbox(p:player,tier:integer):
     opengui({_p},27,"{@crateguititle}")
   #
   # > Send sound of opening a chest.
-  playsound({_p},location of {_p},"{@openlootboxsound}","master",1,1)
+  play sound "{@openlootboxsound}" with volume 1.1 at location of {_p} for {_p}
   #
   # > Create a fancy menu, which contains blacck glass panes.
   loop 27 times:
@@ -476,7 +476,7 @@ function startlootbox(p:player,tier:integer):
     wait {_wait}
     #
     # > Play a predefined sound for the moving inventory each time it is going to move.
-    playsound({_p},location of {_p},"{@movesound}","master",1,1)
+    play sound "{@movesound}" with volume 1.1 at location of {_p} for {_p}
     #
     # > Add one to the {_loops} variable, which defines how many times the while loop already
     # > looped through.
@@ -581,7 +581,7 @@ function cratereward(p:player,reward:item):
   wait 1 second
   #
   # > Play a sound that sounds rewarding.
-  playsound({_p},location of {_p},"{@gotsound}","master",1,1)
+  play sound "{@gotsound}" with volume 1.1 at location of {_p} for {_p}
   #
   # > Close the inventory of the lootbox opening.
   close {_p}'s inventory
@@ -649,9 +649,3 @@ function cratereward(p:player,reward:item):
 on InventoryPickupItemEvent:
   if metadata value "crate" of event.getItem() is 1:
     cancel event
-#
-# > Function - playsound
-# > Parameter: <player>player, <location>location of the sound, <text>sound name,<text>source sound, eg. master, <integer>volume, <integer>pitch
-# > Plays the sound using a vanilla command. Create a seperate function for that in a file that can be reused on other projects later.
-function playsound(p:player,l:location,sound:text,source:text,volume:number,pitch:number):
-  execute console command "/playsound minecraft:%{_sound}% %{_source}% %{_p}% %x-coord of {_l}% %y-coord of {_l}% %z-coord of {_l}% %{_volume}% %{_pitch}%"
