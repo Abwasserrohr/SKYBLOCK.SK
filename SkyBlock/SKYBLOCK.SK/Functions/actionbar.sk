@@ -34,7 +34,7 @@ function actionload(p: player, t:text):
       replace all "&6██" with "&6█" in {_s}
       actionbar({_p},{_s})
       wait 10 ticks
-    actionbar({_p},"")
+    actionbar({_p}," ")
 
 #
 # > Import Java classes for the actionbar function.
@@ -49,10 +49,17 @@ import:
 # > Actions:
 # > Displays the actionbar to the player trough the bungee api, which is
 # > also available in Spigot without BungeeCord.
-function actionbar(p: player, t:text):
+function actionbar(p:player, t:text=" "):
+  #
+  # > Prevent the execution of the actionbar of the player doesn't
+  # > exist or isn't online.
+  if {_p} is not a player:
+    stop
+  if {_p} is not online:
+    stop
   #
   # > Set the text parameter to a TextComponent.
-  set {_tc} to new TextComponent({_t})
+  set {_tc} to new TextComponent(coloured {_t})
   #
   # > Set the chat message type to action bar.
   set {_cmt} to ChatMessageType.ACTION_BAR!
