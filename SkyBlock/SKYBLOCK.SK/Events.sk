@@ -504,6 +504,9 @@ on script load:
             if {_i} is 500:
               wait 1 tick
               delete {_i}
+              #
+              # > Save the game resularly to disk while deleting.
+              execute console command "/save-all"
     delete {deleteisland.1::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
