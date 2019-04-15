@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.6
+# robots.sk v0.0.7
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -654,7 +654,9 @@ on place of {@robotitem}:
 	# > The sound can be predefined in the options.
     set {_soundloc} to location of player
     add 10 to y-coord of {_soundloc}
-    playsound(player,{_soundloc},"{@summonsound}","master",1,1)
+    #
+    # > Play summon sound to the player
+    play sound "{@summonsound}" with volume 1.1 at {_soundloc} for player
     #
     # > The robot spawn is animated with this loop.
     loop 41 times:
@@ -673,7 +675,7 @@ on place of {@robotitem}:
       {_world}.spawnParticle(Particle.{@summonparticles}!,{_x},{_y},{_z}, 0.5)
     #
     # > Once the robot is there, play a sound for that too.
-    playsound(player,{_soundloc},"{@arrivesound}","master",1,0.5)
+    play sound "{@arrivesound}" with volume 1.1 with pitch 0.5 at {_soundloc} for player
     #
     # > Loop 100 times and spawn particles for fancier look.
     loop 100 times:
