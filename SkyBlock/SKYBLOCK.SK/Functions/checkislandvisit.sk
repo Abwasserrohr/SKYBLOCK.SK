@@ -48,14 +48,15 @@ function checkislandvisit(player:player):
         make {_player} execute "/island spawn"
         #
         # > Tell the player that there is no access to the island.
-        send action bar getlang("islandaccess_noaccess",{_lang}) to {_player}
+        set {_msg} to getlang("islandaccess_noaccess",{_lang})
+        actionbar({_msg},{_player})
       else:
         #
         # > If the island isn't abadoned, send a welcome message.
         if {_leader} is not "-":
           set {_msg} to getlang("islandaccess_welcome",{_lang})
           replace all "<leader>" with "%{_leader}%" in {_msg}
-        send action bar {_msg} to {_player}
+        actionbar({_msg},{_player})
     #
     # > Delete any used local variables.
     delete {_leader}
@@ -73,3 +74,4 @@ function checkislandvisit(player:player):
 on quit:
   delete metadata value "lastbedrocklocation" of player
   delete metadata value "lastbedrockleader" of player
+
