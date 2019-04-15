@@ -431,7 +431,7 @@ on script load:
     set {_loc2} to {deleteisland.2::%loop-index%}
     #
     # > Loop through the whole island and remove every block and clear all block inventories.
-    loop blocks within {_loc1} to {_loc2}:
+    loop all of the blocks from {_loc1} to {_loc2}:
       #
       # > Loop through entities that may live at the block.
       loop entities in radius 0.7 of loop-block:
@@ -451,7 +451,7 @@ on script load:
     if {SB::config::nether} is true:
       set {_loc1} to location at x-coord of {_loc1}, y-coord of {_loc1}, z-coord of {_loc1} in "%{SB::config::netherworld}%" parsed as world
       set {_loc2} to location at x-coord of {_loc2}, y-coord of {_loc2}, z-coord of {_loc2} in "%{SB::config::netherworld}%" parsed as world
-      loop blocks within {_loc1} to {_loc2}:
+      loop all of the blocks from {_loc1} to {_loc2}:
         if loop-block is any chest or trapped chest:
           clear loop-block's inventory
         if loop-block is not air:
