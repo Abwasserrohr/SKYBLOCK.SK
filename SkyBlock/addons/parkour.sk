@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.5
+# parkour.sk v0.0.6
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -88,6 +88,7 @@ import:
   java.util.HashMap
   java.util.Date
   java.util.ArrayList
+  org.bukkit.event.player.PlayerTeleportEvent
 #
 # > Commands
 
@@ -122,6 +123,19 @@ command /checkpoint:
 #
 # > Events
 
+#
+# > Event - on PlayerTeleportEvent
+# > Actions:
+# > Prevents teleportation which could be used to cheat.
+on PlayerTeleportEvent:
+  #
+  # > If the teleportation is caused by a plugin, exit from the
+  # > parkour if "validparkourtp" is not set to true.
+  if "%event.getCause()%" is "plugin":
+    if metadata value "validparkourtp" of event.getPlayer() is true:
+      delete metadata value "validparkourtp" of event.getPlayer()
+    else:
+      exitparcour(event.getPlayer())
 #
 # > Event - on dispense of bedrock
 # > Actions:
@@ -353,6 +367,10 @@ on rightclick holding {@itemrestart}:
       cancel event
       apply potion of resistance of tier 5 to player for 1 second
       set {_checkpoint} to metadata value "startpoint" of player
+      #
+      # > Set validparkourtp to true to disable teleportation cheat protection for
+      # > the next teleportation.
+      set metadata value "validparkourtp" of player to true
       teleport player to {_checkpoint}
 
 #
@@ -592,6 +610,10 @@ function parcourcheckpoint(player:player):
   #
   # > Teleport player back to the last checkpoint location.
   set {_checkpoint} to metadata value "checkpoint" of {_player}
+  #
+  # > Set validparkourtp to true to disable teleportation cheat protection for
+  # > the next teleportation.
+  set metadata value "validparkourtp" of {_player} to true
   teleport {_player} to {_checkpoint}
 
 #
