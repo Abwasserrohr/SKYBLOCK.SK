@@ -424,42 +424,86 @@ on script load:
   delete {SB::hunger::*}
   delete {SB::calcstatus::*}
   delete {SB::actionload::*}
-
+  #
+  # > Loop through all island which have to be deleted.
   loop {deleteisland.1::*}:
-    wait 0.5 seconds
+    #
+    # > Send messages into the console to inform the admin about the delete process.
+    send "Deleting islands now. Please be patient. Do not stop the server!" to console
     set {_loc1} to loop-value
     set {_loc2} to {deleteisland.2::%loop-index%}
+	#
+	# > Get the minimum and maximum coordinate for each x-, y- and z-coord.
+    set {_x1} to getmin(x-coord of block at {_loc1}, x-coord of block at {_loc2})
+    set {_x2} to getmax(x-coord of block at {_loc1}, x-coord of block at {_loc2})
+    set {_y1} to getmin(y-coord of block at {_loc1}, y-coord of block at {_loc2})
+    set {_y2} to getmax(y-coord of block at {_loc1}, y-coord of block at {_loc2})
+    set {_z1} to getmin(z-coord of block at {_loc1}, z-coord of block at {_loc2})
+    set {_z2} to getmax(z-coord of block at {_loc1}, z-coord of block at {_loc2})
     #
-    # > Loop through the whole island and remove every block and clear all block inventories.
-    loop all of the blocks from {_loc1} to {_loc2}:
-      #
-      # > Loop through entities that may live at the block.
-      loop entities in radius 0.7 of loop-block:
-        #
-        # > If there is a entity, kill it.
-        kill loop-entity
-      if loop-block is any chest or trapped chest:
-        clear loop-block's inventory
-      if loop-block is not air:
-        set loop-block to air
-        add 1 to {_i}
-      if {_i} is 500:
-        wait 1 tick
-        delete {_i}
+    # > Loop through the island by going through every x- and z-coord and then
+    # > looping the y-coordinate trough. Then remove every block and 
+	# > clear all block inventories.
+    set {_x} to {_x1}
+    while {_x} < {_x2}:
+      add 1 to {_x}
+      set {_z} to {_z1}
+      while {_z} < {_z2}:
+        add 1 to {_z}
+        add 1 to {_blocksremoved}
+        set {_l1} to location at {_x}, 256, {_z} in "%{_loc1}'s world%" parsed as world
+        set {_l2} to {_l1}
+        set y-coord of {_l2} to 0
+        loop all blocks from block at {_l1} to block at {_l2}:
+          #
+          # > Loop through entities that may live at the block.
+          loop entities in radius 0.7 of loop-block:
+            #
+            # > If there is a entity, kill it.
+            kill loop-entity
+          #
+          # > Clear the inventory of blocks with inventory out.
+          if loop-block's inventory is set:
+            clear loop-block's inventory
+          if loop-block is not air or cave air:
+            set loop-block to air
+            add 1 to {_i}
+          if {_i} is 500:
+            wait 1 tick
+            delete {_i}
     #
     # > If the nether is enabled for building islands, also delete the island in the nether.
     if {SB::config::nether} is true:
       set {_loc1} to location at x-coord of {_loc1}, y-coord of {_loc1}, z-coord of {_loc1} in "%{SB::config::netherworld}%" parsed as world
       set {_loc2} to location at x-coord of {_loc2}, y-coord of {_loc2}, z-coord of {_loc2} in "%{SB::config::netherworld}%" parsed as world
-      loop all of the blocks from {_loc1} to {_loc2}:
-        if loop-block is any chest or trapped chest:
-          clear loop-block's inventory
-        if loop-block is not air:
-          set loop-block to air
-          add 1 to {_i}
-        if {_i} is 500:
-          wait 1 tick
-          delete {_i}
+      #
+      # > Repeat the same deletation process as above with the nether world.
+      set {_x} to {_x1}
+      while {_x} < {_x2}:
+        add 1 to {_x}
+        set {_z} to {_z1}
+        while {_z} < {_z2}:
+          add 1 to {_z}
+          set {_l1} to location at {_x}, 256, {_z} in "%{_loc1}'s world%" parsed as world
+          set {_l2} to {_l1}
+          set y-coord of {_l2} to 0
+          loop all blocks from block at {_l1} to block at {_l2}:
+            #
+            # > Loop through entities that may live at the block.
+            loop entities in radius 0.7 of loop-block:
+              #
+              # > If there is a entity, kill it.
+              kill loop-entity
+            #
+            # > Clear the inventory of blocks with inventory out.
+            if loop-block's inventory is set:
+              clear loop-block's inventory
+            if loop-block is not air or cave air:
+              set loop-block to air
+              add 1 to {_i}
+            if {_i} is 500:
+              wait 1 tick
+              delete {_i}
     delete {deleteisland.1::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
@@ -467,7 +511,6 @@ on script load:
   # > To prevent any data being kept here, delete it again completly:
   delete {deleteisland.1::*}
   delete {deleteisland.2::*}
-
   #
   # > If we're done with deleting islands, also double check there is not a level entry left.
   # > If there is one left, delete it and delete all variables to the island.
@@ -488,7 +531,14 @@ on script load:
   # > If we're done, allow players back on the server by disabling the whitelist.
   #
   execute console command "/whitelist off"
+  send "Island deletation done." to console
 
+#
+# > Event - on script unload:
+# > Triggered once this script is shut down. Reloading isn't enough.
+# > Actions:
+# > Enabled the whitelist and prepares a variable for the island deletation
+# > process after the server has been started again.
 on script unload:
   execute console command "/whitelist on"
   set {SB::ISDELPROCESS} to true
