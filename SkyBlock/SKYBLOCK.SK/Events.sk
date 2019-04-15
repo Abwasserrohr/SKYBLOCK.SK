@@ -13,7 +13,7 @@ import:
   org.bukkit.event.player.PlayerInteractEvent
   org.bukkit.event.player.PlayerInteractEntityEvent
   org.bukkit.event.hanging.HangingBreakByEntityEvent
-
+  org.bukkit.event.world.StructureGrowEvent
 #
 # > Event - PlayerArmorStandManipulateEvent
 # > If someone tries to change a armor stand.
@@ -56,6 +56,15 @@ on rightclick:
 on any move:
   $ thread
   checkislandvisit(player)
+
+#
+# > Event - StructureGrowEvent
+# > Action:
+# > Checks if trees with branches are disabled on an island, if
+# > they are, cancel the event. Important for the "tree branches" flag.
+on StructureGrowEvent:
+  if "%event.getSpecies()%" is not "TREE" OR "JUNGLE" OR "ACACIA" OR "BIRCH" OR "TALL_BIRCH" OR "COCOA_TREE" OR "REDWOOD" OR "TALL_REDWOOD" OR "SMALL_JUNGLE" OR "SWAMP" OR "MEGA_REDWOOD" OR "BROWN_MUSHROOM" OR "RED_MUSHROOM" OR "DARK_OAK":
+    handlegeneralflagevent(event,false,event.getLocation(),"tree-branches")
 
 #
 # > Event - bucket fill
