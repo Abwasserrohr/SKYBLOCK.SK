@@ -100,7 +100,7 @@ function bindcheck(i:item, p:player) :: boolean:
     set {_z} to z-coord of {_bedrock}
     #
     # > If it is the block bound to this island, let it trough.
-    if lore of {_i} contains "%{_x}%_%{_z}%":
+    if 2nd line of lore of {_i} contains "%{_x}%_%{_z}%":
       return true
     else:
     #
