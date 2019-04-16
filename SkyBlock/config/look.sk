@@ -26,3 +26,6 @@ on load:
   #
   # > Set a gui back item as you like. This is the item which allows the player to go back from another menu.
   set {SB::config::backguiitem} to redstone dust
+  #
+  # > Custom join and quit messages by SKYBLOCK.SK
+  set {SB::config::customjoinquit} to true
