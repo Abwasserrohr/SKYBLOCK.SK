@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.6
+# parkour.sk v0.0.7
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -135,7 +135,8 @@ on PlayerTeleportEvent:
     if metadata value "validparkourtp" of event.getPlayer() is true:
       delete metadata value "validparkourtp" of event.getPlayer()
     else:
-      exitparcour(event.getPlayer())
+      if metadata value "parcour" of event.getPlayer() is "ingame":
+        exitparcour(event.getPlayer())
 #
 # > Event - on dispense of bedrock
 # > Actions:
