@@ -11,7 +11,7 @@
 # > Actions:
 # > The homehandler handles all actions for homes, creating, teleporting and deleting homes
 # > is possible with this function.
-function homehandler(p:player,action:text,arg1:text,p2:player):
+function homehandler(p:offline player,action:text,arg1:text,p2:player):
   #
   # > If we have the argument 1 set to "1", the user had no input, set it to default "home".
   if {_arg1} is "1":
@@ -20,10 +20,10 @@ function homehandler(p:player,action:text,arg1:text,p2:player):
   # > Get the uuid of the player and the prefix in an local variable, since we
   # > need the two variables quite often now.
   if {_p2} is not set:
-    set {_p2} to {_p2}
+    set {_p2} to {_p}
   set {_uuid} to uuid of {_p}
   set {_uuid2} to uuid of {_p2}
-  set {_lang} to getlangcode({_p})
+  set {_lang} to getlangcode({_p2})
   set {_prefix} to getlang("prefix",{_lang})
   #
   # > If the player wants to set a home:
