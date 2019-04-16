@@ -1,13 +1,6 @@
 # SKYBLOCK.SK
 Run Minecraft SkyBlock with Skript
 
-![Open issues](https://img.shields.io/github/issues/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
-![Closed issues](https://img.shields.io/github/issues-closed-raw/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
-![Last commit](https://img.shields.io/github/last-commit/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
-![Repo size](https://img.shields.io/github/repo-size/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
-![License](https://img.shields.io/github/license/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
-
-
 SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your server using Skript with only a small amount of dependencies. Feel free to use SKYBLOCK.SK on your server and change it as you like, enhancements can be introduced by a pull request.
 	
 
@@ -40,3 +33,12 @@ If you're running SKYBLOCK.SK, feel free to create a issue to get your server di
   - Also include all variables which can be used by the server operator
 - Final Testing and bugfixing
 - Publish the Skript to https://forums.skunity.com and maintain/update it for future versions of minecraft
+
+### Stats
+
+![Open issues](https://img.shields.io/github/issues/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Closed issues](https://img.shields.io/github/issues-closed-raw/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Last commit](https://img.shields.io/github/last-commit/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Repo size](https://img.shields.io/github/repo-size/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![License](https://img.shields.io/github/license/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+
