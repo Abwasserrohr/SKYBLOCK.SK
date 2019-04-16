@@ -132,9 +132,7 @@ function islandinfo(p2:player,p:text="1",previousmenu:text="none"):
   {_book}.append(newTextComponent("[%{_homelevel}%/5] %getlang(""bc_islandhometitle"",{_lang})%%nl%"))
   {_book}.append(newTextComponent("[%{_hopperlevel}%/5] %getlang(""bc_islandhoppertitle"",{_lang})%%nl%"))
   {_book}.append(newTextComponent("[%{_sizelevel}%/5] %getlang(""bc_islandsizetitle"",{_lang})%"))
-
   {_book}.append(newTextComponent("%nl%-------------------%nl%"))
-
   #
   # > Go back to previous menu link:
   if {_previousmenu} is set:
@@ -159,6 +157,23 @@ function islandinfo(p2:player,p:text="1",previousmenu:text="none"):
   {_book}.append(newTextComponent("%nl%-------------------%nl%"))
   {_book}.append(newTextComponent("%getlang(""activehoppers"",{_lang})% %{_activehoppers}%"))
   {_book}.append(newTextComponent("%nl%-------------------%nl%"))
+  set {_msg} to newTextComponent("%getlang(""activeentites"",{_lang})% %getIslandEntityAmount({_bedrock})%")
+  set {_lore} to getlang("info_activentitieslore",{_lang})
+  set {_head} to getlang("info_activentitiestitle",{_lang})
+  set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
+  #
+  # > If a previous menu exists and it isn't "none", add it to the back command.
+  if {_previousmenu} is set:
+    if {_previousmenu} is not "none":
+      set {_msg} to setclickcmdevent({_msg},"/is entity %{_uuid}% is info %{_uuid}% %{_previousmenu}%")
+  #
+  # > If there is no previous menu to this, add no previous menu.
+  else:
+    set {_msg} to setclickcmdevent({_msg},"/is entity %{_uuid}% is info %{_uuid}%")
+  {_book}.append({_msg})
+  set {_msg} to newTextComponent("%nl%-------------------%nl%")
+  set {_msg} to overwritecomponentevents({_msg})
+  {_book}.append({_msg})
   #
   # > Create the book site with the ComponentBuilder and add it to the sites.
   add {_book}.create() to {_sites::*}
@@ -181,3 +196,144 @@ function islandinfo(p2:player,p:text="1",previousmenu:text="none"):
   set {_p2}'s tool to {_item}
   openbook({_p2})
   set {_p2}'s tool to {_tool}
+
+#
+# > Function - islandentityinfo
+# > Parameters:
+# > <player>the player who wants to get the information
+# > <text>the owner of the island as text
+# > <text>a command which leads to the previous menu (optional)
+# > Actions:
+# > Opens a list of all active entities within a book to the player.
+function islandentityinfo(p:player,islandplayer:text,backcmd:text=""):
+  #
+  # > Prevent client side gliches or instant close by waiting 2 ticks.
+  wait 2 ticks
+  #
+  # > Get the language of the player who wants the list.
+  set {_lang} to getlangcode({_p})
+  #
+  # > Get the island player as offline player.
+  set {_islandplayer} to {_islandplayer} parsed as offline player
+  #
+  # > If the island player is "1", set the player who wanted to open
+  # > this menu as the island player.
+  if {_islandplayer} is "1":
+    set {_islandplayer} to {_p}
+  #
+  # > If the island player is set, get the entites and open a book to the player.
+  if {_islandplayer} is set:
+    set {_uuid} to uuid of {_islandplayer}
+    #
+    # > Get the bedrock location of the player.
+    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+    set {_sites::*} to getIslandEntityBookList({_bedrock},{_lang},{_backcmd})
+    createopenbook({_p},{_sites::*})
+	
+#
+# > Function - getIslandEntityBookList
+# > Parameters:
+# > <location>the location of the island bedrock
+# > Actions:
+# > Counts all entities, creates a list and returns book pages which can be
+# > opened using the createopenbook(player,sites) function.
+function getIslandEntityBookList(loc:location,lang:text,backcmd:text="none") :: objects:
+  #
+  # > Get the configured distance of the islands.
+  set {_dist} to {SB::config::distance}
+  #
+  # > Get all entities within the distance from the bedrock location.
+  set {_entities::*} to ...{_loc}.getWorld().getNearbyEntities({_loc}, {_dist}-1, 256, {_dist}-1)
+  #
+  # > Loop all entities and count them after unique entities to
+  # > create a viewable list.
+  loop {_entities::*}:
+    if loop-value is not a player or a dropped item:
+      add 1 to {_uniqueentities::%loop-value.getType()%}
+  #
+  # > Create a list within a book using the Component Builder.
+  set {_list} to newComponentBuilder()
+  #
+  # > Add a header to the book.
+  {_list}.append(newTextComponent("&lAktive Wesen%nl%%{SB::config::bookspacer}%%nl%%nl%"))
+  #
+  # > These variables are there to determine if the first site has been done or still has to
+  # > be created, this is important for the back link arrow on the first page.
+  set {_endcreate} to 1
+  set {_firstsite} to true
+  #
+  # > Loop all unique entities and add them to the book.
+  loop {_uniqueentities::*}:
+    add 1 to {_pageline}
+    set {_endcreate} to 1
+    {_list}.append(getTranslatableComponentFromEntityType(loop-index))
+    {_list}.append(newTextComponent(": %loop-value%%nl%"))
+    if {_pageline} is 9:
+      delete {_pageline}
+      delete {_endcreate}
+      #
+      # > The first site gets a special "back" link to get to the previous menu.
+      if {_firstsite} is true:
+        if {_backcmd} is not "none":
+          #
+          # > Add a new line before the back link gets added.
+          {_list}.append(" %nl%")
+          {_list}.append(createbookbacklinkentityinfo({_backcmd},{_lang}))
+          delete {_firstsite}
+      add {_list}.create() to {_sites::*}
+      set {_list} to newComponentBuilder()
+      {_list}.append(newTextComponent("&lAktive Wesen%nl%%{SB::config::bookspacer}%%nl%%nl%"))
+  #
+  # > If there haven't been exactly 9 lines for the last page, this
+  # > part is going to create the last page.
+  if {_endcreate} is set:
+    #
+	# > If there are less than 9 lines, we also have to create the first page here.
+    if {_firstsite} is true:
+      if {_backcmd} is not "none":
+        #
+        # > Add a new line before the back link gets added.
+        {_list}.append(" %nl%")
+        {_list}.append(createbookbacklinkentityinfo({_backcmd},{_lang}))
+    add {_list}.create() to {_sites::*}
+  #
+  # > Return all book pages, which contains entity information.
+  return {_sites::*}
+
+#
+# > Function - createbookbacklinkentityinfo
+# > Parameters:
+# > <text>the command which should be executed if the player clicks on the link
+# > Actions:
+# > Creates a message with a clickable link, which executes a command.
+function createbookbacklinkentityinfo(backcmd:text,lang:text) :: object:
+  set {_msg} to newTextComponent("&l←&r")
+  set {_lore} to getlang("store_pagebackwardlore",{_lang})
+  set {_head} to getlang("store_pagebackward",{_lang})
+  set {_msg} to sethovertextevent({_msg},"%{_head}%%nl%%{_lore}%")
+  set {_msg} to setclickcmdevent({_msg},"/%{_backcmd}%")
+  return {_msg}
+
+#
+# > Function - getIslandEntityAmount
+# > Parameters:
+# > <location>the bedrock location of the island
+# > Actions:
+# > Counts all valid entities of the island and returns as a number.
+function getIslandEntityAmount(loc:location) :: number:
+  #
+  # > Get the distance for islands from the configuration.
+  set {_dist} to {SB::config::distance}
+  #
+  # > Get the entities within the island area.
+  set {_entities::*} to ...{_loc}.getWorld().getNearbyEntities({_loc}, {_dist}-1, 256, {_dist}-1)
+  #
+  # > Loop all entities and increase a counter for all entities that aren't players or items.
+  loop {_entities::*}:
+    if loop-value is not a player or a dropped item:
+      add 1 to {_entities}
+  #
+  # > If there aren't any entities, return 0.
+  if {_entities} is not set:
+    return 0
+  return {_entities}
