@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.9
+# openbook.sk v0.0.10
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -163,6 +163,15 @@ function getTranslatableComponentFromItem(item:item) :: object:
   else:
     set {_vname} to "item.%{_vname}%"
   return new TranslatableComponent({_vname})
+
+#
+# > Function - getTranslatableComponentFromEntityType
+# > Parameters:
+# > <text>the entity type which should be a translatable component
+# > Actions:
+# > Converts the entity type to a TranslatableComponent and returns it.
+function getTranslatableComponentFromEntityType(type:text) :: object:
+  return new TranslatableComponent("entity.minecraft.%{_type}%")
 
 #
 # > Function - newTextComponent
