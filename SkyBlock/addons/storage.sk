@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.12
+# storage.sk v0.0.13
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -80,7 +80,7 @@ options:
   notenoughinvspace: Not enough space in your inventory.
   storeintitle: Store
   storeinmenu: &7Store everything of this\n&7item in the storage unit.
-  getoutmenu: &7Get <max> out of||&7the storage unit.||&7--------||&7Supply: <supply>
+  getoutmenu: &7Get <max> out of\n&7the storage unit.\n&7--------\n&7Supply: <supply>
 
 #
 # > Import the Java class to detectt the inventory move event. This is used very often and
@@ -686,7 +686,9 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     set {_lang} to getlangcode({_p})
     setguiitem({_p},1,north facing chest,1,"","","getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)||getstorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%,true)",false)
     if getlang("storage_storeinmenu",{_lang}) is set:
-      setguiitem({_p},3,north facing chest,1,getlang("storage_storeinmenu",{_lang}),getlang("storage_storeinmenu",{_lang}),"storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
+      set {_title} to getlang("storage_storeintitle",{_lang},"&r")
+      set {_lore} to getlang("storage_storeinmenu",{_lang})
+      setguiitem({_p},3,north facing chest,1,{_title},{_lore},"storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
     else:
       setguiitem({_p},3,north facing chest,1,"&r{@storeintitle}","{@storeinmenu}","storestorageitem(""%{_p}%"" parsed as player,%x-coord of {_loc}%,%y-coord of {_loc}%,%z-coord of {_loc}%)",false)
     #
@@ -701,7 +703,8 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
       set {_lore} to "{@getoutmenu}"
     replace all "<max>" with "%{_max}%" in {_lore}
     replace all "<supply>" with getformattedamount({_savedamount}) in {_lore}
-    set lore of {_item} to {_lore}
+    set {_lore::*} to {_lore} split at "\n"
+    set lore of {_item} to {_lore::*}
     #
     # > Set the cloned item with the new lore to the newly opened inventory of the player.
     set slot 1 of {_p}'s current inventory to {_item}
@@ -740,8 +743,9 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
           set {_lore} to "{@getoutmenu}"
         replace all "<max>" with "%{_max}%" in {_lore}
         replace all "<supply>" with getformattedamount({_startcheck}) in {_lore}
+        set {_lore::*} to {_lore} split at "\n"
         set {_item} to slot 1 of {_p}'s current inventory
-        set lore of {_item} to {_lore}
+        set lore of {_item} to {_lore::*}
         set slot 1 of {_p}'s current inventory to {_item}
 #
 # > Function - getstorageitem
