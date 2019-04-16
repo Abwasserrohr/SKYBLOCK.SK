@@ -311,6 +311,7 @@ language:
 - flag_pvpt: "&rSpieler gegen Spieler"
 - flag_slime-spawningt: "Schleim"
 - flag_tree-branchest: "Verästelte Bäume"
+- flag_snow-ice-meltt: "Schnee- und Eisschmelze"
 - flag_flagst: "Flags"
 - flag_generalt: "Allgemeine Flags"
 - flag_foreignt: "Flags für Fremde"
@@ -342,6 +343,7 @@ language:
 - flag_pvpd: "<s1>Erlaubt Spieler gegen<nl><s1>Spieler auf deiner Insel."
 - flag_slime-spawningd: "<s1>Erlaubt das erscheinen<nl><s1>von Schleim auf<nl><s1>deiner Insel."
 - flag_tree-branchesd: "<s1>Erlaubt verästelten Bäumen<nl><s1>auf deiner Insel zu wachsen."
+- flag_snow-ice-meltd: "<s1>Lässt Schnee und Eis bei<nl><s1>warmen Temperaturen<nl><s1>auf deiner Insel schmelzen."
 - flag_generald: "<s1>Verändere hier Einstellungen,<nl><s1>die deine Insel allgemein<nl><s1>betreffen."
 - flag_foreignd: <s1>Erlaube Fremden diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
 - flag_trustedd: <s1>Erlaube Vertrauten diverse<nl><s1>Aktionen auf deiner Insel<nl><s1>auszuführen, ändere<nl><s1>diese Einstellungen hier.
