@@ -252,6 +252,10 @@ defaultislandflags-general:
 # > Tree branches. True = enabled, false = disabled.
 - tree-branches: true
 - toggle-tree-branches: true
+#
+# > Snow and ice melting. True = enabled, false = disabled.
+- snow-ice-melt: true
+- toggle-snow-ice-melt: true
 
 #
 # > Flags for not inhabited islands:
