@@ -36,6 +36,13 @@ on despawn of any fish:
     cancel event
 
 #
+# > Event - on fade of snow or ice
+# > Actions:
+# > If snow or ice melts, it is checked if the event should be cancelled or not.
+on fade of snow block or ice block:
+  handlegeneralflagevent(event,false,event-location,"snow-ice-melt")
+
+#
 # > Event - rightclick
 # > If a player rightclicks, this event is triggered
 # > Actions:
@@ -617,17 +624,17 @@ on quit:
   # > If custom quit messages are enabled,
   # > send custom ones.
   if {SB::config::customjoinquit} is true:
-  #
-  # > Disable the global leave message by setting it to a text
-  # > with a length of 0.
-  set quit message to ""
-  #
-  # > Send a translated join message to every player.
-  loop all players:
-    set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("quitmessage",getlangcode(loop-player)," "))
-    replace all "<player>" with "%player%" in {_msg}
-    message {_msg} to loop-player
-  delete {_msg}
+    #
+    # > Disable the global leave message by setting it to a text
+    # > with a length of 0.
+    set quit message to ""
+    #
+    # > Send a translated join message to every player.
+    loop all players:
+      set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("quitmessage",getlangcode(loop-player)," "))
+      replace all "<player>" with "%player%" in {_msg}
+      message {_msg} to loop-player
+    delete {_msg}
 
 #
 # > Event - on connect
