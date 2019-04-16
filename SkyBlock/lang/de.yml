@@ -101,6 +101,9 @@ language:
 - isupgrades: "Inselverbesserungen:"
 - isinfonotfound: Insel konnte nicht gefunden werden.
 - activehoppers: "Aktive Trichter:"
+- activeentites: "Aktive Wesen:"
+- info_activentitiestitle: "Aktive Wesen der Insel"
+- info_activentitieslore: "<s1>Klicke Hier, um eine<nl><s1>genaue Liste aller gerade<nl><s1>aktiven Wesen der<nl><s1>Insel zu erhalten."
 
   #
   # > /island trust:
