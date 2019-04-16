@@ -1,6 +1,13 @@
 # SKYBLOCK.SK
 Run Minecraft SkyBlock with Skript
 
+![Open issues](https://img.shields.io/github/issues/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Closed issues](https://img.shields.io/github/issues-closed-raw/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Last commit](https://img.shields.io/github/last-commit/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![Repo size](https://img.shields.io/github/repo-size/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+![License](https://img.shields.io/github/license/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+
+
 SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your server using Skript with only a small amount of dependencies. Feel free to use SKYBLOCK.SK on your server and change it as you like, enhancements can be introduced by a pull request.
 	
 
