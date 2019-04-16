@@ -568,6 +568,21 @@ on script unload:
 # > and also sets the lastactive state to now to prevent purge of the island.
 on join:
   set {SB::invincible::%player%} to 1
+  #
+  # > If custom join messages are enabled,
+  # > send custom ones.
+  if {SB::config::customjoinquit} is true:
+    #
+    # > Disable the global join message by setting it to a text
+    # > with a length of 0.
+    set join message to ""
+    #
+    # > Send a translated join message to every player.
+    loop all players:
+      set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("joinmessage",getlangcode(loop-player)," "))
+      replace all "<player>" with "%player%" in {_msg}
+      message {_msg} to loop-player
+    delete {_msg}
   wait a tick
   if getlangcode(player) is not set:
     set {SK::lang::%uuid of player%} to "de"
@@ -590,8 +605,32 @@ on join:
     set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
   wait 5 seconds
   delete {SB::invincible::%player%} 
+
 #
-# > Event - connect
+# > Event - on quit
+# > Triggered if a player leaves the game
+# > Actions:
+# > Pevents the default leave message and send everyone a leave message in
+# > the language of the player.
+on quit:
+  #
+  # > If custom quit messages are enabled,
+  # > send custom ones.
+  if {SB::config::customjoinquit} is true:
+  #
+  # > Disable the global leave message by setting it to a text
+  # > with a length of 0.
+  set quit message to ""
+  #
+  # > Send a translated join message to every player.
+  loop all players:
+    set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("quitmessage",getlangcode(loop-player)," "))
+    replace all "<player>" with "%player%" in {_msg}
+    message {_msg} to loop-player
+  delete {_msg}
+
+#
+# > Event - on connect
 # > Triggered if a player connects
 # > Actions:
 # > Force the language "de" and kick the player if the island deletation process is ongoing.

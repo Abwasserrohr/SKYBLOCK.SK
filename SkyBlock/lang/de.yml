@@ -17,6 +17,11 @@ language:
 - currencyname: Taler
 
   #
+  # > Join / quit message
+- joinmessage: <s1><player> ist dem Server beigetreten.
+- quitmessage: <s1><player> hat den Server verlassen.
+
+  #
   # > Command feedback messages
   #
   # > /island create
@@ -401,7 +406,7 @@ language:
 - storage_notenoughinvspace: Du hast nicht genug Platz im Inventar.
 - storage_storeintitle: Einlagern
 - storage_storeinmenu: "&7Lagere alles von diesem<nl>&7Item im Lagersystem ein."
-- storage_getoutmenu: "&7Erhalte <max> aus diesem||&7Lagersystem.||<guispacer>||&7Vorrat: <supply>"
+- storage_getoutmenu: "&7Erhalte <max> aus diesem<nl>&7Lagersystem.<nl><guispacer><nl>&7Vorrat: <supply>"
   
   #
   # > Recovery menu
