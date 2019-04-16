@@ -55,7 +55,8 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
     # > marked as island bound.
     set {_uuid} to uuid of {_p}
     set {_lore} to getlang("islandbound",getlangcode({_p}))
-    set lore of {_block} to "&r%{_lore}%||&7%{_x}%_%{_z}%"
+    add "&r%{_lore}%", "&7%{_x}%_%{_z}%" to {_lore::*}
+    set lore of {_block} to {_lore::*}
   #
   # > Now drop the item, either dirt or the block at the location.
   # > If the island is over the specified level, the item doesn't have a lore.
