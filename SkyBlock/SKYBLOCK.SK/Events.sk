@@ -14,6 +14,8 @@ import:
   org.bukkit.event.player.PlayerInteractEntityEvent
   org.bukkit.event.hanging.HangingBreakByEntityEvent
   org.bukkit.event.world.StructureGrowEvent
+  org.bukkit.event.player.PlayerTeleportEvent
+
 #
 # > Event - PlayerArmorStandManipulateEvent
 # > If someone tries to change a armor stand.
@@ -647,15 +649,16 @@ on connect:
       set {_prefix} to getlang("prefix",getlangcode(player))
       set {_msg} to getlang("delismsg",getlangcode(player))
       kick player due to "%{_prefix}% %{_msg}%"
+
 #
-# > Event - teleport
+# > Event - PlayerTeleportEvent
 # > Triggered on a teleportation
 # > Actions:
 # > If the teleported entity is a player and the teleport cause is a nether portal, check
 # > through settings if this is allowed or not.
-on teleport:
-  if event-entity is a player:
-    if "%teleport cause%" is "nether portal":
+on PlayerTeleportEvent:
+  if event.getPlayer() is a player:
+    if "%event.getCause()%" is "nether portal":
       #
       # > If no special non-vanilla effect should happen, stop this skript here.
       if {SB::config::nether} is false:
@@ -668,7 +671,7 @@ on teleport:
       #
       # > Cancel the event if the nether is enabled
       cancel event
-      set {_p} to event-entity
+      set {_p} to event.getPlayer()
       #
       # > Check the location of the opposite world (nether|world) for a portal.
       set {_l} to location of {_p}
@@ -690,13 +693,14 @@ on teleport:
       #
       # > Teleport the player to the other world (nether|world).
       teleport {_p} to {_newloc}
+      set {_uuid} to uuid of {_p}
       #
       # > If the player has an island and the island block of the player has no
       # > bedrock in the nether yet, it is going to be set.
-      if {SB::player::%uuid of player%::island::bedrock} is set:
-        set {_x} to x-coord of {SB::player::%uuid of player%::island::bedrock}
-        set {_y} to y-coord of {SB::player::%uuid of player%::island::bedrock}
-        set {_z} to z-coord of {SB::player::%uuid of player%::island::bedrock}
+      if {SB::player::%{_uuid}%::island::bedrock} is set:
+        set {_x} to x-coord of {SB::player::%{_uuid}%::island::bedrock}
+        set {_y} to y-coord of {SB::player::%{_uuid}%::island::bedrock}
+        set {_z} to z-coord of {SB::player::%{_uuid}%::island::bedrock}
         set {_netherbedrock} to location at {_x}, {_y}, {_z} in "%{_target}%" parsed as world
         if block at {_netherbedrock} is not bedrock:
           set block at {_netherbedrock} to bedrock

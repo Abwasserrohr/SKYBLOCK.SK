@@ -299,9 +299,18 @@ command /island [<text>] [<text=1>] [<text>]:
     # > Argument: "info" ("level" or "lvl")
     # > If a player types in /island info, islandinfo function is called.
     # > Actions:
-    # > Calls the islandinfo function with the player and second argument as parameter.
+    # > Calls the islandinfo function with the player, second argument 
+    # > as parameter (target player) and a third as back link command.
     else if arg-1 is "info" or "level" or "lvl":
       islandinfo(player,arg-2,arg-3)
+    #
+    # > Argument: "entity" or "entities"
+    # > If a player types in /island entity, islandentityinfo function is called.
+    # > Actions:
+    # > Calls the islandentityinfo function with the player, second argument
+    # > as parameter (target player) and a third as back link command.
+    else if arg-1 is "entity" or "entities":
+      islandentityinfo(player,arg-2,arg-3)
     #
     # > Argument: "generator" ("gen" OR "oregen" OR "oregenerator")
     # > If a player types in /island generator, his current generator level is displayed

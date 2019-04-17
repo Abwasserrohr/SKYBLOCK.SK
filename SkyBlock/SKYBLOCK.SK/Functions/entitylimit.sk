@@ -1,0 +1,79 @@
+#
+# ==============
+# entitylimit.sk v0.0.1
+# ==============
+# entitylimit.sk is part of SKYBLOCK.SK.
+# ==============
+# > This file will load events and functions to prevent exeeding the
+# > predefined entity limit. It also supports island upgrades.
+# > Please do not disable this file, as it is no add-on and needed.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# ==============
+
+#
+# > Event - on spawn of a living entity
+# > Triggered every time, a living entity is spawned.
+# > Actions:
+# > Checks, if the limit has been reached, if it has been reached,
+# > cancel the event.
+on spawn of a living entity:
+  if checkEntityLimitReached(event-location) is true:
+    cancel event
+
+#
+# > Event - on rightclick holding any spawn egg or armor stand or any minecart or any boat
+# > Triggered when the player rightclicks with the specified items.
+# > Actions:
+# > Checks, if the limit has been reached, if it has been reached,
+# > cancel the event and tell the player about it.
+on rightclick holding any spawn egg or armor stand or any minecart or any boat:
+  if checkEntityLimitReached(event-location) is true:
+    message getlang("prefix",getlangcode(player),"",getlang("entitylimitreached",getlangcode(player)," "))
+    cancel event
+
+#
+# > Event - on spawn of a living entity
+# > Triggered if a painting or item frame is placed.
+# > Actions:
+# > Checks, if the limit has been reached, if it has been reached,
+# > cancel the event and tell the player about it.
+on place of a painting or item frame:
+  if checkEntityLimitReached(event-location) is true:
+    message getlang("prefix",getlangcode(player),"",getlang("entitylimitreached",getlangcode(player)," "))
+    cancel event
+
+#
+# > Function - checkEntityLimitReached
+# > Parameters:
+# > <location>a location where it should be checked if a limit has been reached
+# > Actions:
+# > Checks if the entity limit has been reached or exeeded and return true in that case.
+function checkEntityLimitReached(loc:location) :: boolean:
+  set {_bedrock} to getcurrentbedrockmain({_loc})
+  if getIslandEntityAmount({_bedrock}) > getIslandEntityLimit({_bedrock}):
+    return true
+  return false
+
+#
+# > Function - getIslandEntityLimit
+# > Parameters:
+# > <location>the location of a island bedrock
+# > Actions:
+# > Gets the current island entity limit by looking up the current
+# > configuration for island upgrades and check the island upgrade
+# > level.
+function getIslandEntityLimit(loc:location) :: number:
+  #
+  # > This function is not going to be finished in this pull request.
+  # > Later on, there will be a new pull request with a updated
+  # > island upgrade menu, which (pretty sure) also comes with a
+  # > function which allows to get the current upgrade level and
+  # > the limits to it to reduce work. The comment in the first lines
+  # > that state that this file is compatible with the island upgrades
+  # > is false for now but will change in the upcoming versions.
+  return 5000
