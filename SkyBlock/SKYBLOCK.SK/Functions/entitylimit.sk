@@ -1,6 +1,6 @@
 #
 # ==============
-# entitylimit.sk v0.0.1
+# entitylimit.sk v0.0.2
 # ==============
 # entitylimit.sk is part of SKYBLOCK.SK.
 # ==============
@@ -54,7 +54,12 @@ on place of a painting or item frame:
 # > Actions:
 # > Checks if the entity limit has been reached or exeeded and return true in that case.
 function checkEntityLimitReached(loc:location) :: boolean:
+  #
+  # > If the limitation of entites is disabled for some reason,
+  # > stop here to prevent the limitation of add-ons.
   set {_bedrock} to getcurrentbedrockmain({_loc})
+  if getconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%") is true:
+    return false
   if getIslandEntityAmount({_bedrock}) > getIslandEntityLimit({_bedrock}):
     return true
   return false

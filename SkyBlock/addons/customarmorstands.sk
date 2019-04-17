@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.9
+# customarmorstands.sk v0.0.10
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -247,6 +247,11 @@ command /renamestand [<text>]:
   trigger:
     set {_target} to player's target
     if {_target} is a armor stand:
+      #
+      # > Prevent the custom armor stand menu from being opened, if the armor stand is
+      # > marked as "nocustomstand".
+      if getnbtvalue(helmet of {_target},"nocustomstand") is "true":
+        stop
       if checkarmorstandplacepermission(player,{_target}'s location) is not true:
         stop
       if checkarmorstandblacklist({_target}) is not true:
@@ -262,8 +267,12 @@ command /renamestand [<text>]:
 # > Opens the custom armor stand menu. All functions are called through this menu and
 # > it has multilanguage support from SKYBLOCK.SK.
 function opencustomstandmenu(player:player):
-
   set {_target} to metadata value "customarmorstand-target" of {_player}
+  #
+  # > Prevent the custom armor stand menu from being opened, if the armor stand is
+  # > marked as "nocustomstand".
+  if getnbtvalue(helmet of {_target},"nocustomstand") is "true":
+    stop
   if checkarmorstandplacepermission({_player},{_target}'s location) is not true:
     stop
   if checkarmorstandblacklist({_target}) is not true:
