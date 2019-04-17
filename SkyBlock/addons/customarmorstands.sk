@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.8
+# customarmorstands.sk v0.0.9
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -600,7 +600,12 @@ function changecustomstandslot(player:player,event:event,destination:text):
   #
   # > If the amount of the curser is bigger than 0, remove 1 from the ItemStack.
   else:
-    {_item}.setAmount({_item}.getAmount()-1)
+    set {_amount} to {_item}.getAmount() - 1
+    {_item}.setAmount({_amount})
+    #
+    # > Also, set the item back to the cursor, otherwise it wouldn't have a effect.
+    {_event}.setCursor({_item})
+	
   #
   # > Set the item to a valid ItemStack amount to place it within a slot
   # > of a armor stand.
