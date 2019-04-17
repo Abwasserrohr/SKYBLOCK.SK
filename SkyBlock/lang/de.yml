@@ -391,6 +391,7 @@ language:
 - bc_islandhomeshop: Erlaubt dir insgesamt<nl><size> Homes zu setzen.
 - bc_islandupgrades: "Insel Erweiterungen"
 - upgradeavailable: "<s1>Die Insel ist nicht vollständig erweitert, erweitere die Insel, um auch hier bauen zu können: <p1>/island upgrades"
+- entitylimitreached: "<s1>Du hast die Grenze für aktive Wesen erreicht, erweitere deine Grenze mit: <p1>/island upgrades"
 
   #
   # > Island item binding
