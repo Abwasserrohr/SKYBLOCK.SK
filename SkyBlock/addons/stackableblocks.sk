@@ -1,0 +1,291 @@
+#
+# ==============
+# stackableblocks.sk v0.0.1
+# ==============
+# Adds the ability to use stackable blocks in the game for players.
+# ==============
+# Dependencies
+# ==============
+# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Skript by bensku - https://github.com/SkriptLang/Skript/releases
+# > skript-mirror - https://github.com/btk5h/skript-mirror/releases
+# > SKYBLOCK.SK - https://github.com/Abwasserrohr/SKYBLOCK.SK
+# ==============
+# How to use it:
+# ==============
+# > Add stackableblocks.sk to your "plugins/Skript/scripts" folder and then reload, subfolders are possible too.
+# > Players can place valuable blocks and then increase their stack by placing these blocks onto the existing
+# > ones while sneaking (holding shift).
+# --------------
+
+#
+# > Options
+# > Change these values as you want. Invalid changes can beark this script.
+options:
+  #
+  # > All blocks which should be able to be stacked, separate them by "or".
+  stackableblocks: diamond block or emerald block or iron block or gold block or lapis lazuli block or coal block or redstone block
+  #
+  # > The sound which should be played if a player increases the stackable block.
+  fillsound: play sound "block.enchantment_table.use" at {_loc}
+  #
+  # > The sound which should be played if a player decreases the stackable block.
+  emptysound: play sound "block.enchantment_table.use" at {_loc}
+  #
+  # > If the floating stackable item glow? [true = yes|false = no]
+  glowingitem: true
+  #
+  # > The options end here, feel free to change this script as you want,
+  # > but there is a risk involved to create duplication gliches, be
+  # > careful and test twice before using new and changed versions on
+  # > your production server.
+
+#
+# > Import important methods from net minecraft server and bukkit.
+import:
+  org.bukkit.util.EulerAngle
+  org.bukkit.Bukkit
+option nms:
+  get: 
+    set {_nms version} to Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
+    return "net.minecraft.server.%{_nms version}%"
+option bukkitv:
+  get:
+    return Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
+import:
+  {@nms}.NBTTagCompound
+
+#
+# > Event - on rightclick on predefined stackable blocks
+# > Actions:
+# > Allows players to stack valuable, predefined blocks to
+# > save space on the island. It only allows to add or create
+# > to a stacked block if the player is allowed to build.
+on rightclick on {@stackableblocks}:
+  if player is holding event-block:
+    if player is sneaking:
+      if checkislandaccess(player,location of event-block,"Build") is true:
+        set {_amount} to getStackedBlocks(location of event-block,event-block)
+        #
+        # > If the stack amount is 0, create a new stacked block.
+        if {_amount} is 0:
+          createStackedBlock(location of event-block,event-block)
+          remove 1 of event-block from player's inventory
+        #
+        # > If the stack amount isn't 0, just increase the stack size of the block.
+        else:
+          increaseStackedBlock(location of event-block,event-block)
+          remove 1 of event-block from player's inventory
+        #
+        # > Cancel the event to prevent duplication gliches.
+        cancel event
+
+#
+# > Event - on place of predefine stackable blocks
+# > Actions:
+# > Prevents the stackable item status armor stand from being
+# > blocked by the same stackable block. Also prevent mistakes
+# > by players.
+on place of {@stackableblocks}:
+  if player is not sneaking:
+    if "%block 1 below event-block%" is "%event-block%":
+      if getStackedBlocks(location of block 1 below event-block,event-block) is not 0:
+        cancel event
+
+#
+# > Event - on break of predefine stackable blocks
+# > Actions:
+# > If the player has access to the island, remove one block from
+# > the stacked block, if it is one.
+on break of {@stackableblocks}:
+  if checkislandaccess(player,location of event-block,"Build") is true:
+    decreaseStackedBlock(event,location of event-block,event-block)
+
+#
+# > Function - getStackedBlocks
+# > Parameters:
+# > <location>the location of the stacked blocks
+# > <block>the block type which is wanted
+# > Actions:
+# > Searches for entities in the radius 0.7 around the location,
+# > if a valid stackable block is found, the current amount is going
+# > to be returned, if nothing has been found, 0 is going to be returned.
+function getStackedBlocks(loc:location,block:block) :: number:
+  loop entities in radius 0.7 of {_loc}:
+    if loop-entity is armor stand:
+      if "%loop-entity's helmet%" is "%{_block}%":
+        if getnbtvalue(loop-entity's helmet,"stackableblocks") is "true":
+          return "%getnbtvalue(loop-entity's helmet,""stackamount"")%" parsed as number
+  return 0
+
+#
+# > Function - increaseStackedBlock
+# > Parameters:
+# > <location>the location of the stacked blocks
+# > <block>the block type which is going to get increased
+# > Actions:
+# > Searches for entities in the radius 0.7 around the location,
+# > if a valid stackable block is found, the stack size will be
+# > increased by 1. Also, a animation is starting and a configurable
+# > sound will be played to the player.
+function increaseStackedBlock(loc:location,block:block) :: boolean:
+  loop entities in radius 0.7 of {_loc}:
+    if loop-entity is armor stand:
+      if "%loop-entity's helmet%" is "%{_block}%":
+        if getnbtvalue(loop-entity's helmet,"stackableblocks") is "true":
+          set {_amount} to "%getnbtvalue(loop-entity's helmet,""stackamount"")%" parsed as number
+          set {_block} to loop-entity's helmet
+          set {_block} to setnbtvalue({_block},"stackamount","%{_amount}+1%")
+          loop-entity.setCustomName("%{_amount}+1%")
+          set loop-entity's helmet to {_block}
+          {@fillsound}
+          playAnimationStackableBlocks(loop-entity,"clockwise")
+
+#
+# > Function - decreaseStackedBlock
+# > Parameters:
+# > <location>the location of the stacked blocks
+# > <block>the block type which is going to get decreased
+# > Actions:
+# > Searches for entities in the radius 0.7 around the location,
+# > if a valid stackable block is found, the stack size will be
+# > decreased by 1. Also, a animation is starting and a configurable
+# > sound will be played to the player.
+function decreaseStackedBlock(event:object,loc:location,block:block) :: boolean:
+  #
+  # > Loop all blocks in a radius of 0.7 around the location for armor stands
+  # > that are matching with an stacked block.
+  loop entities in radius 0.7 of {_loc}:
+    if loop-entity is armor stand:
+      if "%loop-entity's helmet%" is "%{_block}%":
+        if getnbtvalue(loop-entity's helmet,"stackableblocks") is "true":
+		  #
+		  # > Get the nbt value stackamount from the head of the armor stand,
+		  # > there, the amount of the stack is saved.
+          set {_amount} to "%getnbtvalue(loop-entity's helmet,""stackamount"")%" parsed as number
+          #
+          # > If there are now less than 2 blocks within the stack, the stacked block is
+          # > no longer a stack, kill the stacked block entity.
+          if ({_amount}-1) < 2:
+		    set loop-entity's block to air
+            kill loop-entity
+          #
+          # > Get the helm of the stacked block to change the stack amount and
+          # > update the name.
+          set {_block} to loop-entity's helmet
+          set {_block} to setnbtvalue({_block},"stackamount","%{_amount}-1%")
+          loop-entity.setCustomName("%{_amount}-1%")
+          set loop-entity's helmet to {_block}
+          #
+          # > Play a predefined sound if the stacked block gets decreased.
+          {@emptysound}
+          #
+          # > Drop the item above the stacked block.
+          set {_droploc} to {_loc}
+          add 0.45 to y-coord of {_droploc}
+          set {_drop} to block at {_droploc}
+          drop 1 of {_drop} at {_droploc}
+          #
+          # > Cancel the default event.
+          {_event}.setCancelled(true)
+          #
+          # > Play a animation to at the location.
+          playAnimationStackableBlocks(loop-entity,"counterclockwise")
+          stop
+
+#
+# > Function - createStackedBlock
+# > Parameters:
+# > <location>the location of the stacked block
+# > <block>the block who should get stacked
+# > Actions:
+# > Creates a new stacked block at the location using armor stands.
+function createStackedBlock(loc:location,block:block) :: boolean:
+  set {_block} to setnbtvalue({_block},"stackableblocks","true")
+  set {_block} to setnbtvalue({_block},"nocustomstand","true")
+  set {_block} to setnbtvalue({_block},"stackamount","2")
+  #
+  # > Add 500 to the location, since the armor stand (stacked block) takes around
+  # > 50 - 100ms until it gets displayed properly in the client. To prevent unfancy
+  # > armor stands from being visible, the armor stand is spawned 500 blocks above.
+  add 500 to y-coord of {_loc}
+  #
+  # > Get the current bedrock location to disable the entity limit for the stacked block.
+  set {_bedrock} to getcurrentbedrockmain({_loc})
+  loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",true)
+  #
+  # > Spawn the stacked block (which is a armor stand)
+  spawn 1 armor stand at {_loc}
+  #
+  # > Get the spawned armor stand as a variable.
+  set {_stackedblock} to last spawned entity
+  #
+  # > Enable the entity limit again for the island.
+  loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",false)
+  #
+  # > Reduze the y-coordinate again to teleport the armor stand (stacked block) at the right spot.
+  remove 499.5 from y-coord of {_loc}
+  #
+  # > Get the entity as a net minecraft server object and
+  # > set the "Marker" boolean to true, which disables any
+  # > interaction with it.
+  set {_nmsblock} to {_stackedblock}.getHandle()
+  set {_tagCompount} to new NBTTagCompound()
+  {_nmsblock}.c({_tagCompount})
+  {_tagCompount}.setBoolean("Marker", true)
+  {_nmsblock}.f({_tagCompount})
+  #
+  # > Set important settings whicch prevent the armor stand from being accessed,
+  # > moved or killed.
+  {_stackedblock}.setGravity(false)
+  {_stackedblock}.setBasePlate(false)
+  {_stackedblock}.setCanPickupItems(false)
+  {_stackedblock}.setCustomName("2")
+  {_stackedblock}.setCustomNameVisible(true)
+  {_stackedblock}.setVisible(false)
+  {_stackedblock}.setSmall(true)
+  {_stackedblock}.setAI(false)
+  {_stackedblock}.setInvulnerable(true)
+  #
+  # > For better looks, the head pose is changed by 45°.
+  {_stackedblock}.setHeadPose(new EulerAngle(0, 0.8, 0))
+  #
+  # > To look better, the head is glowing instead just a plain head, if the
+  # > server operator doesn't want that, just use a normal block.
+  if {@glowingitem} is true:
+    set helmet of {_stackedblock} to glowing {_block}
+  else:
+    set helmet of {_stackedblock} to {_block}
+  #
+  # > Teleport the armor stand now to the location where it should be.
+  teleport {_stackedblock} to {_loc}
+  #
+  # > Play a "fill" sound. This is completely customizeable by the
+  # > server operator from the options.
+  {@fillsound}
+  #
+  # > Play a animation to at the location.
+  playAnimationStackableBlocks({_stackedblock},"clockwise")
+
+#
+# > Function - playAnimationStackableBlocks
+# > Parameters:
+# > <entity>the entity which should be rotated
+# > <text>the motion in which the entity should be moved, either "clockwise" or anything else
+# > Actions:
+# > Moves an entity either clockwise or counterclockwise. Only usable for stackable blocks.
+function playAnimationStackableBlocks(entity:object,motion:text):
+  #
+  # > Start a y-angle with 0.8.
+  set {_startangle} to 0.8
+  #
+  # > By looping 20 times with each 0.075, the block is moved 90°.
+  loop 20 times:
+    if {_motion} is "clockwise":
+      add 0.075 to {_startangle}
+    else:
+      remove 0.075 from {_startangle}
+    {_entity}.setHeadPose(new EulerAngle(0, {_startangle}, 0))
+	#
+	# > Wait 1 tick (50ms) per movement.
+    wait 1 tick
