@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.7
+# robots.sk v0.0.8
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -579,8 +579,15 @@ on place of {@robotitem}:
     # > for this.
     set {_world} to player's world
     #
+    # > Get the bedrock and disable the entity limit for this island to allow the robot to be spawned.
+    set {_bedrock} to getcurrentbedrockmain({_loc})
+    loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",true)
+    #
     # > Spawn the armor stand which is the robot.
     spawn 1 armor stand at {_loc}
+    #
+    # > Enable the entity limit again for this island.
+    loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",false)
     #
     # > Get the robot in a variable, which has been spawned above.
     set {_robo} to last spawned entity
