@@ -206,7 +206,10 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false,sorted:text="isla
     replace all "<name>" with "%{_lp}%" in {_hovertext}
     replace all "<rank>" with loop-index in {_hovertext}
     replace all "<level>" with "%{SB::islvl::%loop-value%}%" in {_hovertext}
-    replace all "<challengexp>" with "%{SB::island::%loop-value%::challengexp}%" in {_hovertext}
+    set {_cxp} to {SB::island::%loop-value%::challengexp}
+    if {_cxp} is not set:
+      set {_cxp} to 0
+    replace all "<challengexp>" with "%{_cxp}%" in {_hovertext}
     if {SB::visits::%loop-value%} is not set:
       set {_visits} to 0
     else:
