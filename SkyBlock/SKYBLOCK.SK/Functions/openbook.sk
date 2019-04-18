@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.11
+# openbook.sk v0.0.12
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -100,14 +100,15 @@ function overwritecomponentevents(msg:object) :: object:
   # > Only do something if there is a variable set.
   # > If there isn't set anything, just return it for now.
   if {_msg} is set:
-    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,null))
-    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder(null).create()))
+    set {_null} to null
+    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_null}))
+    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_null}).create()))
   return {_msg}
 
 #
-# > Function - overwritecomponentevents
+# > Function - sethovertextevent
 # > Paremeters:
-# > <TextComponent>the text component which should get the events overwritten.
+# > <TextComponent>the text component which should get hover text
 # > Actions:
 # > Setts a on hover event on this text component and then returns it.
 # > HoverEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/HoverEvent.Action.html
