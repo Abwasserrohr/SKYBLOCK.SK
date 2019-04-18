@@ -32,7 +32,7 @@ options:
   # > The sound which should be played if a player decreases the stackable block.
   emptysound: play sound "block.enchantment_table.use" at {_loc}
   #
-  # > If the floating stackable item glow? [true = yes|false = no]
+  # > Should the floating stackable item glow? [true = yes|false = no]
   glowingitem: true
   #
   # > The options end here, feel free to change this script as you want,
