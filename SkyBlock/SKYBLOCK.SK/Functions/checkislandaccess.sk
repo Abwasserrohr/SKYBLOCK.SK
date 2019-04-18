@@ -277,7 +277,8 @@ function getcurrentbedrockmain(l:location) :: location:
   set {_z} to (round((z-coord of block at {_l}) / ({_d2}))*{_d2})
   #
   # > Set and return the valid bedrock location, which is used by SKYBLOCK.SK.
-  set {_loc} to location {_x}, {SB::config::height}, {_z} in "%{_l}'s world%" parsed as world
+  set {_world} to "%{_l}'s world%"
+  set {_loc} to location {_x}, {SB::config::height}, {_z} in {_world} parsed as world
   #
   # > Return the location of the block at the calculated location. This is important
   # > to have high accuracy.
