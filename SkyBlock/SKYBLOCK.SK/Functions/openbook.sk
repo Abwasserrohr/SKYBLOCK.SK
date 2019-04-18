@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.12
+# openbook.sk v0.0.13
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -102,7 +102,7 @@ function overwritecomponentevents(msg:object) :: object:
   if {_msg} is set:
     set {_null} to null
     {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_null}))
-    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_null}).create()))
+    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,{_null}))
   return {_msg}
 
 #
