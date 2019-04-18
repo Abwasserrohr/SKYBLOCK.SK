@@ -1,6 +1,6 @@
 #
 # ==============
-# stackableblocks.sk v0.0.1
+# stackableblocks.sk v0.0.2
 # ==============
 # Adds the ability to use stackable blocks in the game for players.
 # ==============
@@ -167,7 +167,9 @@ function decreaseStackedBlock(event:object,loc:location,block:block) :: boolean:
           # > If there are now less than 2 blocks within the stack, the stacked block is
           # > no longer a stack, kill the stacked block entity.
           if ({_amount}-1) < 2:
-		    set loop-entity's block to air
+            #
+            # > Remove the helmet to remove the kill protection.
+            set loop-entity's helmet to air
             kill loop-entity
           #
           # > Get the helm of the stacked block to change the stack amount and
