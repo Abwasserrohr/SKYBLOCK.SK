@@ -266,6 +266,10 @@ function handlegeneralflagevent(event:object,cancel:boolean,l:location,flag:text
 # > Gets the bedrock location of the location parameter and returns the location.
 function getcurrentbedrockmain(l:location) :: location:
   #
+  # > If there is no valid location, stop here to prevent errors.
+  if {_l} is not set:
+    stop
+  #
   # > Calculate the location of the bedrock and return it.
   # > Formular: x of island center: x of event location / (distance*2)*distance*2+0.5
   set {_d2} to {SB::config::distance}*2
@@ -273,8 +277,11 @@ function getcurrentbedrockmain(l:location) :: location:
   set {_z} to (round((z-coord of block at {_l}) / ({_d2}))*{_d2})
   #
   # > Set and return the valid bedrock location, which is used by SKYBLOCK.SK.
-  set {_loc} to location of block at location at {_x}, {SB::config::height}, {_z} in "%{_l}'s world%" parsed as world
-  return {_loc}
+  set {_loc} to location {_x}, {SB::config::height}, {_z} in "%{_l}'s world%" parsed as world
+  #
+  # > Return the location of the block at the calculated location. This is important
+  # > to have high accuracy.
+  return location of block at {_loc}
 
 #
 # > Function - checkflagevent:
