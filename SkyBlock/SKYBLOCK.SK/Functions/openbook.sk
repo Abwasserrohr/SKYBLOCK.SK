@@ -1,6 +1,6 @@
 #
 # ==============
-# openbook.sk v0.0.10
+# openbook.sk v0.0.11
 # ==============
 # Opens a book from the server side on the client.
 # ==============
@@ -21,7 +21,7 @@ import:
   org.bukkit.Bukkit
 
 option nms:
-  get: 
+  get:
     set {_nms version} to Bukkit.getServer().getClass().getPackage().getName().split("\.")[3]
     return "net.minecraft.server.%{_nms version}%"
 
@@ -96,8 +96,12 @@ function createopenbook(player:player,sites::*:objects):
 # > Actions:
 # > Overwrites the events of the text components to make them normal again.
 function overwritecomponentevents(msg:object) :: object:
-  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,null))
-  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder(null).create()))
+  #
+  # > Only do something if there is a variable set.
+  # > If there isn't set anything, just return it for now.
+  if {_msg} is set:
+    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,null))
+    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder(null).create()))
   return {_msg}
 
 #
@@ -108,8 +112,9 @@ function overwritecomponentevents(msg:object) :: object:
 # > Setts a on hover event on this text component and then returns it.
 # > HoverEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/HoverEvent.Action.html
 function sethovertextevent(msg:object,text:object) :: object:
-  replace all "\n" with " %nl%" in {_text}
-  {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_text}).create()))
+  if {_msg} is set:
+    replace all "\n" with " %nl%" in {_text}
+    {_msg}.setHoverEvent(new HoverEvent(HoverEventAction.SHOW_TEXT!,new ComponentBuilder({_text}).create()))
   return {_msg}
 
 #
@@ -121,7 +126,8 @@ function sethovertextevent(msg:object,text:object) :: object:
 # > Sets the click event to this text component and then returns it.
 # > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
 function setclickcmdevent(msg:object,cmd:object) :: object:
-  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
+  if {_msg} is set:
+    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.RUN_COMMAND!,{_cmd}))
   return {_msg}
 
 #
@@ -133,7 +139,8 @@ function setclickcmdevent(msg:object,cmd:object) :: object:
 # > Sets the suggest command event to this text component and then returns it.
 # > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
 function setsuggestcmdevent(msg:object,cmd:object) :: object:
-  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.SUGGEST_COMMAND!,{_cmd}))
+  if {_msg} is set:
+    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.SUGGEST_COMMAND!,{_cmd}))
   return {_msg}
 
 #
@@ -144,7 +151,8 @@ function setsuggestcmdevent(msg:object,cmd:object) :: object:
 # > Sets the click event to this text component and then returns it.
 # > ClickEvent: https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/net/md_5/bungee/api/chat/ClickEvent.Action.html
 function setclickopenurlevent(msg:object,url:object) :: object:
-  {_msg}.setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL!,{_url} ))
+  if {_msg} is set:
+    {_msg}.setClickEvent(new ClickEvent(ClickEventAction.OPEN_URL!,{_url} ))
   return {_msg}
 
 #
@@ -155,7 +163,7 @@ function setclickopenurlevent(msg:object,url:object) :: object:
 # > Converts the item stack to a translatable component, which
 # > is going to be translated client side. That means, no translation
 # > on server side is needed.
-function getTranslatableComponentFromItem(item:item) :: object:
+function getTranslatableComponentFromItem(item:item=air) :: object:
   set {_vname} to "%vanilla name of {_item}%"
   replace all ":" with "." in {_vname}
   if {_item}.getType().isBlock() is true:
@@ -170,8 +178,9 @@ function getTranslatableComponentFromItem(item:item) :: object:
 # > <text>the entity type which should be a translatable component
 # > Actions:
 # > Converts the entity type to a TranslatableComponent and returns it.
-function getTranslatableComponentFromEntityType(type:text) :: object:
-  return new TranslatableComponent("entity.minecraft.%{_type}%")
+function getTranslatableComponentFromEntityType(type:text="") :: object:
+  if {_type} is set:
+    return new TranslatableComponent("entity.minecraft.%{_type}%")
 
 #
 # > Function - newTextComponent
@@ -180,7 +189,7 @@ function getTranslatableComponentFromEntityType(type:text) :: object:
 # > Actions:
 # > Returns a new text component, removes the need to import
 # > the neccessary classes everywhere.
-function newTextComponent(text:text) :: object:
+function newTextComponent(text:text="") :: object:
   return new TextComponent({_text})
 
 #
@@ -190,7 +199,7 @@ function newTextComponent(text:text) :: object:
 # > Actions:
 # > Returns a new translatable component, removes the need to import
 # > the neccessary classes everywhere.
-function newTranslatableComponent(text:text) :: object:
+function newTranslatableComponent(text:text="") :: object:
   return new TranslatableComponent({_text})
 
 #
