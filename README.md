@@ -36,7 +36,7 @@ If you're running SKYBLOCK.SK, feel free to create a issue to get your server di
 
 ### Stats
 
-![Open issues](https://img.shields.io/github/issues/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
+[![Chat](https://img.shields.io/discord/183549486675525634.svg?style=for-the-badge&color=success)](https://discord.gg/FRuK5BC)
 ![Closed issues](https://img.shields.io/github/issues-closed-raw/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
 ![Last commit](https://img.shields.io/github/last-commit/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
 ![Repo size](https://img.shields.io/github/repo-size/Abwasserrohr/SKYBLOCK.SK.svg?style=for-the-badge&color=success)
