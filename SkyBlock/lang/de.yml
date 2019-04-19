@@ -10,10 +10,12 @@ language:
   #
   # > Translation for "languages"
 - languages: Sprachen
+  #
+  # > Language change menu messsage: Your language has been changed.
 - changedlang: Deine Sprache wurde geändert.
 
   #
-  # > Translation for the currency name of the server
+  # > Translation for the currency name of the server. Use "Coins" or something similar in your the specific language.
 - currencyname: Taler
 
   #
@@ -24,106 +26,214 @@ language:
   #
   # > Command feedback messages
   #
-  # > /island create
+  # > /island create message once a new island is going to be created.
 - searchis: <p2>Freie Inseln werden gesucht.
+  #
+  # > Message once a new island has been created for the player.
 - foundis: <p1>Deine neue Insel wurde erstellt.
-- islands: <s1>&lInseln
+  #
+  # > Islands
+- islands: <s1><l>Inseln
+  #
+  # > Island creation menu, this appears in a hover effect of the island menu. Click here to create this island for you.
 - clicktocreateisland: <s1>Klicke hier, damit <nl><s1>diese Insel für dich<nl><s1>erstellt wird.
 
   #
-  # > /island home | /island go
+  # > /island go message that the player has been teleported to his island.
 - tpis: <p1>Du wurdest zur Insel teleportiert.
+  #
+  # > /island home message that the player has been teleported to his home.
 - tphome: <p1>Du wurdest zum Zuhause teleportiert.
-- homewarnair: "&cWarnung, dein Zuhause ist in der Luft!"
-- deledtedis: "&c&lDeine Insel wurde gelöscht."
+  #
+  # > /island home message that the home of the player in in the air.
+- homewarnair: "<w1>Warnung, dein Zuhause ist in der Luft!"
+  #
+  # > /island delete message that the island has been deleted.
+- deledtedis: "<w1><l>Deine Insel wurde gelöscht."
+  #
+  # > /island create message that the player is already on an island.
 - alreadyis: <s1>Du bist bereits auf einer Insel.
+  #
+  # > /island invite message that the player is already on an island.
 - alreadyotheris: <s1><player> ist bereits auf einer Insel.
-- waitis: <p2>&lEinen Moment...
+  #
+  # > Please wait a moment...
+- waitis: <p2><l>Bitte warte einen Augenblick...
+  #
+  # > /island leave message which tells the player that this island can't be left.
 - cantleave: <s1>Du kannst diese Insel nicht verlassen.
+  #
+  # > /island home message which lists all homes. <homes> is a list of all homes.
 - notfoundhome: "<s1>Deine Zuhause: <homes>"
   
   #
-  # > /island invite | /island join
+  # > /island invite message which tells that a invitation has been sent.
 - sentrequest: <p2>Du hat eine Anfrage geschickt.
+  #
+  # > /island invite message that tells the invited player who invited.
 - gotrequest: <p2>Du hast eine Inseleinladung von <player> erhalten.
-- reqtoleader: <s1>Die Einladung wurde &nnicht<s1> angenommen.
+  #
+  # > /island invite error
+- reqtoleader: <s1>Die Einladung wurde <u>nicht<s1> angenommen.
+  #
+  # > A clickable message which allows the player to join to an island.
 - clicktojoin: Klicke Hier, um <player> beizutreten.
-- reqtomember: <s1>Die Einladung ist &labgelaufen<s1>.
+  #
+  # > A /island invite message which tells the player that the invitation has timed out.
+- reqtomember: <s1>Die Einladung ist <l>abgelaufen<s1>.
+  #
+  # > A /island invite error message which tells the player that you can't invite yourself.
 - cantinviteself: "&cDu kannst dich nicht selber einladen."
+  #
+  # > A /island invite message which tells the invited player that he joined the island of <arg-2>.
 - joinedismember: <p2>Du bist der Insel von <arg-2> beigetreten.
+  #
+  # > A /island invite message which tells the island owner that <player> has joined the island.
 - joinedisleader: <p2><player> ist der Insel beigetreten.
+  #
+  # > Tells the invted player that there is no invitation available.
 - norequest: <s1>Keine Einladungen verfügbar.
+  #
+  # > A /island join message which tells the player to which island the player has been invited, just "Invitations:"
 - requests: "<s1>Einladungen:"
+  #
+  # > A /island invite error message, which tells the player that there couldn't be a message sent to the player <arg-2>.
 - invitetargeterror: <s1>Es konnte keine Einladung an <arg-2> gesendet werden.
   
   #
-  # > /island leave
+  # > A /island leave message which tells the player that the player left an island.
 - leftis: <s1>Du hast die Insel verlassen.
 
   #
-  # > /island kick
+  # > A /island kick message which tells that the player <arg-2> has been kicked from the island.
 - kickmemberleader: <s1>Du hast <arg-2> von der Insel gekickt.
+  #
+  # > A /island kick message which tells the kicked player that he got kicked from the island.
 - kickmember: <s1>Du wurdest von der Insel von <player> gekickt.
   
   #
-  # > /island sethome
+  # > /island sethome message that is sent when the command was successfull. 
 - sethomeok: Zuhause erfolgreich erstellt.
+  #
+  # > /island sethome error message which is used if the player tries to set a home outside of the own island.
 - ishomecancel: Das neue Zuhause muss auf deiner Insel sein.
+  #
+  # > /island sethome message which is used if a home has been overwritten.
 - sethomeoverwritten: Zuhause erfolgreich überschrieben.
+  #
+  # > /island delete message which is used once a player removed the home with the name <home>.
 - homedeleted: Zuhause <home> wurde entfernt.
+  #
+  # > /island delete error message which tells the player that the home with the name <home> can't be deleted.
 - cantdeletehome: <home> kann nicht entfernt werden.
+  #
+  # > /island sethome error message that tells that the player has reched the home creation limit.
 - sethomelmitreached: Du hast das Limit für noch mehr Zuhause erreicht.
 
   #
-  # > /island reload
+  # > /island reload message that tells that SKYBLOCK.SK is reloading.
 - reloadstarted: <s1>Lade SKYBLOCK.SK neu...
+  #
+  # > /island reload success message which tells that SKYBLOCK.SK has been reloaded successfully.
 - reloadsuccess: <s1>SKYBLOCK.SK wurde erfolgreich neugeladen.
 
   #
   # > /island warp|setwarp|delwarp
+  #
+  # > /island warp success message which tells that the warp has been created successfully.
 - setwarpok: Der Warp wurde erfolgreich erstellt.
+  #
+  # > /island delwarp success message which tells that the warp has been deleted successfully.
 - delwarpok: Der Warp wurde erfolgreich gelöscht.
+  #
+  # > /island warp error message which tells that this warp has not been found.
 - warpnotfound: Dieser Warp wurde nicht gefunden.
-- warptop: "<p2>Am meisten besuchte Inseln:"
-- warptoplist: "<p1>&l<rank> <b1>|&r <s1><leader> <b1>|&r <s1>Besuche: <p2><visits>"
-- warptoisland: "<s1>Besuche eine Insel: <p1>/island warp <s1><<p1>Spielername<s1>>"
 
   #
-  # > /island info:
-- isinfo: "Informationen über diese Insel:"
+  # > The leader of the island.
 - isleader: "Inselleiter:"
+  #
+  # > The members of the island.
 - ismember: "Mitglieder:"
+  #
+  # > Players who are trusted on this island.
 - istrusted: "Vertraute:"
+  #
+  # > The island level of the island.
 - isinfolevel: "Level:"
+  #
+  # > The biome of the island.
 - isinfobiome: "Biom:"
+  #
+  # > The creation date of the island.
 - iscreated: "Erstellt:"
+  #
+  # > The date of the last active day.
 - islastactive: "Zuletzt aktiv:"
+  #
+  # > Island upgrades.
 - isupgrades: "Inselverbesserungen:"
+  #
+  # > Island could not be found.
 - isinfonotfound: Insel konnte nicht gefunden werden.
+  #
+  # > Active hoppers.
 - activehoppers: "Aktive Trichter:"
+  #
+  # > Active entities.
 - activeentites: "Aktive Wesen:"
+  #
+  # > Active entities on this island.
 - info_activentitiestitle: "Aktive Wesen der Insel"
+  #
+  # > A list which tells the player to click on it to get a list of all active entities of this island.
 - info_activentitieslore: "<s1>Klicke Hier, um eine<nl><s1>genaue Liste aller gerade<nl><s1>aktiven Wesen der<nl><s1>Insel zu erhalten."
 
   #
-  # > /island trust:
+  # > /island trust message which shows all trusted players.
 - trustplayerlist: "Alle vertrauten Spieler:"
+  #
+  # > /island trust error message which tells that this player is already trusted.
 - alreadytrusted: Diesem Spieler wird schon vertraut.
+  #
+  # > /island trust success message that tells that <player> is now trusted.
 - trustnowtrusted: <player> wird nun vertraut.
+  #
+  # > /island trust error message which says that the player doesn't exist(not found).
 - notfoundplayer: Der Spieler wurde nicht gefunden.
+  #
+  # > /island trust success message which says that the player is no longer trusted.
 - trustremoved: <player> wird nicht länger vertraut.
 
   #
-  # > /island help
-- help-header: "&l> <p1>&lHilfe"
+  # > /island help header with formatting.
+- help-header: "<l>> <p1><l>Hilfe"
+  #
+  # > Title for: create island.
 - help-title-iscreate: <p1>Insel erstellen
+  #
+  # > Description for: create island
 - help-desc-iscreate: <s1>Erstellt eine Insel
+  #
+  # > Command example for: create island. Replace /island (/is) with a local word for it, if possible. Also on others which follow.
 - help-cmd-iscreate: /is create
+  #
+  # > Title for: delete island.
 - help-title-isdelete: <p1>Insel löschen
+  #
+  # > Description for: delete island.
 - help-desc-isdelete: <s1>Löscht deine Insel
+  #
+  # Command example for: delete island.
 - help-cmd-isdelete: /is delete
+  #
+  # > Title for: teleport to home.
 - help-title-isteleport: <p1>Teleport nachhause
+  #
+  # > Description for: teleport to home.
 - help-desc-isteleport: <s1>Teleportiert dich<nl><s1>zum Zuhause der Insel
+  #
+  # > Command example for: teleport to home.
 - help-cmd-isteleport: /is home [<Name>]
 - help-title-issethome: <p1>Zuhause setzen
 - help-desc-issethome: <s1>Setzt ein Zuhause an<nl><s1>dem aktuellen Standort.
@@ -189,10 +299,10 @@ language:
 - notallowed: "&cDer Befehl ist dem Inselbesitzer vorbehalten."
 - notleader: "&cDu bist nicht der Inselbesitzer."
 - notleaderofthisisland: "&cDu bist nicht der Inselbesitzer dieser Insel."
-- noperm: "&c&lDu besitzt keine Berechtigung für diesen Befehl."
+- noperm: "&c<l>Du besitzt keine Berechtigung für diesen Befehl."
 - leaderleaveinfo: <s1>Verwende /is delete, um deine Insel zu löschen.
 - havetodelete: <s1>Verwende /is delete, um deine Insel zu löschen.
-- nois: "&cDu hast keine Insel. Erstelle eine: &4&l/island create"
+- nois: "&cDu hast keine Insel. Erstelle eine: &4<l>/island create"
 - playeroff: <s1>Dieser Spieler ist offline.
 - havetoleave: <s1>Verwende /is leave, um die Insel zu verlassen.
 - cooldown: <s1>Dieser Befehl lädt noch auf.
@@ -203,8 +313,8 @@ language:
 
   #
   # > /island top
-- istopheader: "&eTop 10 &6&l(<currentpage>/<allpages>)"
-- istoplist: "&7&l<rank>&8 | &8<name>"
+- istopheader: "&eTop 10 &6<l>(<currentpage>/<allpages>)"
+- istoplist: "&7<l><rank>&8 | &8<name>"
 - toplistbookhover: "<name><nl1><guispacer><nl1>&r&7Rang: <rank><nl1>Insellevel: <level><nl1>Erfahrung durch<nl1>Herausforderungen: <challengexp><nl1>Besucher: <visitors><nl1><guispacer>"
 - islandtoplist_sortby: "Sortierung: "
 - islandtoplist_island: "[L]"
@@ -219,7 +329,7 @@ language:
 - isadmin_deletedxis: <amount> Inseln wurden gelöscht.
 - isadmin_xwouldbedeleted: <amount> Insel würden gelöscht werden, möchtest du löschen?
 - isadmin_areyousuretodelete: Bist du sicher, <amount> Insel zu löschen?
-- isadmin_yes: "&6&lYes."
+- isadmin_yes: "&6<l>Yes."
 - isadmin_suretodeleteisofp: Bist du sicher, dass die Insel von <player> gelöscht werden soll?
 - isadmin_kickall: Jeder wurde von dieser Insel gekickt.
 - isadmin_kickallprompt: Möchtest du alle von <player> Insel kicken?
@@ -240,13 +350,13 @@ language:
   
   #
   # > GUI - menu - Titles
-- guigrassname: <p1>&lSkyblock
-- guigraslore: "&9&lStarte eine Insel"
-- guiexpname: "&9&lInselinformationen"
-- guichallangename: "&a&lTägliche Aufgaben"
-- guitopname: "&6&lBestenliste"
-- guirewardsname: "&d&lLootboxen"
-- guihubname: <p1>&lLobby
+- guigrassname: <p1><l>Skyblock
+- guigraslore: "&9<l>Starte eine Insel"
+- guiexpname: "&9<l>Inselinformationen"
+- guichallangename: "&a<l>Tägliche Aufgaben"
+- guitopname: "&6<l>Bestenliste"
+- guirewardsname: "&d<l>Lootboxen"
+- guihubname: <p1><l>Lobby
 - guibacktopreviousmenu: "&rZurück"
 
   #
@@ -266,8 +376,8 @@ language:
   
   #
   # > Chat headers
-- topheader: "&lBestenliste"
-- levelheader: <p2>Insel Level <s1>&l- <p1>
+- topheader: "<l>Bestenliste"
+- levelheader: <p2>Insel Level <s1><l>- <p1>
 - votereward: "&bVote für Belohnungen: "
 - rewardwoods: <p1>Holzkiste
 - rewardenchant: "&5Effektkiste"
@@ -276,7 +386,7 @@ language:
 
   #
   # > Other
-- prefix: <s1>[<p1>&lSkyBlock<s1>] <b1>&l>>&r
+- prefix: <s1>[<p1><l>SkyBlock<s1>] <b1><l>>>&r
 - delismsg: <p2>Alte Inseln werden gerade gelöscht, bitte warte kurz.
 - deletekickmember: <s1>Die Insel, auf der du Mitglied warst, wurde gelöscht.
 - nonether: <s1>Die Hölle ist nicht zugänglich.
@@ -417,7 +527,7 @@ language:
   #
   # > Recovery menu
 - recovery_guiitemlore: "<p2>Wiederherstellung<nl><s1>Platziere diese Kiste,<nl><s1>um dein Inventar zu erhalten.<nl><guispacer><nl>&7Preis: <price><nl><guispacer><nl>&7Datum: <date>"
-- recovery_header: "&lWiederherstellung"
+- recovery_header: "<l>Wiederherstellung"
 - recovery_guiitemname: "&rErhalte dein Inventar zurück"
 - recovery_notenoughspace: <p1>Es sollte kein Block über der Wiederherstellungskiste sein.
 - recovery_placetoget: <s1>Platziere diese Kiste um dein Inventar wiederherzustellen. Diese Wiederherstellung ist zeitlich limitiert und sollte schnellstmöglich durchgeführt werden.
@@ -427,7 +537,7 @@ language:
 
   #
   # > Store
-- store_guititle: "&lLaden"
+- store_guititle: "<l>Laden"
 - store_lvlthreshold: "&7Dieser Gegenstand<nl>&7ist erst ab Insellevel<nl>&7<level> verfügbar."
 - store_pageforward: "&rWeiter"
 - store_pageforwardlore: "&7Blättere weiter um<nl>&7die nächste Seite<nl>&7zu sehen."
@@ -450,18 +560,18 @@ language:
 
   #
   # > Lootbox
-- lootbox_guiheader: "&o» Loot&lKisten&7"
-- lootbox_itemname: "&fLoot&6&lKiste"
+- lootbox_guiheader: "&o» Loot<l>Kisten&7"
+- lootbox_itemname: "&fLoot&6<l>Kiste"
 - lootbox_reward: <s1>Belohnung:<p1>
 - lootbox_gotalootbox: <s1>Du hast eine Lootbox erhalten.
 - lootbox_gotalootboxvar: <s1>Du hast eine Lootbox erhalten. Öffne sie mit /island loot
-- lootbox_tierguiitemlore: "<s1>&lGüteklasse: <tier><nl><guispacer><nl><s1>Du kannst noch<nl><p1><amount> <s1>öffnen."
+- lootbox_tierguiitemlore: "<s1><l>Güteklasse: <tier><nl><guispacer><nl><s1>Du kannst noch<nl><p1><amount> <s1>öffnen."
 - lootbox_clicktoopen: <s1>Klicke <p1>hier<s1>,<nl><s1>um zu öffnen.
 
   #
   # > AFK Check
 - afkcheck_title: AFK Check
-- afkcheck_subtitle: Bitte schreibe &6&l/afkok <random>
+- afkcheck_subtitle: Bitte schreibe &6<l>/afkok <random>
 - afkcheck_noresponse: <player> hat nicht geantwortet.
 - afkcheck_notafk: Du bist nicht afk. Danke für deine Mitteilung.
 - afkcheck_onlyifasked: Schreibe diesen Befehl nur, wenn du danach gefragt wirst.
@@ -483,7 +593,7 @@ language:
 
   #
   # > Votingrewards
-- vr_menu_header: "&lVotebelohnungen"
+- vr_menu_header: "<l>Votebelohnungen"
 - vr_day1title: "Tag 1"
 - vr_day2title: "Tag 2"
 - vr_day3title: "Tag 3"
@@ -509,14 +619,14 @@ language:
 
   #
   # > Parcours
-- parkour_guiheader: "&lParkour"
-- parkour_toplist_header: "&lBestenliste:"
+- parkour_guiheader: "<l>Parkour"
+- parkour_toplist_header: "<l>Bestenliste:"
 - parkour_toplist_item: "&rBestenliste"
 - parkour_personalbest: "Du hast deine Bestzeit verbessert."
 - parkour_nopersonalbest: "Du hast deine Bestzeit nicht geschlagen."
-- parkour_personalbesttime: "Bestzeit: <p2>&l<time>"
-- parkour_thisruntime: "Dieser Lauf: <p2>&l<time>"
-- parkour_pastpersonalbest: "Bisherige Bestzeit: <p2>&l<time>"
+- parkour_personalbesttime: "Bestzeit: <p2><l><time>"
+- parkour_thisruntime: "Dieser Lauf: <p2><l><time>"
+- parkour_pastpersonalbest: "Bisherige Bestzeit: <p2><l><time>"
 - parkour_currentrank: "Aktueller Rang: <rank>"
 - parkour_checkpointreached: Checkpoint erreicht
 - parkour_checkpointinvalid: Ungültiger Checkpoint
@@ -526,7 +636,7 @@ language:
 - parkour_itemexitname: "&rBeenden"
 - parkour_parcourunloaded: Der Parkour wurde entladen. Danke fürs spielen.
 - parkour_finishmsg: Glückwunsch! Du hast das Ziel erreicht.
-- parkour_yourtime: "Deine Zeit: <p2>&l<time>"
+- parkour_yourtime: "Deine Zeit: <p2><l><time>"
 - parkour_menucheckpointitemname: "&rCheckpoint Platte"
 - parkour_menufinishitemname: "&rZiel Platte"
 - parkour_menuremoveblockname: "&rEntferne diesen Parkour Block"
@@ -540,7 +650,7 @@ language:
 
   #
   # > Custom Stands addon
-- cs_guiheader: "&lRüstungsständer anpassen"
+- cs_guiheader: "<l>Rüstungsständer anpassen"
 - cs_head: "&rKopf"
 - cs_body: "&rOberkörper"
 - cs_legs: "&rBeine"
@@ -631,18 +741,18 @@ language:
 
   #
   # > Robot menu
-- robot_on: "&r<s1>[<p1>&lAN&r<s1>]"
-- robot_robotoff: "&r<s1>[<p1>&lAUS&r<s1>]"
+- robot_on: "&r<s1>[<p1><l>AN&r<s1>]"
+- robot_robotoff: "&r<s1>[<p1><l>AUS&r<s1>]"
 - robot_currentdesign: "&rAktuelles Design"
 - robot_currentjob: "&rAktueller Beruf"
-- robot_robotstatuson: "&rRoboter <s1>[<p1>&lAN&r<s1>]"
-- robot_robotstatusoff: "&rRoboter <s1>[<p1>&lAUS&r<s1>]"
+- robot_robotstatuson: "&rRoboter <s1>[<p1><l>AN&r<s1>]"
+- robot_robotstatusoff: "&rRoboter <s1>[<p1><l>AUS&r<s1>]"
 - robot_clicktotogglesstatus: "<s1>Klicke, um den<nl><s1>Roboter zwischen<nl><s1>an und aus umzustellen."
 - robot_stats: "&rStatistik"
 - robot_blocksbroken: "<s1>Blöcke abgebaut: <p1><blocks>"
-- robot_robotjobguiname: "&lRoboter Berufe"
-- robot_robotdesignguiname: "&lRoboter Designs"
-- robot_robotguiname: "&lRoboter Menü"
+- robot_robotjobguiname: "<l>Roboter Berufe"
+- robot_robotdesignguiname: "<l>Roboter Designs"
+- robot_robotguiname: "<l>Roboter Menü"
 - robot_prefix: "<s1>[<p1>Roboter<s1>]"
 - robot_renamedrobot: "Der Roboter wurde umbenannt."
 - robot_onlyrobotownererror: "Nur der Besitzer des Roboters kann diesen umbenennen."
@@ -654,8 +764,8 @@ language:
 
   #
   # > Challenges
-- challenge_menutitle: "&lHerausforderungen"
-- challenge_disabled: "&lHerausforderungen sind nicht verfügbar."
+- challenge_menutitle: "<l>Herausforderungen"
+- challenge_disabled: "<l>Herausforderungen sind nicht verfügbar."
 - challenge_youneed: "Du benötigst:"
 - challenge_youstillneed: "Du benötigst noch:"
 - challenge_youget: "Du erhälst:"
