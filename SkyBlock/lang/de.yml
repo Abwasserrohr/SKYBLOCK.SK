@@ -4,7 +4,12 @@
 #
 
 language:
+  #
+  # > The name of the language in it's own language.
 - language: Deutsch
+  
+  #
+  # > Encrypted language flag picture file, just leave it alone. =)
 - languageskin: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU3ODk5YjQ4MDY4NTg2OTdlMjgzZjA4NGQ5MTczZmU0ODc4ODY0NTM3NzQ2MjZiMjRiZDhjZmVjYzc3YjNmIn19fQ==
   
   #
@@ -209,90 +214,194 @@ language:
   # > /island help header with formatting.
 - help-header: "<l>> <p1><l>Hilfe"
   #
-  # > Title for: create island.
+  # > Title for: Create a island.
 - help-title-iscreate: <p1>Insel erstellen
   #
-  # > Description for: create island
+  # > Description for: Create a island
 - help-desc-iscreate: <s1>Erstellt eine Insel
   #
-  # > Command example for: create island. Replace /island (/is) with a local word for it, if possible. Also on others which follow.
+  # > Command example for: Create a island. Replace /island (/is) with a local word for it, if possible. Also on others which follow.
 - help-cmd-iscreate: /is create
   #
-  # > Title for: delete island.
+  # > Title for: Delete island.
 - help-title-isdelete: <p1>Insel löschen
   #
-  # > Description for: delete island.
+  # > Description for: Delete island.
 - help-desc-isdelete: <s1>Löscht deine Insel
   #
-  # Command example for: delete island.
+  # Command example for: Delete island.
 - help-cmd-isdelete: /is delete
   #
-  # > Title for: teleport to home.
+  # > Title for: Teleport to home.
 - help-title-isteleport: <p1>Teleport nachhause
   #
-  # > Description for: teleport to home.
+  # > Description for: Teleport to home.
 - help-desc-isteleport: <s1>Teleportiert dich<nl><s1>zum Zuhause der Insel
   #
-  # > Command example for: teleport to home.
+  # > Command example for: Teleport to home.
 - help-cmd-isteleport: /is home [<Name>]
+  #
+  # > Title for: Set a home.
 - help-title-issethome: <p1>Zuhause setzen
+  #
+  # > Description for: Set a home at your current location.
 - help-desc-issethome: <s1>Setzt ein Zuhause an<nl><s1>dem aktuellen Standort.
+  #
+  # > Command example for: Set a home.
 - help-cmd-issethome: /is sethome [<Name>]
+  #
+  # > Title for: Teleport to bedrock
 - help-title-isteleportgo: <p1>Zum Grundstein
+  #
+  # > Description for: Teleport to bedrock.
 - help-desc-isteleportgo: <s1>Teleportiert dich zum<nl><s1>Grundstein deiner Insel.
+  #
+  # > Command example for: Teleport to bedrock.
 - help-cmd-isteleportgo: /is go
+  #
+  # > Title for: Island level
 - help-title-islevel: <p1>Insel Level
+  #
+  # > Description for: Get the current island level.
 - help-desc-islevel: <s1>Zeigt dein aktuelles Insellevel an.
+  #
+  # > Command example for: Island level.
 - help-cmd-islevel: /is level
+  #
+  # > Title for: Toplist.
 - help-title-istop: <p1>Bestenliste
-- help-desc-istop: <s1>Zeigt eine Bestenliste an,<nl><s1>auf der die Inseln mit den<nl><s1>höchsten Leveln angezeigt<nl><s1>werden.
+  #
+  # > Description for: Shows the current toplist to you, on which the islands with the best islands are shown.
+- help-desc-istop: <s1>Zeigt eine Bestenliste an,<nl><s1>auf der die besten Inseln<nl><s1>angezeigt werden.
+  #
+  # > Command example for: Toplist.
 - help-cmd-istop: /is top
+  #
+  # > Title for: Invite a player.
 - help-title-isinvite: <p1>Spieler einladen
+  #
+  # > Description for: Invite a player to your island.
 - help-desc-isinvite: <s1>Lädt einen Spieler auf deine Insel ein.
+  #
+  # > Command example for: Invite a player.
 - help-cmd-isinvite: /is invite <Spieler>
+  #
+  # > Title for: Kick a player.
 - help-title-iskick: <p1>Spieler rauswerfen
+  #
+  # > Description for: Kick a player from your island.
 - help-desc-iskick: <s1>Wirft einen Spieler von deiner Insel.
+  #
+  # > Command example for: Kicck a player.
 - help-cmd-iskick: /is kick <Spieler>
+  #
+  # > Title for: Accept invitation.
 - help-title-isjoin: <p1>Einladung annehmen
+  #
+  # > Description for: Accept invitation.
 - help-desc-isjoin: <s1>Nimmt eine Einladung an.
+  #
+  # > Command example for: Accept invitation.
 - help-cmd-isjoin: /is join 
+  #
+  # > Title for: Leave island.
 - help-title-isleave: <p1>Insel verlassen
+  #
+  # > Description for: Leave the island on which you are currently a member.
 - help-desc-isleave: <s1>Verlässt eine Insel auf der<nl><s1>du gerade Mitglied bist.
+  #
+  # > Command example for: Leave island.
 - help-cmd-isleave: /is leave
+  #
+  # > Title for: SkyBlock menu.
 - help-title-isgui: <p1>SkyBlock Menü
+  #
+  # > Description for: SkyBlock menu, where the player can access almost all important commands and function through this menu.
 - help-desc-isgui: <s1>Öffnet das SkyBlock Menü,<nl><s1>von hier kannst du fast alle<nl><s1>wichtigen Befehle über ein<nl><s1>Menü erreichen.
+  #
+  # > Command example for: SkyBlock menu.
 - help-cmd-isgui: /is
+  #
+  # > Title for: Teleport to server lobby
 - help-title-isspawn: <p1>Server Lobby
+  #
+  # > Description for Teleport to server lobby.
 - help-desc-isspawn: <s1>Teleportiert dich zur Lobby des Servers
+  #
+  # > Command example for: Teleport to server lobby.
 - help-cmd-isspawn: /is spawn
+  #
+  # > Title for: Ore generator chances.
 - help-title-isore: <p1>Erzgenerator Chancen
+  #
+  # > Description for: Ore generator chances, shows you the ore chances you have, with you current ore generator.
 - help-desc-isore: <s1>Zeigt dir die Chancen auf<nl><s1>die Erze an, die du mit<nl><s1>dem Erzgenerator derzeit hast.
+  #
+  # > Command example for: Ore generator chances.
 - help-cmd-isore: /is ore
+  #
+  # > Title for: Ore generator status.
 - help-title-isgen: <p1>Erzgenerator Status
+  #
+  # > Description for: Ore generator status, which shows the current ore generator chances to the player.
 - help-desc-isgen: <s1>Zeigt dir den aktuellen<nl><s1>Status deines Erzgenerators an.
+  #
+  # > Command example for: Ore generator status.
 - help-cmd-isgen: /is gen
+  #
+  # > Title for: Trust a player.
 - help-title-trustadd: <p1>Spielern vertrauen
+  #
+  # > Description for: Trust a player, trusted players have a sepatated flag group. "Flags" are special settings which can be set to the island.
 - help-desc-trustadd: <s1>Vertraue einem Spieler,<nl><s1>für vertraute Spieler können<nl><s1>eigene Flaggruppen erstellt werden.
+  #
+  # > Command example for: Trust a player.
 - help-cmd-trustadd: /is trust add <Spieler>
+  #
+  # > Title for: Untrust a player.
 - help-title-trustremove: <p1>Entferne vertrauten Spieler
+  #
+  # > Description for: Untrust a player.
 - help-desc-trustremove: <s1>Traue dem Spieler nicht länger.
+  #
+  # > Command example for: Untrust a player.
 - help-cmd-trustremove: /is trust remove <Spieler>
-- help-title-trustlist: <p1>Aktuell vertraute Spieler
-- help-desc-trustlist: <s1>Zeigt dir eine Liste mit von<nl><s1>dir aktuell vertrauten Spielern an.
-- help-cmd-trustlist: /is trust list
+  #
+  # > Title for: Change flags. "Flags" are special settings which can be set to the island.
 - help-title-flaglist: <p1>Flags ändern
+  #
+  # > Description for: Change flags, opens a menu in which flags can be changed for the island.
 - help-desc-flaglist: <s1>Öffnet ein Menü in dem<nl><s1>die Flags für die Insel<nl><s1>geändert werden können.
+  #
+  # > Command example for: Change flags menu.
 - help-cmd-flaglist: /is flags
+  #
+  # > Title for: Island warp.
 - help-title-helpwarp: <p1>Inselwarps
+  #
+  # > Description for: Island warp, teleports the player to a defined warp of another player.
 - help-desc-helpwarp: <s1>Teleportiert dich zu<nl><s1>einem Warp des definierten<nl><s1>Spielers.
+  #
+  # > Command example for: Island warp.
 - help-cmd-helpwarp: /is warp <Spieler>
+  #
+  # > Title for: Set a warp.
 - help-title-helpsetwarp: <p1>Inselwarp setzen
+  #
+  # > Description for: Set a warp, which is going to be at the current location. Once set, everyone can visit.
 - help-desc-helpsetwarp: <s1>Setzt einen Inselwarp<nl><s1>an deinem aktuellen Standort.<nl><s1>Daraufhin kann dich jeder besuchen.
+  #
+  # > Command example for: Set a warp.
 - help-cmd-helpsetwarp: /is setwarp
+  #
+  # > Title for: Delete a warp.
 - help-title-helpdelwarp: <p1>Inselwarp löschen
+  #
+  # > Description for: Delete a warp, deletes the warp, once deleted, nobody can visit the island anymore using a warp.
 - help-desc-helpdelwarp: <s1>Löscht deinen Inselwarp,<nl><s1>daraufhin kann dich niemand mehr<nl><s1>über deinen Inselwarp besuchen.
+  #
+  # > Command example for: Delete a warp.
 - help-cmd-helpdelwarp: /is delwarp
-- help-title-helps2: Seite
 
   #
   # > /island - Errors
