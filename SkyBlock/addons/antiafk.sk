@@ -1,6 +1,6 @@
 #
 # ==============
-# antiafk.sk v0.0.3
+# antiafk.sk v0.0.4
 # ==============
 # Prevents players from being afk, active players are granted to stand a while afk, if they
 # have been active before being afk.
@@ -28,7 +28,7 @@ options:
   #
   # > Activity increase. Every time, the location of the player changes, the activity
   # > is increased by this amount.
-  activityincrease: 5
+  activityincrease: 3
   #
   # > Activity decrease. Every time the player isn't moving, the activity gets decreased
   # > by this amount.
