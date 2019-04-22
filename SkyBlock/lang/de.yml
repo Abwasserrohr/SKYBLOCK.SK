@@ -938,7 +938,7 @@ language:
   # > Anti AFK
 - antiafk_showactivity: "<s1>Aktivität wird nun angezeigt."
 - antiafk_hideactivity: "<s1>Aktivität wird nun ausgeblendet."
-- antiafk_kickreason: "<s1>Du hast dich zu lange nicht bewegt. Bewege dich mehr, damit deine Aktivität steigt."
+- antiafk_kickreason: "<s1>Du hast dich zu lange nicht bewegt. Bewege dich mehr, damit deine Aktivität steigt. Du kannst deine Aktivität mit /toggleactivity anzeigen lassen."
 - antiafk_actionbar: "<s1>Aktivität: <activity>"
 
   #
