@@ -29,21 +29,13 @@ function trusthandler(p:player,a1:text,a2:text):
   #
   # > If there is no agrument, send all possible options.
   if {_a1} is "1":
-    message "%{_prefix}% %getlang(""trustadd"",{_lang})%" to {_p}
-    message "%{_prefix}% %getlang(""trustremove"",{_lang})%" to {_p}
-    message "%{_prefix}% %getlang(""trustlist"",{_lang})%" to {_p}
+    message getlang("help-title-trustadd",{_lang},"%{_prefix}% ",getlang("help-cmd-trustadd",{_lang}," | ")) to {_p}
+    message getlang("help-title-trustremove",{_lang},"%{_prefix}% ",getlang("help-cmd-trustremove",{_lang}," | ")) to {_p}
 
   #
-  # > If the argument 1 is "list", list all trusted users.
+  # > If the argument 1 is "list", list all trusted users using the island info.
   if {_a1} is "list":
-    set {_msg} to getlang("trustplayerlist",{_lang})
-    message "%{_prefix}% %{_msg}%" to {_p}
-    set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
-    set {_x} to x-coordinate of {_bedrock}
-    set {_y} to y-coordinate of {_bedrock}
-    set {_z} to z-coordinate of {_bedrock}
-    loop {SB::island::%{_x}%_%{_y}%_%{_z}%::trust::*}:
-      message "%{_prefix}% %loop-value parsed as offline player%" to {_p}
+    islandinfo({_p},"%{_p}%")
   
   #
   # > If the argument 1 is "add", add the argument 2 to the trusted list of his island.
