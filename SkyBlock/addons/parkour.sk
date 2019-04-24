@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.7
+# parkour.sk v0.0.8
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -89,6 +89,8 @@ import:
   java.util.Date
   java.util.ArrayList
   org.bukkit.event.player.PlayerTeleportEvent
+  java.util.concurrent.TimeUnit
+
 #
 # > Commands
 
@@ -1048,25 +1050,25 @@ function parkourtoplist(player:player,action:text,parkourblock:block,diff:number
 # > Actions:
 # > Formats the number into a timer, which should then look like on a stopwatch.
 function createstopwatchtimer(diff:number) :: text:
-  set {_difft} to "%{_diff}%"
-  set {_length} to length of {_difft}
-  set {_difft::*} to {_difft} split at ""
-  set {_timer} to ""
-  set {_loops} to 7
-  while {_done} is not set:
-    if {_loops} <= {_length}:
-      add 1 to {_i}
-      set {_timer} to "%{_timer}%%{_difft::%{_i}%}%"
+  #
+  # > Get the milliseconds, seconds and minutes.
+  set {_ms} to mod({_diff},1000)
+  set {_s} to mod(TimeUnit.MILLISECONDS!.toSeconds({_diff}),60)
+  set {_m} to mod(TimeUnit.MILLISECONDS!.toMinutes({_diff}),60)
+  #
+  # > Add a 0 in front of numbers which are too small.
+  if {_ms} < 100:
+    if {_ms} < 10:
+      set {_ms} to "00%{_ms}%"
     else:
-      set {_timer} to "%{_timer}%0"
-    if {_loops} is 6:
-      set {_timer} to "%{_timer}%:"
-    if {_loops} is 4:
-      set {_timer} to "%{_timer}%."
-    remove 1 from {_loops}
-    if {_loops} < 1:
-      set {_done} to true
-  return {_timer}
+      set {_ms} to "0%{_ms}%"
+  if {_s} < 10:
+    set {_s} to "0%{_s}%"
+  if {_m} < 10:
+    set {_m} to "0%{_m}%"
+  #
+  # > Return the stopwatch timer.
+  return "%{_m}%:%{_s}%.%{_ms}%"
 
 #
 # > Function - getcurrentdifference
