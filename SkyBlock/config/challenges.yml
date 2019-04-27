@@ -203,7 +203,7 @@ challenges:
 - 4_1_repeat: true
 - 4_1_repeatsperday: 5
   
-- 4_2_needed: "1-saddle,64-hay bale,32-apple,64-carrot item"
+- 4_2_needed: "1-saddle,64-vertical hay bale,32-apple,64-carrot item"
 - 4_2_reward: "25-xp,1-horse spawn egg,1-iron horse armor,1-leash,1-nametag"
 - 4_2_repeatreward: "15-xp,1-horse spawn egg,1-leash,1-nametag"
 - 4_2_item: "saddle"
