@@ -196,7 +196,10 @@ function createisland(p:player,island:text="1"):
               set {_x} to x-coord of {_loc}
               set {_z} to z-coord of {_loc}
               set {_msg} to getlang("islandbound",{_lang})
-              set lore of {_titem} to "&r%{_msg}%||&7%{_x}%_%{_z}%"
+              #
+              # Create separated list entries for each new line.
+              add "&r%{_msg}%", "&7%{_x}%_%{_z}%" to {_lore::*}
+              set lore of {_titem} to {_lore::*}
             add {_tamount} of {_titem} to {_newchest}'s inventory
         #
         # > We're done with searching and creating, stop the search process to allow others to also create a island.
