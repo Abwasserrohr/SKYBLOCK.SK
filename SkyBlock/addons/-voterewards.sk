@@ -1,6 +1,6 @@
 #
 # ==============
-# voterewards.sk v0.0.2
+# voterewards.sk v0.0.3
 # ==============
 # Gives your players predefined rewards which increase if they're loyal to you and vote every day.
 # ==============
@@ -66,6 +66,7 @@ on load:
   # > loadconfigobject("lang-vr-MCTools.org-day-2-custom-en", "1 Tier 1 Lootbox\n1 Tier 2 Lootbox")
   # > loadconfigobject("vr-service-MCTools.org-day-1","money=50||command=givelootbox 1 <player> 1 true")
   # > loadconfigobject("vr-service-MCTools.org-day-2","money=100||command=givelootbox 1 <player> 1 true||command=givelootbox 2 <player> 1 true")
+  # > loadconfigobject("vr-rewardlang-command=givelootbox 1 <player> 1 true-de","> 1 x Tier 1 Lootbox")
   loadconfigobject("vr-service-MCTools.org-day-1","money=50")
   loadconfigobject("vr-service-MCTools.org-day-2","money=100")
   loadconfigobject("vr-service-MCTools.org-day-3","money=150")
@@ -133,8 +134,8 @@ on VotifierEvent:
   # > Get the uuid of the player to load and save the rewards.
   set {_uuid} to uuid of {_player}
   #
-  # > Load the current rewards from variable and parse it as list.
-  set {_voterewards::*} to ...{{@variableprefix}::%{_uuid}%}
+  # > Load the current rewards from variable (serialized) and parse it as list.
+  set {_voterewards::*} to ...deserialize({{@variableprefix}::%{_uuid}%})
   #
   # > Get the current time as a local variable.
   set {_now} to Instant.now().getEpochSecond()
@@ -148,9 +149,9 @@ on VotifierEvent:
   # > The statistics are important to know how many times the player voted for the
   # > server on the specific voting site already within the loyalty bonus range.
   loop {_voterewards::*}:
-    if loop-value contains "%{_servicename}%||":
+    if loop-value contains "%{_servicename}%":
       set {_tempservice::*} to loop-value split at "||"
-      set {_servicestats::%{_tempservice::1}%} to {_tempservice::2} parsed as number
+      set {_servicestats::%{_servicename}%} to {_tempservice::2} parsed as number
   #
   # > Go through the rewards for the service, if rewards are enabled.
   if getconfigobject("vr-service-%{_servicename}%") is true:
@@ -195,12 +196,12 @@ on VotifierEvent:
     loop {_reward::*}:
       {_voterewards}.add(loop-value)
     #
-    # > If there haven't been any update, don't add a service based reward statistic.
+    # > If there weren't any update, don't add a service based reward statistic.
     if {_updated} is not true:
       {_voterewards}.add("%{_servicename}%||%{_servicestats::%{_servicename}%}%")
     #
-    # > Save the created ArrayList as a variable.
-    set {{@variableprefix}::%{_uuid}%} to {_voterewards}
+    # > Save the created ArrayList as a serialized variable, since Skript doesn't save ArrayLists to disk.
+    set {{@variableprefix}::%{_uuid}%} to serialize({_voterewards})
   #
   # > If vote claiming is disabled, claim the rewards for the player
   # > instantly by calling the claimvoterewards function.
@@ -234,11 +235,11 @@ function getdayrewards(day:number,lang:text) :: text:
           replace all "<money>" with {_money::2} in {_moneylore}
           replace all "<currency>" with getlang("currencyname",{_lang}) in {_moneylore}
           set {_text} to "%{_text}%\n%{_moneylore}%"
-        #
-        # > If a custom reward text is defined, add it to the text.
-        set {_customlang} to getconfigobject("lang-vr-%loop-value-1%-day-%{_day}%-custom-%{_lang}%")
-        if {_customlang} is set:
-          set {_text} to "%{_text}%\n%{_customlang}%"
+      #
+      # > If a custom reward text is defined, add it to the text.
+      set {_customlang} to getconfigobject("lang-vr-%loop-value-1%-day-%{_day}%-custom-%{_lang}%")
+      if {_customlang} is set:
+        set {_text} to "%{_text}%\n%{_customlang}%"
   return {_text}
 
 #
@@ -247,9 +248,10 @@ function getdayrewards(day:number,lang:text) :: text:
 # > <number> unix timestamp
 # > Actions:
 # > Retuns a valid timespan between unix timestamp and now which can be used by skript.
-function gettimespanunix(then:object) :: timespan:
+function gettimespanunix(then:object) :: object:
   set {_now} to Instant.now().getEpochSecond()
-  return "%difference between {_then} and {_now}% seconds" parsed as timespan
+  set {_timestpan} to "%difference between {_then} and {_now}% seconds" parsed as timespan
+  return {_timestpan}
 
 #
 # > Command - /votelink
@@ -296,7 +298,6 @@ command /vote:
     # > Only display this item, if the item to display it is actually set.
     if {SB::config::backguiitem} is set:
       setguiitem(player,44,{SB::config::backguiitem},1,getlang("guibacktopreviousmenu",{_lang}),getlang("guibacktopreviousmenulore",{_lang}),"make ""%player%"" parsed as player execute command ""/is""",true)
-
 #
 # > Function - getvotelink
 # > Parameters:
@@ -349,8 +350,9 @@ function claimvoterewards(player:offline player):
   set {_uuid} to uuid of {_player}
   set {_lang} to getlangcode({_player})
   #
-  # > Get the saved ArrayList parsed as list.
-  set {_voterewards::*} to ...{{@variableprefix}::%{_uuid}%}
+  # > Get the saved (serialized) ArrayList parsed as list.
+  set {_voterewards::*} to ...deserialize({{@variableprefix}::%{_uuid}%})
+  set {_voterewardsmsg::*} to {_voterewards::*}
   #
   # > Loop through the votewards list.
   loop {_voterewards::*}:
@@ -373,7 +375,7 @@ function claimvoterewards(player:offline player):
     #
     # > If the reward is a function, replace the <player> placeholder and execute the function.
     if {_reward::1} is "function":
-      replace all "<player>" with "%{_player}% parsed as player" in {_reward::2}
+      replace all "<player>" with """%{_player}%"" parsed as player" in {_reward::2}
       evaluate "%{_reward::2}%"
       add 1 to {_rewardnumber}
       delete {_voterewards::%loop-index%}
@@ -384,6 +386,9 @@ function claimvoterewards(player:offline player):
   # > Add statistic back to the ArrayList.
   loop {_voterewards::*}:
     {{@variableprefix}::%{_uuid}%}.add(loop-value)
+  #
+  # > Save the statistic serialized, since Skript doesn't save it to disk.
+  set {{@variableprefix}::%{_uuid}%} to serialize({{@variableprefix}::%{_uuid}%})
   #
   # > Give money to the player.
   add {_votemoneyreward} to {_player}'s balance
@@ -403,10 +408,13 @@ function claimvoterewards(player:offline player):
     replace all "<currency>" with getlang("currencyname",{_lang}) in {_msg}
     message "%{_prefix}% %{_msg}%" to {_player}
   if {_rewardnumber} is set:
-    set {_msg} to getlang("vr_claimedmoney",{_lang})
-    replace all "<amount>" with "%{_rewardnumber}%" in {_msg}
-    message "%{_prefix}% %{_msg}%" to {_player}
+    loop {_voterewardsmsg::*}:
+      delete {_msg}
+      set {_msg} to getconfigobject("vr-rewardlang-%loop-value%-%{_lang}%")
+      if {_msg} is set:
+        message "%{_prefix}% %{_msg}%" to {_player}
   #
   # > Delete local variables to prevent any left over data.
   delete {_votemoneyreward}
   delete {_rewardnumber}
+  close {_player}'s inventory
