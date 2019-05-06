@@ -67,7 +67,6 @@ on load:
   # > loadconfigobject("vr-service-MCTools.org-day-1","money=50||command=givelootbox 1 <player> 1 true")
   # > loadconfigobject("vr-service-MCTools.org-day-2","money=100||command=givelootbox 1 <player> 1 true||command=givelootbox 2 <player> 1 true")
   # > loadconfigobject("vr-rewardlang-command=givelootbox 1 <player> 1 true-de","> 1 x Tier 1 Lootbox")
-
   loadconfigobject("vr-service-MCTools.org-day-1","money=50")
   loadconfigobject("vr-service-MCTools.org-day-2","money=100")
   loadconfigobject("vr-service-MCTools.org-day-3","money=150")
@@ -75,7 +74,6 @@ on load:
   loadconfigobject("vr-service-MCTools.org-day-5","money=250")
   loadconfigobject("vr-service-MCTools.org-day-6","money=300")
   loadconfigobject("vr-service-MCTools.org-day-7","money=350")
-
 
   #
   # > Add base64 encoded texture urls
