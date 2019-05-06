@@ -17,11 +17,6 @@
 # > Add voterewards.sk to your "plugins/Skript/scripts" folder and then reload.
 # --------------
 
-on load:
-  if {-vrload} is not set:
-    wait 30 seconds
-    set {-vrload} to true
-    execute console command "/sk reload voterewards"
 #
 # > Configuration, set everything as you like.
 # > You can also change messages in the language files of SKYBLOCK.SK.
