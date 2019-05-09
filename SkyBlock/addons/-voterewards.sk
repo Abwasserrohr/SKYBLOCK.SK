@@ -1,6 +1,6 @@
 #
 # ==============
-# voterewards.sk v0.0.3
+# voterewards.sk v0.0.4
 # ==============
 # Gives your players predefined rewards which increase if they're loyal to you and vote every day.
 # ==============
@@ -45,6 +45,12 @@ options:
   #
   # > Broadcast votes if somebody votes. [true=on|false=off]
   broadcastvotes: true
+  #
+  # > Show current loyalty bonus day using a special item. [true=on|false=off]
+  showloyaltybonusinmenu: true
+  #
+  # > Loyalty bonus display item.
+  showloyaltybonusitem: gold block
 
 #
 # > Service configuration is loaded on skript load, change it here below,
@@ -272,6 +278,7 @@ command /vote:
     #
 	# > Get the language code of the player and open the menu.
     set {_lang} to getlangcode(player)
+    set {_uuid} to uuid of player
     opengui(player,45,getlang("vr_menu_header",{_lang}))
     #
     # > Fill the Inventory with empty glass panes.
@@ -287,8 +294,34 @@ command /vote:
       set {_lore} to getlang("vr_dayheadlore",{_lang})
       replace all "<rewards>" with getdayrewards(loop-number,{_lang}) in {_lore}
       set {_item} to getconfigobject("vr-heads-day-%loop-number%")
+      #
+      # > Get all vote rewards to display loyalty bonuses, if enabled.
+      if {@showloyaltybonusinmenu} is true:
+        #
+        # > Load the vote rewards and statistics from a serialized variable.
+        set {_voterewards::*} to ...deserialize({{@variableprefix}::%{_uuid}%})
+        #
+        # > Go through all vote services to get loyalty bonuses for each of them.
+        loop ...getconfigobject("vr-services"):
+          loop {_voterewards::*}:
+            #
+            # > If the vote service loop 2 contains the same vote service string
+            # > in the vote service statistics loop 3, go forward.
+            if loop-value-3 contains loop-value-2:
+              #
+              # > Split the vote service statistics loop 3 value to ["servicename", loyaltyday],
+              # > needed is the loyaltyday to display a glowing item in the menu to tell the player
+              # > on which loyalty bonus the player is.
+              set {_tempservice::*} to loop-value-3 split at "||"
+              set {_tempservice::2} to {_tempservice::2} parsed as number
+              #
+              # > If the loop number is the same as the loyalty bonus day,
+              # > set the loyalty bonus item to a predefined glowing one.
+              if loop-number-1 is {_tempservice::2}:
+                set {_item} to glowing {@showloyaltybonusitem}
+      #
+      # > Set the gui item to the gui menu.
       setguiitem(player,9 + loop-number,{_item},1,getlang("vr_day%loop-number%title",{_lang},"&r"),{_lore},"",false)
-	  
       set {_item} to getconfigobject("vr-heads-getvotingsite")
       setguiitem(player,30,{_item},1,getlang("vr_getvotelinktitle",{_lang}),getlang("vr_getvotelinklore",{_lang}),"getvotelink(""%player%"" parsed as player)",false)
       set {_item} to getconfigobject("vr-heads-claimreward")
