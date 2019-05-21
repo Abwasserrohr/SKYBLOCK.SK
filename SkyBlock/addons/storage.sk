@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.13
+# storage.sk v0.0.14
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -148,6 +148,31 @@ on place of {@item}:
       set slot 26 of {_inv} to 1 of clay
       set line 1 of lore of slot 26 of {_inv} to "0"
       set line 2 of lore of slot 26 of {_inv} to "STORAGE"
+  #
+  # > Minecraft 1.14 no longer stores the inventory of the shulker boxes as it
+  # > has been done before. Checking the inventory of new shulker boxes
+  # > to prevent corrupted storage units.
+  else:
+    loop all items in the inventory of event-block:
+      if loop-item is clay:
+        if line 2 of lore of loop-item is "STORAGE":
+          set slot 26 of inventory of event-block to loop-item
+          set loop-item to air
+          stop
+
+#
+# > Event - on place of any shulker box
+# > Triggered if a player places not a predefined storage unit.
+# > Actions:
+# > If a player places a shulker box which shouldn't be a storage unit but
+# > somehow got one through bugs, this will prevent the shulker box from
+# > being placed down.
+on place of any shulker box:
+  if event-block is not {@item}:
+    loop all items in the inventory of event-block:
+      if loop-item is clay:
+        if line 2 of lore of loop-item is "STORAGE":
+          cancel event
 
 #
 # > Event - on break of option (item)
