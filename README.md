@@ -1,5 +1,5 @@
 # SKYBLOCK.SK
-Run Minecraft SkyBlock with Skript
+Run Minecraft SkyBlock 1.13.2 with Skript
 
 SKYBLOCK.SK adds a extensive and highly customizable SkyBlock Gamemode into your server using Skript with only a small amount of dependencies. Feel free to use SKYBLOCK.SK on your server and change it as you like, enhancements can be introduced by a pull request.
 	
