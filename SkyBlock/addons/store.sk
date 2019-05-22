@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.8
+# store.sk v0.0.9
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -28,6 +28,9 @@ options:
 #
 # > Configure the categories and items of the store below.
 on load:
+  #
+  # > Wait a second to load needed functions first.
+  wait 1 second
   #
   # > Sell money gain limit per player
   loadconfigobject("store-selllimit",20000)
