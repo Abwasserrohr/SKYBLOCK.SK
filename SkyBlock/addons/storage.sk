@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.14
+# storage.sk v0.0.15
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -933,10 +933,11 @@ function storageitemcheck(item:item) :: boolean:
         #
         # > If the 26th slot has clay balls, check if the 2nd line is "STORAGE",
         # > if it is, then this is a storage unit.
-        if {_inv}.getItem(26) is clay balls:
-          set {_item} to {_inv}.getItem(26)
-          if 2nd line of {_item}'s lore is "STORAGE":
-            return true
+        loop 27 times:
+          set {_item} to {_inv}.getItem(loop-number - 1)
+          if {_item} is clay balls:
+            if 2nd line of {_item}'s lore is "STORAGE":
+              return true
         delete {_inv}
       delete {_meta}
   delete {_item}
