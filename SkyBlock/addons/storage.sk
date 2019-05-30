@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.15
+# storage.sk v0.0.16
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -156,9 +156,10 @@ on place of {@item}:
     loop all items in the inventory of event-block:
       if loop-item is clay:
         if line 2 of lore of loop-item is "STORAGE":
-          set slot 26 of inventory of event-block to loop-item
-          set loop-item to air
-          stop
+          if loop-slot is not 26:
+            set slot 26 of inventory of event-block to loop-item
+            set loop-item to air
+            stop
 
 #
 # > Event - on place of any shulker box
