@@ -73,7 +73,7 @@ language:
   
   #
   # > /island invite message which tells that a invitation has been sent.
-- sentrequest: <p2>Du hat eine Anfrage geschickt.
+- sentrequest: <p2>Du hast eine Anfrage geschickt.
   #
   # > /island invite message that tells the invited player who invited.
 - gotrequest: <p2>Du hast eine Inseleinladung von <player> erhalten.
