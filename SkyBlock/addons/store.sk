@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.10
+# store.sk v0.0.11
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -828,7 +828,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
         {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
         {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-        {_player}.sendMessage({_msg})
+        {_player}.spigot().sendMessage({_msg})
         stop
       #
       # > The player has not enough space, send a error message.
@@ -911,7 +911,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_totalamount}% %{_langmsg::2}%")
         {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
         {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-        {_player}.sendMessage({_msg})
+        {_player}.spigot().sendMessage({_msg})
         stop
     #
     # > If the player doesn't want to sell in masses, check if the player has the item
@@ -933,7 +933,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
       {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
       {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-      {_player}.sendMessage({_msg})
+      {_player}.spigot().sendMessage({_msg})
       stop
     #
     # > The player doesn't have enough items. Send a error message.
@@ -945,4 +945,4 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%")
       {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
       {_msg}.addExtra(newTextComponent("%{_langmsg::2}%"))
-      {_player}.sendMessage({_msg})
+      {_player}.spigot().sendMessage({_msg})
