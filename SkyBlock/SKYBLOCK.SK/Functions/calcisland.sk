@@ -28,9 +28,6 @@ function calcisland(p:offline player):
   # > Set a local variable for chest and storage unit calculation.
   set {_calculatechest} to yaml value "calcinventory" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
   set {_calculatestorage} to yaml value "calcstorage" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
-  #
-  # > Prevent chunks from unloading.
-  set metadata value "nochunkunload" of getdummy() to true
   set {_exp} to 0
   #
   # > Calculate, how many blocks have be checked to make a fully working progress bar:
@@ -85,8 +82,8 @@ function calcisland(p:offline player):
         if isWithinArea(loop-value-2's location,{_b1},{_b2}) is true:
           disablerobot(loop-value-2)
     #
-    # > Loop all chunks within the two borders and keep them loaded until finished:
-    loadtempchunks({_p})
+    # > Force load all needed chunks for a faster calculation process.
+    handletempchunks({_p},true)
 	#
 	# > Get the minimum and maximum coordinate for each x-, y- and z-coord.
     set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
@@ -201,32 +198,25 @@ function calcisland(p:offline player):
   wait 5 ticks
   actionload({_p},"&rLevel: &6&l%{_level}%")
   delete {SB::calcstatus::%{_p}%}
-  delete metadata value "nochunkunload" of getdummy()
+  #
+  # > Unload all force loaded chunks of that player.
+  handletempchunks({_p},false)
 
 #
-# > Event - on chunk unload
-# > Actions:
-# > If the value "nochunkunload" of the metadata of a dummy block is
-# > true, no chunks can unload. This is needed to prevent fast
-# > loading and unloading of chunks while calculating the island.
-on chunk unload:
-  if metadata value "nochunkunload" of getdummy() is true:
-    cancel event
-
-#
-# > Function - loadtempchunks
+# > Function - handletempchunks
 # > Parameters:
-# > <location>location 1
-# > <loaction>location 2
+# > <offline player> the player which island should be calculated.
+# > <boolean>force load temp chunks=true,remove force load temp chunks=false
 # > Actions:
 # > Loops through all blocks between the two location and loads the chunks,
 # > with chunk unload prevention, these chunks keep being loaded for a fast
 # > island calculation.
-function loadtempchunks(p:offline player):
+function handletempchunks(p:offline player,load:boolean=true):
   #
   # > Wait a tick, that way, threaded functions do not have to wait
   # > but can work async.
   wait 1 tick
+
   #
   # > Calculate the borders which should be calculated.
   set {_b1} to location of {_bedrock}
@@ -235,23 +225,35 @@ function loadtempchunks(p:offline player):
   add ({_dist} - {SB::config::protect}) to z-coord of {_b1}
   subtract ({_dist} - {SB::config::protect}) from x-coord of {_b2}
   subtract ({_dist} - {SB::config::protect}) from z-coord of {_b2}
+
   #
   # > Get the minimum and maximum of each x-,y- and z-coord.
   set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
   set {_x2} to getmax(x-coord of block at {_b1}, x-coord of block at {_b2})
-  set {_y1} to getmin(y-coord of block at {_b1}, y-coord of block at {_b2})
-  set {_y2} to getmax(y-coord of block at {_b1}, y-coord of block at {_b2})
   set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
   set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
+
+  set {_world} to "%{_b1}'s world%" parsed as world
+
   #
-  # > Loop through the whole island and load the chunks by setting them
-  # > into a local variable.
+  # > Loop through the whole island and load the chunks and set them force loaded
+  # > to prevent them from being unloaded.
   set {_x} to {_x1}
   while {_x} < {_x2}:
     add 1 to {_x}
     set {_z} to {_z1}
     while {_z} < {_z2}:
       add 1 to {_z}
-      set {_l1} to location at {_x}, 1, {_z} in "%{_b1}'s world%" parsed as world
+      set {_l1} to location at {_x}, 1, {_z} in {_world}
       set {_chunk} to chunk at block at {_l1}
+      broadcast "%{_chunk}%"
+
+      #
+      # > Only load the chunk if it should be loaded.
+      if {_load} is true:
+        {_chunk}.load()
+
+      #
+      # > Change the force loaded status depending on the parameter.
+      {_chunk}.setForceLoaded({_load})
   delete {_chunk}
