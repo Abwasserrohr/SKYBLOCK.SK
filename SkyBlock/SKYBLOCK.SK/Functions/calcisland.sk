@@ -217,6 +217,9 @@ function handletempchunks(p:offline player,load:boolean=true):
   # > but can work async.
   wait 1 tick
 
+  set {_uuid} to uuid of {_p}
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+
   #
   # > Calculate the borders which should be calculated.
   set {_b1} to location of {_bedrock}
@@ -233,8 +236,6 @@ function handletempchunks(p:offline player,load:boolean=true):
   set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
   set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
 
-  set {_world} to "%{_b1}'s world%" parsed as world
-
   #
   # > Loop through the whole island and load the chunks and set them force loaded
   # > to prevent them from being unloaded.
@@ -244,9 +245,8 @@ function handletempchunks(p:offline player,load:boolean=true):
     set {_z} to {_z1}
     while {_z} < {_z2}:
       add 1 to {_z}
-      set {_l1} to location at {_x}, 1, {_z} in {_world}
+      set {_l1} to location at {_x}, 1, {_z} in "%{_b1}'s world%" parsed as world
       set {_chunk} to chunk at block at {_l1}
-      broadcast "%{_chunk}%"
 
       #
       # > Only load the chunk if it should be loaded.
