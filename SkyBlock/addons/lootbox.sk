@@ -406,6 +406,9 @@ function startlootbox(p:player,tier:integer):
   # > Set slot 13 of the inventory (the center) to the predefined lootboxitem. To do only a emptry actionbar messsage.
   setguiitem({_p},13,{@lootboxitem},1," "," ","actionbar(""%{_p}%"" parsed as player,"" "")",false)
   #
+  # > Use the current inventory of the player to prevent any duplication bugs.
+  set {_pinv} to {_p}'s current inventory
+  #
   # > If the player holds a lootbox in his hand, remove one of it out of the inventory of the player.
   if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
     set {_tool} to {_p}'s tool
