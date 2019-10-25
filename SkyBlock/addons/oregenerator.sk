@@ -314,8 +314,8 @@ function generatorinfo(p:player):
   # > Set {_defaultlvl} to all blocks that have been created in the past
   set {_defaultlvl} to {SB::ogplayerblocks::%{_uuid}%}
   #
-  # > Set {_level} to 0, calculate later
-  set {_level} to 0
+  # > Set {_level} to 1, calculate later
+  set {_level} to 1
   #
   # > Subtract the {_defaultlvl} with the in the configuration amount, how many blocks have be produced to get a new level:
   set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregennewlevel})
