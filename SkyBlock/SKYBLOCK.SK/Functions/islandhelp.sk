@@ -54,9 +54,10 @@ function islandhelp(p:player,site:text="1"):
     #
     # > Make a new site every 5 commands.
     if {_i} >= 5:
-      add {_book}.create() to {_sites::*}
-      set {_book} to newComponentBuilder()
-      set {_i} to 0
+      if {_commands::%loop-index parsed as number + 1%} is set:
+        add {_book}.create() to {_sites::*}
+        set {_book} to newComponentBuilder()
+        set {_i} to 0
   #
   # > Add the current page to the sites list.
   add {_book}.create() to {_sites::*}
