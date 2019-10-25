@@ -137,7 +137,7 @@ function islandtoplist(p:player,pageint:text,gui:boolean=false,sorted:text="isla
   set {_book} to new ComponentBuilder({_toplistbook})
   #
   # > The header line of the page.
-  set {_line} to getlang("topheader",{_lang})
+  set {_line} to getlang("parkour_toplist_header",{_lang})
   replace all "<start>" with "%{_pageint}%" in {_line}
   replace all "<end>" with "%{_page}%" in {_line}
   {_book}.append(newTextComponent("%{_line}%%nl%"))
