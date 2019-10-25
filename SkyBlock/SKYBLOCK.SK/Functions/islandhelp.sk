@@ -28,7 +28,7 @@ function islandhelp(p:player,site:text="1"):
   # > Add all commands and the order in which it should be displayed to the player.
   # > These need to have the same name as defined in the language files.
   add "iscreate","isdelete","isteleport","issethome","isteleportgo","islevel","istop","isinvite","iskick","isjoin" to {_commands::*}
-  add "isleave","isgui","isspawn","isore","isgen","trustadd","trustremove","trustlist","helpwarp","helpsetwarp" to {_commands::*}
+  add "isleave","isgui","isspawn","isore","isgen","trustadd","trustremove","helpwarp","helpsetwarp" to {_commands::*}
   add "helpdelwarp" to {_commands::*}
   set {_i} to 0
   loop {_commands::*}:
