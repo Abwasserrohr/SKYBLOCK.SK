@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.9
+# oregenerator.sk v0.0.10
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -412,7 +412,7 @@ function orechancesinfo(p:player):
       # > Send the text with components to allow translateable block names.
       set {_msg} to newTextComponent("%{_prefix}% %{_chance}%%%: ")
       {_msg}.addExtra(getTranslatableComponentFromItem({SB::oregen::%loop-index%}))
-      {_player}.sendMessage({_msg})
+      {_player}.spigot().sendMessage({_msg})
   #
   # > Prints a spacer
   send "%{SB::config::spacer}%" to {_player}
