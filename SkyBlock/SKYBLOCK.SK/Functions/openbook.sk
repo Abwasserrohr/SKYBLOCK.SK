@@ -1,12 +1,12 @@
 #
 # ==============
-# openbook.sk v0.0.13
+# openbook.sk v0.0.14
 # ==============
 # Opens a book from the server side on the client.
 # ==============
 # Dependencies
 # ==============
-# > Spigot 1.13.2 - https://hub.spigotmc.org/jenkins/job/BuildTools/
+# > Spigot - https://hub.spigotmc.org/jenkins/job/BuildTools/
 # > Skript by bensku - https://github.com/SkriptLang/Skript/releases
 # > skript-mirror - https://github.com/btk5h/skript-mirror/releases
 # ==============
@@ -49,16 +49,28 @@ import:
 # > <player>the player who should open the book, has to hold a book to work.
 # > Actions:
 # > Sends a "minecraft:book_open" packet to the client to open a book from the server.
-function openbook(player:player):
-  if {_player}'s tool is a written book:
-    #
-    # > Prepare a byte buffer to send a packet, these packets are documented here:
-    # > https://wiki.vg/Plugin_channels#minecraft:book_open
-    set {_buffer} to Unpooled.buffer(256)
-    {_buffer}.setByte(0, 0)
-    {_buffer}.writerIndex(1)
-    set {_packet} to new PacketPlayOutCustomPayload(new MinecraftKey("minecraft:book_open"), new PacketDataSerializer({_buffer}))
-    {_player}.getHandle().playerConnection!.sendPacket({_packet})
+function openbook(player:player, book:item=air):
+  if {_book} is air:
+    set {_book} to {_player}'s tool
+  if {_book} is a written book:
+    set {_v} to minecraft version
+    replace all "." with "" in {_v}
+    if length of {_v} is 3:
+      set {_v} to "%{_v}%0"
+    set {_v} to {_v} parsed as number
+    if {_v} >= 1142:
+      {_player}.openBook({_book})
+    else:
+      #
+      # > Prepare a byte buffer to send a packet, these packets are documented here:
+      # > https://wiki.vg/Plugin_channels#minecraft:book_open
+      set {_buffer} to Unpooled.buffer(256)
+      {_buffer}.setByte(0, 0)
+      {_buffer}.writerIndex(1)
+      set {_mckey} to new MinecraftKey("minecraft:book_open")
+      set {_packetserializer} to new PacketDataSerializer({_buffer})
+      set {_packet} to new PacketPlayOutCustomPayload({_mckey}, {_packetserializer})
+      set {_conn} to {_player}.getHandle().playerConnection!
 
 #
 # > Function - createopenbook
