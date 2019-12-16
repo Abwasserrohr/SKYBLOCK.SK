@@ -196,6 +196,13 @@ challenges:
 - 3_8_repeat: true
 - 3_8_repeatsperday: 5
 
+- 3_9_needed: "128-stick"
+- 3_9_reward: "250-xp,16-bamboo plant"
+- 3_9_repeatreward: "2-xp,2-bamboo plant"
+- 3_9_item: "bamboo plant"
+- 3_9_repeat: true
+- 3_9_repeatsperday: 5
+
 - 4_1_needed: "512-gold ingot"
 - 4_1_reward: "150-xp,4-blaze rod"
 - 4_1_repeatreward: "25-xp,1-blaze rod"
