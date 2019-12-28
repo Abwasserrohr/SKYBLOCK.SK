@@ -436,9 +436,10 @@ function solvechallenge(p:player,challenge:text,page:number=0,shift:boolean=fals
       {_sendmsg}.append({_msg::1})
       {_sendmsg}.append(getTranslatableComponentFromItem({_tmp::2}))
       {_sendmsg}.append({_msg::2})
+
       #
       # > Print error to player that there is something missing to complete this challenge.
-      {_p}.sendMessage({_sendmsg}.create())
+      {_p}.spigot().sendMessage({_sendmsg}.create())
       set {_incomplete} to true
   #
   # > If the player does not have everything in the inventory, stop here.
