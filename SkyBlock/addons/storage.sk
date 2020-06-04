@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.16
+# storage.sk v0.0.17
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -888,10 +888,17 @@ function storestorageitem(p:player,x:number,y:number,z:number):
       #
       # > Set {_amount} to the amount of items the player has in his inventory.
       # > These items have to be the same as in slot 0 of the storage unit.
-      set {_amount} to number of {_item} in {_p}'s inventory
+      set {_inventory} to {_p}'s inventory
+      set {_amount} to number of {_item} in {_inventory}
+      set {_itemlist} to {_inventory}.all({_item}.getType())
+      loop ...{_itemlist}.keySet():
+        set {_loopitem} to {_itemlist}.get(loop-value)
+        {_loopitem}.setAmount(1)
+        if {_loopitem} is 1 of {_item}:
+          add {_itemlist}.get(loop-value).getAmount() to {_savedamount}
+          {_inventory}.setItem(loop-value, new ItemStack(Material.AIR!))	
       #
       # > Add the amount the player wants to add to the storage unit amount and save it to the storage unit clay amount item.
-      add {_amount} to {_savedamount}
       set line 1 of lore of {_itemdata} to "%{_savedamount}%"
       #
       # > Update the storage sign
@@ -899,7 +906,7 @@ function storestorageitem(p:player,x:number,y:number,z:number):
       set slot 26 of {_inv} to 1 of {_itemdata}
       #
       # > Remove the items of the inventory of the player.
-      remove {_amount} of {_item} from {_p}'s inventory
+      #remove {_amount} of {_item} from {_p}'s inventory
       #
       # > Reopen the storage unit menu to update the menu.
       openstoragemenu({_p},{_inv},{_loc})
