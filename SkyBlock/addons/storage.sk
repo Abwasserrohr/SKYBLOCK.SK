@@ -91,6 +91,8 @@ import:
   org.bukkit.event.vehicle.VehicleMoveEvent
   org.bukkit.Bukkit
   java.text.DecimalFormat
+  org.bukkit.Material
+  org.bukkit.inventory.ItemStack
 
 #
 # > Event - on load
