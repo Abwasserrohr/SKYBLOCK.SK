@@ -15,6 +15,8 @@ import:
   org.bukkit.event.hanging.HangingBreakByEntityEvent
   org.bukkit.event.world.StructureGrowEvent
   org.bukkit.event.player.PlayerTeleportEvent
+  org.bukkit.event.player.PlayerBucketFillEvent
+
 
 #
 # > Event - PlayerArmorStandManipulateEvent
@@ -36,13 +38,6 @@ on PlayerArmorStandManipulateEvent:
 on despawn of any fish:
   if {SB::config::preventfishdespawn} is true:
     cancel event
-
-#
-# > Event - on fade of snow or ice
-# > Actions:
-# > If snow or ice melts, it is checked if the event should be cancelled or not.
-on fade of snow block or ice block:
-  handlegeneralflagevent(event,false,event-location,"snow-ice-melt")
 
 #
 # > Event - rightclick
@@ -81,13 +76,18 @@ on StructureGrowEvent:
 # > Actions:
 # > If the player is allowed to do this action, cancel the event and then give a island
 # > bound lava bucket out.
-on bucket fill:
-  if event-block is lava:
-    set {_allowed} to checkislandaccess(player,event-location)
+#on bucket fill:
+#  if event-block is lava:
+#    set {_allowed} to checkislandaccess(player,event-location)
+#    if {_allowed} is not false:
+#      cancel event
+#      binditem(event-location, player,lava bucket,false,event-block)
+on PlayerBucketFillEvent:
+  if event.getBlock() is lava:
+    set {_allowed} to checkislandaccess(event.getPlayer(),event.getBlock().getLocation())
     if {_allowed} is not false:
       cancel event
-      binditem(event-location, player,lava bucket)
-
+      binditem(event.getBlock().getLocation(), event.getPlayer(),lava bucket,false,event.getBlock())
 #
 # > Event - drop
 # > Triggered once a player drops something
@@ -173,7 +173,7 @@ on HangingBreakByEntityEvent:
   set {_player} to event.getRemover()
   if {_player} is a player:
     set {_l} to event.getEntity().getLocation()
-    set {_allowed} to checkislandaccess({_player},event.getEntity().getLocation(),"entity-click")
+    set {_allowed} to checkislandaccess({_player},{_l},"entity-click")
     if {_allowed} is false:
       event.setCancelled(true)
 
@@ -287,15 +287,15 @@ on break:
     # > island is below level 100.
     if event-block is dirt or grass or farmland or grass path:
       cancel event
-      binditem(event-location, player,dirt)
+      binditem(event-location, player,dirt,false,event-block)
     #
     # > Prevent dirt duplication through podzol revert.
     if event-block is podzol block:
       cancel event
-      binditem(event-location, player,podzol block,true)
+      binditem(event-location, player,podzol block,true,event-block)
     if event-block is obsidian:
       cancel event
-      binditem(event-location, player,obsidian)
+      binditem(event-location, player,obsidian,false,event-block)
       #
 	  # > If the obsidian block is also on the opposite site, it is in most cases a nether portal,
 	  # > break the obsidian on the other side (nether|world) too.
@@ -577,21 +577,6 @@ on script unload:
 # > and also sets the lastactive state to now to prevent purge of the island.
 on join:
   set {SB::invincible::%player%} to 1
-  #
-  # > If custom join messages are enabled,
-  # > send custom ones.
-  if {SB::config::customjoinquit} is true:
-    #
-    # > Disable the global join message by setting it to a text
-    # > with a length of 0.
-    set join message to ""
-    #
-    # > Send a translated join message to every player.
-    loop all players:
-      set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("joinmessage",getlangcode(loop-player)," "))
-      replace all "<player>" with "%player%" in {_msg}
-      message {_msg} to loop-player
-    delete {_msg}
   wait a tick
   if getlangcode(player) is not set:
     set {SK::lang::%uuid of player%} to "de"
@@ -614,32 +599,8 @@ on join:
     set {SB::island::%{_l::1}%_%{_l::2}%_%{_l::3}%::lastactive} to now
   wait 5 seconds
   delete {SB::invincible::%player%} 
-
 #
-# > Event - on quit
-# > Triggered if a player leaves the game
-# > Actions:
-# > Pevents the default leave message and send everyone a leave message in
-# > the language of the player.
-on quit:
-  #
-  # > If custom quit messages are enabled,
-  # > send custom ones.
-  if {SB::config::customjoinquit} is true:
-    #
-    # > Disable the global leave message by setting it to a text
-    # > with a length of 0.
-    set quit message to ""
-    #
-    # > Send a translated join message to every player.
-    loop all players:
-      set {_msg} to getlang("prefix",getlangcode(loop-player),"",getlang("quitmessage",getlangcode(loop-player)," "))
-      replace all "<player>" with "%player%" in {_msg}
-      message {_msg} to loop-player
-    delete {_msg}
-
-#
-# > Event - on connect
+# > Event - connect
 # > Triggered if a player connects
 # > Actions:
 # > Force the language "de" and kick the player if the island deletation process is ongoing.
@@ -649,9 +610,8 @@ on connect:
       set {_prefix} to getlang("prefix",getlangcode(player))
       set {_msg} to getlang("delismsg",getlangcode(player))
       kick player due to "%{_prefix}% %{_msg}%"
-
 #
-# > Event - PlayerTeleportEvent
+# > Event - teleport
 # > Triggered on a teleportation
 # > Actions:
 # > If the teleported entity is a player and the teleport cause is a nether portal, check
