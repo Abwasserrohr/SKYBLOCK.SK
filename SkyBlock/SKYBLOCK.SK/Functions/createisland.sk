@@ -208,7 +208,8 @@ function createisland(p:player,island:text="1"):
         # > If the location where a bedrock should be (island center) is not a bedrock,
         # > the player gets teleported back and a message with the /island create command.
         # > This error happens only if the setup is faulty.
-        if block at {_loc} is not bedrock:
+        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
+        if {SB::island::%{_bedrockloc}%::leader} is not set:
           teleport {_p} to {_backloc}
           message "%{_prefix}% /is create" to {_p}
           broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
@@ -224,7 +225,6 @@ function createisland(p:player,island:text="1"):
         teleport {_p} to {_homeloc}
         #
         # > Now, set new variables for the player and the island.
-        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
         set {SB::island::%{_bedrockloc}%::home::home} to {_homeloc}
         set {SB::island::%{_bedrockloc}%::leader} to {_uuid}
         set {SB::island::%{_bedrockloc}%::level} to 0
