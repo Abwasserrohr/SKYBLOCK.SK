@@ -23,7 +23,12 @@ import:
   {@nms}.EnumBlockRotation
   {@nms}.NBTCompressedStreamTools
   java.io.FileInputStream
-
+  org.bukkit.block.structure.UsageMode
+  java.io.File
+  java.io.IOException
+  org.apache.commons.io.FileUtils
+  org.bukkit.util.BlockVector
+ 
 #
 # > function - loadstructure
 # > Parameters:
@@ -31,7 +36,25 @@ import:
 # > <text>file location, starting from the plugins/ folder
 # > [<boolean>]false to also place mobs which are in the structure file
 # > [<number>]the rotation. Possible are: 0,90,180,270
-function loadstructure(location:location,file:text,nomobs:boolean=false,rotation:number=0):
+function loadstructure(location:location,filename:text,nomobs:boolean=false,rotation:number=0):
+  set {_world} to {_location}.getWorld()
+  set {_destination} to try new File("%{_world}%/generated/minecraft/structures/%{_filename}%.nbt")
+  set {_source} to try new File("plugins/Skript/scripts/SkyBlock/islands/%{_filename}%.nbt")
+  try FileUtils.copyFile({_source}, {_destination})
+  set block at {_location} to structure block
+  set {_structure} to {_location}.getBlock().getState()
+  {_structure}.setUsageMode(UsageMode.LOAD!)
+  {_structure}.setStructureName("%{_filename}%")
+  {_structure}.setRelativePosition(new BlockVector(0.0, 0.0, 0.0))
+  {_structure}.update()
+  set block 1 above {_location} to redstone block
+  if block at {_location} is structure block:
+    set block at {_location} to air
+  if block 1 above {_location} is redstone block:
+    set block at {_location} to air
+  set block 1 above {_location} to air
+
+  stop
   #
   # > Create a new structure
   set {_structure} to new DefinedStructure()
@@ -58,13 +81,24 @@ function loadstructure(location:location,file:text,nomobs:boolean=false,rotation
     set {_rotation} to EnumBlockMirror.NONE!
   #
   # > Define structure info.
-  set {_structureinfo} to new DefinedStructureInfo().a(EnumBlockMirror.NONE!).a({_rotation}).a({_nomobs})
+  set {_structureinfo} to new DefinedStructureInfo()
+  broadcast "err %last java error%"
+  {_structureinfo}.a(EnumBlockMirror.NONE!)
+  broadcast "err %last java error%"
+  {_structureinfo}.a({_rotation})
+  broadcast "err %last java error%"
+  {_structureinfo}.a({_nomobs})
+  broadcast "err %last java error%"
+
   #
   # > Set the position as Blockposition.
   set {_position} to new BlockPosition(x-coord of {_location}, y-coord of {_location}, z-coord of {_location})
   #
   # > Load the structure into the world.
-  {_structure}.a({_world}, {_position}, {_structureinfo})
+  broadcast "world %{_world}%"
+  broadcast "position %{_position}%"
+  broadcast "structureinfo %{_structureinfo}%"
+  {_structure}.a()#{_world}, {_position}, {_position})
   #
   # > Set the file stream to null to stop the stream.
   set {_stream} to null
