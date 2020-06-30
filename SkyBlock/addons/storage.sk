@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.14
+# storage.sk v0.0.18
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -91,6 +91,192 @@ import:
   org.bukkit.event.vehicle.VehicleMoveEvent
   org.bukkit.Bukkit
   java.text.DecimalFormat
+  org.bukkit.Material
+  org.bukkit.inventory.ItemStack
+
+#
+# > Event - on InventoryMoveItemEvent
+# > Triggered if a item is moved in any inventory on the server.
+# > Actions:
+# > Counts up or down, depending if the storage unit gets an item or a hopper takes
+# > one out of it. If the option {@hopperhook} is set to false, all inventory interactions
+# > with hoppers are disabled.
+on InventoryMoveItemEvent:
+  #
+  # > If the server operator disabled hoppers for the storage units, cancel the events.
+  if {@hopperhook} is false:
+    if slot 26 of event.getDestination() is clay:
+      if line 2 of lore of slot 26 of event.getDestination() is "STORAGE":
+        event.setCancelled(true)
+        stop
+  if {@preventhopperbelow} is true:
+    if slot 26 of event.getSource() is clay:
+      if line 2 of lore of slot 26 of event.getSource() is "STORAGE":
+        event.setCancelled(true)
+        stop
+  #
+  # > If the storage unit is the destination of the item.
+  if slot 26 of event.getDestination() is clay:
+    set {_inv} to event.getDestination()
+    set {_itemdata} to slot 26 of {_inv}
+    #
+    # > If this chest is a valid storage unit.
+    if line 2 of lore of {_itemdata} is "STORAGE":
+      set {_item} to slot 0 of {_inv}
+      set {_itemdata} to slot 26 of {_inv}
+      set {_eitem} to event.getItem()
+      #
+      # > If the storage unit is empty, the {_item} is air.
+      if {_item} is air:
+        if "%{_eitem}%" contains "shulker":
+          event.setCancelled(true)
+          stop
+        set line 1 of lore of slot 26 of {_inv} to "1"
+        set {_loc} to event.getDestination().getHolder().getLocation()
+        storagesignupdater({_loc},{_item},1)
+      #
+      # > If the {_item} is the same as the event item (the one, which is added through the hopper),
+      # > add it to the storage unit.
+      else if {_item} is {_eitem}:
+        #
+        # > Set {_amount} to the amount of storage unit items in the inventory of
+        # > the storage unit.
+        set {_amount} to number of {_item} in {_inv}
+        #
+        # > There is always one of the item left to keep NBT data. Since one has been
+        # > added by the event, remove one now.
+        remove 1 of {_item} from {_inv}
+        #
+        # > Get the current storage amount.
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        #
+        # > Add the new amount to the storage amount.
+        add {_amount} to {_savedamount}
+        #
+        # > Save the storage amount back to the item lore.
+        set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+        #
+        # > Get the location of the chest to update the storage sign.
+        set {_loc} to event.getDestination().getHolder().getLocation()
+        storagesignupdater({_loc},{_item},{_savedamount})
+        #
+        # > Set the new item lore to the storage unit.
+        set slot 26 of {_inv} to 64 of {_itemdata}
+      #
+      # > If the hopper tries to move a item into the storage unit which
+      # > doesn't match with the storage item, check, if there are any
+      # > other matching items in the hopper.
+      else:
+        #
+        # > Cancel the event here, if there is a valid item,
+        # > remove it manually out of the hopper.
+        event.setCancelled(true)
+        #
+        # > Get the hopper as a variable.
+        set {_hopper} to event.getSource().getHolder()
+        #
+        # > Prevent item glich bugs by waiting 1 tick.
+        wait 1 tick
+        loop all items in {_hopper}'s inventory:
+          if 1 of loop-item is 1 of {_item}:
+            #
+            # > Remove 1 of the item out of the hopper.
+            remove 1 of {_item} from {_hopper}'s inventory
+            #
+            # > Get the current storage amount.
+            set {_savedamount} to line 1 of lore of {_itemdata}
+            set {_savedamount} to {_savedamount} parsed as integer
+            #
+            # > Add 1 to the storage amount.
+            add 1 to {_savedamount}
+            #
+            # > Save the new value back to the lore
+            set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+            #
+            # > Get the location of the chest to update the storage sign.
+            set {_loc} to event.getDestination().getHolder().getLocation()
+            storagesignupdater({_loc},{_item},{_savedamount})
+            #
+            # > Set the new item lore to the storage unit.
+            set slot 26 of {_inv} to 64 of {_itemdata}
+            #
+            # > Stop the loop if one valid item has been found.
+            stop loop
+        #
+        # > Delete the hopper and stop this event execution here.
+        delete {_hopper}
+        stop
+  else:
+    #
+    # > If the storage unit is the source of the item.
+    if slot 26 of event.getSource() is clay:
+      set {_inv} to event.getSource()
+      #
+      # > If the storage unit is empty, cancel and stop.
+      if line 1 of lore of slot 26 of {_inv} is "0":
+        event.setCancelled(true)
+        stop
+      #
+      # > If the storage unit is valid.
+      if line 2 of lore of slot 26 of {_inv} is "STORAGE":
+        #
+        # > If the hopper tries to get the clay which holds storage unit data, cancel and stop.
+        set {_eitem} to event.getItem()
+        if {_eitem} is clay:
+          if line 2 of lore of {_eitem} is "STORAGE":
+            event.setCancelled(true)
+            stop
+        #
+        # > Set the clay item which holds the storage unit data as local variable.
+        set {_itemdata} to slot 26 of {_inv}
+        #
+        # > Get the current amount of items in the storage amount,
+        # > parse it as integer and check if it is equal or less than 0.
+        # > If it is equal or less than 0, cancel and stop.
+        set {_savedamount} to line 1 of lore of {_itemdata}
+        set {_savedamount} to {_savedamount} parsed as integer
+        if {_savedamount} <= 0:
+          event.setCancelled(true)
+          stop
+        #
+        # > If it is not equal or less than 0, remove 1 from the storage unit amount.
+        else:
+          remove 1 from {_savedamount}
+          set line 1 of lore of {_itemdata} to "%{_savedamount}%"
+          set {_loc} to {_inv}.getHolder().getLocation()
+          #
+          # > Update the storage sign.
+          storagesignupdater({_loc},{_item},{_savedamount})
+          set slot 26 of {_inv} to 64 of {_itemdata}
+          #
+          # > Clone the current item in slot 0 of the storage unit.
+          set {_item} to 1 of slot 0 of {_inv}
+          set {_item} to {_item}.clone()
+          #
+          # > Wait one tick until the hopper has pulled the item out of the
+          # > storage unit.
+          wait 1 tick
+          #
+          # > After one tick, the hopper has pulled the item out, add one to
+          # > the storage unit to save NBT data and item data.
+          if {_savedamount} > 0:
+            add 1 of {_item} to {_inv}
+          #
+          # > If the saved storage unit amount is 0, set the slot 0 to air.
+          else if {_savedamount} is 0:
+            set slot 0 of {_inv} to air
+  
+#
+# > Event - on inventory click
+# > Action:
+# > Prevent the storage item to be clicked in inventory and remove it + log it.
+on inventory click:
+  if event-item.getType() is Material.CLAY_BALL!:
+    if line 2 of lore of event-item is "STORAGE":
+      log "%player% %event-item% %line 1 of lore of event-item%" to "storageitemused"
+      set event-slot to air
+      cancel event
 
 #
 # > Event - on load
@@ -145,7 +331,7 @@ on place of {@item}:
       # > If a item is stored, it is always on slot 0.
       set {_loc} to event-location
       set {_inv} to block at {_loc}'s inventory
-      set slot 26 of {_inv} to 1 of clay
+      set slot 26 of {_inv} to 64 of clay
       set line 1 of lore of slot 26 of {_inv} to "0"
       set line 2 of lore of slot 26 of {_inv} to "STORAGE"
   #
@@ -156,9 +342,10 @@ on place of {@item}:
     loop all items in the inventory of event-block:
       if loop-item is clay:
         if line 2 of lore of loop-item is "STORAGE":
-          set slot 26 of inventory of event-block to loop-item
-          set loop-item to air
-          stop
+          if loop-slot is not 26:
+            set slot 26 of inventory of event-block to 64 of loop-item
+            set loop-item to air
+            stop
 
 #
 # > Event - on place of any shulker box
@@ -364,170 +551,6 @@ on VehicleMoveEvent:
     delete {_loc}
 
 #
-# > Event - on InventoryMoveItemEvent
-# > Triggered if a item is moved in any inventory on the server.
-# > Actions:
-# > Counts up or down, depending if the storage unit gets an item or a hopper takes
-# > one out of it. If the option {@hopperhook} is set to false, all inventory interactions
-# > with hoppers are disabled.
-on InventoryMoveItemEvent:
-  #
-  # > If the server operator disabled hoppers for the storage units, cancel the events.
-  if {@hopperhook} is false:
-    if slot 26 of event.getDestination() is clay:
-      if line 2 of lore of slot 26 of event.getDestination() is "STORAGE":
-        cancel event
-    stop
-  #
-  # > If the storage unit is the destination of the item.
-  if slot 26 of event.getDestination() is clay:
-    set {_inv} to event.getDestination()
-    set {_itemdata} to slot 26 of {_inv}
-    #
-    # > If this chest is a valid storage unit.
-    if line 2 of lore of {_itemdata} is "STORAGE":
-      set {_item} to slot 0 of {_inv}
-      set {_itemdata} to slot 26 of {_inv}
-      set {_eitem} to event.getItem()
-      #
-      # > If the storage unit is empty, the {_item} is air.
-      if {_item} is air:
-        set line 1 of lore of slot 26 of {_inv} to "1"
-        set {_loc} to event.getDestination().getHolder().getLocation()
-        storagesignupdater({_loc},{_item},1)
-      #
-      # > If the {_item} is the same as the event item (the one, which is added through the hopper),
-      # > add it to the storage unit.
-      else if {_item} is {_eitem}:
-        #
-        # > Set {_amount} to the amount of storage unit items in the inventory of
-        # > the storage unit.
-        set {_amount} to number of {_item} in {_inv}
-        #
-        # > There is always one of the item left to keep NBT data. Since one has been
-        # > added by the event, remove one now.
-        remove 1 of {_item} from {_inv}
-        #
-        # > Get the current storage amount.
-        set {_savedamount} to line 1 of lore of {_itemdata}
-        set {_savedamount} to {_savedamount} parsed as integer
-        #
-        # > Add the new amount to the storage amount.
-        add {_amount} to {_savedamount}
-        #
-        # > Save the storage amount back to the item lore.
-        set line 1 of lore of {_itemdata} to "%{_savedamount}%"
-        #
-        # > Get the location of the chest to update the storage sign.
-        set {_loc} to event.getDestination().getHolder().getLocation()
-        storagesignupdater({_loc},{_item},{_savedamount})
-        #
-        # > Set the new item lore to the storage unit.
-        set slot 26 of {_inv} to 1 of {_itemdata}
-      #
-      # > If the hopper tries to move a item into the storage unit which
-      # > doesn't match with the storage item, check, if there are any
-      # > other matching items in the hopper.
-      else:
-        #
-        # > Cancel the event here, if there is a valid item,
-        # > remove it manually out of the hopper.
-        cancel event
-        #
-        # > Get the hopper as a variable.
-        set {_hopper} to event.getSource().getHolder()
-        #
-        # > Prevent item glich bugs by waiting 1 tick.
-        wait 1 tick
-        loop all items in {_hopper}'s inventory:
-          if 1 of loop-item is 1 of {_item}:
-            #
-            # > Remove 1 of the item out of the hopper.
-            remove 1 of {_item} from {_hopper}'s inventory
-            #
-            # > Get the current storage amount.
-            set {_savedamount} to line 1 of lore of {_itemdata}
-            set {_savedamount} to {_savedamount} parsed as integer
-            #
-            # > Add 1 to the storage amount.
-            add 1 to {_savedamount}
-            #
-            # > Save the new value back to the lore
-            set line 1 of lore of {_itemdata} to "%{_savedamount}%"
-            #
-            # > Get the location of the chest to update the storage sign.
-            set {_loc} to event.getDestination().getHolder().getLocation()
-            storagesignupdater({_loc},{_item},{_savedamount})
-            #
-            # > Set the new item lore to the storage unit.
-            set slot 26 of {_inv} to 1 of {_itemdata}
-            #
-            # > Stop the loop if one valid item has been found.
-            stop loop
-        #
-        # > Delete the hopper and stop this event execution here.
-        delete {_hopper}
-        stop
-  else:
-    #
-    # > If the storage unit is the source of the item.
-    if slot 26 of event.getSource() is clay:
-      set {_inv} to event.getSource()
-      #
-      # > If the storage unit is empty, cancel and stop.
-      if line 1 of lore of slot 26 of {_inv} is "0":
-        cancel event
-        stop
-      #
-      # > If the storage unit is valid.
-      if line 2 of lore of slot 26 of {_inv} is "STORAGE":
-        #
-        # > If the hopper tries to get the clay which holds storage unit data, cancel and stop.
-        set {_eitem} to event.getItem()
-        if {_eitem} is clay:
-          if line 2 of lore of {_eitem} is "STORAGE":
-            cancel event
-            stop
-        #
-        # > Set the clay item which holds the storage unit data as local variable.
-        set {_itemdata} to slot 26 of {_inv}
-        #
-        # > Get the current amount of items in the storage amount,
-        # > parse it as integer and check if it is equal or less than 0.
-        # > If it is equal or less than 0, cancel and stop.
-        set {_savedamount} to line 1 of lore of {_itemdata}
-        set {_savedamount} to {_savedamount} parsed as integer
-        if {_savedamount} <= 0:
-          cancel event
-          stop
-        #
-        # > If it is not equal or less than 0, remove 1 from the storage unit amount.
-        else:
-          remove 1 from {_savedamount}
-          set line 1 of lore of {_itemdata} to "%{_savedamount}%"
-          set {_loc} to {_inv}.getHolder().getLocation()
-          #
-          # > Update the storage sign.
-          storagesignupdater({_loc},{_item},{_savedamount})
-          set slot 26 of {_inv} to 1 of {_itemdata}
-          #
-          # > Clone the current item in slot 0 of the storage unit.
-          set {_item} to 1 of slot 0 of {_inv}
-          set {_item} to {_item}.clone()
-          #
-          # > Wait one tick until the hopper has pulled the item out of the
-          # > storage unit.
-          wait 1 tick
-          #
-          # > After one tick, the hopper has pulled the item out, add one to
-          # > the storage unit to save NBT data and item data.
-          if {_savedamount} > 0:
-            add 1 of {_item} to {_inv}
-          #
-          # > If the saved storage unit amount is 0, set the slot 0 to air.
-          else if {_savedamount} is 0:
-            set slot 0 of {_inv} to air
-#
 # > Event - on inventory open
 # > Triggered once a player opens a inventory
 # > Actions:
@@ -673,7 +696,7 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
           #
           # > Save the new item metadata for the storage unit clay, which holds the amount of the items in
           # > its lore.
-          set slot 26 of {_inv} to 1 of {_itemdata}
+          set slot 26 of {_inv} to 64 of {_itemdata}
           #
           # > Reopen the storage unit menu, which should now show the item with options and stop.
           openstoragemenu({_p},{_inv},{_loc})
@@ -847,7 +870,7 @@ function getstorageitem(p:player,x:number,y:number,z:number,mass:boolean=false):
         # > give the player the items.
         set line 1 of lore of {_itemdata} to "%{_savedamount}%"
         storagesignupdater({_loc},{_item},{_savedamount})
-        set slot 26 of {_inv} to 1 of {_itemdata}
+        set slot 26 of {_inv} to 64 of {_itemdata}
         if {_savedamount} is 0:
           remove 1 of {_item} from {_inv}
         give {_max} of {_item} to {_p}
@@ -887,21 +910,29 @@ function storestorageitem(p:player,x:number,y:number,z:number):
       #
       # > Set {_amount} to the amount of items the player has in his inventory.
       # > These items have to be the same as in slot 0 of the storage unit.
-      set {_amount} to number of {_item} in {_p}'s inventory
+      set {_inventory} to {_p}'s inventory
+      set {_amount} to number of {_item} in {_inventory}
+      set {_itemlist} to {_inventory}.all({_item}.getType())
+      loop ...{_itemlist}.keySet():
+        set {_loopitem} to {_itemlist}.get(loop-value)
+        {_loopitem}.setAmount(1)
+        if {_loopitem} is 1 of {_item}:
+          add {_itemlist}.get(loop-value).getAmount() to {_savedamount}
+          {_inventory}.setItem(loop-value, new ItemStack(Material.AIR!))	
       #
       # > Add the amount the player wants to add to the storage unit amount and save it to the storage unit clay amount item.
-      add {_amount} to {_savedamount}
       set line 1 of lore of {_itemdata} to "%{_savedamount}%"
       #
       # > Update the storage sign
       storagesignupdater({_loc},{_item},{_savedamount})
-      set slot 26 of {_inv} to 1 of {_itemdata}
+      set slot 26 of {_inv} to 64 of {_itemdata}
       #
       # > Remove the items of the inventory of the player.
-      remove {_amount} of {_item} from {_p}'s inventory
+      #remove {_amount} of {_item} from {_p}'s inventory
       #
       # > Reopen the storage unit menu to update the menu.
       openstoragemenu({_p},{_inv},{_loc})
+
 
 #
 # > Function - storageitemcheck
@@ -933,10 +964,11 @@ function storageitemcheck(item:item) :: boolean:
         #
         # > If the 26th slot has clay balls, check if the 2nd line is "STORAGE",
         # > if it is, then this is a storage unit.
-        if {_inv}.getItem(26) is clay balls:
-          set {_item} to {_inv}.getItem(26)
-          if 2nd line of {_item}'s lore is "STORAGE":
-            return true
+        loop 27 times:
+          set {_item} to {_inv}.getItem(loop-number - 1)
+          if {_item} is clay balls:
+            if 2nd line of {_item}'s lore is "STORAGE":
+              return true
         delete {_inv}
       delete {_meta}
   delete {_item}

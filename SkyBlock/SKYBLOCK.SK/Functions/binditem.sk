@@ -9,6 +9,8 @@
 # > To get the enchantment of the tool the player is using, we need this class.
 import:
   org.bukkit.enchantments.Enchantment
+  org.bukkit.Material
+
 
 #
 # > Function: binditem
@@ -17,7 +19,7 @@ import:
 # > Actions:
 # > If the island of the player is lower than the configured level, the dirt|grass|farmland
 # > is going to be island bound and can only be used on exactly this island.
-function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
+function binditem(el:location,p:player,block1:item,givesameblock:boolean=false,eventblock:block):
   #
   # > Get the block at the location as a new item.
   delete {_block}
@@ -29,7 +31,9 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false):
   set {_enchantments} to {_item}.getEnchantments()
   #
   # > Set the block to air to then later drop a item there.
-  set block at {_el} to air
+  #set block at {_eventblock}'s location to air
+  {_eventblock}.setType(Material.AIR!)
+
   #
   # > Get the current bedrock where the player wants to break an block:
   set {_bedrock} to getcurrentbedrock({_p},{_el})

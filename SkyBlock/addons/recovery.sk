@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.4
+# recovery.sk v0.0.5
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -107,9 +107,9 @@ function openrecoverymenu(p:player):
     #
     # > Set the items into the menu.
     if getlang("recovery_guiitemname",{_lang}) is set:
-      setguiitem({_p},{_slot},north facing chest,1,getlang("recovery_guiitemname",{_lang}),{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      setguiitem({_p},{_slot},north facing chest,1,getlang("recovery_guiitemname",{_lang}),{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", %{_price}%)",true)
     else:
-      setguiitem({_p},{_slot},north facing chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      setguiitem({_p},{_slot},north facing chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", %{_price}%)",true)
     add 1 to {_slot}
     #
     # > If there are more than 55 inventory uuids. Stop here.
@@ -121,7 +121,7 @@ function openrecoverymenu(p:player):
 # > Parameters - <player>player, <text>inventory uuid
 # > Actions:
 # > This function is called through the recovery menu. It buys the player the recovery chest.
-function buyrecoverychest(p:player,invid:text,price:integer):
+function buyrecoverychest(p:player,invid:text,price:number):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}

@@ -113,7 +113,8 @@ function createisland(p:player,island:text="1"):
       #
       # > If the block at the current location is not a bedrock, this is a empty place
       # > where a island could be created.
-      if block at {_loc} is not bedrock:
+      set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
+      if {SB::island::%{_bedrockloc}%::leader} is not set:
         #
         # > Print to the player that we found a new island.
         set {_msg} to getlang("foundis",{_lang})
@@ -159,7 +160,7 @@ function createisland(p:player,island:text="1"):
           set {_pasteloc} to location at {_loccx}, {_loccy}, {_loccz} in "%{SB::config::world}%" parsed as world
           remove 16 from x-coord of {_pasteloc}
           remove 16 from z-coord of {_pasteloc}
-          loadstructure({_pasteloc},"plugins/Skript/scripts/SkyBlock/islands/%{_schematic}%.nbt")
+          loadstructure({_pasteloc},"%{_schematic}%")
         else if {SB::config::isstorage} is "Schematic":
           #
           # Schematics are currently not supported. 1.13 still has some issues.
@@ -208,10 +209,14 @@ function createisland(p:player,island:text="1"):
         # > If the location where a bedrock should be (island center) is not a bedrock,
         # > the player gets teleported back and a message with the /island create command.
         # > This error happens only if the setup is faulty.
-        if block at {_loc} is not bedrock:
+        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
+        if block at {_loc} is not bedrock block:
           teleport {_p} to {_backloc}
           message "%{_prefix}% /is create" to {_p}
           broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
+          broadcast "Bedrock %{_bedrockloc}%."
+          delete {SB::searchis::%{_p}%}
+
           stop
         #
         # > Delete the {_search} variable to prevent the while loop from repeating.
@@ -224,7 +229,6 @@ function createisland(p:player,island:text="1"):
         teleport {_p} to {_homeloc}
         #
         # > Now, set new variables for the player and the island.
-        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
         set {SB::island::%{_bedrockloc}%::home::home} to {_homeloc}
         set {SB::island::%{_bedrockloc}%::leader} to {_uuid}
         set {SB::island::%{_bedrockloc}%::level} to 0
@@ -238,7 +242,6 @@ function createisland(p:player,island:text="1"):
         stop loop
       #
       # > If no island has been found, wait 1 tick and then go forward.
-      wait a tick
     if {_sb} is 6:
       set {_sb} to 2
     else:

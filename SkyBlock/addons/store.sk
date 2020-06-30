@@ -1,6 +1,6 @@
 #
 # ==============
-# store.sk v0.0.8
+# store.sk v0.0.11
 # ==============
 # Allow your players to buy and sell stuff easily.
 # ==============
@@ -28,6 +28,9 @@ options:
 #
 # > Configure the categories and items of the store below.
 on load:
+  #
+  # > Wait a second to load needed functions first.
+  wait 1 second
   #
   # > Sell money gain limit per player
   loadconfigobject("store-selllimit",20000)
@@ -796,6 +799,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
   else if {_action} is "sell":
     set {_sellprice::*} to getconfigarray("store-config-items-%{_shop}%-sell")
   set {_price} to {_%{_action}%price::%{_itemshopid}%} parsed as number
+
   #
   # > If the price is -1, stop here.
   if {_price} is -1:
@@ -816,6 +820,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         # > Remove the money from the player, send a success message and
         # > give the player the item.
         remove {_price} from {_player}'s balance
+        give {_item} to {_player}'s inventory
         #
         # > Create new Text Components to send them to the player. Also sends an
         # > TranslatableComponent, which is going to be translated by the client.
@@ -823,8 +828,8 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
         {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
         {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-        {_player}.sendMessage({_msg})
-        give {_item} to {_player}'s inventory
+        {_player}.spigot().sendMessage({_msg})
+        stop
       #
       # > The player has not enough space, send a error message.
       else:
@@ -847,6 +852,7 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       replace all "<amount>" with "%getconfigobject(""store-selllimit"")%" in {_msg}
       message "%{_prefix}% %{_msg}%" to {_player}
       stop
+
     #
     # > If the player wants to sell in mass, go through this below.
     if {_mass} is true:
@@ -892,33 +898,26 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
         # > Set the final price which should be given to the player.
         set {_price} to {_totalprice}
         #
-        # > Create new Text Components to send them to the player. Also sends an
-        # > TranslatableComponent, which is going to be translated by the client.
-        set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
-        set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_totalamount}% %{_langmsg::2}%")
-        {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
-        {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-        {_player}.sendMessage({_msg})
-        #
         # > Remove the calculated amount of items and give the player the calculated money. Then stop.
         remove {_totalamount} of {_item} from {_player}'s inventory 
         add {_price} to {_player}'s balance
         #
         # > Add the money to a temporary metadata storage to limit sells per player.
         set metadata value "store-sells-serversession" of {_player} to (metadata value "store-sells-serversession" of {_player}) + {_price}
+        #
+        # > Create new Text Components to send them to the player. Also sends an
+        # > TranslatableComponent, which is going to be translated by the client.
+        set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
+        set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_totalamount}% %{_langmsg::2}%")
+        {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+        {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
+        {_player}.spigot().sendMessage({_msg})
         stop
     #
     # > If the player doesn't want to sell in masses, check if the player has the item
     # > amount in his inventory.
     else if {_player}'s inventory has {_item}:
-      #
-      # > Create new Text Components to send them to the player. Also sends an
-      # > TranslatableComponent, which is going to be translated by the client.
-      set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
-      set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
-      {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
-      {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
-      {_player}.sendMessage({_msg})
+
       #
       # > Remove the item from the inventory of the player and give the money.
       remove {_item} from {_player}'s inventory
@@ -926,6 +925,15 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       #
       # > Add the money to a temporary metadata storage to limit sells per player.
       set metadata value "store-sells-serversession" of {_player} to (metadata value "store-sells-serversession" of {_player}) + {_price}
+
+      #
+      # > Create new Text Components to send them to the player. Also sends an
+      # > TranslatableComponent, which is going to be translated by the client.
+      set {_langmsg::*} to getlang("store_soldxitems",{_lang}) split at "<ph>"
+      set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%%{_item}.getAmount()% %{_langmsg::2}%")
+      {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
+      {_msg}.addExtra(newTextComponent("%{_langmsg::3}%%{_price}% %{_currency}%%{_langmsg::4}%"))
+      {_player}.spigot().sendMessage({_msg})
       stop
     #
     # > The player doesn't have enough items. Send a error message.
@@ -937,4 +945,4 @@ function storeshophandler(player:player,action:text,shop:text,itemshopid:number,
       set {_msg} to newTextComponent("%{_prefix}% %{_langmsg::1}%")
       {_msg}.addExtra(getTranslatableComponentFromItem({_item}))
       {_msg}.addExtra(newTextComponent("%{_langmsg::2}%"))
-      {_player}.sendMessage({_msg})
+      {_player}.spigot().sendMessage({_msg})

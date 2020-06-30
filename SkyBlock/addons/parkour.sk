@@ -1,6 +1,6 @@
 #
 # ==============
-# parkour.sk v0.0.8
+# parkour.sk v0.0.9
 # ==============
 # Let players create jump and run parkour. There are start, checkpoint and finish blocks which can
 # be placed everywhere it is allowed. Players can also try to get into the toplist by speedrunning
@@ -46,7 +46,7 @@ options:
   parcourblock1: dropper
   #
   # > Define the parcour inventory items for the player.
-  itemcheckpoint: floor sign
+  itemcheckpoint: oak wood floor sign
   itemtoplist: book
   itemrestart: eye of ender
   itemexit: barrier

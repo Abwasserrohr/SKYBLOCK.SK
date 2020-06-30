@@ -1,6 +1,6 @@
 #
 # ==============
-# robots.sk v0.0.8
+# robots.sk v0.0.9
 # ==============
 # Give your players robots which can help them farm stuff.
 # ==============
@@ -126,7 +126,7 @@ options:
   revertedrobottoitem: Your robot has been reverted to an item.
   notenoughinvspace: You don't have enough space in your inventory.
   maxnamesizemsg: The name is too lang, use maximum <max> letters.
-  
+
 #
 # > Configure the skript as you want below, the variables are used
 # > within the skript. If you want to change messages, change the
@@ -578,16 +578,21 @@ on place of {@robotitem}:
     # > The world is needed for particle spawning, use a local variable
     # > for this.
     set {_world} to player's world
+
     #
     # > Get the bedrock and disable the entity limit for this island to allow the robot to be spawned.
     set {_bedrock} to getcurrentbedrockmain({_loc})
     loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",true)
+
     #
     # > Spawn the armor stand which is the robot.
     spawn 1 armor stand at {_loc}
+
     #
     # > Enable the entity limit again for this island.
     loadconfigobject("EntityLimitDisabled-%x-coord of {_bedrock}%-%z-coord of {_bedrock}%",false)
+
+    #
     #
     # > Get the robot in a variable, which has been spawned above.
     set {_robo} to last spawned entity
@@ -694,7 +699,7 @@ on place of {@robotitem}:
     # > If the robot should start instantly, call the roboanimation function.
 	# > Also add a predefined "on" string to the name of the robot.
     if {@instantstart} is true:
-      set {_roboton} to {SB::robot::on::%{_lang}%}
+      set {_roboton} to getlang("robot_on",{_lang})
       if {_roboton} is not set:
         set {_roboton} to "{@roboton}"
       else:
@@ -704,7 +709,7 @@ on place of {@robotitem}:
     #
     # > If the robot should not start instantly, add a predefined "off" to the name.
     else:
-      set {_robotoff} to {SB::robot::robotoff::%{_lang}%}
+      set {_robotoff} to getlang("robot_robotoff",{_lang})
       if {_robotoff} is not set:
         set {_robooff} to "{@robotoff}"
       else:
@@ -731,10 +736,10 @@ function openrobotskmenu(robot:entity,player:player):
   set {_lang} to getlangcode({_player})
   #
   # > Open the robot main menu to the player
-  if {SB::robot::robotguiname::%{_lang}%} is not set:
+  if getlang("robot_robotguiname",{_lang}) is not set:
     opengui({_player},36,"{@robotguiname}")
   else:
-    opengui({_player},36,"%{SB::robot::robotguiname::%{_lang}%}%")
+    opengui({_player},36,getlang("robot_robotguiname",{_lang}))
   #
   # > Fill the Inventory with empty glass panes.
   loop 36 times:
@@ -747,14 +752,14 @@ function openrobotskmenu(robot:entity,player:player):
   #
   # > Check if the language for the status is set and use it, if not,
   # > use fallback translation options included in this skript.
-  if {SB::robot::robotstatuson::%{_lang}%} is not set:
+  if getlang("robot_robotstatuson",{_lang}) is not set:
     set {_robotstatuson} to "{@robotstatuson}"
     set {_robotstatusoff} to "{@robotstatusoff}"
     set {_clicktotogglesstatus} to "{@clicktotogglesstatus}"
   else:
-    set {_robotstatuson} to {SB::robot::robotstatuson::%{_lang}%}
-    set {_robotstatusoff} to {SB::robot::robotstatusoff::%{_lang}%}
-    set {_clicktotogglesstatus} to {SB::robot::clicktotogglesstatus::%{_lang}%}
+    set {_robotstatuson} to getlang("robot_robotstatuson",{_lang})
+    set {_robotstatusoff} to getlang("robot_robotstatusoff",{_lang})
+    set {_clicktotogglesstatus} to getlang("robot_clicktotogglesstatus",{_lang})
   #
   # > If the temporary metadata value of the key "robo" is 1, the robot is on.
   # > Set the slot to a emerald block, if it is on or to a redstone block, if it is off.
@@ -769,7 +774,7 @@ function openrobotskmenu(robot:entity,player:player):
   #
   # > Get the translations for the jobs, also load fallback translations, if
   # > the translation variables aren't available.
-  if {SB::robot::currentjob::%{_lang}%} is not set:
+  if getlang("robot_currentjob",{_lang}) is not set:
     set {_currentjoblang} to "{@currentjob}"
     set {_currentdesignlang} to "{@currentdesign}"
     set {_renamelangtitle} to "{@renametitle}"
@@ -777,18 +782,20 @@ function openrobotskmenu(robot:entity,player:player):
     set {_breakrobot} to "{@breakrobot}"
     set {_breakrobotlore} to "{@breakrobotlore}"
   else:
-    set {_currentjoblang} to {SB::robot::currentjob::%{_lang}%}
-    set {_currentdesignlang} to {SB::robot::currentdesign::%{_lang}%}
-    set {_renamelangtitle} to {SB::robot::renametitle::%{_lang}%}
-    set {_renamelanglore} to {SB::robot::renamelore::%{_lang}%}
-    set {_breakrobot} to {SB::robot::breakrobot::%{_lang}%}
-    set {_breakrobotlore} to {SB::robot::breakrobotlore::%{_lang}%}
+    set {_currentjoblang} to getlang("robot_currentjob",{_lang})
+    set {_currentdesignlang} to getlang("robot_currentdesign",{_lang})
+    set {_renamelangtitle} to getlang("robot_renametitle",{_lang})
+    set {_renamelanglore} to getlang("robot_renamelore",{_lang})
+    set {_breakrobot} to getlang("robot_breakrobot",{_lang})
+    set {_breakrobotlore} to getlang("robot_breakrobotlore",{_lang})
+
   #
   # > Get the job name, there aren't any fallback translations available, since
   # > this would make the configuration part harder for server operators.
-  set {_jobname} to {SB::robot::job::name::%{_lang}%::%{_job}%}
-  set {_joblore} to {SB::robot::job::lore::%{_lang}%::%{_job}%}
-  set {_designname} to {SB::robot::design::name::%{_lang}%::%{_design}%}
+  set {_jobname} to getlang("robot_job_name_%{_job}%",{_lang})
+  set {_joblore} to getlang("robot_job_lore_%{_job}%",{_lang})
+  set {_designname} to getlang("robot_design_name_%{_design}%",{_lang})
+  set {_designname} to getlang("robot_design_name_%{_design}%",{_lang})
   #
   # > Also set the tool for the job to set it in the main menu.
   set {_jobtool} to {SB::robot::job::tool::%{_job}%}
@@ -810,12 +817,12 @@ function openrobotskmenu(robot:entity,player:player):
     #
     # > Set the translation variables to local variables, if the translation
 	# > is not available, use fallback translations.
-    if {SB::robot::currentdesign::%{_lang}%} is not set:
+    if getlang("robot_currentdesign",{_lang}) is not set:
       set {_blocksbroken} to "{@blocksbroken}"
       set {_stats} to "{@stats}"
     else:
-      set {_blocksbroken} to {SB::robot::blocksbroken::%{_lang}%}
-      set {_stats} to {SB::robot::stats::%{_lang}%}
+      set {_blocksbroken} to getlang("robot_blocksbroken",{_lang})
+      set {_stats} to getlang("robot_stats",{_lang})
     #
     # > Replace the placeholder of the language variable to the broken blocks statistic, then place it in the slot 15 of the menu.
     replace all "<blocks>" with "%{_blocks}%" in {_blocksbroken}
@@ -836,10 +843,10 @@ function openrobotskdesignmenu(player:player):
   set {_robot} to {TMP::currentrobot::%{_player}%}
   #
   # > Open the design menu with 45 slots.
-  if {SB::robot::robotdesignguiname::%{_lang}%} is not set:
+  if getlang("robot_robotdesignguiname",{_lang}) is not set:
     opengui({_player},45,"{@robotdesignguiname}")
   else:
-    opengui({_player},45,"%{SB::robot::robotdesignguiname::%{_lang}%}%")
+    opengui({_player},45,getlang("robot_robotdesignguiname",{_lang}))
   #
   # > Fill the Inventory with empty glass panes.
   loop 45 times:
@@ -867,7 +874,9 @@ function openrobotskdesignmenu(player:player):
       set {_slotskip} to 1
     #
     # > Set the looped item to the menu with the predefined language variables.
-    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::design::name::%{_lang}%::%loop-index%}%","%{SB::robot::design::lore::%{_lang}%::%loop-index%}%","changerobotskdesign(""%{_player}%"" parsed as player,%{_design}%)",false)
+    set {_translationname} to getlang("robot_design_name_%loop-index%",{_lang})
+    set {_translationlore} to getlang("robot_design_lore_%loop-index%",{_lang})
+    setguiitem({_player},{_start},loop-value,1,"&r%{_translationname}%","%{_translationlore}%","changerobotskdesign(""%{_player}%"" parsed as player,%{_design}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.
@@ -887,10 +896,10 @@ function openrobotskjobmenu(player:player):
   set {_robot} to {TMP::currentrobot::%{_player}%}
   #
   # > Opens the job menu with 27 slots.
-  if {SB::robot::robotjobguiname::%{_lang}%} is not set:
+  if getlang("robot_robotjobguiname",{_lang}) is not set:
     opengui({_player},27,"{@robotjobguiname}")
   else:
-    opengui({_player},27,"%{SB::robot::robotjobguiname::%{_lang}%}%")
+    opengui({_player},27,getlang("robot_robotjobguiname",{_lang}))
   #
   # > Fill the Inventory with empty glass panes.
   loop 27 times:
@@ -914,7 +923,9 @@ function openrobotskjobmenu(player:player):
       set {_slotskip} to 1
     #
     # > Set the item for this job into the jobs menu.
-    setguiitem({_player},{_start},loop-value,1,"&r%{SB::robot::job::name::%{_lang}%::%loop-index%}%","%{SB::robot::job::lore::%{_lang}%::%loop-index%}%","changerobotskjob(""%{_player}%"" parsed as player,%{_job}%)",false)
+    set {_translationname} to getlang("robot_job_name_%loop-index%",{_lang})
+    set {_translationlore} to getlang("robot_job_lore_%loop-index%",{_lang})
+    setguiitem({_player},{_start},loop-value,1,"&r%{_translationname}%","%{_translationlore}%","changerobotskjob(""%{_player}%"" parsed as player,%{_job}%)",false)
     add 1 to {_start}
   #
   # > This item allows the user to go into the previous menu.

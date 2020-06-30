@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.8
+# jetboots.sk v0.0.9
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -55,6 +55,9 @@ options:
 # > Once this file is loaded by skript, the JetBoots get registered as a crafting recipe.
 # > Also, if there is a old jetboots list left, delete it.
 on load:
+  #
+  # > Wait a second until needed functions are loaded.
+  wait 1 second
   #
   # > Sets the efficiency for coal.
   loadconfigobject("JB-fuelefficiency-coal",20)

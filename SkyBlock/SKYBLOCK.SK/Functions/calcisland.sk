@@ -5,6 +5,10 @@
 # calcisland.sk is part of the SKYBLOCK.SK functions.
 # ==============
 
+import:
+  java.util.HashMap
+  java.lang.Integer
+
 #
 # > Function: calcisland
 # > Arguments:
@@ -15,6 +19,8 @@
 function calcisland(p:offline player):
   set {_exp} to 0 
   set {_level} to 1
+  send action bar "%{SB::config::color::secondary::1}% Preparing..." to {_p}
+
   #
   # > Set the experience needed for the next level:
   set {_xpn} to {_level}*{SB::config::explevel}
@@ -28,9 +34,6 @@ function calcisland(p:offline player):
   # > Set a local variable for chest and storage unit calculation.
   set {_calculatechest} to yaml value "calcinventory" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
   set {_calculatestorage} to yaml value "calcstorage" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
-  #
-  # > Prevent chunks from unloading.
-  set metadata value "nochunkunload" of getdummy() to true
   set {_exp} to 0
   #
   # > Calculate, how many blocks have be checked to make a fully working progress bar:
@@ -54,6 +57,7 @@ function calcisland(p:offline player):
   #
   # > Set the experience per block into a list and convert it to a usable format for us.
   set {_bxp::*} to yaml list "blocks" from "plugins/Skript/scripts/SkyBlock/config/blocks.yml"
+  delete {_blockexp::*}
   loop {_bxp::*}:
     set {_lv} to "%loop-value%"
     replace all "{" with "" in {_lv}
@@ -84,9 +88,13 @@ function calcisland(p:offline player):
       loop {TMP::activerobo::*}:
         if isWithinArea(loop-value-2's location,{_b1},{_b2}) is true:
           disablerobot(loop-value-2)
+
+    set {_world} to {_b1}'s world
+
     #
-    # > Loop all chunks within the two borders and keep them loaded until finished:
-    loadtempchunks({_p})
+    # > Force load all needed chunks for a faster calculation process.
+    handletempchunks({_p},{_world},true)
+
 	#
 	# > Get the minimum and maximum coordinate for each x-, y- and z-coord.
     set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
@@ -99,59 +107,43 @@ function calcisland(p:offline player):
     # > Loop through the island by going through every x- and z-coord and then
     # > looping the y-coordinate trough.
     set {_x} to {_x1}
+
     while {_x} < {_x2}:
       add 1 to {_x}
       set {_z} to {_z1}
       while {_z} < {_z2}:
         add 1 to {_z}
         add 1 to {_i}
-        set {_l1} to location at {_x}, 256, {_z} in "%{_b1}'s world%" parsed as world
+        set {_l1} to location at {_x}, 0, {_z} in {_world}
         set {_l2} to {_l1}
-        set y-coord of {_l2} to 0
-        loop all blocks from block at {_l1} to block at {_l2}:
-          if loop-block.isEmpty() is false:
-            set {_tb} to "%loop-block.getType()%"
-            if loop-block is a hopper:
-              add 1 to {_hopper}
+        set y-coord of {_l2} to 256
+        set {_chunk} to chunk at {_l1}
+        set {_snapshot} to (metadata value "SkyBlock|Islandsnapshot" of {_p}).get("%{_world}%|%{_chunk}.getX()%|%{_chunk}.getZ()%")
+        set {_relativeLoc} to convertWorldLocToChunkLoc({_l1})
+
+        set {_y} to 0
+        while {_y} < 256:
+          delete {_block}
+          if {_y} is 0:
             #
-            # > If the looped block as a inventory, check if it is a
-            # > storage unit or a normal inventory block.
-            if loop-block's inventory is set:
-              set {_storage} to false
+            # > If the highest block at Y that is non-air is 0, we
+            # > have nothing there, since the first block is at 1.
+			# > This allows us to just skip this row.
+            set {_check} to {_snapshot}.getHighestBlockYAt({_relativeLoc}.getX(), {_relativeLoc}.getZ())
+            if {_check} is 0:
+              set {_y} to 257
+          if {_y} is not 257:
+            set {_blocktype} to "%{_snapshot}.getBlockType({_relativeLoc}.getX(), {_y}, {_relativeLoc}.getZ())%"
+            if {_blocktype} is not "AIR":
+
               #
-              # > If the slot 26 of the inventory is clay and has "STORAGE" on the
-              # > 2nd line of the clay item, it is a storage unit.
-              if slot 26 of loop-block's inventory is clay:
-                if line 2 of lore of slot 26 of loop-block's inventory is "STORAGE":
-                  set {_storage} to true
-                  #
-                  # > If storage calculation is enabled, add the contents experience
-                  # > values to the island experience.
-                  if {_calculatestorage} is true:
-                    set {_itemdata} to slot 26 of loop-block's inventory
-                    set {_savedamount} to line 1 of lore of {_itemdata} parsed as number
-                    set {_storeditem} to slot 0 of loop-block's inventory
-                    set {_tbi} to "%{_storeditem}.getType()%"
-                    set {_add} to {_blockexp::%{_tbi}%} * {_savedamount}
-                    add {_add} to {_exp}
-              #
-              # > If it isn't a storage unit and chest calculation is enabled,
-              # > loop through the inventory and add the experience values of the
-              # > items to the island experience.
-              if {_storage} is false:
-                if {_calculatechest} is true:
-                  loop all items in loop-block's inventory:
-                    set {_item} to loop-item
-                    set {_tbi} to "%{_item}.getType()%"
-                    if {_blockexp::%{_tbi}%} is set:
-                      set {_add} to {_blockexp::%{_tbi}%} * "%{_item}.getAmount()%" parsed as number
-                      add {_add} to {_exp}
-            #
-            # > If there is experience set for this block, add it to the island experience.
-            if {_blockexp::%{_tb}%} is set:
-              #
-              # > Add the experience of the block to the local experience variable {_exp}
-              add {_blockexp::%{_tb}%} to {_exp}
+              # > If there is experience set for this block, add it to the island experience.
+              if {_blockexp::%{_blocktype}%} is set:
+                #
+                # > Add the experience of the block to the local experience variable {_exp}
+                add {_blockexp::%{_blocktype}%} to {_exp}
+
+          add 1 to {_y}
         add 256 to {_i}
         add 256 to {_blocks}
         #
@@ -167,7 +159,7 @@ function calcisland(p:offline player):
           # > Send the current progress bar to the player.
           if {_blocks} > {_size}:
             set {_blocks} to {_size}
-          actionbar({_p},"%{_progress}% %{SB::config::color::secondary::1}%[%{_blocks}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::1}%%{_size}%]")
+          send action bar "%{_progress}% %{SB::config::color::secondary::1}%[%{_blocks}%%{SB::config::color::primary::1}%/%{SB::config::color::secondary::1}%%{_size}%]" to {_p}
           #
           # > Set the counter back to 0 to do this again in 5000 blocks.
           set {_i} to 0
@@ -201,57 +193,71 @@ function calcisland(p:offline player):
   wait 5 ticks
   actionload({_p},"&rLevel: &6&l%{_level}%")
   delete {SB::calcstatus::%{_p}%}
-  delete metadata value "nochunkunload" of getdummy()
+  #
+  # > Unload all force loaded chunks of that player.
+  delete metadata value "SkyBlock|Islandsnapshot" of {_p}
 
 #
-# > Event - on chunk unload
-# > Actions:
-# > If the value "nochunkunload" of the metadata of a dummy block is
-# > true, no chunks can unload. This is needed to prevent fast
-# > loading and unloading of chunks while calculating the island.
-on chunk unload:
-  if metadata value "nochunkunload" of getdummy() is true:
-    cancel event
-
-#
-# > Function - loadtempchunks
+# > Function - convertWorldLocToChunkLoc
+# > Convertts a world location into a chunk relative location.
 # > Parameters:
-# > <location>location 1
-# > <loaction>location 2
+# > <Location> The location that should be converted.
+# > Returns:
+# > <Vector> A vector with all relative locations.
+function convertWorldLocToChunkLoc(loc:location) :: object:
+  set {_blockX} to Integer.valueOf(round(x-coord of {_loc} - 0.5))
+  set {_blockY} to Integer.valueOf(round(y-coord of {_loc} - 0.5))
+  set {_blockZ} to Integer.valueOf(round(z-coord of {_loc} - 0.5))
+  set {_X} to mod({_blockX}, 16)
+  set {_Z} to mod({_blockZ}, 16)
+  return vector({_X}, {_blockY}, {_Z})
+
+#
+# > Function - handletempchunks
+# > Parameters:
+# > <offline player> the player which island should be calculated.
+# > <boolean>force load temp chunks=true,remove force load temp chunks=false
 # > Actions:
 # > Loops through all blocks between the two location and loads the chunks,
 # > with chunk unload prevention, these chunks keep being loaded for a fast
 # > island calculation.
-function loadtempchunks(p:offline player):
-  #
-  # > Wait a tick, that way, threaded functions do not have to wait
-  # > but can work async.
-  wait 1 tick
+function handletempchunks(p:offline player,world:world,load:boolean=true):
+
+  set {_uuid} to uuid of {_p}
+  set {_bedrock} to {SB::player::%{_uuid}%::island::bedrock}
+
   #
   # > Calculate the borders which should be calculated.
+  set {_dist} to {SB::config::distance}
   set {_b1} to location of {_bedrock}
   set {_b2} to location of {_bedrock}
   add ({_dist} - {SB::config::protect}) to x-coord of {_b1}
   add ({_dist} - {SB::config::protect}) to z-coord of {_b1}
   subtract ({_dist} - {SB::config::protect}) from x-coord of {_b2}
   subtract ({_dist} - {SB::config::protect}) from z-coord of {_b2}
+
   #
   # > Get the minimum and maximum of each x-,y- and z-coord.
   set {_x1} to getmin(x-coord of block at {_b1}, x-coord of block at {_b2})
   set {_x2} to getmax(x-coord of block at {_b1}, x-coord of block at {_b2})
-  set {_y1} to getmin(y-coord of block at {_b1}, y-coord of block at {_b2})
-  set {_y2} to getmax(y-coord of block at {_b1}, y-coord of block at {_b2})
   set {_z1} to getmin(z-coord of block at {_b1}, z-coord of block at {_b2})
   set {_z2} to getmax(z-coord of block at {_b1}, z-coord of block at {_b2})
+
   #
-  # > Loop through the whole island and load the chunks by setting them
-  # > into a local variable.
+  # > Loop through the whole island and load the chunks and set them force loaded
+  # > to prevent them from being unloaded.
   set {_x} to {_x1}
+  set metadata value "SkyBlock|Islandsnapshot" of {_p} to new HashMap()
   while {_x} < {_x2}:
     add 1 to {_x}
     set {_z} to {_z1}
     while {_z} < {_z2}:
       add 1 to {_z}
-      set {_l1} to location at {_x}, 1, {_z} in "%{_b1}'s world%" parsed as world
+      set {_l1} to location at {_x}, 1, {_z} in {_world}
       set {_chunk} to chunk at block at {_l1}
+      (metadata value "SkyBlock|Islandsnapshot" of {_p}).put("%{_world}%|%{_chunk}.getX()%|%{_chunk}.getZ()%", {_chunk}.getChunkSnapshot())
+      #
+      # > Only load the chunk if it should be loaded.
+      #if {_load} is true:
+      #  {_chunk}.load()
   delete {_chunk}

@@ -1,6 +1,6 @@
 #
 # ==============
-# oregenerator.sk v0.0.9
+# oregenerator.sk v0.0.10
 # ==============
 # Allows users to build cobblestone generators which generate ores.
 # ==============
@@ -314,8 +314,8 @@ function generatorinfo(p:player):
   # > Set {_defaultlvl} to all blocks that have been created in the past
   set {_defaultlvl} to {SB::ogplayerblocks::%{_uuid}%}
   #
-  # > Set {_level} to 0, calculate later
-  set {_level} to 0
+  # > Set {_level} to 1, calculate later
+  set {_level} to 1
   #
   # > Subtract the {_defaultlvl} with the in the configuration amount, how many blocks have be produced to get a new level:
   set {_defaultlvl} to ({_defaultlvl} / {SB::config::oregennewlevel})
@@ -412,7 +412,7 @@ function orechancesinfo(p:player):
       # > Send the text with components to allow translateable block names.
       set {_msg} to newTextComponent("%{_prefix}% %{_chance}%%%: ")
       {_msg}.addExtra(getTranslatableComponentFromItem({SB::oregen::%loop-index%}))
-      {_player}.sendMessage({_msg})
+      {_player}.spigot().sendMessage({_msg})
   #
   # > Prints a spacer
   send "%{SB::config::spacer}%" to {_player}
