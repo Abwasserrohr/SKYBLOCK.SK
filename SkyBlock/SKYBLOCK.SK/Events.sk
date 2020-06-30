@@ -452,6 +452,8 @@ on script load:
     wait 20 seconds
   #
   # > Loop through all island which have to be deleted.
+  loop {deleteisland.3::*}:
+    delete {SB::island::%loop-value%::leader}
   loop {deleteisland.1::*}:
     #
     # > Send messages into the console to inform the admin about the delete process.
