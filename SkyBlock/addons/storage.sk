@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.18
+# storage.sk v0.0.19
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -952,8 +952,15 @@ function storageitemcheck(item:item) :: boolean:
     # > If the metadata of this item is set.
     if {_item}.getItemMeta() is set:
       #
-	  # > Set the metadata to a variable and check if it has a blockstate.
+      # > Set the metadata to a variable and check if it has a blockstate.
       set {_meta} to {_item}.getItemMeta()
+      #
+      # > Check if the block state exists before checking for it.
+      set {_blockStateSet} to try {_meta}.hasBlockState()
+      if {_blockStateSet} is not set:
+        return false
+      if {_blockStateSet} is false:
+        return false
       if {_meta}.getBlockState() is set:
         #
         # > Get the BlockState of the item to check the inventory of the block.

@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.10
+# customarmorstands.sk v0.0.12
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -66,7 +66,7 @@ options:
   toggleglowitem: glowstone block
   #
   # > Toggle baseplate item
-  togglebaseplateitem: stone slab
+  togglebaseplateitem: clean stone slab
   #
   # > Toglle arms item
   togglearmsitem: stick
@@ -231,7 +231,7 @@ on spawn of a armor stand:
 # > If the entitiy is a armor stand, cancel the event and call the opencustomstandmenu
 # > function. Also sets the entity as a metadata value into the player.
 on PlayerInteractAtEntityEvent:
-  if event.getRightClicked() is armor stand:
+  if "%event.getRightClicked()%" is "armor stand":
     set metadata "customarmorstand-target" of event.getPlayer() to event.getRightClicked()
     opencustomstandmenu(event.getPlayer())
     cancel event
@@ -259,6 +259,11 @@ command /renamestand [<text>]:
       if length of arg-1 <= 20:
         {_target}.setCustomName(colored arg-1)
 
+on inventory close:
+  set {_target} to metadata value "customarmorstand-target" of player
+  if {_target} is set:
+    delete metadata value "inuse" of {_target}
+
 #
 # > Function - opencustomstandmenu
 # > Parameters:
@@ -267,6 +272,7 @@ command /renamestand [<text>]:
 # > Opens the custom armor stand menu. All functions are called through this menu and
 # > it has multilanguage support from SKYBLOCK.SK.
 function opencustomstandmenu(player:player):
+
   set {_target} to metadata value "customarmorstand-target" of {_player}
   #
   # > Prevent the custom armor stand menu from being opened, if the armor stand is
@@ -277,6 +283,9 @@ function opencustomstandmenu(player:player):
     stop
   if checkarmorstandblacklist({_target}) is not true:
     stop
+  if metadata value "inuse" of {_target} is set:
+    stop
+  set metadata value "inuse" of {_target} to true 
   #
   # > Get the translation for the menu.
   set {_uuid} to uuid of {_player}

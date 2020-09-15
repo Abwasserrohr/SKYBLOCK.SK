@@ -54,12 +54,20 @@ on rightclick:
 #
 # > Event: on any move
 # > Action:
-# > Once a player moves, the checkislandvisit function gets called
-# > within a thread. This is going to handle events if a player
-# > is visiting a new island to for example deny access to an island.
+# > Once a player moves from one block to another, the 
+# > checkislandvisit function is called on the player
+# > to check if the player is allowed to visit.
+# > To save up some resources, it is checked if the
+# > player moved over one block on the x or z coord.
 on any move:
-  $ thread
-  checkislandvisit(player)
+  set {_to} to event.getTo()
+  set {_from} to event.getFrom()
+  if round({_to}.getX()) is not round({_from}.getX()):
+    $ thread
+    checkislandvisit(player)
+  if round({_to}.getZ()) is not round({_from}.getZ()):
+    $ thread
+    checkislandvisit(player)
 
 #
 # > Event - StructureGrowEvent

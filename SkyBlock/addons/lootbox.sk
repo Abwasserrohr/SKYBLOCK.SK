@@ -1,6 +1,6 @@
 #
 # ==============
-# lootbox.sk v0.0.7
+# lootbox.sk v0.0.9
 # ==============
 # Create custom lootboxes with three different tiers and animations.
 # ==============
@@ -148,7 +148,6 @@ on load:
   add 3 to {SB::crates::3::chance::*}
   add 1 of pig spawn egg to {SB::crates::3::loot::*}
   add 3 to {SB::crates::3::chance::*}
-
 
 #
 # > Command /givelootbox
@@ -388,14 +387,22 @@ function openlootbox(p:player,tier:integer):
   set {_uuid} to uuid of {_p}
   set {_lang} to {SK::lang::%{_uuid}%}
   if getlang("lootbox_clicktoopen",{_lang}) is set:
-    setguiitem({_p},13,{@lootboxitem},1,getlang("lootbox_itemname",{_lang}),getlang("lootbox_clicktoopen",{_lang}),"startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+    setguiitem({_p},13,{@lootboxitem},1,getlang("lootbox_itemname",{_lang}),getlang("lootbox_clicktoopen",{_lang}),"startlootbox(""%{_p}%"" parsed as player,%{_tier}%)||startmasslootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
   else:
-    setguiitem({_p},13,{@lootboxitem},1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+    setguiitem({_p},13,{@lootboxitem},1,"{@lootbox}","{@clicktoopen}","startlootbox(""%{_p}%"" parsed as player,%{_tier}%)||startmasslootbox(""%{_p}%"" parsed as player,%{_tier}%)",false)
+	
+function startmasslootbox(p:player,tier:integer):
+  if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
+    set {_tool} to {_p}'s tool
+    set {_amount} to {_tool}.getAmount()
+    remove {_amount} of {_tool} from {_p}'s inventory
+    loop {_amount} times:
+      startlootbox({_p},{_tier},true)
 #
 # > function - startlootbox
 # > Parameter: <player>player, <integer>tier of the lootbox
 # > Starts the lootbox opening and determines the reward by luck
-function startlootbox(p:player,tier:integer):
+function startlootbox(p:player,tier:integer,mass:boolean=false):
   #
   # > Get the lootbox item.
   set {_item} to {@lootboxitem}
@@ -410,30 +417,33 @@ function startlootbox(p:player,tier:integer):
   set {_pinv} to {_p}'s current inventory
   #
   # > If the player holds a lootbox in his hand, remove one of it out of the inventory of the player.
-  if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
-    set {_tool} to {_p}'s tool
-    remove 1 of {_tool} from {_p}'s inventory
-  #
-  # > If the player doesn't hold one of these, remove one out of the variables.
-  else:
-    set {_uuid} to uuid of {_p}
-    set {_lang} to {SK::lang::%{_uuid}%}
+  if {_mass} is false:
+    if line 3 of lore of {_p}'s tool contains "&0|%{_tier}%":
+      set {_tool} to {_p}'s tool
+      remove 1 of {_tool} from {_p}'s inventory
     #
-    # > If there is no lootbox set as variable, set it to 0 for each lootbox tier.
-    if {SR::crates::%{_uuid}%} is not set:
-      set {SR::crates::%{_uuid}%} to "0||0||0"
-    #
-    # > Seperate the lootbox string into a list to parse it as integer and get the stored amounts.
-    set {_crates::*} to {SR::crates::%{_uuid}%} split at "||"
-    loop {_crates::*}:
-      if loop-index is "%{_tier}%":
-        set {_crates::%loop-index%} to {_crates::%loop-index%} parsed as integer
-        #
-        # > Remove one from the current tier of the stored lootboxes.
-        remove 1 from {_crates::%loop-index%}
-    #
-    # > Save the new lootbox string, which contains all saved lootboxes of this player.
-    set {SR::crates::%{_uuid}%} to "%{_crates::1}%||%{_crates::2}%||%{_crates::3}%"
+    # > If the player doesn't hold one of these, remove one out of the variables.
+    else:
+      set {_uuid} to uuid of {_p}
+      set {_lang} to {SK::lang::%{_uuid}%}
+      #
+      # > If there is no lootbox set as variable, set it to 0 for each lootbox tier.
+      if {SR::crates::%{_uuid}%} is not set:
+        set {SR::crates::%{_uuid}%} to "0||0||0"
+      #
+      # > Seperate the lootbox string into a list to parse it as integer and get the stored amounts.
+      set {_crates::*} to {SR::crates::%{_uuid}%} split at "||"
+      loop {_crates::*}:
+        if loop-index is "%{_tier}%":
+          set {_crates::%loop-index%} to {_crates::%loop-index%} parsed as integer
+          #
+          # > Remove one from the current tier of the stored lootboxes.
+          if {_crates::%loop-index%} < 1:
+            stop
+          remove 1 from {_crates::%loop-index%}
+      #
+      # > Save the new lootbox string, which contains all saved lootboxes of this player.
+      set {SR::crates::%{_uuid}%} to "%{_crates::1}%||%{_crates::2}%||%{_crates::3}%"
   #
   # > Give the player 0.25 Seconds rest after the click to make it more natural.
   wait 5 ticks
@@ -504,6 +514,7 @@ function startlootbox(p:player,tier:integer):
     # > If the player goes offline, give the player a new lootbox and stop.
     if {_p} is offline:
       execute console command "/givelootbox %{_tier}% %{_p}% 1 true"
+      delete metadata value "runninglootbox" of {_p}
       stop
     #
     # > Set the luck back to false.
@@ -547,7 +558,7 @@ function startlootbox(p:player,tier:integer):
       set {_item} to {SB::crates::%{_tier}%::loot::%loop-value%}
       #
       # > Set the item into the lootbox opening menu.
-      set slot {_slot} of {_p}'s current inventory to {_item}
+      set slot {_slot} of {_pinv} to {_item}
       #
       # > If the lootbox opening should be from left to right, add 1 to the slot, if not, remove 1 from the slot
       # > to have it right to left.
@@ -555,6 +566,9 @@ function startlootbox(p:player,tier:integer):
         add 1 to {_slot}
       else:
         remove 1 from {_slot}
+		
+    delete metadata value "runninglootbox" of {_p}
+
     #
     # > As this while loop is going to be slower and slower because of the {_wait} timespan is increasing each time by a chance of around 50%,
     # > stop it, if it takes longer than 10 ticks per loop (0.5 seconds).
