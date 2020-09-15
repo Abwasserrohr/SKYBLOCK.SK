@@ -1,0 +1,100 @@
+
+import:
+  org.bukkit.configuration.file.YamlConfiguration
+  java.io.File
+  java.util.concurrent.ConcurrentHashMap
+
+options:
+  # > The time until the data will be cleared out of cache if it is unused.
+  dataCacheTime: 5 minutes
+
+#
+# > Function - dataManager
+# > Parameters - <text>path
+# > Actions:
+# > Prepares the required configuration and returns it.
+# > Requires a Skript variable name like a list name to properly store data.
+# > Caches data and also automatically clears data that is not requested for a longer time.
+function getDataManager(path:Text) :: object:
+  set {_cachedData} to getDataManagerCache()
+  set {_dataManager} to try {_cachedData}.get({_path})
+  if {_dataManager} is not set:
+    set {_dataManager} to new ConcurrentHashMap()
+    set {_file} to new File(getStoragePath({_path}))
+    {_file}.mkdirs()
+    set {_config} to new YamlConfiguration()
+    {_dataManager}.put("lastAccess", now)
+    {_config}.load({_file})
+    {_cachedData}.put({_path}, {_dataManager})
+    {_dataManager}.put("data", {_config})
+  else:
+    set {_config} to {_dataManager}.get("data")
+  set {_lA} to {_dataManager}.get("lastAccess")
+  if difference between {_lA} and now > 1 second:
+    {_dataManager}.put("lastAccess", now)
+
+  return {_config}
+
+#
+# > Function - saveDataManager
+# > Parameters - <text>path
+# > Actions:
+# > Saves the data that is cached for the path.
+function saveDataManager(path: Text):
+  set {_cachedData} to getDataManagerCache()
+  set {_dataManager} to try {_cachedData}.get({_path})
+  if try {_dataManager}.get("save") is true:
+    stop
+  {_dataManager}.put("save", true)
+
+
+every 5 seconds:
+  $ thread
+  dataManagerWorker()
+
+#
+# > Function - dataManagerWorker
+# > Actions:
+# > Call this from time to time in a thread.
+# > This will save data to file and remove old data from cache.
+function dataManagerWorker():
+  set {_cachedData} to getDataManagerCache()
+  set {_dataManager} to try {_cachedData}.get({_path})
+  
+  set {_now} to now
+  loop ...{_cachedData}.keySet():
+    set {_dataManager} to {_cachedData}.get(loop-value)
+    if {_dataManager}.get("save") is true:
+      set {_file} to new File(getStoragePath("%loop-value%"))
+      {_file}.mkdir()
+      {_dataManager}.put("save",false)
+      {_data}.save({_file})
+    set {_lastAccess} to {_dataManager}.get("lastAccess")
+    if {_lastAccess} is set:
+      if difference between {_lastAccess} and {_now} > {@dataCacheTime}:
+        {_cachedData}.remove("%loop-value%")
+    else:
+      {_cachedData}.remove("%loop-value%")
+
+#
+# > Event - unload
+# > Actions:
+# > Save data to file before this gets unloaded.
+on unload:
+  dataManagerWorker()
+
+#
+# > Event - load
+# > Actions:
+# > Reset the cacher. Shouldn't be necessary but to be sure.
+on load:
+  set {datamCacher} to new ConcurrentHashMap()
+
+#
+# > Function - getDataManagerCache
+# > Actions:
+# > Returns the cached data manager variable which holds all cached configurations.
+function getDataManagerCache() :: object:
+  if {datamCacher} is not set:
+    set {datamCacher} to new ConcurrentHashMap()
+  return {datamCacher}
