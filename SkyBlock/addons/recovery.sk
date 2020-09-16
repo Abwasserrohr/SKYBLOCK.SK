@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.6
+# recovery.sk v0.0.7
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -199,7 +199,8 @@ on place of any chest:
       #
       # > Only place the chest, if the player is allowed to do this action to prevent loss of
       # > the items if placed somewhere else.
-      if the player can build at event-location:
+      set {_allowed} to checkislandaccess(player,location of event-block,"build")
+      if {_allowed} is not false:
         loop all blocks in radius 3 around event-location:
           if loop-block is chest:
             if location of loop-block is not event-location:
