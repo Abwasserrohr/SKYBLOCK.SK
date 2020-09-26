@@ -405,9 +405,16 @@ on spawn of a monster:
 #
 # > Event: on spawn of a bat
 # > Actions:
-# > If a bbat spawns, check if the event should get cancelled.
+# > If a bat spawns, check if the event should get cancelled.
 on spawn of a bat:
   handlegeneralflagevent(event,false,event-location,"bat-spawning")
+
+#
+# > Event: on ade of snow or ice
+# > Actions:
+# > If a snow block or ice block breaks, check if the event should get cancelled.
+on fade of snow or ice:
+  handlegeneralflagevent(event,false,event-location,"ice-melt")
 
 #
 # > Event: on spawn of a slime
