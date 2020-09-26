@@ -629,6 +629,9 @@ language:
   # > Island flag title: Monster
 - flag_mob-spawningt: "Monster"
   #
+  # > Island flag title: Monster
+- flag_bat-spawningt: "Fledermäuse"
+  #
   # > Island flag title: Buttons & levers
 - flag_buttont: "&rKnöpfe & Hebel"
   #
@@ -715,6 +718,9 @@ language:
   #
   # > Island flag description: Allows spawning monsters on your island.
 - flag_mob-spawningd: <s1>Erlaubt das erscheinen<nl><s1>von Monstern auf<nl><s1>deiner Insel.
+  #
+  # > Island flag description: Allows spawning monsters on your island.
+- flag_bat-spawningd: <s1>Erlaubt das erscheinen<nl><s1>von Fledermäusen auf<nl><s1>deiner Insel.
   #
   # > Island flag description: Allows to use buttons and levers on your island.
 - flag_buttond: <s1>Erlaubt, die<nl><s1>Knöpfe und Hebel auf deiner Insel<nl><s1>zu verwenden.
