@@ -1,5 +1,5 @@
 ---
-#> SKYBLOCK.SK LANGUAGE: EN - English
+#> SKYBLOCK.SK LANGUAGE: DE - German
 #> COMPATIBLE VERSION: x (there is no release yet)
 language:
   - 
@@ -594,6 +594,9 @@ language:
     #> Island flag title: Monster
     flag_mob-spawningt: "Monster"
   - 
+    #> Island flag title: Monster
+    flag_bat-spawningt: "Bat"
+  - 
     #> Island flag title: Buttons & levers
     flag_buttont: "&rButtons and levers"
   - 
@@ -678,6 +681,9 @@ language:
   - 
     #> Island flag description: Allows spawning monsters on your island.
     flag_mob-spawningd: <s1>Allows monster<nl><s1>spawning on<nl><s1>your island.
+  - 
+    #> Island flag description: Allows spawning monsters on your island.
+    flag_mob-spawningd: <s1>Allows bats<nl><s1>spawning on<nl><s1>your island.
   - 
     #> Island flag description: Allows to use buttons and levers on your island.
     flag_buttond: <s1>Allow to<nl><s1>use buttons and levers on your island<nl><s1>.
