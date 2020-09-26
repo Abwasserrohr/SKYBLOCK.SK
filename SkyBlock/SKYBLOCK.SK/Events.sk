@@ -403,6 +403,13 @@ on spawn of a monster:
   handlegeneralflagevent(event,false,event-location,"mob-spawning")
 
 #
+# > Event: on spawn of a bat
+# > Actions:
+# > If a bbat spawns, check if the event should get cancelled.
+on spawn of a bat:
+  handlegeneralflagevent(event,false,event-location,"bat-spawning")
+
+#
 # > Event: on spawn of a slime
 # > Actions:
 # > If a slime spawns, check if the event should get cancelled.
