@@ -283,27 +283,36 @@ on break:
   #
   # > If the player is allowed to build and the event-block is also a hopper,
   # > check, run the hoppercounter function.
-  if event-block is hopper:
+  if event-block is a hopper:
     if {_allowed} is true:
       set {_allowed} to hoppercounter(player, "break")
   if {_allowed} is false:
     cancel event
   if {_allowed} is true:
+    #message "0"
+
     #
     # > If the player is allowed to break the block, check if the block is
     # > dirt, grass or farmland and then add a island binding to it, if the
     # > island is below level 100.
-    if event-block is dirt or grass or farmland or grass path:
+    if event-block is a dirt block or a grass block or a farmland or a grass path:
       cancel event
-      binditem(event-location, player,dirt,false,event-block)
+      set {_i} to 1 of dirt block
+      #message "%event-block%"
+      #message "%event-location%"
+      #message "%player%"
+      #message "%{_i}%"
+      binditem(event-location, player, {_i}, false, event-block)
     #
     # > Prevent dirt duplication through podzol revert.
-    if event-block is podzol block:
+    if event-block is a podzol block:
       cancel event
-      binditem(event-location, player,podzol block,true,event-block)
-    if event-block is obsidian:
+      set {_i} to 1 of podzol block
+      binditem(event-location, player, {_i}, true, event-block)
+    if event-block is a obsidian:
       cancel event
-      binditem(event-location, player,obsidian,false,event-block)
+      set {_i} to 1 of obsidian block
+      binditem(event-location, player, {_i}, false, event-block)
       #
 	  # > If the obsidian block is also on the opposite site, it is in most cases a nether portal,
 	  # > break the obsidian on the other side (nether|world) too.
@@ -472,6 +481,8 @@ on script load:
     # > and then delete the islands.
     send "There are islands to delete. Deleting islands now, please do not stop the server." to console
     wait 20 seconds
+  else:
+    stop
   #
   # > Loop through all island which have to be deleted.
   loop {deleteisland.3::*}:
@@ -558,12 +569,14 @@ on script load:
     # > Save the game regularly to disk while deleting.
     execute console command "/save-all"
     delete {deleteisland.1::%loop-index%}
+    delete {deleteisland.3::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
   #
   # > To prevent any data being kept here, delete it again completly:
   delete {deleteisland.1::*}
   delete {deleteisland.2::*}
+  delete {deleteisland.3::*}
   #
   # > If we're done with deleting islands, also double check there is not a level entry left.
   # > If there is one left, delete it and delete all variables to the island.
