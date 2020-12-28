@@ -481,8 +481,6 @@ on script load:
     # > and then delete the islands.
     send "There are islands to delete. Deleting islands now, please do not stop the server." to console
     wait 20 seconds
-  else:
-    stop
   #
   # > Loop through all island which have to be deleted.
   loop {deleteisland.3::*}:
