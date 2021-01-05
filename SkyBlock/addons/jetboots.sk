@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.9
+# jetboots.sk v0.0.10
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -114,6 +114,8 @@ on inventory click:
   if event-item is diamond boots:
     set {_check} to true
   else if event-slot is player's boots:
+    set {_check} to true
+  else if event.isShiftClick() is true:
     set {_check} to true
   if {_check} is true:
     wait 2 ticks
