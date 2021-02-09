@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.14
+# customarmorstands.sk v0.0.15
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -224,7 +224,7 @@ function checkarmorstandblacklist(entity:entity) :: boolean:
 # > Creates a copy of the already created armor stand which is
 # > stored as metadata.
 on rightclick holding {@copytool}:
-  set {_copytool} to getnbtvalue(player's tool,"customstandv2")
+  set {_copytool} to getnbtvalue(event-item,"customstandv2")
   if {_copytool} is not "" or false:
     cancel event
     set {_loc} to location of player's target block
@@ -232,7 +232,11 @@ on rightclick holding {@copytool}:
     if checkarmorstandplacepermission(player,{_loc}) is not true:
       stop
     if player's gamemode is not creative:
-      remove 1 of player's tool from player's inventory
+      set {_item} to event-item
+      {_item}.setAmount(1)
+      set {_playerInventory} to player's inventory
+      {_playerInventory}.removeItem({_item})
+
     #
     # > De-serialize the HashMap from the tool.
     set {_standdata} to ARdecompressBase64({_copytool})
