@@ -447,10 +447,11 @@ on toggling gliding:
 # > Event: on shoot
 # > Actions:
 # > If the shooter shoots something, check if it is allowed. If not, cancel the event.
-on shoot: 
-  set {_allowed} to checkislandaccess(shooter,location of shooter,"shoot")
-  if {_allowed} is false:
-    cancel event
+on shoot:
+  if shooter is a player:
+    set {_allowed} to checkislandaccess(shooter,location of shooter,"shoot")
+    if {_allowed} is false:
+      cancel event
 #
 # > Event: on explode
 # > Actions:
