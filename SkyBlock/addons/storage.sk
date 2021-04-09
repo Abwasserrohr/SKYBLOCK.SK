@@ -393,14 +393,7 @@ on break of {@item}:
           else:
             message "{@prefix} {@onlybreakempty}"
           cancel event
-        #
-        # > If the first line of the lore (of the clay ball) is 0, remove the storage unit and drop itt.
-        else:
-          clear event-block's inventory
-          set event-block to air
-          set {_item} to {@item}
-          set line 1 of lore of {_item} to "{@itemidentfier}"
-          drop 1 of {_item} at event-location
+
 #
 # > Event - on place of hopper
 # > Triggered if the player places a hopper.
