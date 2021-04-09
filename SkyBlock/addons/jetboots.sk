@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.11
+# jetboots.sk v0.0.12
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -188,7 +188,15 @@ function jetboots(player:player):
     # > Remove fuel from the JetBoots if the player is flying and
     # > update the actionbar of the player.
     if {_player} is flying:
+      delete {_lore}
       set {_lore} to line 2 of lore of {_player}'s boots
+      # > If there is no lore, stop here.
+      if {_lore} is not set:
+        set {_player}'s flight mode to false
+        set {_player}'s fly speed to 0.08
+        delete metadata value "jetboots" of {_player}
+        stop
+
       replace all "&r" with "" in {_lore}
       replace all "&4" with "" in {_lore}
       set {_lore} to {_lore} parsed as integer
