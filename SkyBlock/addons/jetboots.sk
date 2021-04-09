@@ -248,9 +248,9 @@ function jetboots(player:player):
         set line 2 of lore of {_player}'s boots to "&4%{_lore}%"
       else:
         set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
-      #
-      # > After every while loop, wait 1 tick.
-      wait 1 tick
+    #
+    # > After every while loop, wait 1 tick.
+    wait 1 tick
 
   #
   # > If the while loop ends, disable flying for player,
