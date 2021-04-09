@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.10
+# jetboots.sk v0.0.11
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -183,9 +183,7 @@ function jetboots(player:player):
     # > to the metadata of the player, then stop the while loop.
     if {_now} is not metadata value "jetboots" of {_player}:
       stop loop
-    #
-    # > Before every while loop, wait 1 tick.
-    wait 1 tick
+
     #
     # > Remove fuel from the JetBoots if the player is flying and
     # > update the actionbar of the player.
@@ -250,6 +248,10 @@ function jetboots(player:player):
         set line 2 of lore of {_player}'s boots to "&4%{_lore}%"
       else:
         set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
+      #
+      # > After every while loop, wait 1 tick.
+      wait 1 tick
+
   #
   # > If the while loop ends, disable flying for player,
   # > this happens, if the player takes the JetBoots off while
