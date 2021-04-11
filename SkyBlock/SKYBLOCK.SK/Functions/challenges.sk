@@ -311,45 +311,45 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
       set {_lorereward} to "%{_lorereward}%%{_m}%"
       #
       # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
-      set {_loreend} to "\n%{SB::config::guispacer}%\n"
-      if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat") is true:
-        set {_m} to getlang("challenge_repeatable",{_lang})
-        set {_c} to 0
-        set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
-        set {_max} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
-        #
-        # > If the server operator set the repeat amount per day to -1, it is endless.
-        if {_max} is -1:
-          set {_max} to "∞"
-        #
-        # > If tthe current repeats aren't unlimited, calculate the maximum amount.
-        else:
-          set {_max} to getcurrentrepeats({_xp},{_max})
-        replace all "<current>" with "%{_c}%" in {_m}
-        replace all "<maxrepeat>" with "%{_max}%" in {_m}
-        set {_loreend} to "%{_loreend}%%{_m}%"
-        #
-        # > If the maximum amount is reached, make it a glowing item.
-        if {_c} is {_max}:
-          set {_item} to glowing {_item}
+    set {_loreend} to "\n%{SB::config::guispacer}%\n"
+    {_lore}.add("{""text"":""%{SB::config::guispacer}%"",""color"":""gray"",""italic"":false}")
+    if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat") is true:
+      set {_m} to getlang("challenge_repeatable",{_lang})
+      set {_c} to 0
+      set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
+      set {_max} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
       #
-      # > If repeats are disabled for the challenge:
+      # > If the server operator set the repeat amount per day to -1, it is endless.
+      if {_max} is -1:
+        set {_max} to "∞"
+      #
+      # > If tthe current repeats aren't unlimited, calculate the maximum amount.
       else:
-        set {_msg} to getlang("challenge_notrepeatable",{_lang})
-        set {_loreend} to "%{_loreend}%%{_msg}%"
-        #
-        # > Repeats for this challenge are disabled, if it has been done, make it glowing
-        if {_done} is true:
-          set {_item} to glowing {_item}
-      # > Currently, custom syntax isn't always working as intended, use functions until they work better.
-	  
-      set {_item}'s name to getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r")
-      set {_item} to setnbtLore({_item},{_lore})
+        set {_max} to getcurrentrepeats({_xp},{_max})
+      replace all "<current>" with "%{_c}%" in {_m}
+      replace all "<maxrepeat>" with "%{_max}%" in {_m}
+      {_lore}.add("{""text"":""%{_m}%"",""color"":""gray"",""italic"":false}")
 
+      set {_loreend} to "%{_loreend}%%{_m}%"
+      #
+      # > If the maximum amount is reached, make it a glowing item.
+      if {_c} is {_max}:
+        set {_item} to glowing {_item}
+    #
+    # > If repeats are disabled for the challenge:
+    else:
+      set {_msg} to getlang("challenge_notrepeatable",{_lang})
+      {_lore}.add("{""text"":""%{_msg}%"",""color"":""gray"",""italic"":false}")
+      #
+      # > Repeats for this challenge are disabled, if it has been done, make it glowing
+      if {_done} is true:
+        set {_item} to glowing {_item}
 	  
-	  
-	  #lore: "&r%{_loreneeded}%%{_lorereward}%%{_loreend}%"
-      setguiitem({_player},{_slot},{_item},1,"","","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
+    set {_itemName} to getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r")
+    set {_item}'s name to {_itemName}
+    set {_item} to setnbtLore({_item},{_lore})
+      
+    setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r"),"","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
     #
 	# > The challenge level part loop ends here, add 1 to the slot and challenge level part.
     add 1 to {_slot}
