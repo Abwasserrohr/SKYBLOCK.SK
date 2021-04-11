@@ -1,0 +1,11 @@
+
+#
+# > Function - getStorageKey
+# > Parameters - <text>path
+# > Actions:
+# > Converts the list variable style path into a key for other storage formats.
+function getStorageKey(path: Text) :: object:
+  set {_path::*} to split {_path} at "::"
+  set {_size} to size of {_path::*}
+  set {_key} to {_path::%{_size}%}
+  return {_key}

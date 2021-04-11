@@ -230,7 +230,7 @@ on PlayerInteractEvent:
   #
   # > Only prevent these types of interactions and let others trough,
   # > this gets called very often, should be very efficient.
-  if {_b} is soil or lever or button or door or trapdoor or fence gate or any chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or flower pot or hopper or dropper or dispenser:
+  if {_b} is soil or lever or button or door or trapdoor or fence gate or any chest or trapped chest or shulker box or anvil or enchanting table or jukebox or furnace or brewing stand or flower pot or hopper or dropper or dispenser or barrel:
     set {_player} to event.getPlayer()
     if {_player} is a player:
       set {_l} to event.getClickedBlock().getLocation()
@@ -283,27 +283,36 @@ on break:
   #
   # > If the player is allowed to build and the event-block is also a hopper,
   # > check, run the hoppercounter function.
-  if event-block is hopper:
+  if event-block is a hopper:
     if {_allowed} is true:
       set {_allowed} to hoppercounter(player, "break")
   if {_allowed} is false:
     cancel event
   if {_allowed} is true:
+    #message "0"
+
     #
     # > If the player is allowed to break the block, check if the block is
     # > dirt, grass or farmland and then add a island binding to it, if the
     # > island is below level 100.
-    if event-block is dirt or grass or farmland or grass path:
+    if event-block is a dirt block or a grass block or a farmland or a grass path:
       cancel event
-      binditem(event-location, player,dirt,false,event-block)
+      set {_i} to 1 of dirt block
+      #message "%event-block%"
+      #message "%event-location%"
+      #message "%player%"
+      #message "%{_i}%"
+      binditem(event-location, player, {_i}, false, event-block)
     #
     # > Prevent dirt duplication through podzol revert.
-    if event-block is podzol block:
+    if event-block is a podzol block:
       cancel event
-      binditem(event-location, player,podzol block,true,event-block)
-    if event-block is obsidian:
+      set {_i} to 1 of podzol block
+      binditem(event-location, player, {_i}, true, event-block)
+    if event-block is a obsidian:
       cancel event
-      binditem(event-location, player,obsidian,false,event-block)
+      set {_i} to 1 of obsidian block
+      binditem(event-location, player, {_i}, false, event-block)
       #
 	  # > If the obsidian block is also on the opposite site, it is in most cases a nether portal,
 	  # > break the obsidian on the other side (nether|world) too.
@@ -403,6 +412,20 @@ on spawn of a monster:
   handlegeneralflagevent(event,false,event-location,"mob-spawning")
 
 #
+# > Event: on spawn of a bat
+# > Actions:
+# > If a bat spawns, check if the event should get cancelled.
+on spawn of a bat:
+  handlegeneralflagevent(event,false,event-location,"bat-spawning")
+
+#
+# > Event: on ade of snow or ice
+# > Actions:
+# > If a snow block or ice block breaks, check if the event should get cancelled.
+on fade of snow or ice:
+  handlegeneralflagevent(event,false,event-location,"ice-melt")
+
+#
 # > Event: on spawn of a slime
 # > Actions:
 # > If a slime spawns, check if the event should get cancelled.
@@ -424,10 +447,11 @@ on toggling gliding:
 # > Event: on shoot
 # > Actions:
 # > If the shooter shoots something, check if it is allowed. If not, cancel the event.
-on shoot: 
-  set {_allowed} to checkislandaccess(shooter,location of shooter,"shoot")
-  if {_allowed} is false:
-    cancel event
+on shoot:
+  if shooter is a player:
+    set {_allowed} to checkislandaccess(shooter,location of shooter,"shoot")
+    if {_allowed} is false:
+      cancel event
 #
 # > Event: on explode
 # > Actions:
@@ -544,12 +568,14 @@ on script load:
     # > Save the game regularly to disk while deleting.
     execute console command "/save-all"
     delete {deleteisland.1::%loop-index%}
+    delete {deleteisland.3::%loop-index%}
     delete {deleteisland.2::%loop-index%}
   delete {SB::ISDELPROCESS}
   #
   # > To prevent any data being kept here, delete it again completly:
   delete {deleteisland.1::*}
   delete {deleteisland.2::*}
+  delete {deleteisland.3::*}
   #
   # > If we're done with deleting islands, also double check there is not a level entry left.
   # > If there is one left, delete it and delete all variables to the island.

@@ -115,131 +115,135 @@ function createisland(p:player,island:text="1"):
       # > where a island could be created.
       set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
       if {SB::island::%{_bedrockloc}%::leader} is not set:
-        #
-        # > Print to the player that we found a new island.
-        set {_msg} to getlang("foundis",{_lang})
-        message "%{_prefix}% %{_msg}%" to {_p}
-        add 1 to y-coord of {_loc}
-        set {_schematic} to {_island}
-        set {_backloc} to {_p}'s location
-        subtract 1 from y-coord of {_loc}
-        #
-        # > Prepare location for strucure file format.
-        set {_loccx} to "%x-coord of {_loc}%"
-        set {_loccy} to "%y-coord of {_loc}%"
-        set {_loccz} to "%z-coord of {_loc}%"
-        replace all ".5" with "" in {_loccx}
-        set {_loccx} to {_loccx} parsed as integer
-        replace all ".5" with "" in {_loccy}
-        set {_loccy} to {_loccy} parsed as integer
-        replace all ".5" with "" in {_loccz}
-        set {_loccz} to {_loccz} parsed as integer
-        if {_loccx} < 0:
-          set {_loccx} to {_loccx}-1
-        if {_loccz} < 0:
-          set {_loccz} to {_loccz}-1
-        set {_chestloc} to {_loc}
-        set {_homeloc} to {_loc}
-        teleport {_p} to {_loc}
-        set block 1 below {_loc} to barrier block
-        set block 1 north {_loc} to barrier block
-        set block 1 south {_loc} to barrier block
-        set block 1 west {_loc} to barrier block
-        set block 1 east {_loc} to barrier block
-        wait 1 second
-        set block 1 below {_loc} to air
-        set block 1 north {_loc} to air
-        set block 1 south {_loc} to air
-        set block 1 west {_loc} to air
-        set block 1 east {_loc} to air
-        #
-        # > If structure files are defined as format, set a structure_block to load the file.
-        if {SB::config::isstorage} is "Structure":
+        if block at {_bedrockloc} is not a bedrock:
           #
-          # > Create a new location with the correct coordinates and then call the loadstructure function.
-          set {_pasteloc} to location at {_loccx}, {_loccy}, {_loccz} in "%{SB::config::world}%" parsed as world
-          remove 16 from x-coord of {_pasteloc}
-          remove 16 from z-coord of {_pasteloc}
-          loadstructure({_pasteloc},"%{_schematic}%")
-        else if {SB::config::isstorage} is "Schematic":
+          # > Print to the player that we found a new island.
+          set {_msg} to getlang("foundis",{_lang})
+          message "%{_prefix}% %{_msg}%" to {_p}
+          add 1 to y-coord of {_loc}
+          set {_schematic} to {_island}
+          set {_backloc} to {_p}'s location
+          subtract 1 from y-coord of {_loc}
           #
-          # Schematics are currently not supported. 1.13 still has some issues.
-          broadcast "Currently, no Schematic support."
-          stop
-        #
-        # > Get the new home location out of the configuration.
-        set {_temphomeloc::*} to {SB::schematics::loc::%{_schematic}%::home} split at ","
-        loop {_temphomeloc::*}:
-          set {_temphomeloc::%loop-index%} to {_temphomeloc::%loop-index%} parsed as integer
-        set x-coordinate of {_homeloc} to x-coordinate of {_homeloc} + {_temphomeloc::1}
-        set y-coordinate of {_homeloc} to y-coordinate of {_homeloc} + {_temphomeloc::2}
-        set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
-        #
-        # > Get the new chest location out of the configuration.
-        if {SB::schematics::loc::%{_schematic}%::chest} is set:
-          set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
-          loop {_tc::*}:
-            set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
-          set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
-          set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
-          set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
-          set block at {_chestloc} to north facing chest
-          set {_newchest} to block at {_chestloc}
+          # > Prepare location for strucure file format.
+          set {_loccx} to "%x-coord of {_loc}%"
+          set {_loccy} to "%y-coord of {_loc}%"
+          set {_loccz} to "%z-coord of {_loc}%"
+          replace all ".5" with "" in {_loccx}
+          set {_loccx} to {_loccx} parsed as integer
+          replace all ".5" with "" in {_loccy}
+          set {_loccy} to {_loccy} parsed as integer
+          replace all ".5" with "" in {_loccz}
+          set {_loccz} to {_loccz} parsed as integer
+          if {_loccx} < 0:
+            set {_loccx} to {_loccx}-1
+          if {_loccz} < 0:
+            set {_loccz} to {_loccz}-1
+          set {_chestloc} to {_loc}
+          set {_homeloc} to {_loc}
+          teleport {_p} to {_loc}
+          set block 1 below {_loc} to barrier block
+          set block 1 north {_loc} to barrier block
+          set block 1 south {_loc} to barrier block
+          set block 1 west {_loc} to barrier block
+          set block 1 east {_loc} to barrier block
+          wait 1 second
+          set block 1 below {_loc} to air
+          set block 1 north {_loc} to air
+          set block 1 south {_loc} to air
+          set block 1 west {_loc} to air
+          set block 1 east {_loc} to air
           #
-          # > Set all configurated items into the created chest.
-          loop {SB::schematics::chest::%{_schematic}%::*}:
-            set {_item::*} to loop-value-2 split at ","
-            set {_titem} to "%{_item::2}%" parsed as item
-            set {_tamount} to {_item::1} parsed as integer
+          # > If structure files are defined as format, set a structure_block to load the file.
+          if {SB::config::isstorage} is "Structure":
             #
-            # > If the item is a lava bucket, bind it to the island by applying a lore.
-            if {_titem} is a lava bucket:
-              set {_x} to x-coord of {_loc}
-              set {_z} to z-coord of {_loc}
-              set {_msg} to getlang("islandbound",{_lang})
+            # > Create a new location with the correct coordinates and then call the loadstructure function.
+            set {_pasteloc} to location at {_loccx}, {_loccy}, {_loccz} in "%{SB::config::world}%" parsed as world
+            remove 16 from x-coord of {_pasteloc}
+            remove 16 from z-coord of {_pasteloc}
+            loadstructure({_pasteloc},"%{_schematic}%")
+          else if {SB::config::isstorage} is "Schematic":
+            #
+            # Schematics are currently not supported. 1.13 still has some issues.
+            broadcast "Currently, no Schematic support."
+            stop
+          #
+          # > Get the new home location out of the configuration.
+          set {_temphomeloc::*} to {SB::schematics::loc::%{_schematic}%::home} split at ","
+          loop {_temphomeloc::*}:
+            set {_temphomeloc::%loop-index%} to {_temphomeloc::%loop-index%} parsed as integer
+          set x-coordinate of {_homeloc} to x-coordinate of {_homeloc} + {_temphomeloc::1}
+          set y-coordinate of {_homeloc} to y-coordinate of {_homeloc} + {_temphomeloc::2}
+          set z-coordinate of {_homeloc} to z-coordinate of {_homeloc} + {_temphomeloc::3}
+          #
+          # > Get the new chest location out of the configuration.
+          if {SB::schematics::loc::%{_schematic}%::chest} is set:
+            set {_tc::*} to {SB::schematics::loc::%{_schematic}%::chest} split at ","
+            loop {_tc::*}:
+              set {_tc::%loop-index%} to {_tc::%loop-index%} parsed as integer
+            set x-coordinate of {_chestloc} to x-coordinate of {_chestloc} + {_tc::1}
+            set y-coordinate of {_chestloc} to y-coordinate of {_chestloc} + {_tc::2}
+            set z-coordinate of {_chestloc} to z-coordinate of {_chestloc} + {_tc::3}
+            set block at {_chestloc} to north facing chest
+            set {_newchest} to block at {_chestloc}
+            #
+            # > Set all configurated items into the created chest.
+            loop {SB::schematics::chest::%{_schematic}%::*}:
+              if loop-value-2 is a item:
+                set {_titem} to loop-value-2
+              else:
+                set {_item::*} to loop-value-2 split at ","
+                set {_titem} to "%{_item::2}%" parsed as item
+                set {_tamount} to {_item::1} parsed as integer
               #
-              # Create separated list entries for each new line.
-              add "&r%{_msg}%", "&7%{_x}%_%{_z}%" to {_lore::*}
-              set lore of {_titem} to {_lore::*}
-            add {_tamount} of {_titem} to {_newchest}'s inventory
-        #
-        # > We're done with searching and creating, stop the search process to allow others to also create a island.
-        set {SB::searchprocess} to false
-        #
-        # > If the location where a bedrock should be (island center) is not a bedrock,
-        # > the player gets teleported back and a message with the /island create command.
-        # > This error happens only if the setup is faulty.
-        set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
-        if block at {_loc} is not bedrock block:
-          teleport {_p} to {_backloc}
-          message "%{_prefix}% /is create" to {_p}
-          broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
-          broadcast "Bedrock %{_bedrockloc}%."
-          delete {SB::searchis::%{_p}%}
+              # > If the item is a lava bucket, bind it to the island by applying a lore.
+              if {_titem} is a lava bucket:
+                set {_x} to x-coord of {_loc}
+                set {_z} to z-coord of {_loc}
+                set {_msg} to getlang("islandbound",{_lang})
+                #
+                # Create separated list entries for each new line.
+                add "&r%{_msg}%", "&7%{_x}%_%{_z}%" to {_lore::*}
+                set lore of {_titem} to {_lore::*}
+              add {_tamount} of {_titem} to {_newchest}'s inventory
+          #
+          # > We're done with searching and creating, stop the search process to allow others to also create a island.
+          set {SB::searchprocess} to false
+          #
+          # > If the location where a bedrock should be (island center) is not a bedrock,
+          # > the player gets teleported back and a message with the /island create command.
+          # > This error happens only if the setup is faulty.
+          set {_bedrockloc} to "%x-coord of {_loc}%_%y-coord of {_loc}%_%z-coord of {_loc}%"
+          if block at {_loc} is not bedrock block:
+            teleport {_p} to {_backloc}
+            message "%{_prefix}% /is create" to {_p}
+            broadcast "Block at %{_loc}% should be bedrock. But it is %block at {_loc}%."
+            broadcast "Bedrock %{_bedrockloc}%."
+            delete {SB::searchis::%{_p}%}
 
-          stop
-        #
-        # > Delete the {_search} variable to prevent the while loop from repeating.
-        delete {_search}
-        #
-        # > Send success message to the player.
-        actionload({_p},getlang("foundis",{_lang}))
-        #
-        # > Teleport the player to the new island.
-        teleport {_p} to {_homeloc}
-        #
-        # > Now, set new variables for the player and the island.
-        set {SB::island::%{_bedrockloc}%::home::home} to {_homeloc}
-        set {SB::island::%{_bedrockloc}%::leader} to {_uuid}
-        set {SB::island::%{_bedrockloc}%::level} to 0
-        set {SB::island::%{_bedrockloc}%::created} to now
-        set {SB::player::%{_uuid}%::island::bedrock} to {_loc}
-        set {SB::islvl::%{_bedrockloc}%} to 0
-        #
-        # > The player now has his island, remove this variable, which prevented the player
-        # > to create multiple islands at once.
-        delete {SB::searchis::%{_p}%}
-        stop loop
+            stop
+          #
+          # > Delete the {_search} variable to prevent the while loop from repeating.
+          delete {_search}
+          #
+          # > Send success message to the player.
+          actionload({_p},getlang("foundis",{_lang}))
+          #
+          # > Teleport the player to the new island.
+          teleport {_p} to {_homeloc}
+          #
+          # > Now, set new variables for the player and the island.
+          set {SB::island::%{_bedrockloc}%::home::home} to {_homeloc}
+          set {SB::island::%{_bedrockloc}%::leader} to {_uuid}
+          set {SB::island::%{_bedrockloc}%::level} to 0
+          set {SB::island::%{_bedrockloc}%::created} to now
+          set {SB::player::%{_uuid}%::island::bedrock} to {_loc}
+          set {SB::islvl::%{_bedrockloc}%} to 0
+          #
+          # > The player now has his island, remove this variable, which prevented the player
+          # > to create multiple islands at once.
+          delete {SB::searchis::%{_p}%}
+          stop loop
       #
       # > If no island has been found, wait 1 tick and then go forward.
     if {_sb} is 6:

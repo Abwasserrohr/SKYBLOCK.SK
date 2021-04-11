@@ -1,0 +1,11 @@
+
+#
+# > Function - deleteData
+# > Parameters - <text>path
+# > Actions:
+# > Deletes the data from file.
+function deleteData(path: Text):
+  delete {%{_path}%}
+  set {_config} to getDataManager({_path})
+  try {_config}.remove(getStorageKey({_path}))
+  saveDataManager({_path})

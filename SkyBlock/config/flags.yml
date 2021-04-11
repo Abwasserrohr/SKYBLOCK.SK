@@ -256,6 +256,10 @@ defaultislandflags-general:
 # > Snow and ice melting. True = enabled, false = disabled.
 - snow-ice-melt: true
 - toggle-snow-ice-melt: true
+#
+# > Bat spawning. True = enabled, false = disabled.
+- bat-spawning: true
+- toggle-bat-spawning: true
 
 #
 # > Flags for not inhabited islands:

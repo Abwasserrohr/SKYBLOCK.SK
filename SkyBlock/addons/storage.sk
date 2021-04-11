@@ -1,6 +1,6 @@
 #
 # ==============
-# storage.sk v0.0.19
+# storage.sk v0.0.21
 # ==============
 # Let players create efficient storage units without the need to building big hopper storage systems.
 # ==============
@@ -393,14 +393,7 @@ on break of {@item}:
           else:
             message "{@prefix} {@onlybreakempty}"
           cancel event
-        #
-        # > If the first line of the lore (of the clay ball) is 0, remove the storage unit and drop itt.
-        else:
-          clear event-block's inventory
-          set event-block to air
-          set {_item} to {@item}
-          set line 1 of lore of {_item} to "{@itemidentfier}"
-          drop 1 of {_item} at event-location
+
 #
 # > Event - on place of hopper
 # > Triggered if the player places a hopper.
@@ -660,9 +653,6 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
     # > by using while.
     while {_cinv} is {_p}'s current inventory:
       #
-      # > Update the storage unit menu only as often as predefined.
-      wait {@updatemenu} tick
-      #
       # > Since the storage unit can also be updated using hoppers or by other players,
       # > check everytime, if the storage unit has been filled with something.
       set {_itemdata} to slot 26 of {_inv}
@@ -712,6 +702,16 @@ function openstoragemenu(p:player,inv:inventory,loc:location):
       else:
         openstoragemenu({_p},{_inv},{_loc})
         stop
+
+      #
+      # > Update the storage unit menu only as often as predefined.
+      wait {@updatefirstmenu} tick
+
+    #
+    # > Give the items back, if the menu has been closed before it has been cheecked.
+    set {_items::*} to all items in {_cinv}
+    loop {_items::*}:
+      drop loop-value at {_p}
   #
   # > The storage unit has something in it to show.
   else:

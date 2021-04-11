@@ -1,0 +1,62 @@
+
+import:
+  java.lang.Long
+  java.lang.Integer
+  java.util.regex.Pattern
+  java.util.UUID
+  java.lang.StringBuilder
+
+#
+# Function - uniqueIdToIntArray
+# > Creates a Int Array in form of a text out of the uuid
+# > to be directly used in a vanilla command or nms.
+function uniqueIdToIntArray(uuid: object, asString: Boolean = true) :: object:
+  set {_uuid} to {_uuid}.toString()
+
+  # > Split the UUID into 4 parts with a size of 8 each.
+  replace all "-" with "" in {_uuid}
+  loop 4 times:
+    add 8 to {_i}
+    add {_uuid}.substring({_i}-8,{_i}) to {_uuid::*}
+
+  # > Build a String that can be used in nms/vanilla commands.
+  if {_asString} is true:
+    return "[I;%hexToInt({_uuid::1})%,%hexToInt({_uuid::2})%,%hexToInt({_uuid::3})%,%hexToInt({_uuid::4})%]"
+  loop {_uuid::*}:
+    add hexToInt(loop-value) to {_intArray::*}
+  set {_intArray} to [{_intArray::*} as Integer]
+  return {_intArray}
+  
+# > Function - intArrayToUniqueId
+# > Parameter: int Array as String like [I;864739610,-730314911,-1400185626,-644318737] or actual Integer Array.
+# > This is how Minecraft commands use it so it is easier for us to use this function
+# > in Skript.
+function intArrayToUniqueId(intArray: object) :: Text:
+  if {_intArray} is not instance of String:
+    set {_iA::*} to ...{_intArray}
+    set {_intArray} to "%{_iA::1}%,%{_iA::2}%,%{_iA::3}%,%{_iA::4}%"
+
+  replace all " " with "" in {_intArray}
+  set {_iA::*} to {_intArray} split at ","
+  replace all "[I;" with "" in {_iA::1}
+  replace all "]" with "" in {_iA::4}
+  set {_uuid} to new StringBuilder("%intToHex({_iA::1})%%intToHex({_iA::2})%%intToHex({_iA::3})%%intToHex({_iA::4})%")
+  {_uuid}.insert(8, "-")
+  {_uuid}.insert(13, "-")
+  {_uuid}.insert(18, "-")
+  {_uuid}.insert(23, "-")
+  return {_uuid}.toString()
+
+# > Function - intToHex
+# > Converts a 32 bit signed integer back to hex.
+# > Parameter: 32 bit signed integer
+# > Returns: hex string
+function intToHex(int: object) :: Text:
+  return Integer.valueOf({_int}).toHexString()
+
+# > Function - hexToInt
+# > Converts a hex string into a 32 bit signed integer.
+# > Parameter: hex string
+# > Returns: 32 bit signed integer
+function hexToInt(hex: Text) :: object:
+  return Integer.valueOf(Long.parseLong({_hex}, 16))
