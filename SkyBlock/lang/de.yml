@@ -1156,22 +1156,26 @@ language:
 - challenge_name_1_7: Kürbisbauer
 
 - challenge_name_2_1: Holzfäller
-- challenge_name_2_2: Erdmensch
-- challenge_name_2_3: Grüße aus der Hölle
-- challenge_name_2_4: Pilzzüchter
-- challenge_name_2_5: Krümelige Angelegenheit
-- challenge_name_2_6: Gartenarbeit
-- challenge_name_2_7: Bäckerei
+- challenge_name_2_2: Grüße aus der Hölle
+- challenge_name_2_3: Erdmensch
+- challenge_name_2_4: Gartenarbeit
+- challenge_name_2_5: Pilzzüchter
+- challenge_name_2_6: Dschungel-Kind
+- challenge_name_2_7: Krümelige Angelegenheit
+- challenge_name_2_8: Bäckerei
+- challenge_name_2_9: Unter Hochdruck
 
 - challenge_name_3_1: Luftminenexperte
 - challenge_name_3_2: Riechendes Geschäft
-- challenge_name_3_3: Korallen
-- challenge_name_3_4: Fliegendes Gewässer
-- challenge_name_3_5: Augenexperte
-- challenge_name_3_6: Erfahrungssammler
-- challenge_name_3_7: Heiße Sachen
-- challenge_name_3_8: Abrüstung durch Verrottung
-- challenge_name_3_9: Zurück zum Ursprung
+- challenge_name_3_3: Fischparadies
+- challenge_name_3_4: Korallenriff
+- challenge_name_3_5: Fliegendes Gewässer
+- challenge_name_3_6: Augenexperte
+- challenge_name_3_7: Erfahrungssammler
+- challenge_name_3_8: Heiße Sachen
+- challenge_name_3_9: Abrüstung durch Verrottung
+- challenge_name_3_10: Zurück zum Ursprung
+- challenge_name_3_11: Bogenschütze... oder Armbrustschütze?
 
 - challenge_name_4_1: Leuchtende Aussichten
 - challenge_name_4_2: Aufgesattelt
@@ -1182,6 +1186,7 @@ language:
 - challenge_name_4_7: Meister des Transports
 - challenge_name_4_8: Tiefsee Abenteuer
 - challenge_name_4_9: Schwammiges Erlebnis
+- challenge_name_4_10: Brrrr, kann jemand die Heizung anschalten?
 
 - challenge_name_5_1: Geheime Experimente
 - challenge_name_5_2: Geklebt, sieht aus wie echt!
@@ -1192,6 +1197,7 @@ language:
 - challenge_name_5_7: Ausgestopfte Drachen
 - challenge_name_5_8: Selbst gewebt
 - challenge_name_5_9: Fermentierte Augen
+- challenge_name_5_10: Das Ultimative Item
 
   #
   # > Store categories
@@ -1202,3 +1208,27 @@ language:
 - store_category_decoration: "&rDekoartikel"
 - store_category_ores: "&rErze"
 - store_category_colorblocks: "&rFarbige Blöcke"
+
+  #
+  # > Tokenshop
+
+- tokenshop: "Tokenshop"
+
+- tokenshop_lore: "<s1>Hier kannst du verzauberte goldene Äpfel<nl><s1>gegen wertvolle Gegenstände eintauschen"
+
+- successful_netherite_trade: "Du hast erfolgreich einen verzauberten goldenen Apfel gegen ein Netherite getauscht!"
+
+- not_enough_enchanted_gapples: "Du hast nicht genug verzauberte goldene Äpfel!"
+
+
+  #
+  # > Tradeshop
+  
+- tradeshop: "Tauschladen"
+- tradeshop_lore: "<s1>Hier kannst du Dekorationsblöcke<nl><s1>gegen Bruchstein eintauschen"
+
+
+  #
+  # > Miscellaneous
+- block_enchanted_gapple_eat: "Willst du wirklich deinen verzauberten Gold Apfel essen? Du kannst ihn gegen wertvolle Items eintauschen bei /tokenshop"
+
