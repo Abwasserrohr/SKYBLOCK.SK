@@ -302,7 +302,9 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
 
       if {_tmp::2} is "xp":
-        {_lore}.add("{""text"":""» %{_tmp::1}% %{SB::lang::item::%{_tmp::2}%::%{_lang}%}%"",""color"":""gray"",""italic"":false}")
+        set {_xplang} to getlang("challenge_xp",{_lang})
+        replace all "<amount>" with "%{_tmp::1}%" in {_xplang}
+        {_lore}.add("{""text"":""» %{_xplang}%"",""color"":""gray"",""italic"":false}")
       else:
         set {_loreItem} to {_tmp::2} parsed as item
         set {_trItem} to getTranslatableComponentFromItem({_loreItem})
