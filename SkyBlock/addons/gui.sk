@@ -1,6 +1,6 @@
 #
 # ==============
-# GUI.SK v0.0.9
+# GUI.SK v0.0.10
 # ==============
 # Create GUI menus fast and secure with all available inventory types.
 # ==============
@@ -72,6 +72,16 @@ import:
   org.bukkit.inventory.ItemStack
   org.bukkit.inventory.meta.ItemMeta
   org.bukkit.event.inventory.InventoryType
+  org.bukkit.event.player.PlayerItemHeldEvent
+  
+# > Moving the held item while having a opened inventory is impossible without mods.
+on PlayerItemHeldEvent:
+  
+  set {_lastclose} to metadata value "gui-inv-lastclose" of event.getPlayer()
+  if {_lastclose} is set:
+    if difference between {_lastclose} and now is less than 3 ticks:  
+      event.setCancelled(true)
+
 #
 # Custom effect: Sets a gui item
 # Patterns:
@@ -314,7 +324,11 @@ on InventoryClickEvent:
 # > Deletes variables which may exist:
 on InventoryCloseEvent:
   set {_player} to event.getPlayer()
+  set metadata value "gui-inv-lastclose" of {_player} to now
   loop 54 times:
     delete metadata value "gui-items-%loop-number - 1%" of {_player}
     delete metadata value "gui-itemsclose-%loop-number - 1%" of {_player}
   delete metadata value "gui-inv" of {_player}
+
+on join:
+  set metadata value "gui-inv-lastclose" of {_player} to now
