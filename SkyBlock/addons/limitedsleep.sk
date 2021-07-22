@@ -1,6 +1,6 @@
 #
 # ==============
-# limitedsleep.sk v0.0.1
+# limitedsleep.sk v0.0.2
 # ==============
 # > Source: https://github.com/Abwasserrohr/SKYBLOCK.SK/blob/master/SkyBlock/addons/limitedsleep.sk
 # ==============
@@ -36,10 +36,18 @@ on bed enter:
   #
   # > Loop through all players to count how many are
   # > sleeping.
+  set {_realsleepers} to 0
   loop all players:
     add 1 to {_players}
+    set {_lastP} to loop-player
     if loop-player is sleeping:
       add 1 to {_sleepers}
+      add 1 to {_realsleepers}
+    else:
+      if metadata value "lastLoc" of loop-player is loop-player's location:
+        add 1 to {_sleepers}
+  if {_realsleepers} is 0:
+    stop
   #
   # > Calculate a percentage of how many players are sleeping.
   set {_sleeppercent} to ({_sleepers} / {_players})*100
@@ -48,3 +56,11 @@ on bed enter:
   # > predefined percentage, change to day.
   if {_sleeppercent} >= {@startdaypercent}:
     set time to 08:00
+    set weather in {_lastP}'s world to sunny
+
+every 1 minute:
+  loop all players:
+    set metadata value "lastLoc" of loop-player to loop-player's location
+	
+on quit:
+  delete metadata value "lastLoc" of player

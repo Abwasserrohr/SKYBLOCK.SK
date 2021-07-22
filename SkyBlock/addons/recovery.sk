@@ -1,6 +1,6 @@
 #
 # ==============
-# recovery.sk v0.0.5
+# recovery.sk v0.0.7
 # ==============
 # Let users recover their xp and items if they die. They have to use /recovery to get items.
 # ==============
@@ -19,6 +19,9 @@
 # > Import this Java class to create random uuids for the inventories.
 import:
   java.util.UUID
+  org.bukkit.configuration.file.YamlConfiguration
+  java.io.File
+  java.util.ArrayList
 
 options:
   #
@@ -45,8 +48,8 @@ options:
   r_recovery_gui_item_name: &rGet Inventory back
   r_not_enough_money: &rYou don't have enough money to buy this.
   r_not_enough_space: &rYou don't have enough space in your inventory.
-  r_gui_lore: &eRestore chest\n&7Place it to get\n&7your inventory back.\n&8---------\n&7Price: <price>\n&8---------\n&7Date: <date>
-
+  r_gui_lore: &eRestore chest\n&7Place it to get\n&7your inventory back.\n&8---------\n&7Price: <price>\n&7Todesart: <deathcause>\n&8---------\n&7Date: <date>
+  r_not_your_recovery_chest: &eDas ist nicht deine Recovery Kiste.
 #
 # > Command - recovery
 # > Actions:
@@ -63,7 +66,7 @@ function openrecoverymenu(p:player):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
-  set {_lang} to getlangcode({_p})
+  set {_lang} to "de"
   #
   # > Open the recovery menu.
   if {SB::lang::recovery::header::%{_lang}%} is set:
@@ -71,57 +74,63 @@ function openrecoverymenu(p:player):
   else:
     opengui({_p},54,{@r_header})
   set {_slot} to 0
-  #
-  # > Loop through all available inventory uuids.
-  loop {SR::recovery::player::%{_uuid}%::*}:
+  set {_recoveryChests::*} to ...new File("plugins/Skript/storage/recovery/%{_uuid}%/").list()
+  loop {_recoveryChests::*}:
+    set {_file} to new File("plugins/Skript/storage/recovery/%{_uuid}%/%loop-value%")
+    set {_config} to new YamlConfiguration()
+    {_config}.load({_file})
     set {_invuuid} to loop-value
+    replace all ".yml" with "" in {_invuuid}
     #
     # > Set the time of the death to {_now}
-    set {_now} to {SR::recovery::time::%{_invuuid}%}
+    set {_now} to {_config}.get("time")
     #
     # > Set {_cause} to the cause of the death.
-    set {_cause} to {SR::recovery::cause::%{_invuuid}%}
-    #
-    # > Apply a price depending on the {_cause} variable.
-    if {_cause} is "void":
-      set {_price} to {@void_price}
-    else if {_cause} is "lava":
-      set {_price} to {@lava_price}
-    else:
-      set {_price} to {@default_price}
-    #
-    # > Create the lore and replace the placeholders.
-    if getlang("recovery_guiitemlore",{_lang}) is set:
-      set {_lore} to getlang("recovery_guiitemlore",{_lang})
-    else:          
-      set {_lore} to "{@r_gui_lore}"
-    if {_price} is 0:
-      if getlang("recovery_free",{_lang}) is set:
-        set {_msg} to getlang("recovery_free",{_lang})
-        replace all "<price>" with "%{_msg}%" in {_lore}
+    set {_cause} to {_config}.get("cause")
+    set {_bought} to {_config}.get("bought")
+    if {_bought} is false:
+      #
+      # > Apply a price depending on the {_cause} variable.
+      if {_cause} is "VOID":
+        set {_price} to {@void_price}
+      else if {_cause} is "LAVA":
+        set {_price} to {@lava_price}
       else:
-        replace all "<price>" with "{@r_free}" in {_lore}
-    else:
-      replace all "<price>" with "%{_price}% {@currency_name}" in {_lore}
-    replace all "<date>" with "%{_now}%" in {_lore}
-    #
-    # > Set the items into the menu.
-    if getlang("recovery_guiitemname",{_lang}) is set:
-      setguiitem({_p},{_slot},north facing chest,1,getlang("recovery_guiitemname",{_lang}),{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", %{_price}%)",true)
-    else:
-      setguiitem({_p},{_slot},north facing chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", %{_price}%)",true)
-    add 1 to {_slot}
-    #
-    # > If there are more than 55 inventory uuids. Stop here.
-    if {_slot} is 55:
-      stop
+        set {_price} to {@default_price}
+      #
+      # > Create the lore and replace the placeholders.
+      if getlang("recovery_guiitemlore",{_lang}) is set:
+        set {_lore} to getlang("recovery_guiitemlore",{_lang})
+      else:          
+        set {_lore} to "{@r_gui_lore}"
+      if {_price} is 0:
+        if getlang("recovery_free",{_lang}) is set:
+          set {_msg} to getlang("recovery_free",{_lang})
+          replace all "<price>" with "%{_msg}%" in {_lore}
+        else:
+          replace all "<price>" with "{@r_free}" in {_lore}
+      else:
+        replace all "<price>" with "%{_price}% {@currency_name}" in {_lore}
+      replace all "<date>" with "%{_now}%" in {_lore}
+      replace all "<deathcause>" with "%{_cause}%" in {_lore}
+      #
+      # > Set the items into the menu.
+      if getlang("recovery_guiitemname",{_lang}) is set:
+        setguiitem({_p},{_slot},chest,1,getlang("recovery_guiitemname",{_lang}),{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      else:
+        setguiitem({_p},{_slot},chest,1,"{@r_recovery_gui_item_name}",{_lore},"buyrecoverychest(""%{_p}%"" parsed as player, ""%{_invuuid}%"", {_price})",true)
+      add 1 to {_slot}
+      #
+      # > If there are more than 55 inventory uuids. Stop here.
+      if {_slot} is 55:
+        stop
 
 #
 # > Function - buyrecoverychest
 # > Parameters - <player>player, <text>inventory uuid
 # > Actions:
 # > This function is called through the recovery menu. It buys the player the recovery chest.
-function buyrecoverychest(p:player,invid:text,price:number):
+function buyrecoverychest(p:player,invid:text,price:integer):
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of {_p}
@@ -130,6 +139,7 @@ function buyrecoverychest(p:player,invid:text,price:number):
   set {_item} to north facing chest
   set line 1 of lore of {_item} to "&eRecovery"
   set line 2 of lore of {_item} to "&7%{_invid}%"
+  set line 3 of lore of {_item} to "&7%{_uuid}%"
   #
   # > Only continue, if the player has enough money.
   if {_p}'s balance <= {_price}:
@@ -146,7 +156,12 @@ function buyrecoverychest(p:player,invid:text,price:number):
     # > Gie the player the recovery chest. And remove the uuid from his recovery menu
     # > using deleterecoverychest with step parameter 1.
     give 1 of {_item} to {_p}
-    deleterecoverychest({_invid},1)
+    #deleterecoverychest({_invid},1)
+    set {_file} to new File("plugins/Skript/storage/recovery/%{_uuid}%/%{_invid}%.yml")
+    set {_config} to new YamlConfiguration()
+    {_config}.load({_file})
+    {_config}.set("bought",true)
+    {_config}.save({_file})
     #
     # > Remove money from player's balance.
     remove {_price} from {_p}'s balance
@@ -167,45 +182,6 @@ function buyrecoverychest(p:player,invid:text,price:number):
       message "{@r_prefix} {@r_not_enough_space}" to {_p}
 
 #
-# > Function - deleterecoverychest
-# > Parameters - <text>inventory uuid, <integer>step (1 = remove from player's gui, 2 = remove completly)
-# > Actions:
-# > Deletes the recovery variables out of the system.
-function deleterecoverychest(invid:text,step:integer):
-  set {_uuid} to {SR::recovery::idp::%{_invid}%}
-  if {_step} is 1:
-    loop {SR::recovery::player::%{_uuid}%::*}:
-      if "%loop-value%" is "%{_invid}%":
-        delete {SR::recovery::player::%{_uuid}%::%loop-index%}
-  if {_step} is 2:
-    delete {SR::recovery::inv::%{_invid}%::*}
-    delete {SR::recovery::inv::%{_invid}%}
-    delete {SR::recovery::time::%{_invid}%}
-    delete {SR::recovery::idp::%{_invid}%}
-    delete {SR::recovery::cause::%{_invid}%}
-    delete {SR::recovery::xp::%{_invid}%}
-    loop {SR::recovery::player::%{_uuid}%::*}:
-      if "%loop-value%" is "%{_invid}%":
-        delete {SR::recovery::player::%{_uuid}%::%loop-index%}
-
-#
-# > Event - on load
-# > Triggered on load of this file.
-# > Actions:
-# > Loops through all recovery inventories, if there is one which is
-# > longer there than the timeframe set in the options, delete it using
-# > the deleterecoverychest function.
-on load:
-  loop {SR::recovery::time::*}:
-    set {_time} to loop-value
-    set {_time} to {_time} parsed as time
-    #
-    # > If the compared time between now and the time of the looped inventory uuid is larger than
-    # > specified in the options, delete it.
-    if difference between {_time} and now > {@keepinv}:
-      deleterecoverychest(loop-index,2)
-
-#
 # > Event - on place of chest
 # > Triggered, if the player places a chest.
 # > Actions:
@@ -216,15 +192,32 @@ on place of any chest:
     #
     # > Only proceed, if this is a recovery chest.
     if line 1 of lore of player's tool is "&eRecovery":
+      if line 3 of lore of player's tool doesn't contain uuid of player:
+        message "{@r_not_your_recovery_chest}"
+        cancel event
+        stop
       #
       # > Only place the chest, if the player is allowed to do this action to prevent loss of
       # > the items if placed somewhere else.
       set {_allowed} to checkislandaccess(player,location of event-block,"build")
       if {_allowed} is not false:
+        loop all blocks in radius 3 around event-location:
+          if loop-block is chest:
+            if location of loop-block is not event-location:
+              message "Platziere die Kiste weiter weg von anderen Kisten."
+              cancel event
+              stop
         #
         # > Get the inventory uuid from the second line of the chest and remove the color format code.
         set {_invid} to line 2 of lore of player's tool
         replace all "&7" with "" in {_invid}
+		
+        set {_uuid} to uuid of player
+        set {_file} to new File("plugins/Skript/storage/recovery/%{_uuid}%/%{_invid}%.yml")
+        set {_config} to new YamlConfiguration()
+        {_config}.load({_file})
+        set {_items::*} to ...{_config}.get("items")
+
         #
         # > Start at slot 0 of the chest.
         set {_slot} to 0
@@ -238,10 +231,11 @@ on place of any chest:
         # > set {_chest1} to the block above the event location
         add 1 to y-coord of {_l}
         set {_chest1} to block at {_l}
+		
         #
         # > If the inventory has more than 27 slots and the block above is not air,
         # > stop and inform that there is more space needed.
-        if size of {SR::recovery::inv::%{_invid}%::*} > 27:
+        if size of {_items::*} > 27:
           if block above event-location is not air:
             set {_lang} to getlangcode({_p})
             if getlang("recovery_inventoryspaceneeded",{_lang}) is set:
@@ -264,7 +258,7 @@ on place of any chest:
         wait 1 tick
         #
         # > Loop trough all saved items and set it into the chest.
-        loop {SR::recovery::inv::%{_invid}%::*}:
+        loop {_items::*}:
           if {_slot} is 27:
             set {_slot} to 0
             set {_chest} to {_chest1}
@@ -273,7 +267,7 @@ on place of any chest:
           add 1 to {_slot}
         #
         # > Delete the recovery inventory uuid using deleterecoverychest.
-        deleterecoverychest({_invid},2)
+        {_file}.delete()
 
 #
 # > Event - on death of player
@@ -285,33 +279,58 @@ on death of player:
   #
   # > Set local variables which are used frequently.
   set {_uuid} to uuid of player
-  set {_lang} to getlangcode(player)
+  set {_lang} to "de"
   #
   # > Create a unique uuid, check that it is actually unique.
   while {_s} is not set:
     set {_invuuid} to UUID.randomUUID()
-    if {SR::recovery::time::%{_invuuid}%} is not set:
+    set {_file} to new File("plugins/Skript/storage/recovery/%{_uuid}%/%{_invuuid}%.yml")
+    if {_file}.exists() is false:
       set {_s} to true
+    #if {SR::recovery::time::%{_invuuid}%} is not set:
+    #  set {_s} to true
+
+  set {_config} to new YamlConfiguration()
+  #{_config}.load({_file})
+
+  {_config}.set("bought",false)
+
   #
   # > Assign the inventory uuid to the player.
-  add {_invuuid} to {SR::recovery::player::%{_uuid}%::*}
+  #add {_invuuid} to {SR::recovery::player::%{_uuid}%::*}
+  #
+  # > Set the cause
+  set {_cause} to player.getLastDamageCause().getCause().toString()
+  {_config}.set("cause",{_cause})
   #
   # > Set the timestamp of the inventory uuid to now.
-  set {SR::recovery::time::%{_invuuid}%} to now
+  #set {SR::recovery::time::%{_invuuid}%} to now
+  {_config}.set("time","%now%")
   #
   # > Set the uuid, who owns the inventory.
-  set {SR::recovery::idp::%{_invuuid}%} to {_uuid}
+  #set {SR::recovery::idp::%{_invuuid}%} to {_uuid}
+  {_config}.set("owner","%{_uuid}%")
+  #
+  # > Set the location of the recovery.
+  #set {SR::recovery::location::%{_invuuid}%} to location of player
+  {_config}.set("location","%location of player%")
   #
   # > Set the death cause to the inventory.
-  set {SR::recovery::cause::%{_invuuid}%} to "%damage cause%"
+  #set {SR::recovery::cause::%{_invuuid}%} to "%damage cause%"
   #
   # > Set the xp of the player to the inventory.
   #set {SR::recovery::xp::%{_invuuid}%} to xp of player
   #
   # > Loop through all items in the inventory of the player and save them into a list.
+  set {_itemList} to new ArrayList()
   loop all items in player's inventory:
+    add 1 to {_itemIndex}
     set {_item} to loop-item
-    add loop-item to {SR::recovery::inv::%{_invuuid}%::*}
+    log "%player% %{_item}.serialize()%" to "recoveryadded"
+    {_itemList}.add({_item})
+    #add loop-item to {SR::recovery::inv::%{_invuuid}%::*}
+  {_config}.set("items",{_itemList})
+  {_config}.save({_file})
   #
   # > Clear all drops and remove all xp on the floor.
   clear drops

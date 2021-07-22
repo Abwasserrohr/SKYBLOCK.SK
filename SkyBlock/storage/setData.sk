@@ -1,0 +1,12 @@
+
+#
+# > Function - setData
+# > Parameters - <text>path, <object>data
+# > Actions:
+# > Saves data to a path, the path should be a list style variable name.
+# > Eg. setData("SB::islands::0.5_65.5_0.5::owner", mydata)
+function setData(path:Text,data:object):
+  set {%{_path}%} to {_data}
+  set {_config} to getDataManager({_path})
+  {_config}.set(getStorageKey({_path}),{_data})
+  saveDataManager({_path})

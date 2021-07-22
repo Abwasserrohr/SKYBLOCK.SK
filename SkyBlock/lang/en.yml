@@ -1,5 +1,5 @@
 ---
-#> SKYBLOCK.SK LANGUAGE: EN - English
+#> SKYBLOCK.SK LANGUAGE: DE - German
 #> COMPATIBLE VERSION: x (there is no release yet)
 language:
   - 
@@ -594,6 +594,9 @@ language:
     #> Island flag title: Monster
     flag_mob-spawningt: "Monster"
   - 
+    #> Island flag title: Monster
+    flag_bat-spawningt: "Bat"
+  - 
     #> Island flag title: Buttons & levers
     flag_buttont: "&rButtons and levers"
   - 
@@ -678,6 +681,9 @@ language:
   - 
     #> Island flag description: Allows spawning monsters on your island.
     flag_mob-spawningd: <s1>Allows monster<nl><s1>spawning on<nl><s1>your island.
+  - 
+    #> Island flag description: Allows spawning monsters on your island.
+    flag_mob-spawningd: <s1>Allows bats<nl><s1>spawning on<nl><s1>your island.
   - 
     #> Island flag description: Allows to use buttons and levers on your island.
     flag_buttond: <s1>Allow to<nl><s1>use buttons and levers on your island<nl><s1>.
@@ -1312,89 +1318,72 @@ language:
     challenge_repeatbonuslore: "&r<s1>Current bonus: <bonus>%<nl><s1>Bonus progress: <progress>%"
   - 
     #> Challenge names
-    challenge_name_1_1: Cactifarmer
-  - 
-    challenge_name_1_2: Graveluser
-  - 
-    challenge_name_1_3: Mossy friends
-  - 
-    challenge_name_1_4: Forest friend
-  - 
-    challenge_name_1_5: Loamy sight
-  - 
-    challenge_name_1_6: Melon lover
-  - 
-    challenge_name_1_7: Pumpkinfarmer
-  - 
-    challenge_name_2_1: Lumberjack
-  - 
-    challenge_name_2_2: Human
-  - 
-    challenge_name_2_3: Greetings from hell
-  - 
-    challenge_name_2_4: Mushroom grower
-  - 
-    challenge_name_2_5: Crumbly matter
-  - 
-    challenge_name_2_6: Gardening
-  - 
-    challenge_name_2_7: Bakery
-  - 
-    challenge_name_3_1: Aerial mine expert
-  - 
-    challenge_name_3_2: Smelly business
-  - 
-    challenge_name_3_3: Corals
-  - 
-    challenge_name_3_4: Floating waters
-  - 
-    challenge_name_3_5: Eye expert
-  - 
-    challenge_name_3_6: Experience collector
-  - 
-    challenge_name_3_7: Hot things
-  - 
-    challenge_name_3_8: Disarmament through rotting
-  - 
-    challenge_name_4_1: Bright prospects
-  - 
-    challenge_name_4_2: Saddled
-  - 
-    challenge_name_4_3: Glass? DIRT!
-  - 
-    challenge_name_4_4: Seaweed smokehouse
-  - 
-    challenge_name_4_5: Brewery master
-  - 
-    challenge_name_4_6: Tears of terror
-  - 
-    challenge_name_4_7: Master of transport
-  - 
-    challenge_name_4_8: Deep-sea adventure
-  - 
-    challenge_name_4_9: A spongy adventure
-  - 
-    challenge_name_5_1: Secret experiments
-  - 
-    challenge_name_5_2: Glued, looks like real!
-  - 
-    challenge_name_5_3: Zzzsssss...
-  - 
-    challenge_name_5_4: Heady
-  - 
-    challenge_name_5_5: One with the sea animals
-  - 
-    challenge_name_5_6: Master of Villagers
-  - 
-    challenge_name_5_7: Stuffed dragons
-  - 
-    challenge_name_5_8: Self-woven
-  - 
-    challenge_name_5_9: Fermented eyes
-  - 
+    
+    
+  - challenge_name_1_1: Cactifarmer 
+  - challenge_name_1_2: Graveluser 
+  - challenge_name_1_3: Mossy friends
+  - challenge_name_1_4: Forest friend 
+  - challenge_name_1_5: Loamy sight
+  - challenge_name_1_6: Melon lover
+  - challenge_name_1_7: Pumpkinfarmer
+    
+    # Level 2
+    
+  - challenge_name_2_1: Lumberjack
+  - challenge_name_2_2: Greetings from hell
+  - challenge_name_2_3: Fun in the mud
+  - challenge_name_2_4: Gardening
+  - challenge_name_2_5: Mushroom grower
+  - challenge_name_2_6: Jungle Child
+  - challenge_name_2_7: Crumbly matter
+  - challenge_name_2_8: Bakery
+  - challenge_name_2_9: Under Pressure
+    
+    # Level 3
+    
+  - challenge_name_3_1: Aerial mine expert
+  - challenge_name_3_2: Smelly business
+  - challenge_name_3_3: Fish paradise
+  - challenge_name_3_4: Coral reef
+  - challenge_name_3_5: Floating waters
+  - challenge_name_3_6: Eye expert
+  - challenge_name_3_7: Experience collector
+  - challenge_name_3_8: Hot things
+  - challenge_name_3_9: Disarmament through rotting
+  - challenge_name_3_10: Back to the roots
+  - challenge_name_3_11: Bowman... or Crossbowman?
+    
+    # Level 4
+    
+  - challenge_name_4_1: Bright prospects 
+  - challenge_name_4_2: Saddled
+  - challenge_name_4_3: Glass? DIRT!
+  - challenge_name_4_4: Seaweed smokehouse
+  - challenge_name_4_5: Brewery master
+  - challenge_name_4_6: Tears of terror
+  - challenge_name_4_7: Master of transport
+  - challenge_name_4_8: Deep-sea adventure
+  - challenge_name_4_9: A spongy adventure 
+  - challenge_name_4_10: Brrr, can someone turn on the heater?
+  
+    # Level 5
+  
+  - challenge_name_5_1: Secret experiments
+  - challenge_name_5_2: Glued, looks like real!
+  - challenge_name_5_3: Zzzsssss...
+  - challenge_name_5_4: Heady
+  - challenge_name_5_5: One with the sea animals
+  - challenge_name_5_6: Master of Villagers
+  - challenge_name_5_7: Stuffed dragons
+  - challenge_name_5_8: Self-woven
+  - challenge_name_5_9: Fermented eyes
+  - challenge_name_5_10: The Ultimate Item
+    
+    
     #> Store categories
-    store_category_blocks: "&rBlocks"
-  - 
+  - store_category_blocks: "&rBlocks"
+  -
     store_category_items: "&rItems"
   - 
     store_category_eggs: "&rSpawneggs"
@@ -1406,3 +1395,8 @@ language:
     store_category_ores: "&rOres"
   - 
     store_category_colorblocks: "&rColored Blocks"
+    
+  
+  
+    #> Miscellaneous
+    block_enchanted_gapple_eat: "Do you really want to eat your enchanted golden apple? You can trade it at /tokenshop for precious items!"

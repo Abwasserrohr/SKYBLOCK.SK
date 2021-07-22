@@ -1,0 +1,12 @@
+
+#
+# > Function - getData
+# > Parameters - <text>path
+# > Actions:
+# > Loads data from a skript style path and returns it.
+# > It might also use a cached version for better performance.
+# > Eg. setData("SB::islands::0.5_65.5_0.5::owner", mydata)
+function getData(path: Text) :: object:
+  return {%{_path}%}
+  set {_config} to getDataManager({_path})
+  return {_config}.get(getStorageKey({_path}))

@@ -1,6 +1,6 @@
 #
 # ==============
-# jetboots.sk v0.0.9
+# jetboots.sk v0.0.12
 # ==============
 # Let users craft jetboots, which can be used to fly around. They need fuel to fly.
 # ==============
@@ -115,6 +115,8 @@ on inventory click:
     set {_check} to true
   else if event-slot is player's boots:
     set {_check} to true
+  else if event.isShiftClick() is true:
+    set {_check} to true
   if {_check} is true:
     wait 2 ticks
     if line 1 of lore of player's boots is {@item_name}:
@@ -181,14 +183,20 @@ function jetboots(player:player):
     # > to the metadata of the player, then stop the while loop.
     if {_now} is not metadata value "jetboots" of {_player}:
       stop loop
-    #
-    # > Before every while loop, wait 1 tick.
-    wait 1 tick
+
     #
     # > Remove fuel from the JetBoots if the player is flying and
     # > update the actionbar of the player.
     if {_player} is flying:
+      delete {_lore}
       set {_lore} to line 2 of lore of {_player}'s boots
+      # > If there is no lore, stop here.
+      if {_lore} is not set:
+        set {_player}'s flight mode to false
+        set {_player}'s fly speed to 0.08
+        delete metadata value "jetboots" of {_player}
+        stop
+
       replace all "&r" with "" in {_lore}
       replace all "&4" with "" in {_lore}
       set {_lore} to {_lore} parsed as integer
@@ -248,6 +256,10 @@ function jetboots(player:player):
         set line 2 of lore of {_player}'s boots to "&4%{_lore}%"
       else:
         set line 2 of lore of {_player}'s boots to "&r%{_lore}%"
+    #
+    # > After every while loop, wait 1 tick.
+    wait 1 tick
+
   #
   # > If the while loop ends, disable flying for player,
   # > this happens, if the player takes the JetBoots off while

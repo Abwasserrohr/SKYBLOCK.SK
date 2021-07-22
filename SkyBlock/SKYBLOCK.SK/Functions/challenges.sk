@@ -10,7 +10,7 @@
 import:
   java.text.SimpleDateFormat
   java.util.Date
-
+  java.util.ArrayList
 #
 # > Function: openchallenges
 # > Arguments:
@@ -234,7 +234,12 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
     #
     # > Loop trough all needed items and create a lore compatible text:
     set {_loreneeded} to getlang("challenge_youneed",{_lang})
+    set {_lore} to new ArrayList()
+
+    {_lore}.add("{""text"":""%{_loreneeded}%"",""color"":""white"",""italic"":false}")
+
     loop {_needed::*}:
+      delete {_tmp::*}
       set {_tmp::*} to loop-value-2 split at "-"
       set {_loreneeded} to "%{_loreneeded}%\n"
       set {_m} to getlang("challenge_amountofitem",{_lang})
@@ -245,6 +250,11 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
         #
         # > Once 1.14 is out, this part is going to be replaced with chat components. 
         replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
+		
+      set {_loreItem} to {_tmp::2} parsed as item
+      set {_trItem} to getTranslatableComponentFromItem({_loreItem})
+      {_lore}.add("[{""text"":""» %{_tmp::1}% "",""color"":""gray"",""italic"":false},{""translate"":""%{_trItem}.getTranslate()%"",""color"":""gray""}]")
+		
       set {_loreneeded} to "%{_loreneeded}%%{_m}%"
       #
       # > Extract reward items for this challenge:
@@ -259,68 +269,89 @@ function renderchallengeitems(player:player,page:number,currentxp:number=0):
       else:
         set {_done} to false
         set {_reward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_reward")
+    #
+    # > Split the rewards string to get a list of rewards.
+    set {_reward::*} to {_reward} split at ","
+    set {_msg} to getlang("challenge_youget",{_lang})
+    {_lore}.add("{""text"":""%{_msg}%"",""color"":""white"",""italic"":false}")
+
+    set {_lorereward} to "\n%{_msg}%"
+    #
+    # > Add custom reward text to reward lore.
+    if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is set:
+      if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is not "":
+        set {_customreward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward")
+        {_lore}.add("{""text"":""%{_customreward}%"",""color"":""white"",""italic"":false}")
+
+    #
+    # > Loop through the reward list. 
+    loop {_reward::*}:
       #
-      # > Split the rewards string to get a list of rewards.
-      set {_reward::*} to {_reward} split at ","
-      set {_msg} to getlang("challenge_youget",{_lang})
-      set {_lorereward} to "\n%{_msg}%"
+      # > Each list entry contains a string with <amount>-<itemname>, split it at "-",
+      # > to display it correctly.
+      delete {_tmp::*}
+      set {_tmp::*} to loop-value-2 split at "-"
+      set {_lorereward} to "%{_lorereward}%\n"
       #
-      # > Add custom reward text to reward lore.
-      if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is set:
-        if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward") is not "":
-          set {_customreward} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_customreward")
-          set {_lorereward} to "%{_lorereward}%\n%{_customreward}%"
+      # > Get the translation and replace placeholders.
+      set {_m} to getlang("challenge_amountofitem",{_lang})
+      replace all "<amount>" with "%{_tmp::1}%" in {_m}
+      if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
+        replace all "<item>" with "%{_tmp::2}%" in {_m}
+      else:
+        replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
+
+      if {_tmp::2} is "xp":
+        set {_xplang} to getlang("challenge_xp",{_lang})
+        replace all "<amount>" with "%{_tmp::1}%" in {_xplang}
+        {_lore}.add("{""text"":""» %{_xplang}%"",""color"":""gray"",""italic"":false}")
+      else:
+        set {_loreItem} to {_tmp::2} parsed as item
+        set {_trItem} to getTranslatableComponentFromItem({_loreItem})
+        {_lore}.add("[{""text"":""» %{_tmp::1}% "",""color"":""gray"",""italic"":false},{""translate"":""%{_trItem}.getTranslate()%"",""color"":""gray""}]")
+
+      set {_lorereward} to "%{_lorereward}%%{_m}%"
       #
-      # > Loop through the reward list.
-      loop {_reward::*}:
-        #
-        # > Each list entry contains a string with <amount>-<itemname>, split it at "-",
-        # > to display it correctly.
-        set {_tmp::*} to loop-value-3 split at "-"
-        set {_lorereward} to "%{_lorereward}%\n"
-        #
-        # > Get the translation and replace placeholders.
-        set {_m} to getlang("challenge_amountofitem",{_lang})
-        replace all "<amount>" with "%{_tmp::1}%" in {_m}
-        if {SB::lang::item::%{_tmp::2}%::%{_lang}%} is not set:
-          replace all "<item>" with "%{_tmp::2}%" in {_m}
-        else:
-          replace all "<item>" with "%{SB::lang::item::%{_tmp::2}%::%{_lang}%}%" in {_m}
-        set {_lorereward} to "%{_lorereward}%%{_m}%"
-        #
-        # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
-        set {_loreend} to "\n%{SB::config::guispacer}%\n"
-        if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat") is true:
-          set {_m} to getlang("challenge_repeatable",{_lang})
-          set {_c} to 0
-          set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
-          set {_max} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
-          #
-          # > If the server operator set the repeat amount per day to -1, it is endless.
-          if {_max} is -1:
-            set {_max} to "∞"
-          #
-          # > If tthe current repeats aren't unlimited, calculate the maximum amount.
-          else:
-            set {_max} to getcurrentrepeats({_xp},{_max})
-          replace all "<current>" with "%{_c}%" in {_m}
-          replace all "<maxrepeat>" with "%{_max}%" in {_m}
-          set {_loreend} to "%{_loreend}%%{_m}%"
-          #
-          # > If the maximum amount is reached, make it a glowing item.
-          if {_c} is {_max}:
-            set {_item} to glowing {_item}
-        #
-        # > If repeats are disabled for the challenge:
-        else:
-          set {_msg} to getlang("challenge_notrepeatable",{_lang})
-          set {_loreend} to "%{_loreend}%%{_msg}%"
-          #
-          # > Repeats for this challenge are disabled, if it has been done, make it glowing
-          if {_done} is true:
-            set {_item} to glowing {_item}
-      # > Currently, custom syntax isn't always working as intended, use functions until they work better.
-      setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r"),"&r%{_loreneeded}%%{_lorereward}%%{_loreend}%","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
+      # > Repeat information is added at the end of the item lore, a spacer is added to make it easier to read.
+    set {_loreend} to "\n%{SB::config::guispacer}%\n"
+    {_lore}.add("{""text"":""%{SB::config::guispacer}%"",""color"":""gray"",""italic"":false}")
+    if getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeat") is true:
+      set {_m} to getlang("challenge_repeatable",{_lang})
+      set {_c} to 0
+      set {_c} to {SB::crepeats::%{_uuid}%-%{_page}%%{_challangelvlpart}%}
+      set {_max} to getconfigobject("challenges-config-c-%{_page}%_%{_challangelvlpart}%_repeatsperday")
+      #
+      # > If the server operator set the repeat amount per day to -1, it is endless.
+      if {_max} is -1:
+        set {_max} to "∞"
+      #
+      # > If tthe current repeats aren't unlimited, calculate the maximum amount.
+      else:
+        set {_max} to getcurrentrepeats({_xp},{_max})
+      replace all "<current>" with "%{_c}%" in {_m}
+      replace all "<maxrepeat>" with "%{_max}%" in {_m}
+      {_lore}.add("{""text"":""%{_m}%"",""color"":""gray"",""italic"":false}")
+
+      set {_loreend} to "%{_loreend}%%{_m}%"
+      #
+      # > If the maximum amount is reached, make it a glowing item.
+      if {_c} is {_max}:
+        set {_item} to glowing {_item}
+    #
+    # > If repeats are disabled for the challenge:
+    else:
+      set {_msg} to getlang("challenge_notrepeatable",{_lang})
+      {_lore}.add("{""text"":""%{_msg}%"",""color"":""gray"",""italic"":false}")
+      #
+      # > Repeats for this challenge are disabled, if it has been done, make it glowing
+      if {_done} is true:
+        set {_item} to glowing {_item}
+	  
+    set {_itemName} to getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r")
+    set {_item}'s name to {_itemName}
+    set {_item} to setnbtLore({_item},{_lore})
+      
+    setguiitem({_player},{_slot},{_item},1,getlang("challenge_name_%{_page}%_%{_challangelvlpart}%",{_lang},"&r"),"","solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%)||solvechallenge(""%{_player}%"" parsed as player,""%{_page}%::%{_challangelvlpart}%"",%{_page}%,true)",false)
     #
 	# > The challenge level part loop ends here, add 1 to the slot and challenge level part.
     add 1 to {_slot}

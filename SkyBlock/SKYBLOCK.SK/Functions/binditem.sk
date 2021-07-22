@@ -6,11 +6,8 @@
 # ==============
 #
 
-# > To get the enchantment of the tool the player is using, we need this class.
 import:
-  org.bukkit.enchantments.Enchantment
   org.bukkit.Material
-
 
 #
 # > Function: binditem
@@ -19,19 +16,13 @@ import:
 # > Actions:
 # > If the island of the player is lower than the configured level, the dirt|grass|farmland
 # > is going to be island bound and can only be used on exactly this island.
-function binditem(el:location,p:player,block1:item,givesameblock:boolean=false,eventblock:block):
+function binditem(el:location, p:player, block1:item, givesameblock:boolean=false, eventblock:block):
+
   #
   # > Get the block at the location as a new item.
-  delete {_block}
-  set {_block} to "%block at {_el}%" parsed as item
-  #
-  # > Get the tool the player is holding to check, know later, if
-  # > the player holds an enchanted tool.
   set {_item} to {_p}'s tool
-  set {_enchantments} to {_item}.getEnchantments()
-  #
-  # > Set the block to air to then later drop a item there.
-  #set block at {_eventblock}'s location to air
+  set {_block::*} to ...{_eventblock}.getDrops({_item}).toArray()
+  set {_block} to {_block::1}
   {_eventblock}.setType(Material.AIR!)
 
   #
@@ -40,11 +31,7 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false,e
   set {_x} to x-coord of {_bedrock}
   set {_y} to y-coord of {_bedrock}
   set {_z} to z-coord of {_bedrock}
-  #
-  # > If the tool the player is using is not enchanted with silk touch,
-  # > do overwrite the {_block} with a new created dirt item.
-  if "%{_enchantments}%" does not contain "silk_touch":
-    set {_block} to {_block1}
+
   #
   # > Delete any left over lore which might got here due to caching
   # > in Skript itself.
@@ -65,22 +52,19 @@ function binditem(el:location,p:player,block1:item,givesameblock:boolean=false,e
   # > Now drop the item, either dirt or the block at the location.
   # > If the island is over the specified level, the item doesn't have a lore.
   # > If the block is not a lava bucket, drop it.
-  if {_block} is not lava bucket:
-    if {_givesameblock} is true:
-      drop 1 of {_block1} at {_el}
-    else:
-      drop 1 of {_block} at {_el}
+  if {_block1} is not lava bucket:
+    drop 1 of {_block} at {_el}
   #
   # > If the {_block} is a lava bucket, try to give it to the player, if
   # > the inventory is full, drop it. Also remove one bucket from player's
   # > inventory.
   else:
-    if {_p}'s inventory has not enough space for 1 of {_block}:
+    if {_p}'s inventory has not enough space for 1 of {_block1}:
       remove 1 of bucket from {_p}'s inventory
-      drop 1 of {_block} at {_el}
+      drop 1 of {_block1} at {_el}
     else:
       remove 1 of bucket from {_p}'s inventory
-      give {_p} 1 of {_block}
+      give {_p} 1 of {_block1}
 
 #
 # > Function: bindcheck

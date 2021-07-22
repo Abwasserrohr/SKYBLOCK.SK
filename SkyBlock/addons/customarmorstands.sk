@@ -1,6 +1,6 @@
 #
 # ==============
-# customarmorstands.sk v0.0.12
+# customarmorstands.sk v0.0.15
 # ==============
 # Allow your players to edit their armor stands with ease.
 # ==============
@@ -66,7 +66,7 @@ options:
   toggleglowitem: glowstone block
   #
   # > Toggle baseplate item
-  togglebaseplateitem: clean stone slab
+  togglebaseplateitem: stone slab
   #
   # > Toglle arms item
   togglearmsitem: stick
@@ -126,6 +126,18 @@ import:
   java.util.HashMap
   org.bukkit.inventory.ItemStack
   org.bukkit.util.EulerAngle
+  org.bukkit.configuration.file.YamlConfiguration
+  java.util.zip.Deflater
+  java.util.Base64
+  java.util.zip.DeflaterOutputStream
+  java.lang.String
+  java.util.zip.Inflater
+  java.util.zip.InflaterOutputStream
+  java.io.ByteArrayInputStream
+  java.util.zip.GZIPInputStream
+  java.io.ByteArrayOutputStream
+  java.util.zip.GZIPOutputStream
+  java.nio.charset.StandardCharsets
 
 #
 # > Function - checkarmorstandplacepermission
@@ -144,6 +156,49 @@ function checkarmorstandplacepermission(player:player,location:location) :: bool
     return true
   else:
     false
+
+#
+# > Function - compressBase64:
+# > Compresses a string into a compressed base64 string.
+# > Parameters:
+# > <text>regular text
+# > Returns:
+# > <text>compressed base64 string
+function ARcompressBase64(text:text) :: text:
+  set {_stream} to new ByteArrayOutputStream()
+  set {_compressor} to new Deflater(Deflater.BEST_COMPRESSION!, true)
+  set {_deflateOutput} to new DeflaterOutputStream({_stream}, {_compressor})
+  set {_inputBytes} to {_text}.getBytes(StandardCharsets.UTF_8!)
+  {_deflateOutput}.write({_inputBytes})
+  {_deflateOutput}.close()
+
+  set {_output} to {_stream}.toByteArray()
+  set {_encoder} to Base64.getEncoder()
+  set {_b64Str} to {_encoder}.encodeToString({_output})
+  return {_b64Str}
+
+#
+# > Function - decompressBase64:
+# > Decompresses a compressed base64 string back into a normal string.
+# > Parameters:
+# > <text>compressed text
+# > Returns:
+# > <text>decompressed text
+function ARdecompressBase64(text:text) :: text:
+  set {_bytes} to {_text}.getBytes(StandardCharsets.UTF_8!)
+  set {_decoder} to Base64.getDecoder()
+  set {_b64} to {_decoder}.decode({_text})
+
+  set {_oS} to new ByteArrayOutputStream()
+  set {_decompresser} to new Inflater(true)
+  set {_iOutS} to new InflaterOutputStream({_oS}, {_decompresser})
+  {_iOutS}.write({_b64})
+  {_iOutS}.close()
+
+  set {_output} to {_oS}.toByteArray()
+  set {_outputStr} to new String({_output}, StandardCharsets.UTF_8!)
+
+  return {_outputStr}
 
 #
 # > Function - checkarmorstandblacklist
@@ -169,7 +224,7 @@ function checkarmorstandblacklist(entity:entity) :: boolean:
 # > Creates a copy of the already created armor stand which is
 # > stored as metadata.
 on rightclick holding {@copytool}:
-  set {_copytool} to getnbtvalue(player's tool,"customstand")
+  set {_copytool} to getnbtvalue(event-item,"customstandv2")
   if {_copytool} is not "" or false:
     cancel event
     set {_loc} to location of player's target block
@@ -177,38 +232,45 @@ on rightclick holding {@copytool}:
     if checkarmorstandplacepermission(player,{_loc}) is not true:
       stop
     if player's gamemode is not creative:
-      remove 1 of player's tool from player's inventory
+      set {_item} to event-item
+      {_item}.setAmount(1)
+      set {_playerInventory} to player's inventory
+      {_playerInventory}.removeItem({_item})
+
     #
     # > De-serialize the HashMap from the tool.
-    set {_standdata} to deserialize({_copytool})
+    set {_standdata} to ARdecompressBase64({_copytool})
+    set {_config} to new YamlConfiguration()
+    {_config}.loadFromString({_standdata})
+
     #
     # > Get the yaw of the copied armor stand and modify the location
     # > to spawn the armor stand with the right yaw.
-    set {_loc}'s yaw to {_standdata}.get("yaw")
+    set {_loc}'s yaw to {_config}.get("yaw")
     spawn 1 armor stand at {_loc}
     #
     # > Get the spawned armor stand from above and configure
     # > the armor stand with the data of the HashMap.
     set {_target} to last spawned entity
     {_target}.setGravity(false)
-    {_target}.setBodyPose(text2pose({_standdata}.get("BodyPose")))
-    {_target}.setHeadPose(text2pose({_standdata}.get("HeadPose")))
-    {_target}.setLeftArmPose(text2pose({_standdata}.get("LeftArmPose")))
-    {_target}.setLeftLegPose(text2pose({_standdata}.get("LeftLegPose")))
-    {_target}.setRightArmPose(text2pose({_standdata}.get("RightArmPose")))
-    {_target}.setLegPose(text2pose({_standdata}.get("LegPose")))
-    {_target}.setBoots(ItemStack.deserialize({_standdata}.get("Boots")))
-    {_target}.setChestplate(ItemStack.deserialize({_standdata}.get("Chestplate")))
-    {_target}.setHelmet(ItemStack.deserialize({_standdata}.get("Helmet")))
-    set {_target}'s offhand tool to ItemStack.deserialize({_standdata}.get("ItemInLeftHand"))
-    set {_target}'s tool to ItemStack.deserialize({_standdata}.get("ItemInRightHand"))
-    {_target}.setLeggings(ItemStack.deserialize({_standdata}.get("Leggings")))
-    {_target}.setArms({_standdata}.get("Arms"))
-    {_target}.setBasePlate({_standdata}.get("BasePlate"))
-    {_target}.setMarker({_standdata}.get("Marker"))
-    {_target}.setSmall({_standdata}.get("Small"))
-    {_target}.setCustomNameVisible({_standdata}.get("CustomNameVisible"))
-    {_target}.setCustomName({_standdata}.get("CustomName"))
+    {_target}.setBodyPose(text2pose({_config}.get("BodyPose")))
+    {_target}.setHeadPose(text2pose({_config}.get("HeadPose")))
+    {_target}.setLeftArmPose(text2pose({_config}.get("LeftArmPose")))
+    {_target}.setLeftLegPose(text2pose({_config}.get("LeftLegPose")))
+    {_target}.setRightArmPose(text2pose({_config}.get("RightArmPose")))
+    {_target}.setLegPose(text2pose({_config}.get("LegPose")))
+    {_target}.setBoots({_config}.get("Boots"))
+    {_target}.setChestplate({_config}.get("Chestplate"))
+    {_target}.setHelmet({_config}.get("Helmet"))
+    set {_target}'s offhand tool to {_config}.get("ItemInLeftHand")
+    set {_target}'s tool to {_config}.get("ItemInRightHand")
+    {_target}.setLeggings({_config}.get("Leggings"))
+    {_target}.setArms({_config}.get("Arms"))
+    {_target}.setBasePlate({_config}.get("BasePlate"))
+    {_target}.setMarker({_config}.get("Marker"))
+    {_target}.setSmall({_config}.get("Small"))
+    {_target}.setCustomNameVisible({_config}.get("CustomNameVisible"))
+    {_target}.setCustomName({_config}.get("CustomName"))
 
 #
 # > On rightclick holding an armor stand
@@ -539,32 +601,35 @@ function copycustomstand(player:player):
   set metadata "%{_newuuid}%" of {_player} to {_target}
   #
   # > Save the entire armor stand into a hashmap and serialize it.
+  set {_config} to new YamlConfiguration()	
   set {_standdata} to new HashMap()
   set {_tool} to {_target}'s tool
   set {_offhandtool} to {_target}'s offhand tool
-  {_standdata}.put("BodyPose",pose2text({_target}.getBodyPose()))
-  {_standdata}.put("Boots",{_target}.getBoots().serialize())
-  {_standdata}.put("Chestplate",{_target}.getChestplate().serialize())
-  {_standdata}.put("HeadPose",pose2text({_target}.getHeadPose()))
-  {_standdata}.put("Helmet",{_target}.getHelmet().serialize())
-  {_standdata}.put("ItemInRightHand",{_tool}.serialize())
-  {_standdata}.put("ItemInLeftHand",{_offhandtool}.serialize())
-  {_standdata}.put("LeftArmPose",pose2text({_target}.getLeftArmPose()))
-  {_standdata}.put("LeftLegPose",pose2text({_target}.getLeftLegPose()))
-  {_standdata}.put("RightArmPose",pose2text({_target}.getRightArmPose()))
-  {_standdata}.put("RightLegPose",pose2text({_target}.getRightLegPose()))
-  {_standdata}.put("Leggings",{_target}.getLeggings().serialize())
-  {_standdata}.put("Arms",{_target}.hasArms())
-  {_standdata}.put("BasePlate",{_target}.hasBasePlate())
-  {_standdata}.put("Marker",{_target}.isMarker())
-  {_standdata}.put("Small",{_target}.isSmall())
-  {_standdata}.put("Visible",{_target}.isVisible())
-  {_standdata}.put("CustomNameVisible",{_target}.isCustomNameVisible())
-  {_standdata}.put("CustomName",{_target}'s name)
-  {_standdata}.put("yaw",{_target}'s yaw)
+  {_config}.set("BodyPose",pose2text({_target}.getBodyPose()))
+  {_config}.set("Boots",{_target}.getBoots())
+  {_config}.set("Chestplate",{_target}.getChestplate())
+  {_config}.set("HeadPose",pose2text({_target}.getHeadPose()))
+  {_config}.set("Helmet",{_target}.getHelmet())
+  {_config}.set("ItemInRightHand",{_tool})
+  {_config}.set("ItemInLeftHand",{_offhandtool})
+  {_config}.set("LeftArmPose",pose2text({_target}.getLeftArmPose()))
+  {_config}.set("LeftLegPose",pose2text({_target}.getLeftLegPose()))
+  {_config}.set("RightArmPose",pose2text({_target}.getRightArmPose()))
+  {_config}.set("RightLegPose",pose2text({_target}.getRightLegPose()))
+  {_config}.set("Leggings",{_target}.getLeggings())
+  {_config}.set("Arms",{_target}.hasArms())
+  {_config}.set("BasePlate",{_target}.hasBasePlate())
+  {_config}.set("Marker",{_target}.isMarker())
+  {_config}.set("Small",{_target}.isSmall())
+  {_config}.set("Visible",{_target}.isVisible())
+  {_config}.set("CustomNameVisible",{_target}.isCustomNameVisible())
+  {_config}.set("CustomName",{_target}'s name)
+  {_config}.set("yaw",{_target}'s yaw)
   #
   # > Set the serialized hashmap as nbt value into the item.
-  set {_item} to setnbtvalue({_item},"customstand",serialize({_standdata}))
+  set {_configStr} to {_config}.saveToString()
+  set {_base64} to ARcompressBase64({_configStr})
+  set {_item} to setnbtvalue({_item},"customstandv2", {_base64})
   #
   # > Give the player one of the copy tool.
   give 1 of {_item} to {_player}

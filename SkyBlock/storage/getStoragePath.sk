@@ -1,0 +1,18 @@
+
+#
+# > Function - getStoragePath
+# > Parameters - <text>path
+# > Actions:
+# > Converts a list style variable name to a file structured format and returns it.
+function getStoragePath(path: Text) :: Text:
+  set {_path::*} to split {_path} at "::"
+  set {_size} to size of {_path::*}
+  set {_loops} to {_size} - 2
+  set {_filePath} to "plugins/SkyBlock/storage/"
+  if {_loops} >= 1:
+    loop {_loops} times:
+      set {_filePath} to "%{_filePath}%%{_path::%loop-number%}%/"
+  set {_fileNameId} to {_size} - 1
+  set {_fileName} to "%{_path::%{_fileNameId}%}%.yml"
+  set {_filePath} to "%{_filePath}%%{_fileName}%"
+  return {_filePath}

@@ -64,7 +64,7 @@ challenges:
 - 1_3_customfunction: ""
 
 - 1_4_needed: "6-apple"
-- 1_4_reward: "15-xp,2-oak sapling,2-spruce sapling,2-birch sapling,2-jungle sapling,2-acacia sapling,4-dark oak sapling"
+- 1_4_reward: "15-xp,2-oak sapling,2-spruce sapling,2-birch sapling,2-jungle sapling,2-acacia sapling,4-dark oak sapling,1-cocoa bean"
 - 1_4_repeatreward: "5-xp,1-oak sapling,1-spruce sapling,1-birch sapling,1-jungle sapling,1-acacia sapling,2-dark oak sapling"
 - 1_4_item: "apple"
 - 1_4_repeat: true
@@ -98,47 +98,61 @@ challenges:
 - 2_1_repeat: true
 - 2_1_repeatsperday: 5
 
-- 2_2_needed: "3-diamond,2-iron ingot"
-- 2_2_reward: "150-xp,3-dirt"
-- 2_2_repeatreward: "10-xp,1-dirt"
-- 2_2_item: "dirt"
+- 2_2_needed: "64-nether wart item"
+- 2_2_reward: "45-xp,32-netherrack"
+- 2_2_repeatreward: "3-xp,1-magma block,18-netherrack"
+- 2_2_item: "netherrack"
 - 2_2_repeat: true
-- 2_2_repeatsperday: 5
+- 2_2_repeatsperday: 30
 
-- 2_3_needed: "64-nether wart item"
-- 2_3_reward: "45-xp,32-netherrack"
-- 2_3_repeatreward: "3-xp,1-magma block,18-netherrack"
-- 2_3_item: "netherrack"
+- 2_3_needed: "3-diamond,2-iron ingot"
+- 2_3_reward: "140-xp,3-dirt"
+- 2_3_repeatreward: "10-xp,1-dirt"
+- 2_3_item: "dirt"
 - 2_3_repeat: true
-- 2_3_repeatsperday: 30
+- 2_3_repeatsperday: 5
 
-- 2_4_needed: "64-red mushroom,64-brown mushroom"
-- 2_4_reward: "40-xp,1-mycelium"
-- 2_4_repeatreward: "15-xp,1-mycelium"
-- 2_4_item: "mycelium"
+- 2_4_needed: "64-wheat seeds,64-pumpkin seeds,64-melon seeds,64-beetroot seeds"
+- 2_4_reward: "60-xp,4-peony,4-rose bush,4-lilac,4-sunflower,4-brown mushroom,4-red mushroom"
+- 2_4_repeatreward: "3-xp,1-peony,1-rose bush,1-lilac,1-sunflower,1-brown mushroom,1-red mushroom"
+- 2_4_item: "peony"
 - 2_4_repeat: true
 - 2_4_repeatsperday: 5
 
-- 2_5_needed: "128-cookie,1-milk bucket"
-- 2_5_reward: "25-xp,64-jungle log,1-bucket"
-- 2_5_repeatreward: "3-xp,32-jungle log,1-bucket"
-- 2_5_item: "cookie"
+- 2_5_needed: "64-red mushroom,64-brown mushroom"
+- 2_5_reward: "40-xp,1-mycelium"
+- 2_5_repeatreward: "15-xp,1-mycelium"
+- 2_5_item: "mycelium"
 - 2_5_repeat: true
 - 2_5_repeatsperday: 5
 
-- 2_6_needed: "64-wheat seeds,64-pumpkin seeds,64-melon seeds,64-beetroot seeds"
-- 2_6_reward: "70-xp,4-peony,4-rose bush,4-lilac,4-sunflower,4-brown mushroom,4-red mushroom"
-- 2_6_repeatreward: "3-xp,1-peony,1-rose bush,1-lilac,1-sunflower,1-brown mushroom,1-red mushroom"
-- 2_6_item: "peony"
+- 2_6_needed: "32-jungle log,10-vine, 5-grass"
+- 2_6_reward: "20-xp,5-cocoa bean"
+- 2_6_repeatreward: "3-xp,2-cocoa bean"
+- 2_6_item: "jungle sapling"
 - 2_6_repeat: true
 - 2_6_repeatsperday: 5
 
-- 2_7_needed: "12-pumpkin pie,2-cake,16-bread,32-cookie"
-- 2_7_reward: "10-xp,2-gold ore,2-iron ore"
-- 2_7_repeatreward: "2-xp,1-iron ore"
-- 2_7_item: "pumpkin pie"
+- 2_7_needed: "128-cookie,1-milk bucket"
+- 2_7_reward: "25-xp,64-jungle log,1-bucket"
+- 2_7_repeatreward: "3-xp,32-jungle log,1-bucket"
+- 2_7_item: "cookie"
 - 2_7_repeat: true
 - 2_7_repeatsperday: 5
+
+- 2_8_needed: "12-pumpkin pie,2-cake,16-bread,32-cookie"
+- 2_8_reward: "10-xp,2-gold ore,2-iron ore"
+- 2_8_repeatreward: "2-xp,1-iron ore"
+- 2_8_item: "pumpkin pie"
+- 2_8_repeat: true
+- 2_8_repeatsperday: 5
+
+- 2_9_needed: "2-piston,64-coal"
+- 2_9_reward: "10-xp,2-diamond"
+- 2_9_repeatreward: "3-xp,1-diamond"
+- 2_9_item: "piston"
+- 2_9_repeat: true
+- 2_9_repeatsperday: 5
 
 - 3_1_needed: "128-cobblestone"
 - 3_1_reward: "20-xp,2-iron ore"
@@ -148,60 +162,74 @@ challenges:
 - 3_1_repeatsperday: 15
 
 - 3_2_needed: "64-raw cod"
-- 3_2_reward: "150-xp,4-sea pickle,4-kelp,2-nautilus shell"
-- 3_2_repeatreward: "10-xp,2-sea pickle,2-kelp,1-nautilus shell"
+- 3_2_reward: "150-xp,4-sea pickle,4-kelp"
+- 3_2_repeatreward: "10-xp,2-sea pickle,2-kelp"
 - 3_2_item: "raw cod"
 - 3_2_repeat: true
 - 3_2_repeatsperday: 15
 
 - 3_3_needed: "9-living tube coral plant,9-living brain coral plant,9-living bubble coral plant,9-living fire coral plant,9-living horn coral plant"
-- 3_3_reward: "150-xp,2-living tube coral block,2-living brain coral block,2-living bubble coral block,2-living fire coral block,2-living horn coral block"
-- 3_3_repeatreward: "10-xp,1-living tube coral block,1-living brain coral block,1-living bubble coral block,1-living fire coral block,1-living horn coral block"
+- 3_3_reward: "75-xp,2-living tube coral block,2-living brain coral block,2-living bubble coral block,2-living fire coral block,2-living horn coral block"
+- 3_3_repeatreward: "5-xp,1-living tube coral block,1-living brain coral block,1-living bubble coral block,1-living fire coral block,1-living horn coral block"
 - 3_3_item: "living pink coral block"
 - 3_3_repeat: true
 - 3_3_repeatsperday: 20
 
-- 3_4_needed: "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
-- 3_4_reward: "150-xp,1-sponge,1-heart of the sea"
-- 3_4_repeatreward: "10-xp,1-sponge,1-heart of the sea"
-- 3_4_item: "heart of the sea"
+- 3_4_needed: "9-living tube coral fan,9-living brain coral fan,9-living bubble coral fan,9-living fire coral fan,9-living horn coral fan"
+- 3_4_reward: "75-xp,2-nautilus shell"
+- 3_4_repeatreward: "5-xp, 1-nautilus shell"
+- 3_4_item: "living pink coral block"
 - 3_4_repeat: true
-- 3_4_repeatsperday: 5
+- 3_4_repeatsperday: 20
 
-- 3_5_needed: "128-ender pearl"
-- 3_5_reward: "75-xp,2-shulker shell"
-- 3_5_repeatreward: "10-xp,1-shulker shell"
-- 3_5_item: "ender pearl"
+- 3_5_needed: "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
+- 3_5_reward: "150-xp,1-sponge,1-heart of the sea"
+- 3_5_repeatreward: "10-xp,1-sponge,1-heart of the sea"
+- 3_5_item: "heart of the sea"
 - 3_5_repeat: true
 - 3_5_repeatsperday: 5
 
-- 3_6_needed: "16-emerald"
-- 3_6_reward: "35-xp,32-bottle o' enchanting"
-- 3_6_repeatreward: "5-xp,8-bottle o' enchanting"
-- 3_6_item: "bottle o' enchanting"
+- 3_6_needed: "128-ender pearl"
+- 3_6_reward: "75-xp,2-shulker shell"
+- 3_6_repeatreward: "10-xp,1-shulker shell"
+- 3_6_item: "ender pearl"
 - 3_6_repeat: true
-- 3_6_repeatsperday: 15
+- 3_6_repeatsperday: 5
 
-- 3_7_needed: "32-diamond"
-- 3_7_reward: "250-xp,1-lava bucket"
-- 3_7_repeatreward: "150-xp,1-lava bucket"
-- 3_7_item: "lava bucket"
+- 3_7_needed: "16-emerald"
+- 3_7_reward: "35-xp,32-bottle o' enchanting"
+- 3_7_repeatreward: "5-xp,8-bottle o' enchanting"
+- 3_7_item: "bottle o' enchanting"
 - 3_7_repeat: true
-- 3_7_repeatsperday: 2
+- 3_7_repeatsperday: 15
 
-- 3_8_needed: "128-arrow"
-- 3_8_reward: "125-xp,32-bone block"
-- 3_8_repeatreward: "15-xp,16-bone block"
-- 3_8_item: "bone block"
+- 3_8_needed: "32-diamond"
+- 3_8_reward: "250-xp,1-lava bucket"
+- 3_8_repeatreward: "150-xp,1-lava bucket"
+- 3_8_item: "lava bucket"
 - 3_8_repeat: true
-- 3_8_repeatsperday: 5
+- 3_8_repeatsperday: 2
 
-- 3_9_needed: "128-stick"
-- 3_9_reward: "250-xp,16-bamboo plant"
-- 3_9_repeatreward: "2-xp,2-bamboo plant"
-- 3_9_item: "bamboo plant"
+- 3_9_needed: "128-arrow"
+- 3_9_reward: "125-xp,32-bone block"
+- 3_9_repeatreward: "15-xp,16-bone block"
+- 3_9_item: "bone block"
 - 3_9_repeat: true
 - 3_9_repeatsperday: 5
+
+- 3_10_needed: "128-stick"
+- 3_10_reward: "250-xp,16-bamboo plant"
+- 3_10_repeatreward: "2-xp,2-bamboo plant"
+- 3_10_item: "bamboo plant"
+- 3_10_repeat: true
+- 3_10_repeatsperday: 5
+
+- 3_11_needed: "2-crossbow,128-arrow,2-bow"
+- 3_11_reward: "250-xp,32-gold ingot"
+- 3_11_repeatreward: "4-xp,12-gold ingot"
+- 3_11_item: "crossbow"
+- 3_11_repeat: true
+- 3_11_repeatsperday: 5
 
 - 4_1_needed: "512-gold ingot"
 - 4_1_reward: "150-xp,4-blaze rod"
@@ -266,6 +294,13 @@ challenges:
 - 4_9_repeat: true
 - 4_9_repeatsperday: 5
 
+- 4_10_needed: "64-ice,64-snow block"
+- 4_10_reward: "50-xp,8-coal,4-white wool"
+- 4_10_repeatreward: "5-xp,2-coal,2-white wool"
+- 4_10_item: "ice"
+- 4_10_repeat: true
+- 4_10_repeatsperday: 10
+
 - 5_1_needed: "1728-rotten flesh"
 - 5_1_reward: "150-xp,1-zombie head,3-diamond ore"
 - 5_1_repeatreward: "50-xp,1-zombie head"
@@ -295,8 +330,8 @@ challenges:
 - 5_4_repeatsperday: 5
   
 - 5_5_needed: "64-living tube coral block,64-living brain coral block,64-living bubble coral block,64-living fire coral block,64-living horn coral block"
-- 5_5_reward: "150-xp,2-dolphin spawn egg,2-turtle egg,4-nametag"
-- 5_5_repeatreward: "10-xp,1-dolphin spawn egg,1-turtle egg,2-nametag"
+- 5_5_reward: "150-xp,2-dolphin spawn egg,2-turtle egg,4-nametag,1-fox egg"
+- 5_5_repeatreward: "10-xp,1-dolphin spawn egg,1-turtle egg,2-nametag,1-fox egg"
 - 5_5_item: "turtle egg"
 - 5_5_repeat: true
 - 5_5_repeatsperday: 5
@@ -328,3 +363,10 @@ challenges:
 - 5_9_item: "rotten flesh"
 - 5_9_repeat: true
 - 5_9_repeatsperday: 25
+
+- 5_10_needed: "20-diamond,128-iron ingot,32-golden apple,3-shulker shell"
+- 5_10_reward: "500-xp,1-enchanted golden apple"
+- 5_10_repeatreward: "250-xp,1-enchanted golden apple"
+- 5_10_item: "enchanted golden apple"
+- 5_10_repeat: true
+- 5_10_repeatsperday: 1
